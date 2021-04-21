@@ -2,8 +2,8 @@
   "name": "entropic-bond",
   "version": "0.2.0",
   "description": "",
-  "types": "lib/index.d.ts",
-  "main": "lib/",
+  "types": "lib/*",
+  "main": "lib/*",
   "exports": {
     "./": "./lib/"
   },
