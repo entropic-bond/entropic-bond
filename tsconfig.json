@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "ES6", 
+    "module": "ESNext", 
+    "allowSyntheticDefaultImports": false,
+    "esModuleInterop": false,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./lib",
+    "baseUrl": "./src",
+    "rootDir": "./src/",
+		"resolveJsonModule": true,
+    "lib": [
+      "esnext", "dom"
+    ],
+    "declaration": true,
+    "experimentalDecorators": true,
+	},
+  "exclude": [
+    "node_modules",
+    "lib",
+    "**/*.spec.*"
+  ]
+}
