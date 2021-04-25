@@ -7,3 +7,4 @@ out/
 dist/
 tmp/
 coverage/
+lib/

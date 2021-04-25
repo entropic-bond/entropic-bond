@@ -2,11 +2,9 @@
   "name": "entropic-bond",
   "version": "0.2.1",
   "description": "",
-  "types": "lib/*",
-  "main": "lib/*",
-  "exports": {
-    "./": "./lib/"
-  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [ "dist" ],
   "scripts": {
     "test": "jest",
     "build": "tsc",

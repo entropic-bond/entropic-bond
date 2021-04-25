@@ -1,4 +1,4 @@
-import { ClassProps } from '../types/utility-types';
+import { ClassProps } from '../types';
 
 export class Persistent {
 	fromObject( obj: Partial<ClassProps<this>> ) {
