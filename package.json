@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "files": [ "dist" ],
+  "files": [ "lib" ],
   "scripts": {
     "test": "jest",
     "build": "tsc",
