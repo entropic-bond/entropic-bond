@@ -1,10 +1,12 @@
 {
   "name": "entropic-bond",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "description": "Tidy up your messy components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "files": [ "lib" ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc",
