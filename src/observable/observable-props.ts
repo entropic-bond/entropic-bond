@@ -1,4 +1,4 @@
-import { Callback, Observable } from '../observer/observable'
+import { Callback, Observable } from './observable'
 import { ClassProps } from '../types'
 
 type PropChangeEvent<T> = Partial<ClassProps<T>>
