@@ -1,10 +1,11 @@
-import { Callback, Observable } from './observable'
-import { ClassProps } from '../types'
+import { Callback, Observable } from '../observable/observable';
+import { ClassProps } from '../types/utility-types';
+import { Persistent } from './persistent';
 
 type PropChangeEvent<T> = Partial<ClassProps<T>>
 type PropChangeCallback<T> = Callback<PropChangeEvent<T>>
 
-export class ObservableProps {
+export class ObservablePersistent extends Persistent {
 	onChange( cb: PropChangeCallback<this> ) {
 		this._onChange.subscribe( cb )
 	}
@@ -31,9 +32,9 @@ export class ObservableProps {
 	 * 
 	 * @param event a valid event from a derived class
 	 */
-	notify<T extends ObservableProps>( event: PropChangeEvent<T> ) {
+	notify<T extends ObservablePersistent>( event: PropChangeEvent<T> ) {
 		this._onChange.notify(event)
 	}
 
-	protected _onChange: Observable<PropChangeEvent<ObservableProps>> = new Observable<PropChangeEvent<ObservableProps>>()
+	protected _onChange: Observable<PropChangeEvent<ObservablePersistent>> = new Observable<PropChangeEvent<ObservablePersistent>>()
 }

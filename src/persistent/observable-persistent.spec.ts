@@ -1,6 +1,6 @@
-import { ObservableProps } from './observable-props'
+import { ObservablePersistent } from './observable-persistent'
 
-class Character extends ObservableProps {
+class Character extends ObservablePersistent {
 	setName( value: string ) {
 		this.changeProp( 'name', value )
 		return this
@@ -13,7 +13,7 @@ class Character extends ObservableProps {
 	private _name: string
 }
 
-describe('Observable Props', ()=>{
+describe('Observable Persistent', ()=>{
 	let hero: Character
 
 	beforeEach(()=>{

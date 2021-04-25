@@ -1,16 +1,14 @@
 {
   "name": "entropic-bond",
-  "version": "0.2.12",
-  "description": "Puts order on your messy components",
-  "type": "module",
+  "version": "0.2.15",
+  "description": "Tidy up your messy components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [ "lib" ],
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "prepare": "npm run build",
-    "postinstall": "mv ./lib/* . && rmdir lib"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
