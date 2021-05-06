@@ -10,6 +10,8 @@ export type ClassPropNames<T> = {
 
 export type ClassProps<T> = Pick<T, ClassPropNames<T>>
 
+export type SomeClassProps<T> = Partial< ClassProps< T > >
+
 /*
 // How to use 
 

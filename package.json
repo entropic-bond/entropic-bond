@@ -29,12 +29,13 @@
   },
   "homepage": "https://github.com/jseto/entropic-bond#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.22",
+    "@types/jest": "^26.0.23",
     "git-branch-is": "^4.0.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
-    "ts-jest": "^26.5.5",
-    "typescript": "^4.2.4"
+    "ts-jest": "^26.5.6",
+    "typescript": "^4.2.4",
+    "uuid": "^8.3.2"
   },
   "husky": {
     "hooks": {

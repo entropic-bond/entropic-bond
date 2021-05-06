@@ -1,5 +1,6 @@
-import { Persistent, persistent } from './persistent';
+import { Persistent, persistent, registerClassFactory } from './persistent';
 
+@registerClassFactory( 'Person', ()=> new Person() )
 class Person extends Persistent {
 	set name( value: string ) {
 		this._name = value
@@ -29,7 +30,6 @@ class Person extends Persistent {
 	@persistent private _salary: number;
 	private _doNotPersist: number;
 }
-
 
 describe( 'Persistent', ()=>{
 	let person: Person;
