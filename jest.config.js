@@ -2,6 +2,7 @@ const pathsToIgnore = [
 	"/node_modules/",
 	"/dist/",
 	"/out/",
+	"/lib/",
 	"/coverage/"
 ];
 
