@@ -21,11 +21,6 @@ export class Persistent {
 		return this['__className'];
 	}
 
-	// setId(id: string) {
-	// 	this._id = id;
-	// 	return this;
-	// }
-
 	get id() {
 		return this._id;
 	}
@@ -51,7 +46,7 @@ export class Persistent {
 		return obj
 	}
 
-	@persistent private _id: string;
+	@persistent private _id: string
 	private _persistentProperties: PersistentProperty[]
 }
 
@@ -62,7 +57,7 @@ interface PersistentProperty {
 }
 
 export function persistent(target: Persistent, property: string) {
-	if (!target['_persistentProperties']) target['_persistentProperties'] = [];
+	if (!target['_persistentProperties']) target['_persistentProperties'] = []
 	target['_persistentProperties'].push({ name: property })
 }
 
@@ -78,9 +73,9 @@ export function persistentCollection(target: Persistent, property: string) {
 }
 
 export function registerClassFactory(className: string, factory: PersistentFactory) {
-	Persistent.registerFactory(className, factory);
+	Persistent.registerFactory(className, factory)
 	return (constructor: Function) => {
-		constructor.prototype.__className = className;
+		constructor.prototype.__className = className
 	}
 }
 
