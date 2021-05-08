@@ -78,6 +78,16 @@ describe('Model', ()=>{
 			expect( admins ).toHaveLength( 2 )
 		})
 
+		it( 'should find admins with age less than 56', async ()=>{
+			const admins = await model.find()
+				.where( 'admin', '==', true )
+				.where( 'age', '<', 50 )
+				.get()
+
+			expect( admins ).toHaveLength( 1 )
+			expect( admins[0].age ).toBeLessThan( 50 )
+		})
+
 		
 	})
 })
