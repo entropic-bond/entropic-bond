@@ -59,8 +59,8 @@ describe('Model', ()=>{
 	})
 
 	describe( 'Generic find', ()=>{
-		it( 'should find all admins with query object', async ()=>{
-			const admins = await model.find({
+		it( 'should query all admins with query object', async ()=>{
+			const admins = await model.query({
 				admin: {
 					operator: '==',
 					value: true
@@ -70,5 +70,14 @@ describe('Model', ()=>{
 			expect( admins[0] ).toBeInstanceOf( TestUser )
 			expect( admins ).toHaveLength( 2 )
 		})
+
+		it( 'should find all admins with where methods', async ()=>{
+			const admins = await model.find().where( 'admin', '==', true ).get()
+
+			expect( admins[0] ).toBeInstanceOf( TestUser )
+			expect( admins ).toHaveLength( 2 )
+		})
+
+		
 	})
 })

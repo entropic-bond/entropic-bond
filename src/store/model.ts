@@ -33,19 +33,18 @@ export class Model<T extends Persistent>{
 		return this._stream.delete( id, this.persistentClassName )
 	}
 
-	find( queryObject?: QueryObject<T>): Promise< T[] > | Query<T> {
-		if ( queryObject ) {
-			return new Promise<T[]>( ( resolve, reject ) => {
-				this._stream.find( queryObject, this.persistentClassName )
-					.then( data => resolve( 
-						data.map( obj => this.createInstance().fromObject( obj ) as T ) 
-					))
-					.catch( error => reject( error ) )
-			})
-		}
-		else {
-			return new Query<T>( this )
-		}
+	find(): Query<T> {
+		return new Query<T>( this )
+	}
+
+	query( queryObject?: QueryObject<T>): Promise<T[]> {
+		return new Promise<T[]>( ( resolve, reject ) => {
+			this._stream.find( queryObject, this.persistentClassName )
+				.then( data => resolve( 
+					data.map( obj => this.createInstance().fromObject( obj ) as T ) 
+				))
+				.catch( error => reject( error ) )
+		})
 	}
 
 	readonly persistentClassName: string
@@ -69,7 +68,7 @@ class Query<T extends Persistent> {
 	}
 
 	get() {
-		return this.model.find( this.queryObject )
+		return this.model.query( this.queryObject )
 	}
 
 	private queryObject: QueryObject<T> = {} as QueryObject<T>
