@@ -1,5 +1,9 @@
 import { Persistent, persistent, registerClassFactory } from './persistent';
 
+class NotRegistered {
+	value: number
+}
+
 @registerClassFactory( 'Person', ()=> new Person() )
 class Person extends Persistent {
 	set name( value: string ) {
@@ -26,8 +30,17 @@ class Person extends Persistent {
 		return this._doNotPersist
 	}
 
+	set notRegistered( value: NotRegistered ) {
+		this._notRegistered = value
+	}
+
+	get notRegistered() {
+		return this._notRegistered
+	}
+
 	@persistent private _name: string;
 	@persistent private _salary: number;
+	@persistent private _notRegistered: NotRegistered = new NotRegistered()
 	private _doNotPersist: number;
 }
 
@@ -98,5 +111,29 @@ describe( 'Persistent', ()=>{
 		person.fromObject( obj );
 		expect( person.name ).toBeUndefined();
 	})
+	
+	xdescribe( 'Compound persistent types', ()=>{
+		beforeEach(()=>{
+			const notRegistered = new NotRegistered()
+			notRegistered.value = 23
 
+			person.notRegistered = notRegistered
+		})
+
+		it( 'should return compound objects as instance of object class', ()=>{
+			const obj = JSON.stringify( person.toObject() )
+			const newPerson = new Person()
+			newPerson.fromObject( JSON.parse( obj ) )
+
+			expect( newPerson.notRegistered ).toBeInstanceOf( NotRegistered )
+		})
+
+		it( 'should throw if class not registered', ()=>{
+
+			expect( ()=>{
+				const obj = person.toObject()
+				person.fromObject( obj )
+			}).toThrow()
+		})
+	})
 })

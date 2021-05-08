@@ -1,0 +1,14 @@
+{
+	"TestUser": {
+		"user1": {
+			"id": "user1",
+			"name": {
+				"firstName": "userFirstName1",
+				"lastName": "userLastName1"
+			},
+			"age": 23,
+			"admin": true,
+			"skills": ["skill1", "skill2", "skill3"]
+		}
+	}
+}

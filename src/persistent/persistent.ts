@@ -8,9 +8,13 @@ interface FactoryMap {
 }
 
 export class Persistent {
-	static readonly factoryMap: FactoryMap = {}
 	static registerFactory<T extends Persistent>(className: string, factory: () => T) {
-		this.factoryMap[className] = factory
+		this._factoryMap[ className ] = factory
+	}
+
+	static classFactory( className: string ) {
+		if ( !this._factoryMap[ className ] ) throw new Error( `You should register class ${ className } prior to use.` )
+		return this._factoryMap[ className ]
 	}
 
 	constructor() {
@@ -27,7 +31,7 @@ export class Persistent {
 
 	fromObject(obj: SomeClassProps<this>) {
 
-		this._persistentProperties.forEach(prop => {
+		this._persistentProperties.forEach( prop => {
 			const value = obj[prop.name.slice(1)]
 			if (value) this[prop.name] = value
 		})
@@ -48,6 +52,7 @@ export class Persistent {
 
 	@persistent private _id: string
 	private _persistentProperties: PersistentProperty[]
+	private static _factoryMap: FactoryMap = {}
 }
 
 interface PersistentProperty {

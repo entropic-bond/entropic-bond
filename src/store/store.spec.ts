@@ -12,12 +12,4 @@ describe( 'Store', ()=>{
 		expect( ()=>Store.instance ).not.toThrow()
 		expect( Store.instance.dataStream ).toBeInstanceOf( JsonStream )
 	})
-
-	describe('Model', ()=>{
-		beforeEach(()=> {
-			Store.registerDataStreamFactory( ()=> new JsonStream() )
-		})
-
-		// it( )
-	})
 })
