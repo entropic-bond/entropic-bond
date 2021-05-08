@@ -16,11 +16,11 @@ export class TestUser extends Persistent {
 	}
 
 	set age( value: number ) {
-		this.age = value
+		this._age = value
 	}
 
 	get age() {
-		return this.age
+		return this._age
 	}
 
 	set admin( value: boolean ) {

@@ -9,6 +9,26 @@
 			"age": 23,
 			"admin": true,
 			"skills": ["skill1", "skill2", "skill3"]
+		},
+		"user2": {
+			"id": "user2",
+			"name": {
+				"firstName": "userFirstName2",
+				"lastName": "userLastName2"
+			},
+			"age": 23,
+			"admin": false,
+			"skills": ["skill1", "skill2", "skill3"]
+		},
+		"user3": {
+			"id": "user3",
+			"name": {
+				"firstName": "userFirstName3",
+				"lastName": "userLastName3"
+			},
+			"age": 56,
+			"admin": true,
+			"skills": ["skill21", "skill22", "skill23"]
 		}
 	}
 }

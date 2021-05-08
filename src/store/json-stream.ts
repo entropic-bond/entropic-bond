@@ -1,4 +1,4 @@
-import { DataStream, StreamDocument } from "./data-stream";
+import { DataStream, QueryObject, StreamDocument } from "./data-stream";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -24,10 +24,11 @@ export class JsonStream implements DataStream {
 		return Promise.resolve()
 	}
 
-	find( object: StreamDocument, collectionName: string ): Promise< StreamDocument[] > {
-		return Promise.resolve(
-			Object.values( this._jsonRawData[ collectionName ] ).filter( a => object['res']==='res' )
+	find( queryObject: QueryObject<StreamDocument>, collectionName: string ): Promise< StreamDocument[] > {
+		const matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
+			doc => this.isQueryMatched( doc, queryObject )
 		)
+		return Promise.resolve( matchingDocs )
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
@@ -37,6 +38,21 @@ export class JsonStream implements DataStream {
 
 	get rawData() {
 		return this._jsonRawData;
+	}
+
+	private isQueryMatched( doc: StreamDocument, queryObject: QueryObject<StreamDocument> ) {
+		const queryOperator = {
+			'==': <T>(a: T, b: T) => a === b,
+			'!=': <T>(a: T, b: T) => a !== b,
+			'<': <T>(a: T, b: T) => a < b,
+			'<=': <T>(a: T, b: T) => a <= b,
+			'>': <T>(a: T, b: T) => a > b,
+			'>=': <T>(a: T, b: T) => a >= b,
+		}
+
+		return Object.entries( queryObject ).reduce( ( prevVal, [ key, value ]) => {
+			return prevVal && queryOperator[ value.operator ]( doc[ key ], value.value )
+		}, true)
 	}
 
 	private _jsonRawData: JsonRawData;
