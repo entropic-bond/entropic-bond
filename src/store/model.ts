@@ -1,9 +1,9 @@
 import { Persistent, PersistentFactory } from '../persistent/persistent'
 import { ClassProps, SomeClassProps } from '../types/utility-types'
-import { DataStream, QueryOperator, QueryObject } from './data-stream'
+import { DataSource, QueryOperator, QueryObject } from './data-source'
 
 export class Model<T extends Persistent>{
-	constructor( stream: DataStream, persistentClass: Persistent | string ) {
+	constructor( stream: DataSource, persistentClass: Persistent | string ) {
 		this.persistentClassName = persistentClass instanceof Persistent
 			? persistentClass.className : persistentClass
 
@@ -49,7 +49,7 @@ export class Model<T extends Persistent>{
 
 	readonly persistentClassName: string
 	private createInstance: PersistentFactory 
-	private _stream: DataStream
+	private _stream: DataSource
 }
 
 

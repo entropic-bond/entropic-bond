@@ -1,6 +1,6 @@
 import { SomeClassProps } from '../types/utility-types'
 
-export interface StreamDocument {
+export interface Document {
 	id: string
 	[ key: string ]: unknown
 }
@@ -14,9 +14,9 @@ export type QueryObject<T> = {
 	}
 }
 
-export interface DataStream {
-	findById( id: string, collectionName: string ): Promise< StreamDocument >
-	find( queryObject: QueryObject<StreamDocument>, collectionName: string ): Promise< StreamDocument[] >
-	save( object: StreamDocument, collectionName: string ): Promise< void >
+export interface DataSource {
+	findById( id: string, collectionName: string ): Promise< Document >
+	find( queryObject: QueryObject<Document>, collectionName: string ): Promise< Document[] >
+	save( object: Document, collectionName: string ): Promise< void >
 	delete( id: string, collectionName: string ): Promise<void>
 }

@@ -1,10 +1,10 @@
 import { Persistent } from '../persistent/persistent';
-import { DataStream } from './data-stream';
+import { DataSource } from './data-source';
 import { Model } from './model';
 
 export class Store {
-	protected constructor( streamFactory: ()=> DataStream ){
-		if ( !streamFactory ) throw( new Error( 'You should register a data stream before using DataSource.') );
+	protected constructor( streamFactory: ()=> DataSource ){
+		if ( !streamFactory ) throw( new Error( 'You should register a data source before using the data Store.') );
 		this._stream = streamFactory();
 	}
 
@@ -12,7 +12,7 @@ export class Store {
 		return this._instance || ( this._instance = new this( this._streamFactory ) );
 	}
 
-	static registerDataStreamFactory( streamFactory: ()=>DataStream ) {
+	static registerDataStreamFactory( streamFactory: ()=>DataSource ) {
 		this._streamFactory = streamFactory;
 		this._instance = undefined;
 	}
@@ -26,6 +26,6 @@ export class Store {
 	}
 
 	private static _instance: Store = null;
-	private static _streamFactory: ()=>DataStream;
-	private _stream: DataStream;
+	private static _streamFactory: ()=>DataSource;
+	private _stream: DataSource;
 }
