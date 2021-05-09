@@ -3,29 +3,29 @@ import { DataSource } from './data-source';
 import { Model } from './model';
 
 export class Store {
-	protected constructor( streamFactory: ()=> DataSource ){
-		if ( !streamFactory ) throw( new Error( 'You should register a data source before using the data Store.') );
-		this._stream = streamFactory();
+	protected constructor( dataSource: DataSource ){
+		if ( !dataSource ) throw( new Error( 'You should register a data source before using the data Store.') );
+		this._dataSource = dataSource;
 	}
 
 	static get instance() {
-		return this._instance || ( this._instance = new this( this._streamFactory ) );
+		return this._instance || ( this._instance = new this( this._staticDataSource ) );
 	}
 
-	static registerDataStreamFactory( streamFactory: ()=>DataSource ) {
-		this._streamFactory = streamFactory;
+	static useDataSource( dataSource: DataSource ) {
+		this._staticDataSource = dataSource;
 		this._instance = undefined;
 	}
 
-	get dataStream() {
-		return this._stream;
+	get dataSource() {
+		return this._dataSource;
 	}
 
 	static getModel< T extends Persistent>( classId: T | string ): Model<T> {
-		return new Model<T>( this.instance._stream, classId )		
+		return new Model<T>( this.instance._dataSource, classId )		
 	}
 
 	private static _instance: Store = null;
-	private static _streamFactory: ()=>DataSource;
-	private _stream: DataSource;
+	private static _staticDataSource: DataSource;
+	private _dataSource: DataSource;
 }

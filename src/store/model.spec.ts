@@ -10,7 +10,7 @@ describe('Model', ()=>{
 	let rawData: JsonRawData
 
 	beforeEach(()=> {
-		Store.registerDataStreamFactory( ()=> new JsonStream( JSON.parse( JSON.stringify( testData ) ) ) )
+		Store.useDataSource( new JsonStream( JSON.parse( JSON.stringify( testData ) ) ) )
 		model = Store.getModel<TestUser>( 'TestUser' )
 
 		testUser = new TestUser()
@@ -21,7 +21,7 @@ describe('Model', ()=>{
 		testUser.age = 35
 		testUser.skills = [ 'lazy', 'dirty' ]
 
-		rawData = (<JsonStream>Store.instance.dataStream ).rawData
+		rawData = (<JsonStream>Store.instance.dataSource ).rawData
 	})
 
 	it( 'should get model from class name string and class instance', ()=>{
