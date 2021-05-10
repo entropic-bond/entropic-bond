@@ -21,7 +21,7 @@ describe('Model', ()=>{
 		testUser.age = 35
 		testUser.skills = [ 'lazy', 'dirty' ]
 
-		rawData = (<JsonStream>Store.instance.dataSource ).rawData
+		rawData = (<JsonStream>Store.dataSource ).rawData
 	})
 
 	it( 'should get model from class name string and class instance', ()=>{
