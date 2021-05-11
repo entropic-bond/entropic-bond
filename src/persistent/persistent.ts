@@ -21,8 +21,8 @@ export class Persistent {
 		this._id = uuid()
 	}
 
-	get className() {
-		return this['__className'];
+	get className(): string {
+		return this[ '__className' ];
 	}
 
 	get id() {
@@ -32,8 +32,16 @@ export class Persistent {
 	fromObject(obj: SomeClassProps<this>) {
 
 		this._persistentProperties.forEach( prop => {
-			const value = obj[prop.name.slice(1)]
-			if (value) this[prop.name] = value
+			const value = obj[ prop.name.slice(1) ]
+			if ( value ) {
+				if ( value[ '__className' ] ) {
+					const instance = Persistent.classFactory( value[ '__className' ] )()
+					this[ prop.name ] = instance.fromObject( value )
+				}
+				else {
+					this[ prop.name ] = value
+				}
+			}
 		})
 
 		return this
@@ -41,11 +49,22 @@ export class Persistent {
 
 	toObject(): SomeClassProps<this> {
 		const obj: SomeClassProps<this> = {}
+		if ( !this.className ) throw new Error( 'You should register this class prior to streaming it.' )
 
-		this._persistentProperties.forEach(prop => {
-			const value = this[prop.name]
-			obj[prop.name.slice(1)] = value
+		this._persistentProperties.forEach( prop => {
+			const propValue = this[ prop.name ]
+			
+			if ( propValue ) {
+				if ( propValue instanceof Persistent ) {
+					obj[ prop.name.slice(1) ]	= propValue.toObject()
+				}
+				else {
+					obj[ prop.name.slice(1) ] = propValue
+				}
+			}
 		})
+
+		obj[ '__className' ] = this.className
 
 		return obj
 	}
@@ -61,10 +80,30 @@ interface PersistentProperty {
 	fromObjectSpecial?: (obj: any) => any
 }
 
-export function persistent(target: Persistent, property: string) {
-	if (!target['_persistentProperties']) target['_persistentProperties'] = []
-	target['_persistentProperties'].push({ name: property })
+export function persistent( target: Persistent, property: string ) {
+	return persistentParser()( target, property);
 }
+
+export function persistentParser( toTypeParser?: ( val: any )=> any, fromTypeParser?: ( val: any ) => any ) {
+	return function( target: Persistent, property: string ) {
+
+		// from: https://stackoverflow.com/questions/43912168/typescript-decorators-with-inheritance
+		// should work like this in order to avoid propagation of persistent properties from one class to others
+		if ( !Object.getOwnPropertyDescriptor( target, '_persistentProperties' ) ) {
+			if ( target[ '_persistentProperties' ] )	{
+				target[ '_persistentProperties' ]  = [...target[ '_persistentProperties' ] ]
+			}
+			else target[ '_persistentProperties' ]  = []
+		}
+
+		target[ '_persistentProperties' ].push({ 
+			name: property, 
+			toObjectSpecial: toTypeParser, 
+			fromObjectSpecial: fromTypeParser 
+		})
+	}
+}
+
 
 export function persistentCollection(target: Persistent, property: string) {
 	const persistentProperty: PersistentProperty = {

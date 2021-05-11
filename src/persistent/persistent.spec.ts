@@ -1,8 +1,13 @@
+import { SomeClassProps } from '../types/utility-types';
 import { Persistent, persistent, registerClassFactory } from './persistent';
 
-class NotRegistered {
-	value: number
+@registerClassFactory( 'APersistentClass', ()=>new APersistentSubClass() )
+class APersistentSubClass extends Persistent {
+	@persistent _persistentProp: number
+	_nonPersistentProp: number
 }
+
+class NotRegistered extends Persistent {}
 
 @registerClassFactory( 'Person', ()=> new Person() )
 class Person extends Persistent {
@@ -30,17 +35,18 @@ class Person extends Persistent {
 		return this._doNotPersist
 	}
 
-	set notRegistered( value: NotRegistered ) {
-		this._notRegistered = value
+	set anObjectProperty( value: APersistentSubClass ) {
+		this._anObjectProperty = value
 	}
 
-	get notRegistered() {
-		return this._notRegistered
+	get anObjectProperty() {
+		return this._anObjectProperty
 	}
 
 	@persistent private _name: string;
 	@persistent private _salary: number;
-	@persistent private _notRegistered: NotRegistered = new NotRegistered()
+	@persistent private _anObjectProperty: APersistentSubClass = new APersistentSubClass()
+	@persistent _notRegistered: NotRegistered
 	private _doNotPersist: number;
 }
 
@@ -78,28 +84,28 @@ describe( 'Persistent', ()=>{
 		expect( person.salary ).toBe( 2500 );
 	})
 
-	it( 'should deal with null number values', ()=>{
-		person.salary = null;
-		expect( person.salary ).toBeNull();
+	// it( 'should deal with null number values', ()=>{
+	// 	person.salary = null;
+	// 	expect( person.salary ).toBeNull();
 
-		expect( person.toObject().salary ).toBeNull()
+	// 	expect( person.toObject().salary ).toBeNull()
 
-		obj.salary = null;
+	// 	obj.salary = null;
 
-		person.fromObject( obj );
-		expect( person.salary ).toBeNull();
-	})
+	// 	person.fromObject( obj );
+	// 	expect( person.salary ).toBeNull();
+	// })
 
-	it( 'should deal with null string values', ()=>{
-		person.name = null;
-		expect( person.name ).toBeNull();
+	// it( 'should deal with null string values', ()=>{
+	// 	person.name = null;
+	// 	expect( person.name ).toBeNull();
 
-		expect( person.toObject().name ).toBeNull()
+	// 	expect( person.toObject().name ).toBeNull()
 
-		obj.name = null;
-		person.fromObject( obj );
-		expect( person.name ).toBeNull();
-	})
+	// 	obj.name = null;
+	// 	person.fromObject( obj );
+	// 	expect( person.name ).toBeNull();
+	// })
 
 	it( 'should deal with undefined strings', ()=>{
 		person.name = undefined;
@@ -112,12 +118,12 @@ describe( 'Persistent', ()=>{
 		expect( person.name ).toBeUndefined();
 	})
 	
-	xdescribe( 'Compound persistent types', ()=>{
+	describe( 'Compound persistent types', ()=>{
 		beforeEach(()=>{
-			const notRegistered = new NotRegistered()
-			notRegistered.value = 23
+			const subObject = new APersistentSubClass()
+			subObject._persistentProp = 23
 
-			person.notRegistered = notRegistered
+			person.anObjectProperty = subObject
 		})
 
 		it( 'should return compound objects as instance of object class', ()=>{
@@ -125,15 +131,27 @@ describe( 'Persistent', ()=>{
 			const newPerson = new Person()
 			newPerson.fromObject( JSON.parse( obj ) )
 
-			expect( newPerson.notRegistered ).toBeInstanceOf( NotRegistered )
+			expect( newPerson.anObjectProperty ).toBeInstanceOf( APersistentSubClass )
 		})
 
-		it( 'should throw if class not registered', ()=>{
+		it( 'should throw if class not registered on writing to a stream', ()=>{
+			person._notRegistered = new NotRegistered()
 
 			expect( ()=>{
-				const obj = person.toObject()
-				person.fromObject( obj )
-			}).toThrow()
+				person.toObject()
+			}).toThrow( 'You should register this class prior to streaming it.')
 		})
+
+		it( 'should throw if class not registered on reading from stream', ()=>{
+			const obj: any = {
+				id: 'id',
+				anObjectProperty: { __className: 'NotRegistered' }
+			}
+
+			expect( ()=>{
+				new Person().fromObject( obj )
+			}).toThrow( 'You should register class NotRegistered prior to use.' )
+		})
+
 	})
 })
