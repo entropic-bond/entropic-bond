@@ -43,8 +43,17 @@ class Person extends Persistent {
 		return this._anObjectProperty
 	}
 
+	set skills( value: string[] ) {
+		this._skills = value
+	}
+
+	get skills() {
+		return this._skills
+	}
+
 	@persistent private _name: string;
 	@persistent private _salary: number;
+	@persistent private _skills: string[]
 	@persistent private _anObjectProperty: APersistentSubClass = new APersistentSubClass()
 	@persistent _notRegistered: NotRegistered
 	private _doNotPersist: number;
@@ -54,13 +63,15 @@ describe( 'Persistent', ()=>{
 	let person: Person;
 	let obj = {
 		name: 'Lisa',
-		salary: 2500
+		salary: 2500,
+		skills: [ 'lazy', 'messy' ]
 	}
 
 	beforeEach(()=>{
 		person = new Person()
 		person.name = 'Maria'
 		person.salary = 3000;
+		person.skills = [ 'diligent', 'smart' ]
 	});
 
 
@@ -84,29 +95,6 @@ describe( 'Persistent', ()=>{
 		expect( person.salary ).toBe( 2500 );
 	})
 
-	// it( 'should deal with null number values', ()=>{
-	// 	person.salary = null;
-	// 	expect( person.salary ).toBeNull();
-
-	// 	expect( person.toObject().salary ).toBeNull()
-
-	// 	obj.salary = null;
-
-	// 	person.fromObject( obj );
-	// 	expect( person.salary ).toBeNull();
-	// })
-
-	// it( 'should deal with null string values', ()=>{
-	// 	person.name = null;
-	// 	expect( person.name ).toBeNull();
-
-	// 	expect( person.toObject().name ).toBeNull()
-
-	// 	obj.name = null;
-	// 	person.fromObject( obj );
-	// 	expect( person.name ).toBeNull();
-	// })
-
 	it( 'should deal with undefined strings', ()=>{
 		person.name = undefined;
 		expect( person.name ).toBeUndefined();
@@ -117,8 +105,17 @@ describe( 'Persistent', ()=>{
 		person.fromObject( obj );
 		expect( person.name ).toBeUndefined();
 	})
+
+	it( 'should persist array properties', ()=>{
+		expect( person.toObject().skills ).toEqual([ 'diligent', 'smart' ])
+	})
+
+	it( 'should read arrays from stream', ()=>{
+		const newPerson = new Person().fromObject( obj )
+		expect( newPerson.skills ).toEqual([ 'lazy', 'messy' ])
+	})
 	
-	describe( 'Compound persistent types', ()=>{
+	describe( 'Properties instance of Persistent type', ()=>{
 		beforeEach(()=>{
 			const subObject = new APersistentSubClass()
 			subObject._persistentProp = 23
