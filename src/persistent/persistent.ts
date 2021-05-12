@@ -34,12 +34,19 @@ export class Persistent {
 		this._persistentProperties.forEach( prop => {
 			const value = obj[ prop.name.slice(1) ]
 			if ( value ) {
-				if ( value[ '__className' ] ) {
-					const instance = Persistent.classFactory( value[ '__className' ] )()
-					this[ prop.name ] = instance.fromObject( value )
+
+				if ( Array.isArray( value ) ) {
+					this[ prop.name ] = this.fromArrayObject( value )
 				}
 				else {
-					this[ prop.name ] = value
+
+					if ( value[ '__className' ] ) {
+						this[ prop.name ] = this.createFromClassName( value )
+					}
+					else {
+						this[ prop.name ] = value
+					}
+
 				}
 			}
 		})
@@ -53,13 +60,22 @@ export class Persistent {
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
+			const propName = prop.name.slice(1)
 			
 			if ( propValue ) {
-				if ( propValue instanceof Persistent ) {
-					obj[ prop.name.slice(1) ]	= propValue.toObject()
+
+				if ( Array.isArray( propValue ) ) {
+					obj[ propName ] = this.toArrayObject( propValue )
 				}
 				else {
-					obj[ prop.name.slice(1) ] = propValue
+
+					if ( propValue instanceof Persistent ) {
+						obj[ propName ]	= propValue.toObject()
+					}
+					else {
+						obj[ propName ] = propValue
+					}
+
 				}
 			}
 		})
@@ -67,6 +83,25 @@ export class Persistent {
 		obj[ '__className' ] = this.className
 
 		return obj
+	}
+
+	private createFromClassName( value: unknown ) {
+		const instance = Persistent.classFactory( value[ '__className' ] )()
+		return instance.fromObject( value )
+	}
+
+	private toArrayObject( propValue: unknown[]) {
+		return propValue.map( item => {
+			if ( item instanceof Persistent ) return item.toObject()
+			else return item
+		})
+	}
+
+	private fromArrayObject( value: unknown[] ) {
+		return value.map( item => {
+			if ( item[ '__className' ] ) return this.createFromClassName( item )
+			else return item
+		})
 	}
 
 	@persistent private _id: string
