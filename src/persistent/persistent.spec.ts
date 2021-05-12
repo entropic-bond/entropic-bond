@@ -51,10 +51,19 @@ class Person extends Persistent {
 		return this._skills
 	}
 
+	set arrayOfPersistent( value: APersistentSubClass[] ) {
+		this._arrayOfPersistent = value
+	}
+
+	get arrayOfPersistent() {
+		return this._arrayOfPersistent
+	}
+
 	@persistent private _name: string;
 	@persistent private _salary: number;
 	@persistent private _skills: string[]
 	@persistent private _anObjectProperty: APersistentSubClass = new APersistentSubClass()
+	@persistent private _arrayOfPersistent: APersistentSubClass[]
 	@persistent _notRegistered: NotRegistered
 	private _doNotPersist: number;
 }
@@ -119,8 +128,11 @@ describe( 'Persistent', ()=>{
 		beforeEach(()=>{
 			const subObject = new APersistentSubClass()
 			subObject._persistentProp = 23
+			const subObject2 = new APersistentSubClass()
+			subObject._persistentProp = 103
 
 			person.anObjectProperty = subObject
+			person.arrayOfPersistent = [ subObject, subObject2 ]
 		})
 
 		it( 'should return compound objects as instance of object class', ()=>{
@@ -150,5 +162,14 @@ describe( 'Persistent', ()=>{
 			}).toThrow( 'You should register class NotRegistered prior to use.' )
 		})
 
+		it( 'should persist array of Persistent type properties', ()=>{
+			const obj = JSON.stringify( person.toObject() )
+			const newPerson = new Person()
+			newPerson.fromObject( JSON.parse( obj ) )
+
+			expect( newPerson.arrayOfPersistent[0] ).toBeInstanceOf( APersistentSubClass )
+
+		})
+	
 	})
 })
