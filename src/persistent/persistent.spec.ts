@@ -170,6 +170,14 @@ describe( 'Persistent', ()=>{
 			expect( newPerson.arrayOfPersistent[0] ).toBeInstanceOf( APersistentSubClass )
 
 		})
-	
+
+		it( 'should persist array of array of Persistent type properties', ()=>{
+			const obj = JSON.stringify( person.toObject() )
+			const newPerson = new Person()
+			newPerson.fromObject( JSON.parse( obj ) )
+
+			expect( newPerson.arrayOfPersistent[0][0] ).toBeInstanceOf( APersistentSubClass )
+
+		})
 	})
 })
