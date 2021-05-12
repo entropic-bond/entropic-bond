@@ -64,6 +64,15 @@ export class Persistent {
 		if ( obj[ '__className' ] ) {
 			return this.createFromClassName( obj )
 		}
+		if ( typeof obj === 'object' ) {
+			const newObject = {}
+
+			Object.entries( obj ).forEach(
+				([ key, value ]) => newObject[ key ] = this.fromDeepObject( value )
+			)
+
+			return newObject
+		}
 		return obj
 	}
 
@@ -73,6 +82,15 @@ export class Persistent {
 		}
 		if ( value instanceof Persistent ) {
 			return value.toObject()
+		}
+		if ( typeof value === 'object' ) {
+			const newObject = {}
+
+			Object.entries( value ).forEach(
+				([ key, val ]) => newObject[ key ] = this.toDeepObject( val ) 
+			)
+
+			return newObject
 		}
 		return value
 	}
