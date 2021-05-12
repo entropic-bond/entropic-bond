@@ -34,20 +34,7 @@ export class Persistent {
 		this._persistentProperties.forEach( prop => {
 			const value = obj[ prop.name.slice(1) ]
 			if ( value ) {
-
-				if ( Array.isArray( value ) ) {
-					this[ prop.name ] = this.fromArray( value )
-				}
-				else {
-
-					if ( value[ '__className' ] ) {
-						this[ prop.name ] = this.createFromClassName( value )
-					}
-					else {
-						this[ prop.name ] = value
-					}
-
-				}
+				this[ prop.name ] = this.fromDeepObject( value )
 			}
 		})
 
@@ -60,23 +47,8 @@ export class Persistent {
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
-			const propName = prop.name.slice(1)
-			
 			if ( propValue ) {
-
-				if ( Array.isArray( propValue ) ) {
-					obj[ propName ] = this.toArray( propValue )
-				}
-				else {
-
-					if ( propValue instanceof Persistent ) {
-						obj[ propName ]	= propValue.toObject()
-					}
-					else {
-						obj[ propName ] = propValue
-					}
-
-				}
+				obj[ prop.name.slice(1) ] = this.toDeepObject( propValue )
 			}
 		})
 
@@ -85,25 +57,29 @@ export class Persistent {
 		return obj
 	}
 
+	private fromDeepObject( obj: unknown ) {
+		if ( Array.isArray( obj ) ) {
+			return obj.map( item => this.fromDeepObject( item ) )
+		}
+		if ( obj[ '__className' ] ) {
+			return this.createFromClassName( obj )
+		}
+		return obj
+	}
+
+	private toDeepObject( value: unknown ) {
+		if ( Array.isArray( value ) ) {
+			return value.map( item => this.toDeepObject( item ) )
+		}
+		if ( value instanceof Persistent ) {
+			return value.toObject()
+		}
+		return value
+	}
+
 	private createFromClassName( value: unknown ) {
 		const instance = Persistent.classFactory( value[ '__className' ] )()
 		return instance.fromObject( value )
-	}
-
-	private toArray( propValue: unknown[]) {
-		return propValue.map( item => {
-			if ( item instanceof Persistent ) return item.toObject()
-			if ( Array.isArray( item ) ) return this.toArray( item )
-			return item
-		})
-	}
-
-	private fromArray( value: unknown[] ) {
-		return value.map( item => {
-			if ( item[ '__className' ] ) return this.createFromClassName( item )
-			if ( Array.isArray( item ) ) return this.fromArray( item )
-			return item
-		})
 	}
 
 	@persistent private _id: string
