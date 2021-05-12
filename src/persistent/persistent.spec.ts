@@ -1,9 +1,9 @@
-import { SomeClassProps } from '../types/utility-types';
 import { Persistent, persistent, registerClassFactory } from './persistent';
 
 @registerClassFactory( 'APersistentClass', ()=>new APersistentSubClass() )
 class APersistentSubClass extends Persistent {
 	@persistent _persistentProp: number
+	@persistent _persistentArray: APersistentSubClass[]
 	_nonPersistentProp: number
 }
 
@@ -65,6 +65,8 @@ class Person extends Persistent {
 	@persistent private _anObjectProperty: APersistentSubClass = new APersistentSubClass()
 	@persistent private _arrayOfPersistent: APersistentSubClass[]
 	@persistent _notRegistered: NotRegistered
+	@persistent _arrayOfArray: number[][]
+	@persistent _arrayOfPersistentArray: APersistentSubClass[][]
 	private _doNotPersist: number;
 }
 
@@ -73,14 +75,16 @@ describe( 'Persistent', ()=>{
 	let obj = {
 		name: 'Lisa',
 		salary: 2500,
-		skills: [ 'lazy', 'messy' ]
+		skills: [ 'lazy', 'messy' ],
+		arrayOfArray: [ [5,6], [7,8] ]
 	}
 
 	beforeEach(()=>{
 		person = new Person()
 		person.name = 'Maria'
-		person.salary = 3000;
+		person.salary = 3000
 		person.skills = [ 'diligent', 'smart' ]
+		person._arrayOfArray = [ [1,2], [3,4] ]
 	});
 
 
@@ -123,6 +127,16 @@ describe( 'Persistent', ()=>{
 		const newPerson = new Person().fromObject( obj )
 		expect( newPerson.skills ).toEqual([ 'lazy', 'messy' ])
 	})
+
+	it( 'should persist array of array properties', ()=>{
+		const obj: any = person.toObject()
+		expect( obj.arrayOfArray ).toEqual([ [1,2], [3,4] ])
+	})
+
+	it( 'should read arrays of array from stream', ()=>{
+		const newPerson = new Person().fromObject( obj )
+		expect( newPerson._arrayOfArray ).toEqual([ [5,6], [7,8] ])
+	})
 	
 	describe( 'Properties instance of Persistent type', ()=>{
 		beforeEach(()=>{
@@ -131,8 +145,14 @@ describe( 'Persistent', ()=>{
 			const subObject2 = new APersistentSubClass()
 			subObject._persistentProp = 103
 
+			const a = new APersistentSubClass(), b = new APersistentSubClass()
+			a._persistentProp = 205
+			b._persistentProp = 206
+			subObject._persistentArray = [ a, b ]
+
 			person.anObjectProperty = subObject
 			person.arrayOfPersistent = [ subObject, subObject2 ]
+			person._arrayOfPersistentArray = [ [ subObject, subObject2 ], [ subObject2, subObject ] ]
 		})
 
 		it( 'should return compound objects as instance of object class', ()=>{
@@ -171,13 +191,21 @@ describe( 'Persistent', ()=>{
 
 		})
 
+		it( 'should persist persistent array of array of Persistent type properties', ()=>{
+			const obj = JSON.stringify( person.toObject() )
+			const newPerson = new Person()
+			newPerson.fromObject( JSON.parse( obj ) )
+
+			expect( newPerson.arrayOfPersistent[0]._persistentArray[0] ).toBeInstanceOf( APersistentSubClass )
+
+		})
+
 		it( 'should persist array of array of Persistent type properties', ()=>{
 			const obj = JSON.stringify( person.toObject() )
 			const newPerson = new Person()
 			newPerson.fromObject( JSON.parse( obj ) )
 
-			expect( newPerson.arrayOfPersistent[0][0] ).toBeInstanceOf( APersistentSubClass )
-
+			expect( newPerson._arrayOfPersistentArray[0][0] ).toBeInstanceOf( APersistentSubClass )
 		})
 	})
 })

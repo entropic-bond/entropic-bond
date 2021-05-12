@@ -36,7 +36,7 @@ export class Persistent {
 			if ( value ) {
 
 				if ( Array.isArray( value ) ) {
-					this[ prop.name ] = this.fromArrayObject( value )
+					this[ prop.name ] = this.fromArray( value )
 				}
 				else {
 
@@ -65,7 +65,7 @@ export class Persistent {
 			if ( propValue ) {
 
 				if ( Array.isArray( propValue ) ) {
-					obj[ propName ] = this.toArrayObject( propValue )
+					obj[ propName ] = this.toArray( propValue )
 				}
 				else {
 
@@ -90,17 +90,19 @@ export class Persistent {
 		return instance.fromObject( value )
 	}
 
-	private toArrayObject( propValue: unknown[]) {
+	private toArray( propValue: unknown[]) {
 		return propValue.map( item => {
 			if ( item instanceof Persistent ) return item.toObject()
-			else return item
+			if ( Array.isArray( item ) ) return this.toArray( item )
+			return item
 		})
 	}
 
-	private fromArrayObject( value: unknown[] ) {
+	private fromArray( value: unknown[] ) {
 		return value.map( item => {
 			if ( item[ '__className' ] ) return this.createFromClassName( item )
-			else return item
+			if ( Array.isArray( item ) ) return this.fromArray( item )
+			return item
 		})
 	}
 
