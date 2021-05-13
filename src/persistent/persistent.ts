@@ -49,6 +49,7 @@ export class Persistent {
 			const propValue = this[ prop.name ]
 			if ( propValue ) {
 				obj[ prop.name.slice(1) ] = this.toDeepObject( propValue )
+				if ( prop.isCollection ) obj[ prop.name.slice(1) ].__isCollection = true
 			}
 		})
 
@@ -107,6 +108,7 @@ export class Persistent {
 
 interface PersistentProperty {
 	name: string
+	isCollection?: boolean
 	toObjectSpecial?: (classObj: any) => any
 	fromObjectSpecial?: (obj: any) => any
 }
@@ -115,7 +117,7 @@ export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property);
 }
 
-export function persistentParser( toTypeParser?: ( val: any )=> any, fromTypeParser?: ( val: any ) => any ) {
+export function persistentParser( options?: Partial<PersistentProperty> ) {
 	return function( target: Persistent, property: string ) {
 
 		// from: https://stackoverflow.com/questions/43912168/typescript-decorators-with-inheritance
@@ -129,22 +131,13 @@ export function persistentParser( toTypeParser?: ( val: any )=> any, fromTypePar
 
 		target[ '_persistentProperties' ].push({ 
 			name: property, 
-			toObjectSpecial: toTypeParser, 
-			fromObjectSpecial: fromTypeParser 
+			...options
 		})
 	}
 }
 
-
 export function persistentCollection(target: Persistent, property: string) {
-	const persistentProperty: PersistentProperty = {
-		name: property,
-		toObjectSpecial: (collection: any[]) => {
-			collection.forEach(item => {
-
-			})
-		}
-	}
+	return persistentParser({ isCollection: true })( target, property )
 }
 
 export function registerClassFactory(className: string, factory: PersistentFactory) {

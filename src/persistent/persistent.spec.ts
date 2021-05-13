@@ -1,4 +1,4 @@
-import { Persistent, persistent, registerClassFactory } from './persistent';
+import { Persistent, persistent, persistentCollection, registerClassFactory } from './persistent';
 
 @registerClassFactory( 'APersistentClass', ()=>new APersistentSubClass() )
 class APersistentSubClass extends Persistent {
@@ -59,6 +59,14 @@ class Person extends Persistent {
 		return this._arrayOfPersistent
 	}
 
+	set subCollection( value: APersistentSubClass ) {
+		this._subCollection = value
+	}
+
+	get subCollection() {
+		return this._subCollection
+	}
+
 	@persistent private _name: string;
 	@persistent private _salary: number;
 	@persistent private _skills: string[]
@@ -68,6 +76,7 @@ class Person extends Persistent {
 	@persistent _arrayOfArray: number[][]
 	@persistent _arrayOfPersistentArray: APersistentSubClass[][]
 	@persistent _plainObject: { [ key: string ]: unknown }
+	@persistentCollection _subCollection: APersistentSubClass
 	private _doNotPersist: number;
 }
 
@@ -94,6 +103,8 @@ describe( 'Persistent', ()=>{
 			prop1: 'aProp1',
 			prop2: 1034
 		}
+		person.subCollection = new APersistentSubClass()
+		person.subCollection._persistentProp = 345
 	});
 
 
@@ -243,6 +254,14 @@ describe( 'Persistent', ()=>{
 			newPerson.fromObject( JSON.parse( obj ) )
 
 			expect( newPerson._plainObject.prop1 ).toBeInstanceOf( APersistentSubClass )
+		})
+	})
+
+	describe( 'SubCollection', ()=>{
+		it( 'should mark subcollection object as subcollection', ()=>{
+			const obj = person.toObject()
+
+			expect( obj.subCollection[ '__isCollection' ] ).toBeTruthy()
 		})
 	})
 })
