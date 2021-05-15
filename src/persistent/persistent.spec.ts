@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentCollection, registerClassFactory } from './persistent';
+import { Persistent, persistent, persistentDoc, registerClassFactory } from './persistent';
 
 @registerClassFactory( 'APersistentClass', ()=>new APersistentSubClass() )
 class APersistentSubClass extends Persistent {
@@ -59,12 +59,12 @@ class Person extends Persistent {
 		return this._arrayOfPersistent
 	}
 
-	set subCollection( value: APersistentSubClass ) {
-		this._subCollection = value
+	set document( value: APersistentSubClass ) {
+		this._document = value
 	}
 
-	get subCollection() {
-		return this._subCollection
+	get document() {
+		return this._document
 	}
 
 	@persistent private _name: string;
@@ -76,7 +76,7 @@ class Person extends Persistent {
 	@persistent _arrayOfArray: number[][]
 	@persistent _arrayOfPersistentArray: APersistentSubClass[][]
 	@persistent _plainObject: { [ key: string ]: unknown }
-	@persistentCollection _subCollection: APersistentSubClass
+	@persistentDoc _document: APersistentSubClass
 	private _doNotPersist: number;
 }
 
@@ -103,10 +103,9 @@ describe( 'Persistent', ()=>{
 			prop1: 'aProp1',
 			prop2: 1034
 		}
-		person.subCollection = new APersistentSubClass()
-		person.subCollection._persistentProp = 345
+		person.document = new APersistentSubClass()
+		person.document._persistentProp = 345
 	});
-
 
 	it( 'should provide a flat object with persistent properties', ()=>{
 		expect( person.name ).toEqual( 'Maria' );
@@ -257,11 +256,11 @@ describe( 'Persistent', ()=>{
 		})
 	})
 
-	describe( 'SubCollection', ()=>{
-		it( 'should mark subcollection object as subcollection', ()=>{
+	describe( 'Document', ()=>{
+		it( 'should create an object at root level', ()=>{
 			const obj = person.toObject()
 
-			expect( obj.subCollection[ '__isCollection' ] ).toBeTruthy()
+			expect( obj.document._persistentProp ).toEqual( 345 )
 		})
 	})
 })

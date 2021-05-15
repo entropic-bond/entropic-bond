@@ -7,6 +7,10 @@ interface FactoryMap {
 	[id: string]: PersistentFactory
 }
 
+interface ObjectProps<T> {
+	[ collection: string ]: SomeClassProps<T> | unknown
+}
+
 export class Persistent {
 	static registerFactory<T extends Persistent>(className: string, factory: () => T) {
 		this._factoryMap[ className ] = factory
@@ -41,15 +45,30 @@ export class Persistent {
 		return this
 	}
 
-	toObject(): SomeClassProps<this> {
+	toObject(): ObjectProps<this> {
+		const rootObj: ObjectProps<this> = {}
+		rootObj[ this.className ] = this.toObj( rootObj )
+		return rootObj
+	}
+
+	private toObj( rootObj: ObjectProps<this> ): SomeClassProps<this> {
 		const obj: SomeClassProps<this> = {}
 		if ( !this.className ) throw new Error( 'You should register this class prior to streaming it.' )
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
 			if ( propValue ) {
-				obj[ prop.name.slice(1) ] = this.toDeepObject( propValue )
-				if ( prop.isCollection ) obj[ prop.name.slice(1) ].__isCollection = true
+				if ( prop.isDocument ) {
+					if ( !obj[ prop.name.slice(1) ] ) obj[ prop.name.slice(1) ] = {}
+					obj[ prop.name.slice(1) ].__document = { 
+						collection: propValue.className,
+						documentId: propValue.id
+					}
+					rootObj[ propValue.className ] = this.toDeepObj( propValue, rootObj )
+				}
+				else {
+					obj[ prop.name.slice(1) ] = this.toDeepObj( propValue, rootObj )
+				}
 			}
 		})
 
@@ -77,18 +96,18 @@ export class Persistent {
 		return obj
 	}
 
-	private toDeepObject( value: unknown ) {
+	private toDeepObj( value: unknown, rootObj: ObjectProps<this> ) {
 		if ( Array.isArray( value ) ) {
-			return value.map( item => this.toDeepObject( item ) )
+			return value.map( item => this.toDeepObj( item, rootObj ) )
 		}
 		if ( value instanceof Persistent ) {
-			return value.toObject()
+			return value.toObj( rootObj )
 		}
 		if ( typeof value === 'object' ) {
 			const newObject = {}
 
 			Object.entries( value ).forEach(
-				([ key, val ]) => newObject[ key ] = this.toDeepObject( val ) 
+				([ key, val ]) => newObject[ key ] = this.toDeepObj( val, rootObj ) 
 			)
 
 			return newObject
@@ -108,7 +127,8 @@ export class Persistent {
 
 interface PersistentProperty {
 	name: string
-	isCollection?: boolean
+	// isCollection?: boolean
+	isDocument?: boolean
 	toObjectSpecial?: (classObj: any) => any
 	fromObjectSpecial?: (obj: any) => any
 }
@@ -136,9 +156,17 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 	}
 }
 
-export function persistentCollection(target: Persistent, property: string) {
-	return persistentParser({ isCollection: true })( target, property )
+// export function persistentCollection(target: Persistent, property: string) {
+// 	return persistentParser({ isCollection: true })( target, property )
+// }
+
+export function persistentDoc(target: Persistent, property: string) {
+	return persistentParser({ isDocument: true })( target, property )
 }
+
+// export function persistentSubCollection(target: Persistent, property: string) {
+// 	return persistentParser({ isSubCollection: true })( target, property )
+// }
 
 export function registerClassFactory(className: string, factory: PersistentFactory) {
 	Persistent.registerFactory(className, factory)
@@ -146,4 +174,7 @@ export function registerClassFactory(className: string, factory: PersistentFacto
 		constructor.prototype.__className = className
 	}
 }
+
+
+
 
