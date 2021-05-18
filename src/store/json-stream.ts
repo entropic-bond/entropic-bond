@@ -1,8 +1,10 @@
-import { DataSource, QueryObject, Document } from "./data-source";
+import { Persistent } from '../persistent/persistent';
+import { SomeClassProps } from '../types/utility-types';
+import { DataSource, QueryObject, CollectionsObject, PersistentObject } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
-		[ documentId: string ]: Document
+		[ documentId: string ]: SomeClassProps<Persistent>
 	}
 }
 
@@ -15,16 +17,22 @@ export class JsonStream implements DataSource {
 		this._jsonRawData = rawDataStore;
 	}
 
-	findById( id: string, collectionName: string ): Promise< Document > {
+	findById( id: string, collectionName: string ): Promise< PersistentObject > {
 		return Promise.resolve( this._jsonRawData[ collectionName ][ id ] )
 	}
 
-	save( object: Document, collectionName: string ): Promise< void > {
-		this._jsonRawData[ collectionName ][ object.id ] = object
+	save( object: CollectionsObject ): Promise< void > {
+		object.__rootCollections.forEach( collection => {
+			console.log( collection )
+			console.log( this._jsonRawData[ collection.className ] )
+			if ( this._jsonRawData[ collection.className ] ) this._jsonRawData[ collection.className ] = {}
+			this._jsonRawData[ collection.className ][ collection.id ] = collection
+		})
+
 		return Promise.resolve()
 	}
 
-	find( queryObject: QueryObject<Document>, collectionName: string ): Promise< Document[] > {
+	find( queryObject: QueryObject<PersistentObject>, collectionName: string ): Promise< PersistentObject[] > {
 		const matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
 			doc => this.isQueryMatched( doc, queryObject )
 		)
@@ -40,7 +48,7 @@ export class JsonStream implements DataSource {
 		return this._jsonRawData;
 	}
 
-	private isQueryMatched( doc: Document, queryObject: QueryObject<Document> ) {
+	private isQueryMatched( doc: PersistentObject, queryObject: QueryObject<PersistentObject> ) {
 		const queryOperator = {
 			'==': <T>(a: T, b: T) => a === b,
 			'!=': <T>(a: T, b: T) => a !== b,

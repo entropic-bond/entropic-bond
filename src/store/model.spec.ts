@@ -7,7 +7,7 @@ import testData from './mocks/mock-data.json'
 describe('Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
-	let rawData: JsonRawData
+	const rawData = ()=> (<JsonStream>Store.dataSource ).rawData 
 
 	beforeEach(()=> {
 		Store.useDataSource( new JsonStream( JSON.parse( JSON.stringify( testData ) ) ) )
@@ -21,7 +21,6 @@ describe('Model', ()=>{
 		testUser.age = 35
 		testUser.skills = [ 'lazy', 'dirty' ]
 
-		rawData = (<JsonStream>Store.dataSource ).rawData
 	})
 
 	it( 'should get model from class name string and class instance', ()=>{
@@ -43,7 +42,7 @@ describe('Model', ()=>{
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
-		expect( rawData[ 'TestUser' ][ testUser.id ] ).toEqual(	expect.objectContaining({ 
+		expect( rawData()[ 'TestUser' ][ testUser.id ] ).toEqual(	expect.objectContaining({ 
 			name: { 
 				firstName: 'testUserFirstName',
 				lastName: 'testUserLastName'
@@ -52,7 +51,7 @@ describe('Model', ()=>{
 	})	
 	
 	it( 'should delete a document by id', async ()=>{
-		expect( rawData[ 'TestUser' ][ 'user1'] ).toBeDefined()
+		expect( rawData()[ 'TestUser' ][ 'user1'] ).toBeDefined()
 		await model.delete( 'user1' )
 
 		expect( rawData[ 'TestUser' ][ 'user1' ] ).toBeUndefined()

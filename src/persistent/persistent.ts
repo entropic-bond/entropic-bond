@@ -4,15 +4,17 @@ import { SomeClassProps } from '../types/utility-types';
 export type PersistentFactory = () => Persistent
 
 interface FactoryMap {
-	[id: string]: PersistentFactory
+	[ id: string ]: PersistentFactory
 }
 
-interface ObjectProps<T> {
-	[ collection: string ]: SomeClassProps<T> | unknown
+type Collections = SomeClassProps<Persistent>[]
+
+export type ObjectWithCollections<T extends Persistent> = SomeClassProps<T> & {
+	__rootCollections: Collections
 }
 
 export class Persistent {
-	static registerFactory<T extends Persistent>(className: string, factory: () => T) {
+	static registerFactory<T extends Persistent>( className: string, factory: () => T ) {
 		this._factoryMap[ className ] = factory
 	}
 
@@ -33,10 +35,10 @@ export class Persistent {
 		return this._id;
 	}
 
-	fromObject(obj: SomeClassProps<this>) {
+	fromObject( obj: SomeClassProps<this> ) {
 
 		this._persistentProperties.forEach( prop => {
-			const value = obj[ prop.name.slice(1) ]
+			const value = obj[ prop.name.slice( 1 ) ]
 			if ( value ) {
 				this[ prop.name ] = this.fromDeepObject( value )
 			}
@@ -45,13 +47,18 @@ export class Persistent {
 		return this
 	}
 
-	toObject(): ObjectProps<this> {
-		const rootObj: ObjectProps<this> = {}
-		rootObj[ this.className ] = this.toObj( rootObj )
-		return rootObj
+	toObject(): ObjectWithCollections<this> {
+		const rootCollections = []
+		const obj = this.toObj( rootCollections )
+		rootCollections.push( obj )
+
+		return {
+			...obj,
+			__rootCollections: rootCollections
+		}
 	}
 
-	private toObj( rootObj: ObjectProps<this> ): SomeClassProps<this> {
+	private toObj( rootCollections: Collections ): SomeClassProps<this> {
 		const obj: SomeClassProps<this> = {}
 		if ( !this.className ) throw new Error( 'You should register this class prior to streaming it.' )
 
@@ -59,18 +66,18 @@ export class Persistent {
 			const propValue = this[ prop.name ]
 			if ( propValue ) {
 				if ( prop.isDocument ) {
-					if ( !obj[ prop.name.slice(1) ] ) obj[ prop.name.slice(1) ] = {}
-					obj[ prop.name.slice(1) ].__document = { 
+					if ( !obj[ prop.name.slice( 1 ) ] ) obj[ prop.name.slice( 1 ) ] = {}
+					obj[ prop.name.slice( 1 ) ].__document = {
 						collection: propValue.className,
 						documentId: propValue.id
 					}
-					rootObj[ propValue.className ] = this.toDeepObj( propValue, rootObj )
+					rootCollections.push( this.toDeepObj( propValue, rootCollections ) )
 				}
 				else {
-					obj[ prop.name.slice(1) ] = this.toDeepObj( propValue, rootObj )
+					obj[ prop.name.slice( 1 ) ] = this.toDeepObj( propValue, rootCollections )
 				}
 			}
-		})
+		} )
 
 		obj[ '__className' ] = this.className
 
@@ -88,7 +95,7 @@ export class Persistent {
 			const newObject = {}
 
 			Object.entries( obj ).forEach(
-				([ key, value ]) => newObject[ key ] = this.fromDeepObject( value )
+				( [ key, value ] ) => newObject[ key ] = this.fromDeepObject( value )
 			)
 
 			return newObject
@@ -96,18 +103,18 @@ export class Persistent {
 		return obj
 	}
 
-	private toDeepObj( value: unknown, rootObj: ObjectProps<this> ) {
+	private toDeepObj( value: unknown, rootCollections: Collections ) {
 		if ( Array.isArray( value ) ) {
-			return value.map( item => this.toDeepObj( item, rootObj ) )
+			return value.map( item => this.toDeepObj( item, rootCollections ) )
 		}
 		if ( value instanceof Persistent ) {
-			return value.toObj( rootObj )
+			return value.toObj( rootCollections )
 		}
 		if ( typeof value === 'object' ) {
 			const newObject = {}
 
 			Object.entries( value ).forEach(
-				([ key, val ]) => newObject[ key ] = this.toDeepObj( val, rootObj ) 
+				( [ key, val ] ) => newObject[ key ] = this.toDeepObj( val, rootCollections )
 			)
 
 			return newObject
@@ -129,30 +136,30 @@ interface PersistentProperty {
 	name: string
 	// isCollection?: boolean
 	isDocument?: boolean
-	toObjectSpecial?: (classObj: any) => any
-	fromObjectSpecial?: (obj: any) => any
+	toObjectSpecial?: ( classObj: any ) => any
+	fromObjectSpecial?: ( obj: any ) => any
 }
 
 export function persistent( target: Persistent, property: string ) {
-	return persistentParser()( target, property);
+	return persistentParser()( target, property );
 }
 
 export function persistentParser( options?: Partial<PersistentProperty> ) {
-	return function( target: Persistent, property: string ) {
+	return function ( target: Persistent, property: string ) {
 
 		// from: https://stackoverflow.com/questions/43912168/typescript-decorators-with-inheritance
 		// should work like this in order to avoid propagation of persistent properties from one class to others
 		if ( !Object.getOwnPropertyDescriptor( target, '_persistentProperties' ) ) {
-			if ( target[ '_persistentProperties' ] )	{
-				target[ '_persistentProperties' ]  = [...target[ '_persistentProperties' ] ]
+			if ( target[ '_persistentProperties' ] ) {
+				target[ '_persistentProperties' ] = [ ...target[ '_persistentProperties' ] ]
 			}
-			else target[ '_persistentProperties' ]  = []
+			else target[ '_persistentProperties' ] = []
 		}
 
-		target[ '_persistentProperties' ].push({ 
-			name: property, 
+		target[ '_persistentProperties' ].push( {
+			name: property,
 			...options
-		})
+		} )
 	}
 }
 
@@ -160,17 +167,17 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 // 	return persistentParser({ isCollection: true })( target, property )
 // }
 
-export function persistentDoc(target: Persistent, property: string) {
-	return persistentParser({ isDocument: true })( target, property )
+export function persistentDoc( target: Persistent, property: string ) {
+	return persistentParser( { isDocument: true } )( target, property )
 }
 
 // export function persistentSubCollection(target: Persistent, property: string) {
 // 	return persistentParser({ isSubCollection: true })( target, property )
 // }
 
-export function registerClassFactory(className: string, factory: PersistentFactory) {
-	Persistent.registerFactory(className, factory)
-	return (constructor: Function) => {
+export function registerClassFactory( className: string, factory: PersistentFactory ) {
+	Persistent.registerFactory( className, factory )
+	return ( constructor: Function ) => {
 		constructor.prototype.__className = className
 	}
 }

@@ -1,5 +1,5 @@
 import { Persistent, PersistentFactory } from '../persistent/persistent'
-import { ClassProps, SomeClassProps } from '../types/utility-types'
+import { ClassProps } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject } from './data-source'
 
 export class Model<T extends Persistent>{
@@ -23,8 +23,8 @@ export class Model<T extends Persistent>{
 	
 	save( object: T ): Promise<void> {
 		return new Promise<void>( ( resolve, reject ) => {
-			this._stream.save( object as any, this.persistentClassName ) 
-			.then( data => resolve() )
+			this._stream.save( object.toObject() ) 
+			.then( () => resolve() )
 			.catch( error => reject( error ) )
 		})
 	}

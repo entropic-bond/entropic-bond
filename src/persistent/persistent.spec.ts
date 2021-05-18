@@ -1,7 +1,9 @@
+import { SomeClassProps } from '../types/utility-types';
 import { Persistent, persistent, persistentDoc, registerClassFactory } from './persistent';
 
-@registerClassFactory( 'APersistentClass', ()=>new APersistentSubClass() )
+@registerClassFactory( 'APersistentSubClass', () => new APersistentSubClass() )
 class APersistentSubClass extends Persistent {
+	get persistentProp() { return this.persistentProp }
 	@persistent _persistentProp: number
 	@persistent _persistentArray: APersistentSubClass[]
 	_nonPersistentProp: number
@@ -9,7 +11,7 @@ class APersistentSubClass extends Persistent {
 
 class NotRegistered extends Persistent {}
 
-@registerClassFactory( 'Person', ()=> new Person() )
+@registerClassFactory( 'Person', () => new Person() )
 class Person extends Persistent {
 	set name( value: string ) {
 		this._name = value
@@ -43,7 +45,7 @@ class Person extends Persistent {
 		return this._anObjectProperty
 	}
 
-	set skills( value: string[] ) {
+	set skills( value: string[]) {
 		this._skills = value
 	}
 
@@ -51,7 +53,7 @@ class Person extends Persistent {
 		return this._skills
 	}
 
-	set arrayOfPersistent( value: APersistentSubClass[] ) {
+	set arrayOfPersistent( value: APersistentSubClass[]) {
 		this._arrayOfPersistent = value
 	}
 
@@ -86,7 +88,7 @@ describe( 'Persistent', ()=>{
 		name: 'Lisa',
 		salary: 2500,
 		skills: [ 'lazy', 'messy' ],
-		arrayOfArray: [ [5,6], [7,8] ],
+		arrayOfArray: [ [ 5, 6 ], [ 7, 8 ] ],
 		plainObject: {
 			prop1: 'prop1',
 			prop2: 3
@@ -98,13 +100,11 @@ describe( 'Persistent', ()=>{
 		person.name = 'Maria'
 		person.salary = 3000
 		person.skills = [ 'diligent', 'smart' ]
-		person._arrayOfArray = [ [1,2], [3,4] ]
+		person._arrayOfArray = [ [ 1, 2 ], [ 3, 4 ] ]
 		person._plainObject = {
 			prop1: 'aProp1',
 			prop2: 1034
 		}
-		person.document = new APersistentSubClass()
-		person.document._persistentProp = 345
 	});
 
 	it( 'should provide a flat object with persistent properties', ()=>{
@@ -149,14 +149,14 @@ describe( 'Persistent', ()=>{
 
 	it( 'should persist array of array properties', ()=>{
 		const obj: any = person.toObject()
-		expect( obj.arrayOfArray ).toEqual([ [1,2], [3,4] ])
+		expect( obj.arrayOfArray ).toEqual([ [ 1, 2 ], [ 3, 4 ] ])
 	})
 
 	it( 'should read arrays of array from stream', ()=>{
 		const newPerson = new Person().fromObject( obj )
-		expect( newPerson._arrayOfArray ).toEqual([ [5,6], [7,8] ])
+		expect( newPerson._arrayOfArray ).toEqual([ [ 5, 6 ], [ 7, 8 ] ])
 	})
-	
+
 	it( 'should persist plain object properties', ()=>{
 		const obj: any = person.toObject()
 		expect( obj.plainObject ).toEqual({
@@ -205,9 +205,9 @@ describe( 'Persistent', ()=>{
 		it( 'should throw if class not registered on writing to a stream', ()=>{
 			person._notRegistered = new NotRegistered()
 
-			expect( ()=>{
+			expect(()=>{
 				person.toObject()
-			}).toThrow( 'You should register this class prior to streaming it.')
+			}).toThrow( 'You should register this class prior to streaming it.' )
 		})
 
 		it( 'should throw if class not registered on reading from stream', ()=>{
@@ -216,7 +216,7 @@ describe( 'Persistent', ()=>{
 				anObjectProperty: { __className: 'NotRegistered' }
 			}
 
-			expect( ()=>{
+			expect(()=>{
 				new Person().fromObject( obj )
 			}).toThrow( 'You should register class NotRegistered prior to use.' )
 		})
@@ -226,7 +226,7 @@ describe( 'Persistent', ()=>{
 			const newPerson = new Person()
 			newPerson.fromObject( JSON.parse( obj ) )
 
-			expect( newPerson.arrayOfPersistent[0] ).toBeInstanceOf( APersistentSubClass )
+			expect( newPerson.arrayOfPersistent[ 0 ] ).toBeInstanceOf( APersistentSubClass )
 
 		})
 
@@ -235,7 +235,7 @@ describe( 'Persistent', ()=>{
 			const newPerson = new Person()
 			newPerson.fromObject( JSON.parse( obj ) )
 
-			expect( newPerson.arrayOfPersistent[0]._persistentArray[0] ).toBeInstanceOf( APersistentSubClass )
+			expect( newPerson.arrayOfPersistent[ 0 ]._persistentArray[ 0 ]).toBeInstanceOf( APersistentSubClass )
 
 		})
 
@@ -244,7 +244,7 @@ describe( 'Persistent', ()=>{
 			const newPerson = new Person()
 			newPerson.fromObject( JSON.parse( obj ) )
 
-			expect( newPerson._arrayOfPersistentArray[0][0] ).toBeInstanceOf( APersistentSubClass )
+			expect( newPerson._arrayOfPersistentArray[ 0 ][ 0 ]).toBeInstanceOf( APersistentSubClass )
 		})
 
 		it( 'should persist properties of type Persistent in plain object', ()=>{
@@ -257,10 +257,15 @@ describe( 'Persistent', ()=>{
 	})
 
 	describe( 'Document', ()=>{
-		it( 'should create an object at root level', ()=>{
-			const obj = person.toObject()
+		beforeEach(()=>{
+			person.document = new APersistentSubClass()
+			person.document._persistentProp = 345
+		})
 
-			expect( obj.document._persistentProp ).toEqual( 345 )
+		it( 'should create an object at root level', ()=>{
+			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 0 ] as SomeClassProps<APersistentSubClass>
+
+			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 345 )
 		})
 	})
 })
