@@ -1,10 +1,10 @@
-import { JsonRawData, JsonStream } from './json-stream'
+import { JsonStream } from './json-stream'
 import { TestUser } from './mocks/test-user'
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
 
-describe('Model', ()=>{
+describe( 'Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
 	const rawData = ()=> (<JsonStream>Store.dataSource ).rawData 
@@ -54,7 +54,7 @@ describe('Model', ()=>{
 		expect( rawData()[ 'TestUser' ][ 'user1'] ).toBeDefined()
 		await model.delete( 'user1' )
 
-		expect( rawData[ 'TestUser' ][ 'user1' ] ).toBeUndefined()
+		expect( rawData()[ 'TestUser' ][ 'user1' ] ).toBeUndefined()
 	})
 
 	describe( 'Generic find', ()=>{

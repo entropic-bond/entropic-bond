@@ -11,7 +11,7 @@ export class Model<T extends Persistent>{
 		this._stream = stream
 	}
 
-	findById( id: string ): Promise< T > {
+	findById( id: string ): Promise<T> {
 		return new Promise<T>( ( resolve, reject ) => {
 			this._stream.findById( id, this.persistentClassName )
 				.then( data => resolve(  

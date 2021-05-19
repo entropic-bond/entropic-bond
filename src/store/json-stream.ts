@@ -1,10 +1,9 @@
-import { Persistent } from '../persistent/persistent';
-import { SomeClassProps } from '../types/utility-types';
-import { DataSource, QueryObject, CollectionsObject, PersistentObject } from "./data-source";
+import { Persistent, PersistentObject } from '../persistent/persistent';
+import { CollectionsDocument, DataSource, DocumentObject, QueryObject } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
-		[ documentId: string ]: SomeClassProps<Persistent>
+		[ documentId: string ]: PersistentObject<Persistent>
 	}
 }
 
@@ -17,22 +16,20 @@ export class JsonStream implements DataSource {
 		this._jsonRawData = rawDataStore;
 	}
 
-	findById( id: string, collectionName: string ): Promise< PersistentObject > {
+	findById( id: string, collectionName: string ): Promise< DocumentObject > {
 		return Promise.resolve( this._jsonRawData[ collectionName ][ id ] )
 	}
 
-	save( object: CollectionsObject ): Promise< void > {
+	save( object: CollectionsDocument ): Promise< void > {
 		object.__rootCollections.forEach( collection => {
-			console.log( collection )
-			console.log( this._jsonRawData[ collection.className ] )
-			if ( this._jsonRawData[ collection.className ] ) this._jsonRawData[ collection.className ] = {}
-			this._jsonRawData[ collection.className ][ collection.id ] = collection
+			if ( this._jsonRawData[ collection.__className ] ) this._jsonRawData[ collection.__className ] = {}
+			this._jsonRawData[ collection.__className ][ collection.id ] = collection
 		})
 
 		return Promise.resolve()
 	}
 
-	find( queryObject: QueryObject<PersistentObject>, collectionName: string ): Promise< PersistentObject[] > {
+	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
 		const matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
 			doc => this.isQueryMatched( doc, queryObject )
 		)
@@ -48,7 +45,7 @@ export class JsonStream implements DataSource {
 		return this._jsonRawData;
 	}
 
-	private isQueryMatched( doc: PersistentObject, queryObject: QueryObject<PersistentObject> ) {
+	private isQueryMatched( doc: DocumentObject, queryObject: QueryObject<DocumentObject> ) {
 		const queryOperator = {
 			'==': <T>(a: T, b: T) => a === b,
 			'!=': <T>(a: T, b: T) => a !== b,

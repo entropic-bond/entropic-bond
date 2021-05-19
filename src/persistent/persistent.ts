@@ -7,9 +7,13 @@ interface FactoryMap {
 	[ id: string ]: PersistentFactory
 }
 
-type Collections = SomeClassProps<Persistent>[]
+export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
+	__className?: string
+}
 
-export type ObjectWithCollections<T extends Persistent> = SomeClassProps<T> & {
+type Collections = PersistentObject<Persistent>[]
+
+export type PersistentCollections<T extends Persistent> = PersistentObject<T> & {
 	__rootCollections: Collections
 }
 
@@ -35,7 +39,7 @@ export class Persistent {
 		return this._id;
 	}
 
-	fromObject( obj: SomeClassProps<this> ) {
+	fromObject( obj: PersistentObject<this> ) {
 
 		this._persistentProperties.forEach( prop => {
 			const value = obj[ prop.name.slice( 1 ) ]
@@ -47,7 +51,7 @@ export class Persistent {
 		return this
 	}
 
-	toObject(): ObjectWithCollections<this> {
+	toObject(): PersistentCollections<this> {
 		const rootCollections = []
 		const obj = this.toObj( rootCollections )
 		rootCollections.push( obj )
@@ -58,8 +62,8 @@ export class Persistent {
 		}
 	}
 
-	private toObj( rootCollections: Collections ): SomeClassProps<this> {
-		const obj: SomeClassProps<this> = {}
+	private toObj( rootCollections: Collections ): PersistentObject<this> {
+		const obj: PersistentObject<this> = {} as any
 		if ( !this.className ) throw new Error( 'You should register this class prior to streaming it.' )
 
 		this._persistentProperties.forEach( prop => {
@@ -89,7 +93,7 @@ export class Persistent {
 			return obj.map( item => this.fromDeepObject( item ) )
 		}
 		if ( obj[ '__className' ] ) {
-			return this.createFromClassName( obj )
+			return this.createInstaceFromObject( obj as PersistentObject<Persistent> )
 		}
 		if ( typeof obj === 'object' ) {
 			const newObject = {}
@@ -122,8 +126,8 @@ export class Persistent {
 		return value
 	}
 
-	private createFromClassName( value: unknown ) {
-		const instance = Persistent.classFactory( value[ '__className' ] )()
+	private createInstaceFromObject( value: PersistentObject<Persistent> ) {
+		const instance = Persistent.classFactory( value.__className )()
 		return instance.fromObject( value )
 	}
 
