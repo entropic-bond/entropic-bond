@@ -37,7 +37,7 @@ export class JsonStream implements DataSource {
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
-		this._jsonRawData[ collectionName ][ id ] = undefined
+		delete this._jsonRawData[ collectionName ][ id ]
 		return Promise.resolve()
 	}
 
