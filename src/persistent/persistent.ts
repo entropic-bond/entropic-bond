@@ -71,9 +71,9 @@ export class Persistent {
 			if ( propValue ) {
 				if ( prop.isDocument ) {
 					if ( !obj[ prop.name.slice( 1 ) ] ) obj[ prop.name.slice( 1 ) ] = {}
-					obj[ prop.name.slice( 1 ) ].__document = {
+					obj[ prop.name.slice( 1 ) ].__documentRef = {
 						collection: propValue.className,
-						documentId: propValue.id
+						id: propValue.id
 					}
 					rootCollections.push( this.toDeepObj( propValue, rootCollections ) )
 				}

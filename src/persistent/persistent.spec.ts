@@ -256,7 +256,7 @@ describe( 'Persistent', ()=>{
 		})
 	})
 
-	describe( 'Document', ()=>{
+	describe( 'Document as reference', ()=>{
 		beforeEach(()=>{
 			person.document = new APersistentSubClass()
 			person.document._persistentProp = 345
@@ -266,6 +266,20 @@ describe( 'Persistent', ()=>{
 			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 0 ] as SomeClassProps<APersistentSubClass>
 
 			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 345 )
+		})
+
+		it( 'should read swallow object document as reference', ()=>{
+			const obj = JSON.stringify( person.toObject() )
+
+			const newPerson = new Person()
+			newPerson.fromObject( JSON.parse( obj ) )
+
+			expect( newPerson.document ).toEqual({
+				__documentRef: {
+					id: person.document.id,
+					collection: 'APersistentSubClass'
+				}
+			})
 		})
 	})
 })
