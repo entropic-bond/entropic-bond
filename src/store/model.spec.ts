@@ -7,12 +7,11 @@ import testData from './mocks/mock-data.json'
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
-	const rawData = ()=> (<JsonStream>Store.dataSource ).rawData 
+	const rawData = ()=> ( Store.dataSource as JsonStream ).rawData 
 
 	beforeEach(()=> {
 		Store.useDataSource( new JsonStream( JSON.parse( JSON.stringify( testData ) ) ) )
-		model = Store.getModel<TestUser>( 'TestUser' )
-
+		
 		testUser = new TestUser()
 		testUser.name = {
 			firstName: 'testUserFirstName',
@@ -20,7 +19,8 @@ describe( 'Model', ()=>{
 		}
 		testUser.age = 35
 		testUser.skills = [ 'lazy', 'dirty' ]
-
+		
+		model = Store.getModel<TestUser>( 'TestUser' )
 	})
 
 	it( 'should get model from class name string and class instance', ()=>{

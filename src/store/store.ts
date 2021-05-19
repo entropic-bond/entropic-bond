@@ -16,7 +16,7 @@ export class Store {
 	}
 
 	static getModel< T extends Persistent>( classId: T | string ): Model<T> {
-		if ( !Store._dataSource ) throw( new Error( this.error.shouldBeRegistered ) )
+		if ( !Store._dataSource ) throw new Error( this.error.shouldBeRegistered )
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
