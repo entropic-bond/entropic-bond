@@ -1,8 +1,21 @@
-import { persistent, Persistent, registerClassFactory } from '../../persistent/persistent'
+import { persistent, Persistent, persistentDoc, registerClassFactory } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
 	lastName: string 
+}
+
+@registerClassFactory( 'SubClass', ()=>new SubClass() )
+export class SubClass extends Persistent {
+	set year( value: number ) {
+		this._year = value
+	}
+
+	get year() {
+		return this._year
+	}
+
+	@persistent private _year: number
 }
 
 @registerClassFactory( 'TestUser', ()=>new TestUser() )
@@ -39,8 +52,17 @@ export class TestUser extends Persistent {
 		return this._skills
 	}
 
+	set documentRef( value: SubClass ) {
+		this._documentRef = value
+	}
+
+	get documentRef() {
+		return this._documentRef
+	}
+
 	@persistent private _name: Name
 	@persistent private _age: number
 	@persistent private _admin: boolean
 	@persistent private _skills: string[]
+	@persistentDoc private _documentRef: SubClass
 }

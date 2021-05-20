@@ -1,5 +1,5 @@
 import { JsonStream } from './json-stream'
-import { TestUser } from './mocks/test-user'
+import { SubClass, TestUser } from './mocks/test-user'
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
@@ -88,5 +88,33 @@ describe( 'Model', ()=>{
 		})
 
 		
+	})
+
+	describe( 'References to documents', ()=>{
+		beforeEach(()=>{
+			testUser.documentRef = new SubClass()
+			testUser.documentRef.year = 2045	
+		})
+
+		it( 'should save a document as a reference', async ()=>{
+			await model.save( testUser )
+
+			expect( rawData()[ 'SubClass' ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ][ testUser.documentRef.id ] ).toEqual(
+				expect.objectContaining({
+					__className: 'SubClass',
+					year: 2045
+				})
+			)
+		})
+
+		xit( 'should read a swallow document reference', async ()=>{
+			await model.save( testUser )
+			const loadedUser = await model.findById( testUser.id )
+
+			// expect( loadedUser.documentRef ).toEqual({ expect.objectContaining({
+				
+			// })
+		})
 	})
 })

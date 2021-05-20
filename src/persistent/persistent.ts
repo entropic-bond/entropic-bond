@@ -69,12 +69,16 @@ export class Persistent {
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
 			if ( propValue ) {
+
 				if ( prop.isDocument ) {
+
 					if ( !obj[ prop.name.slice( 1 ) ] ) obj[ prop.name.slice( 1 ) ] = {}
+
 					obj[ prop.name.slice( 1 ) ].__documentRef = {
 						collection: propValue.className,
 						id: propValue.id
 					}
+
 					rootCollections.push( this.toDeepObj( propValue, rootCollections ) )
 				}
 				else {
@@ -89,12 +93,15 @@ export class Persistent {
 	}
 
 	private fromDeepObject( obj: unknown ) {
+
 		if ( Array.isArray( obj ) ) {
 			return obj.map( item => this.fromDeepObject( item ) )
 		}
+
 		if ( obj[ '__className' ] ) {
 			return this.createInstaceFromObject( obj as PersistentObject<Persistent> )
 		}
+
 		if ( typeof obj === 'object' ) {
 			const newObject = {}
 
@@ -104,16 +111,20 @@ export class Persistent {
 
 			return newObject
 		}
+
 		return obj
 	}
 
 	private toDeepObj( value: unknown, rootCollections: Collections ) {
+
 		if ( Array.isArray( value ) ) {
 			return value.map( item => this.toDeepObj( item, rootCollections ) )
 		}
+
 		if ( value instanceof Persistent ) {
 			return value.toObj( rootCollections )
 		}
+
 		if ( typeof value === 'object' ) {
 			const newObject = {}
 
@@ -123,6 +134,7 @@ export class Persistent {
 
 			return newObject
 		}
+
 		return value
 	}
 
