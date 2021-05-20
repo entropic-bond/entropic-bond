@@ -42,7 +42,9 @@ export class Persistent {
 	fromObject( obj: PersistentObject<this> ) {
 
 		this._persistentProperties.forEach( prop => {
-			const value = obj[ prop.name.slice( 1 ) ]
+			const propName = prop.name.slice( 1 )		//removes leading underscore
+
+			const value = obj[ propName ]
 			if ( value ) {
 				this[ prop.name ] = this.fromDeepObject( value )
 			}
@@ -68,13 +70,15 @@ export class Persistent {
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
+			const propName = prop.name.slice( 1 )		//removes leading underscore
+			
 			if ( propValue ) {
 
 				if ( prop.isDocument ) {
 
-					if ( !obj[ prop.name.slice( 1 ) ] ) obj[ prop.name.slice( 1 ) ] = {}
+					if ( !obj[ propName ] ) obj[ propName ] = {}
 
-					obj[ prop.name.slice( 1 ) ].__documentRef = {
+					obj[ propName ].__documentRef = {
 						collection: propValue.className,
 						id: propValue.id
 					}
@@ -82,7 +86,7 @@ export class Persistent {
 					rootCollections.push( this.toDeepObj( propValue, rootCollections ) )
 				}
 				else {
-					obj[ prop.name.slice( 1 ) ] = this.toDeepObj( propValue, rootCollections )
+					obj[ propName ] = this.toDeepObj( propValue, rootCollections )
 				}
 			}
 		} )
@@ -92,27 +96,34 @@ export class Persistent {
 		return obj
 	}
 
-	private fromDeepObject( obj: unknown ) {
+	private fromDeepObject( value: unknown ) {
 
-		if ( Array.isArray( obj ) ) {
-			return obj.map( item => this.fromDeepObject( item ) )
+		if ( Array.isArray( value ) ) {
+			return value.map( item => this.fromDeepObject( item ) )
 		}
 
-		if ( obj[ '__className' ] ) {
-			return this.createInstaceFromObject( obj as PersistentObject<Persistent> )
+		if ( value[ '__className' ] ) {
+			return this.createInstaceFromObject( value as PersistentObject<Persistent> )
 		}
 
-		if ( typeof obj === 'object' ) {
+		if ( value[ '__documentRef' ] ) {
+			const emptyInstance = Persistent.classFactory( value[ '__documentRef' ].collection )()
+			emptyInstance.fromObject( value[ '__documentRef' ].collection )
+
+			return emptyInstance
+		}
+
+		if ( typeof value === 'object' ) {
 			const newObject = {}
 
-			Object.entries( obj ).forEach(
+			Object.entries( value ).forEach(
 				( [ key, value ] ) => newObject[ key ] = this.fromDeepObject( value )
 			)
 
 			return newObject
 		}
 
-		return obj
+		return value
 	}
 
 	private toDeepObj( value: unknown, rootCollections: Collections ) {
