@@ -268,12 +268,14 @@ describe( 'Persistent', ()=>{
 			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 345 )
 		})
 
-		xit( 'should read swallow object document as reference', ()=>{
+		it( 'should read swallow object document as reference', ()=>{
 			const obj = JSON.stringify( person.toObject() )
 
 			const newPerson = new Person()
 			newPerson.fromObject( JSON.parse( obj ) )
 
+			expect( newPerson.document ).toBeInstanceOf( APersistentSubClass )
+			expect( newPerson.document.empty ).toBeTruthy()
 			// expect( newPerson.document ).toEqual({
 			// 	__documentRef: {
 			// 		id: person.document.id,
