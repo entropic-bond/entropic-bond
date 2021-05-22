@@ -108,13 +108,15 @@ describe( 'Model', ()=>{
 			)
 		})
 
-		xit( 'should read a swallow document reference', async ()=>{
+		it( 'should read a swallow document reference', async ()=>{
 			await model.save( testUser )
 			const loadedUser = await model.findById( testUser.id )
 
-			// expect( loadedUser.documentRef ).toEqual({ expect.objectContaining({
-				
-			// })
+			expect( loadedUser.documentRef ).toBeInstanceOf( SubClass )
+			expect( loadedUser.documentRef.id ).toEqual( testUser.documentRef.id )
+			expect( loadedUser.documentRef.year ).toBeUndefined()
+			expect( loadedUser.documentRef.wasLoaded ).toBeFalsy()
 		})
+
 	})
 })

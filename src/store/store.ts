@@ -20,5 +20,10 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
+	static populate< T extends Persistent>( instance: T ): Promise<T> {
+		const model = this.getModel( instance )
+		return model.findById( instance.id, instance )
+	}
+
 	private static _dataSource: DataSource
 }

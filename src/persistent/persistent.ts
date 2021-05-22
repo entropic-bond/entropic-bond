@@ -38,8 +38,23 @@ export class Persistent {
 	get id() {
 		return this._id;
 	}
+	
+	get wasLoaded() {
+		return this._loaded
+	}
+
+	protected loaded(){
+		this._loaded = true
+	}
 
 	fromObject( obj: PersistentObject<this> ) {
+		this.fromObj( obj )
+		this.loaded()
+
+		return this
+	}
+
+	private fromObj( obj: PersistentObject<this> ) {
 
 		this._persistentProperties.forEach( prop => {
 			const propName = prop.name.slice( 1 )		//removes leading underscore
@@ -108,7 +123,7 @@ export class Persistent {
 
 		if ( value[ '__documentRef' ] ) {
 			const emptyInstance = Persistent.classFactory( value[ '__documentRef' ].collection )()
-			emptyInstance.fromObject( value[ '__documentRef' ].collection )
+			emptyInstance.fromObj( value[ '__documentRef' ] )
 
 			return emptyInstance
 		}
@@ -151,10 +166,12 @@ export class Persistent {
 
 	private createInstaceFromObject( value: PersistentObject<Persistent> ) {
 		const instance = Persistent.classFactory( value.__className )()
-		return instance.fromObject( value )
+		instance.fromObject( value )
+		return instance
 	}
 
 	@persistent private _id: string
+	private _loaded: boolean
 	private _persistentProperties: PersistentProperty[]
 	private static _factoryMap: FactoryMap = {}
 }
@@ -166,6 +183,10 @@ interface PersistentProperty {
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 }
+
+///////////////////////////////////
+//Decorators
+///////////////////////////////////
 
 export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property );

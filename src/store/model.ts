@@ -1,4 +1,4 @@
-import { Persistent, PersistentFactory } from '../persistent/persistent'
+import { Persistent, PersistentFactory, PersistentObject } from '../persistent/persistent'
 import { ClassProps } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject } from './data-source'
 
@@ -11,11 +11,13 @@ export class Model<T extends Persistent>{
 		this._stream = stream
 	}
 
-	findById( id: string ): Promise<T> {
+	findById( id: string, instance?: T ): Promise<T> {
+		if ( !instance ) instance = this.createInstance() as T
+
 		return new Promise<T>( ( resolve, reject ) => {
 			this._stream.findById( id, this.persistentClassName )
 				.then( data => resolve(  
-					this.createInstance().fromObject( data ) as T 
+					instance.fromObject( data as PersistentObject<T> ) 
 				))
 				.catch( error => reject( error ) )
 		})
