@@ -7,12 +7,11 @@ export class Model<T extends Persistent>{
 		this.persistentClassName = persistentClass instanceof Persistent
 			? persistentClass.className : persistentClass
 
-		this.createInstance = Persistent.classFactory( this.persistentClassName )
 		this._stream = stream
 	}
 
 	findById( id: string, instance?: T ): Promise<T> {
-		if ( !instance ) instance = this.createInstance() as T
+		if ( !instance ) instance = Persistent.classFactory( this.persistentClassName )() as T
 
 		return new Promise<T>( ( resolve, reject ) => {
 			this._stream.findById( id, this.persistentClassName )
@@ -43,14 +42,13 @@ export class Model<T extends Persistent>{
 		return new Promise<T[]>( ( resolve, reject ) => {
 			this._stream.find( queryObject, this.persistentClassName )
 				.then( data => resolve( 
-					data.map( obj => this.createInstance().fromObject( obj ) as T ) 
+					data.map( obj => Persistent.createInstance<T>( obj as any )) 
 				))
 				.catch( error => reject( error ) )
 		})
 	}
 
 	readonly persistentClassName: string
-	private createInstance: PersistentFactory 
 	private _stream: DataSource
 }
 

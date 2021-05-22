@@ -84,7 +84,9 @@ class Person extends Persistent {
 
 describe( 'Persistent', ()=>{
 	let person: Person
+	let newPerson: Person
 	let obj = {
+		__className: 'Person',
 		name: 'Lisa',
 		salary: 2500,
 		skills: [ 'lazy', 'messy' ],
@@ -105,6 +107,7 @@ describe( 'Persistent', ()=>{
 			prop1: 'aProp1',
 			prop2: 1034
 		}
+		newPerson = Persistent.createInstance<Person>( obj )
 	})
 
 	it( 'should keep a persistent properties list for each class', ()=>{
@@ -164,7 +167,6 @@ describe( 'Persistent', ()=>{
 	})
 
 	it( 'should read arrays from stream', ()=>{
-		const newPerson = new Person().fromObject( obj )
 		expect( newPerson.skills ).toEqual( [ 'lazy', 'messy' ] )
 	})
 
@@ -174,7 +176,6 @@ describe( 'Persistent', ()=>{
 	})
 
 	it( 'should read arrays of array from stream', ()=>{
-		const newPerson = new Person().fromObject( obj )
 		expect( newPerson._arrayOfArray ).toEqual( [ [ 5, 6 ], [ 7, 8 ] ] )
 	})
 
@@ -187,7 +188,6 @@ describe( 'Persistent', ()=>{
 	})
 
 	it( 'should read plain objects from stream', ()=>{
-		const newPerson = new Person().fromObject( obj )
 		expect( newPerson._plainObject ).toEqual( {
 			prop1: 'prop1',
 			prop2: 3
@@ -213,13 +213,12 @@ describe( 'Persistent', ()=>{
 				prop1: subObject,
 				prop2: subObject2
 			}
+
+			const obj = JSON.stringify( person.toObject() )
+			newPerson = Persistent.createInstance<Person>( JSON.parse( obj ) )
 		})
 
 		it( 'should return compound objects as instance of object class', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-			const newPerson = new Person()
-			newPerson.fromObject( JSON.parse( obj ) )
-
 			expect( newPerson.anObjectProperty ).toBeInstanceOf( PersistentClass )
 		})
 
@@ -255,36 +254,18 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should persist array of Persistent type properties', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-			const newPerson = new Person()
-			newPerson.fromObject( JSON.parse( obj ) )
-
 			expect( newPerson.arrayOfPersistent[ 0 ] ).toBeInstanceOf( PersistentClass )
-
 		})
 
 		it( 'should persist persistent array of array of Persistent type properties', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-			const newPerson = new Person()
-			newPerson.fromObject( JSON.parse( obj ) )
-
 			expect( newPerson.arrayOfPersistent[ 0 ]._persistentArray[ 0 ] ).toBeInstanceOf( PersistentClass )
-
 		})
 
 		it( 'should persist array of array of Persistent type properties', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-			const newPerson = new Person()
-			newPerson.fromObject( JSON.parse( obj ) )
-
 			expect( newPerson._arrayOfPersistentArray[ 0 ][ 0 ] ).toBeInstanceOf( PersistentClass )
 		})
 
 		it( 'should persist properties of type Persistent in plain object', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-			const newPerson = new Person()
-			newPerson.fromObject( JSON.parse( obj ) )
-
 			expect( newPerson._plainObject.prop1 ).toBeInstanceOf( PersistentClass )
 		})
 	})
@@ -293,6 +274,8 @@ describe( 'Persistent', ()=>{
 		beforeEach(()=>{
 			person.document = new PersistentClass()
 			person.document._persistentProp = 345
+			const obj = JSON.stringify( person.toObject() )
+			newPerson = Persistent.createInstance<Person>( JSON.parse( obj ) )
 		})
 
 		it( 'should create an object at root level', ()=>{
@@ -302,11 +285,6 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should read swallow object document as reference', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-
-			const newPerson = new Person()
-			newPerson.fromObject( JSON.parse( obj ) )
-
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
 			expect( newPerson.wasLoaded ).toBeTruthy()
 			expect( newPerson.document.wasLoaded ).toBeFalsy()

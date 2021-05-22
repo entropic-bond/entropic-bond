@@ -1,6 +1,7 @@
 {
 	"TestUser": {
 		"user1": {
+			"__className": "TestUser",
 			"id": "user1",
 			"name": {
 				"firstName": "userFirstName1",
@@ -11,6 +12,7 @@
 			"skills": ["skill1", "skill2", "skill3"]
 		},
 		"user2": {
+			"__className": "TestUser",
 			"id": "user2",
 			"name": {
 				"firstName": "userFirstName2",
@@ -21,6 +23,7 @@
 			"skills": ["skill1", "skill2", "skill3"]
 		},
 		"user3": {
+			"__className": "TestUser",
 			"id": "user3",
 			"name": {
 				"firstName": "userFirstName3",

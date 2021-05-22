@@ -118,7 +118,7 @@ export class Persistent {
 		}
 
 		if ( value[ '__className' ] ) {
-			return this.createInstaceFromObject( value as PersistentObject<Persistent> )
+			return Persistent.createInstance( value as PersistentObject<Persistent> )
 		}
 
 		if ( value[ '__documentRef' ] ) {
@@ -164,10 +164,9 @@ export class Persistent {
 		return value
 	}
 
-	private createInstaceFromObject( value: PersistentObject<Persistent> ) {
-		const instance = Persistent.classFactory( value.__className )()
-		instance.fromObject( value )
-		return instance
+	static createInstance<T extends Persistent>( obj: PersistentObject<T>): T {
+		const instance = Persistent.classFactory( obj.__className )()
+		return instance.fromObject( obj ) as T
 	}
 
 	@persistent private _id: string
@@ -178,7 +177,6 @@ export class Persistent {
 
 interface PersistentProperty {
 	name: string
-	// isCollection?: boolean
 	isDocument?: boolean
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
@@ -211,17 +209,9 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 	}
 }
 
-// export function persistentCollection(target: Persistent, property: string) {
-// 	return persistentParser({ isCollection: true })( target, property )
-// }
-
 export function persistentDoc( target: Persistent, property: string ) {
 	return persistentParser( { isDocument: true } )( target, property )
 }
-
-// export function persistentSubCollection(target: Persistent, property: string) {
-// 	return persistentParser({ isSubCollection: true })( target, property )
-// }
 
 export function registerClassFactory( className: string, factory: PersistentFactory ) {
 	Persistent.registerFactory( className, factory )
