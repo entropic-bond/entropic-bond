@@ -91,14 +91,13 @@ describe( 'Model', ()=>{
 	})
 
 	describe( 'References to documents', ()=>{
-		beforeEach(()=>{
+		beforeEach( async ()=>{
 			testUser.documentRef = new SubClass()
 			testUser.documentRef.year = 2045	
+			await model.save( testUser )
 		})
 
 		it( 'should save a document as a reference', async ()=>{
-			await model.save( testUser )
-
 			expect( rawData()[ 'SubClass' ] ).toBeDefined()
 			expect( rawData()[ 'SubClass' ][ testUser.documentRef.id ] ).toEqual(
 				expect.objectContaining({
@@ -109,7 +108,6 @@ describe( 'Model', ()=>{
 		})
 
 		it( 'should read a swallow document reference', async ()=>{
-			await model.save( testUser )
 			const loadedUser = await model.findById( testUser.id )
 
 			expect( loadedUser.documentRef ).toBeInstanceOf( SubClass )
@@ -118,5 +116,12 @@ describe( 'Model', ()=>{
 			expect( loadedUser.documentRef.wasLoaded ).toBeFalsy()
 		})
 
+		it( 'should fill data of swallow document reference', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+
+			await Store.populate( loadedUser.documentRef )
+			expect( loadedUser.documentRef.wasLoaded ).toBeTruthy()
+			expect( loadedUser.documentRef.year ).toBe( 2045 )
+		})
 	})
 })
