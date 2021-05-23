@@ -1,5 +1,5 @@
 import { SomeClassProps } from '../types/utility-types'
-import { Persistent, persistent, persistentDoc, registerClassFactory } from './persistent'
+import { Persistent, persistent, persistentRef, registerClassFactory } from './persistent'
 
 @registerClassFactory( 'PersistentClass', () => new PersistentClass() )
 class PersistentClass extends Persistent {
@@ -78,7 +78,7 @@ class Person extends Persistent {
 	@persistent _arrayOfArray: number[][]
 	@persistent _arrayOfPersistentArray: PersistentClass[][]
 	@persistent _plainObject: { [ key: string ]: unknown }
-	@persistentDoc _document: PersistentClass
+	@persistentRef _document: PersistentClass
 	private _doNotPersist: number
 }
 
@@ -279,7 +279,7 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should create an object at root level', ()=>{
-			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 0 ] as SomeClassProps<PersistentClass>
+			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 'PersistentClass' ] as SomeClassProps<PersistentClass>
 
 			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 345 )
 		})

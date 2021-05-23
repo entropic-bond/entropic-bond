@@ -20,7 +20,3 @@ export interface DataSource {
 	save( object: CollectionsDocument ): Promise< void >
 	delete( id: string, collectionName: string ): Promise<void>
 }
-
-function prepareRef( doc: DocumentObject ) {
-	
-}

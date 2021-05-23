@@ -32,6 +32,18 @@
 			"age": 56,
 			"admin": true,
 			"skills": ["skill21", "skill22", "skill23"]
+		},
+		"user4": {
+			"__className": "DerivedUser",
+			"id": "user4",
+			"name": {
+				"firstName": "userFirstName4",
+				"lastName": "userLastName4"
+			},
+			"age": 35,
+			"admin": false,
+			"skills": ["skill41", "skill42", "skill43"],
+			"salary": 2800
 		}
 	}
 }

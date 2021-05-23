@@ -11,7 +11,9 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 	__className?: string
 }
 
-type Collections = PersistentObject<Persistent>[]
+type Collections = {
+	[ collectionPath: string ]: PersistentObject<Persistent>
+}
 
 export type PersistentCollections<T extends Persistent> = PersistentObject<T> & {
 	__rootCollections: Collections
@@ -69,9 +71,9 @@ export class Persistent {
 	}
 
 	toObject(): PersistentCollections<this> {
-		const rootCollections = []
+		const rootCollections = {}
 		const obj = this.toObj( rootCollections )
-		rootCollections.push( obj )
+		rootCollections[ this.className ] = obj
 
 		return {
 			...obj,
@@ -89,16 +91,18 @@ export class Persistent {
 			
 			if ( propValue ) {
 
-				if ( prop.isDocument ) {
+				if ( prop.isReference ) {
 
 					if ( !obj[ propName ] ) obj[ propName ] = {}
 
+					const collectionPath = prop.storeInCollection || propValue.className
+
 					obj[ propName ].__documentRef = {
-						collection: propValue.className,
+						collection: collectionPath,
 						id: propValue.id
 					}
 
-					rootCollections.push( this.toDeepObj( propValue, rootCollections ) )
+					rootCollections[ collectionPath ] = this.toDeepObj( propValue, rootCollections )
 				}
 				else {
 					obj[ propName ] = this.toDeepObj( propValue, rootCollections )
@@ -177,7 +181,8 @@ export class Persistent {
 
 interface PersistentProperty {
 	name: string
-	isDocument?: boolean
+	isReference?: boolean
+	storeInCollection?: string
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 }
@@ -190,8 +195,21 @@ export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property );
 }
 
+export function persistentReference( collectionPath: string ) {
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ 
+			storeInCollection: collectionPath,
+			isReference: true
+		})( target, property )
+	}
+}
+
+export function persistentRef( target: Persistent, property: string ) {
+	return persistentParser({ isReference: true })( target, property )
+}
+
 export function persistentParser( options?: Partial<PersistentProperty> ) {
-	return function ( target: Persistent, property: string ) {
+	return function( target: Persistent, property: string ) {
 
 		// from: https://stackoverflow.com/questions/43912168/typescript-decorators-with-inheritance
 		// should work like this in order to avoid propagation of persistent properties from one class to others
@@ -207,10 +225,6 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 			...options
 		} )
 	}
-}
-
-export function persistentDoc( target: Persistent, property: string ) {
-	return persistentParser( { isDocument: true } )( target, property )
 }
 
 export function registerClassFactory( className: string, factory: PersistentFactory ) {

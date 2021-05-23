@@ -1,4 +1,4 @@
-import { Persistent, PersistentFactory, PersistentObject } from '../persistent/persistent'
+import { Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassProps } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject } from './data-source'
 
@@ -22,9 +22,9 @@ export class Model<T extends Persistent>{
 		})
 	}
 	
-	save( object: T ): Promise<void> {
+	save( instance: T ): Promise<void> {
 		return new Promise<void>( ( resolve, reject ) => {
-			this._stream.save( object.toObject() ) 
+			this._stream.save( instance.toObject() ) 
 			.then( () => resolve() )
 			.catch( error => reject( error ) )
 		})
@@ -65,6 +65,14 @@ class Query<T extends Persistent> {
 		}
 
 		return this
+	}
+
+	instanceOf<U extends T>( classId: U | string ) {
+		const className = classId instanceof Persistent? classId.className : classId
+		this.queryObject[ '__className' ] = {
+			operator: '==',
+			value: className
+		}
 	}
 
 	get() {

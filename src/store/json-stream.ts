@@ -21,7 +21,7 @@ export class JsonStream implements DataSource {
 	}
 
 	save( object: CollectionsDocument ): Promise< void > {
-		object.__rootCollections.forEach( collection => {
+		Object.values( object.__rootCollections ).forEach( collection => {
 			if ( !this._jsonRawData[ collection.__className ] ) this._jsonRawData[ collection.__className ] = {}
 			this._jsonRawData[ collection.__className ][ collection.id ] = collection
 		})

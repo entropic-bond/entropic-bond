@@ -1,5 +1,5 @@
 import { JsonStream } from './json-stream'
-import { SubClass, TestUser } from './mocks/test-user'
+import { DerivedUser, SubClass, TestUser } from './mocks/test-user'
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
@@ -87,6 +87,22 @@ describe( 'Model', ()=>{
 			expect( admins[0].age ).toBeLessThan( 50 )
 		})
 
+		
+	})
+
+	describe( 'Derived classes should fit on parent collection', ()=>{
+
+		xit( 'should save derived object in parent collection', async ()=>{
+			const derived = new DerivedUser()
+			derived.name = { firstName: 'Fulanito', lastName: 'Derived' }
+			derived.salary = 3900
+
+			await model.save( derived )
+
+			const a = rawData()[ 'TestUser' ]
+			expect( rawData()[ 'TestUser' ][ derived.id ][ 'salary' ] ).toBe( 3900 )
+			expect( rawData()[ 'TestUser' ][ derived.id ][ '__className' ] ).toEqual( 'DerivedUser' )
+		})
 		
 	})
 
