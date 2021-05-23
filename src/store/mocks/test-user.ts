@@ -1,4 +1,4 @@
-import { persistent, Persistent, persistentRef, registerClassFactory } from '../../persistent/persistent'
+import { persistent, Persistent, persistentReference, registerClassFactory } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
@@ -64,7 +64,7 @@ export class TestUser extends Persistent {
 	@persistent private _age: number
 	@persistent private _admin: boolean
 	@persistent private _skills: string[]
-	@persistentRef private _documentRef: SubClass
+	@persistentReference private _documentRef: SubClass
 }
 
 @registerClassFactory( 'DerivedUser', ()=>new DerivedUser() )

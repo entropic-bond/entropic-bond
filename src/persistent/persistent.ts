@@ -99,6 +99,7 @@ export class Persistent {
 
 					obj[ propName ].__documentRef = {
 						collection: collectionPath,
+						className: propValue.className,
 						id: propValue.id
 					}
 
@@ -126,7 +127,7 @@ export class Persistent {
 		}
 
 		if ( value[ '__documentRef' ] ) {
-			const emptyInstance = Persistent.classFactory( value[ '__documentRef' ].collection )()
+			const emptyInstance = Persistent.classFactory( value[ '__documentRef' ].className )()
 			emptyInstance.fromObj( value[ '__documentRef' ] )
 
 			return emptyInstance
@@ -195,7 +196,7 @@ export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property );
 }
 
-export function persistentReference( collectionPath: string ) {
+export function persistentReferenceAt( collectionPath: string ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			storeInCollection: collectionPath,
@@ -204,7 +205,7 @@ export function persistentReference( collectionPath: string ) {
 	}
 }
 
-export function persistentRef( target: Persistent, property: string ) {
+export function persistentReference( target: Persistent, property: string ) {
 	return persistentParser({ isReference: true })( target, property )
 }
 

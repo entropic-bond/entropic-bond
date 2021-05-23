@@ -1,5 +1,5 @@
 import { SomeClassProps } from '../types/utility-types'
-import { Persistent, persistent, persistentRef, registerClassFactory } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerClassFactory } from './persistent'
 
 @registerClassFactory( 'PersistentClass', () => new PersistentClass() )
 class PersistentClass extends Persistent {
@@ -78,7 +78,8 @@ class Person extends Persistent {
 	@persistent _arrayOfArray: number[][]
 	@persistent _arrayOfPersistentArray: PersistentClass[][]
 	@persistent _plainObject: { [ key: string ]: unknown }
-	@persistentRef _document: PersistentClass
+	@persistentReference _document: PersistentClass
+	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
 	private _doNotPersist: number
 }
 
@@ -274,6 +275,8 @@ describe( 'Persistent', ()=>{
 		beforeEach(()=>{
 			person.document = new PersistentClass()
 			person.document._persistentProp = 345
+			person._docAtArbitraryCollection = new PersistentClass()
+			person._docAtArbitraryCollection._persistentProp = 3989
 			const obj = JSON.stringify( person.toObject() )
 			newPerson = Persistent.createInstance<Person>( JSON.parse( obj ) )
 		})
@@ -282,7 +285,18 @@ describe( 'Persistent', ()=>{
 			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 'PersistentClass' ] as SomeClassProps<PersistentClass>
 
 			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 345 )
+			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
+			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
+
+		it( 'should create root reference collection with arbitrary name', ()=>{
+			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 'ArbitraryCollectionName' ] as SomeClassProps<PersistentClass>
+
+			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 3989 )
+			expect( newPerson._docAtArbitraryCollection ).toBeInstanceOf( PersistentClass )
+			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
+		})
+		
 
 		it( 'should read swallow object document as reference', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
