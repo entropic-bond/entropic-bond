@@ -1,5 +1,5 @@
-import { Persistent, PersistentObject } from '../persistent/persistent';
-import { CollectionsDocument, DataSource, DocumentObject, QueryObject } from "./data-source";
+import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
+import { DataSource, DocumentObject, QueryObject } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -20,10 +20,10 @@ export class JsonStream implements DataSource {
 		return Promise.resolve( this._jsonRawData[ collectionName ][ id ] )
 	}
 
-	save( object: CollectionsDocument ): Promise< void > {
-		Object.values( object.__rootCollections ).forEach( collection => {
-			if ( !this._jsonRawData[ collection.__className ] ) this._jsonRawData[ collection.__className ] = {}
-			this._jsonRawData[ collection.__className ][ collection.id ] = collection
+	save( collections: Collections ): Promise< void > {
+		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
+			if ( !this._jsonRawData[ collectionName ] ) this._jsonRawData[ collectionName ] = {}
+			this._jsonRawData[ collectionName ][ collection.id ] = collection
 		})
 
 		return Promise.resolve()

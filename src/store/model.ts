@@ -4,34 +4,43 @@ import { DataSource, QueryOperator, QueryObject } from './data-source'
 
 export class Model<T extends Persistent>{
 	constructor( stream: DataSource, persistentClass: Persistent | string ) {
-		this.persistentClassName = persistentClass instanceof Persistent
+		this.collectionName = persistentClass instanceof Persistent
 			? persistentClass.className : persistentClass
 
 		this._stream = stream
 	}
 
 	findById( id: string, instance?: T ): Promise<T> {
-		if ( !instance ) instance = Persistent.classFactory( this.persistentClassName )() as T
-
 		return new Promise<T>( ( resolve, reject ) => {
-			this._stream.findById( id, this.persistentClassName )
-				.then( data => resolve(  
-					instance.fromObject( data as PersistentObject<T> ) 
-				))
-				.catch( error => reject( error ) )
+			this._stream.findById( id, this.collectionName )
+			.then(( data: PersistentObject<T> ) => {
+
+				if ( !instance ) instance = Persistent.createInstance( data )
+				else instance.fromObject( data as PersistentObject<T> ) 
+
+				resolve( instance )
+			})
+			.catch( error => reject( error ) )
 		})
 	}
 	
 	save( instance: T ): Promise<void> {
+		const obj = instance.toObject()
+		
+		if ( this.collectionName !== obj.__className ) {
+			obj.__rootCollections[ this.collectionName ] = obj.__rootCollections[ obj.__className ]
+			delete obj.__rootCollections[ obj.__className ]
+		}
+		
 		return new Promise<void>( ( resolve, reject ) => {
-			this._stream.save( instance.toObject() ) 
+			this._stream.save( obj.__rootCollections ) 
 			.then( () => resolve() )
 			.catch( error => reject( error ) )
 		})
 	}
 	
 	delete( id: string ): Promise<void> {
-		return this._stream.delete( id, this.persistentClassName )
+		return this._stream.delete( id, this.collectionName )
 	}
 
 	find(): Query<T> {
@@ -40,7 +49,7 @@ export class Model<T extends Persistent>{
 
 	query( queryObject?: QueryObject<T>): Promise<T[]> {
 		return new Promise<T[]>( ( resolve, reject ) => {
-			this._stream.find( queryObject, this.persistentClassName )
+			this._stream.find( queryObject, this.collectionName )
 				.then( data => resolve( 
 					data.map( obj => Persistent.createInstance<T>( obj as any )) 
 				))
@@ -48,7 +57,7 @@ export class Model<T extends Persistent>{
 		})
 	}
 
-	readonly persistentClassName: string
+	readonly collectionName: string
 	private _stream: DataSource
 }
 

@@ -1,7 +1,5 @@
-import { PersistentCollections, Persistent, PersistentObject } from '../persistent/persistent'
+import { PersistentCollections, Persistent, PersistentObject, Collections } from '../persistent/persistent'
 import { SomeClassProps } from '../types/utility-types'
-
-export type CollectionsDocument = PersistentCollections<Persistent>
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -17,6 +15,6 @@ export type QueryObject<T> = {
 export interface DataSource {
 	findById( id: string, collectionName: string ): Promise< DocumentObject >
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] >
-	save( object: CollectionsDocument ): Promise< void >
+	save( object: Collections ): Promise< void >
 	delete( id: string, collectionName: string ): Promise<void>
 }

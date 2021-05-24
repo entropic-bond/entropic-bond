@@ -11,7 +11,7 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 	__className?: string
 }
 
-type Collections = {
+export type Collections = {
 	[ collectionPath: string ]: PersistentObject<Persistent>
 }
 

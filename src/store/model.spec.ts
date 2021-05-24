@@ -25,10 +25,10 @@ describe( 'Model', ()=>{
 
 	it( 'should get model from class name string and class instance', ()=>{
 		expect( 
-			Store.getModel( testUser ).persistentClassName 
-		).toEqual( model.persistentClassName )
+			Store.getModel( testUser ).collectionName 
+		).toEqual( model.collectionName )
 
-		expect( model.persistentClassName ).toEqual( 'TestUser' )
+		expect( model.collectionName ).toEqual( 'TestUser' )
 	})
 
 	it( 'should find document by id', async ()=>{
@@ -92,7 +92,7 @@ describe( 'Model', ()=>{
 
 	describe( 'Derived classes should fit on parent collection', ()=>{
 
-		xit( 'should save derived object in parent collection', async ()=>{
+		it( 'should save derived object in parent collection', async ()=>{
 			const derived = new DerivedUser()
 			derived.name = { firstName: 'Fulanito', lastName: 'Derived' }
 			derived.salary = 3900
@@ -103,6 +103,14 @@ describe( 'Model', ()=>{
 			expect( rawData()[ 'TestUser' ][ derived.id ][ 'salary' ] ).toBe( 3900 )
 			expect( rawData()[ 'TestUser' ][ derived.id ][ '__className' ] ).toEqual( 'DerivedUser' )
 		})
+
+		it( 'should retrieve derived object by id ', async ()=>{
+			const derived = await model.findById( 'user4' )
+
+			expect( derived ).toBeInstanceOf( DerivedUser )
+			expect( ( derived as DerivedUser ).salary ).toBe( 2800 )
+		})
+		
 		
 	})
 
