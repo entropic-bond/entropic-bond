@@ -9,14 +9,11 @@ interface FactoryMap {
 
 export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
 	__className?: string
+	__rootCollections?: Collections
 }
 
 export type Collections = {
 	[ collectionPath: string ]: PersistentObject<Persistent>
-}
-
-export type PersistentCollections<T extends Persistent> = PersistentObject<T> & {
-	__rootCollections: Collections
 }
 
 export class Persistent {
@@ -70,7 +67,7 @@ export class Persistent {
 		return this
 	}
 
-	toObject(): PersistentCollections<this> {
+	toObject(): PersistentObject<this> {
 		const rootCollections = {}
 		const obj = this.toObj( rootCollections )
 		rootCollections[ this.className ] = obj
@@ -180,6 +177,10 @@ export class Persistent {
 	private static _factoryMap: FactoryMap = {}
 }
 
+///////////////////////////////////
+//Decorators
+///////////////////////////////////
+
 interface PersistentProperty {
 	name: string
 	isReference?: boolean
@@ -187,10 +188,6 @@ interface PersistentProperty {
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 }
-
-///////////////////////////////////
-//Decorators
-///////////////////////////////////
 
 export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property );
