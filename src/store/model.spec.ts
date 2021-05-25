@@ -39,6 +39,22 @@ describe( 'Model', ()=>{
 		expect( user.name.firstName ).toEqual( 'userFirstName1' )
 	})
 
+	it( 'should not throw if a document id doesn\'t exists', ( done )=>{
+		expect( ()=>{
+			model.findById( 'nonExistingId' )
+				.then( done )
+				.catch( done )
+		}).not.toThrow()
+	})
+	
+	it( 'should return undefined if a document id doesn\'t exists', async ()=>{
+		expect( await model.findById( 'nonExistingId' ) ).toBeUndefined()
+	})
+	
+	it( 'should return empty array if no document matches condition', async ()=>{
+		expect( await model.find().where( 'age', '<', 0 ).get() ).toHaveLength( 0 )
+	})
+
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
