@@ -99,7 +99,6 @@ describe( 'Model', ()=>{
 
 			await model.save( derived )
 
-			const a = rawData()[ 'TestUser' ]
 			expect( rawData()[ 'TestUser' ][ derived.id ][ 'salary' ] ).toBe( 3900 )
 			expect( rawData()[ 'TestUser' ][ derived.id ][ '__className' ] ).toEqual( 'DerivedUser' )
 		})
