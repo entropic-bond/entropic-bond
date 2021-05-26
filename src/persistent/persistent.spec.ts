@@ -69,6 +69,14 @@ class Person extends Persistent {
 		return this._document
 	}
 
+	set arrayOfRefs(value: PersistentClass[]) {
+		this._arrayOfRefs = value
+	}
+	
+	get arrayOfRefs(): PersistentClass[] {
+		return this._arrayOfRefs
+	}
+	
 	@persistent private _name: string
 	@persistent private _salary: number
 	@persistent private _skills: string[]
@@ -80,6 +88,7 @@ class Person extends Persistent {
 	@persistent _plainObject: { [ key: string ]: unknown }
 	@persistentReference _document: PersistentClass
 	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
+	@persistentReference private _arrayOfRefs: PersistentClass[]
 	private _doNotPersist: number
 }
 
@@ -272,11 +281,17 @@ describe( 'Persistent', ()=>{
 	})
 
 	describe( 'Document as reference', ()=>{
+		let ref1: PersistentClass, ref2: PersistentClass
+
 		beforeEach(()=>{
 			person.document = new PersistentClass()
 			person.document._persistentProp = 345
 			person._docAtArbitraryCollection = new PersistentClass()
 			person._docAtArbitraryCollection._persistentProp = 3989
+			ref1 = new PersistentClass(); ref1._persistentProp = 2091
+			ref2 = new PersistentClass(); ref2._persistentProp = 2092
+			person.arrayOfRefs.push( ref1 )
+			person.arrayOfRefs.push( ref2 )
 			const obj = JSON.stringify( person.toObject() )
 			newPerson = Persistent.createInstance<Person>( JSON.parse( obj ) )
 		})
@@ -305,5 +320,13 @@ describe( 'Persistent', ()=>{
 			expect( newPerson.document.id ).toEqual( person.document.id )
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
+
+		it( 'should deal with arrays of refs', ()=>{
+			expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
+			expect( newPerson.arrayOfRefs[0].wasLoaded ).toBeFalsy()
+			expect( newPerson.arrayOfRefs[0].id ).toEqual( ref1.id )
+			expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
+		})
+		
 	})
 })

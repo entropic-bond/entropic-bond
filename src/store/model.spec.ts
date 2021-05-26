@@ -130,9 +130,14 @@ describe( 'Model', ()=>{
 	})
 
 	describe( 'References to documents', ()=>{
+		let ref1: SubClass, ref2: SubClass
+
 		beforeEach( async ()=>{
 			testUser.documentRef = new SubClass()
 			testUser.documentRef.year = 2045	
+			ref1 = new SubClass(); ref1.year = 2081
+			ref2 = new SubClass(); ref2.year = 2082
+			testUser.manyRefs.push( ref1 )
 			await model.save( testUser )
 		})
 
@@ -162,5 +167,13 @@ describe( 'Model', ()=>{
 			expect( loadedUser.documentRef.wasLoaded ).toBeTruthy()
 			expect( loadedUser.documentRef.year ).toBe( 2045 )
 		})
+
+		it( 'should save and array of references', ()=>{
+			expect( rawData()[ 'SubClass' ][ ref1.id ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ][ ref1.id ][ 'year'] ).toBe( 2081 )			
+			expect( rawData()[ 'SubClass' ][ ref2.id ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ][ ref2.id ][ 'year'] ).toBe( 2082 )			
+		})
+		
 	})
 })
