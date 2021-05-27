@@ -297,22 +297,26 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should create an object at root level', ()=>{
-			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 'PersistentClass' ] as SomeClassProps<PersistentClass>
+			const persistentClassDocs = person.toObject().__rootCollections[ 'PersistentClass' ]
 
-			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 345 )
+			expect( persistentClassDocs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ persistentProp: 345 })
+			]))
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
 
 		it( 'should create root reference collection with arbitrary name', ()=>{
-			const objFromAPersistentSubClass = person.toObject().__rootCollections[ 'ArbitraryCollectionName' ] as SomeClassProps<PersistentClass>
+			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName' ]
 
-			expect( objFromAPersistentSubClass.persistentProp ).toEqual( 3989 )
+			expect( collectionDocs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ persistentProp: 3989 })
+			]))
 			expect( newPerson._docAtArbitraryCollection ).toBeInstanceOf( PersistentClass )
 			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
 		})
 		
-
+		
 		it( 'should read swallow object document as reference', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
 			expect( newPerson.wasLoaded ).toBeTruthy()
@@ -320,25 +324,40 @@ describe( 'Persistent', ()=>{
 			expect( newPerson.document.id ).toEqual( person.document.id )
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
-
-		it( 'should create an object with array of refs', ()=>{
-			const obj = person.toObject()
-
-			expect( obj.arrayOfRefs ).toHaveLength( 2 )
-			expect( obj.arrayOfRefs[0] ).toEqual({
-				__documentRef: {
-					collection: 'PersistentClass',
-					className: 'PersistentClass',
-					id: ref1.id
-				}
-			})
-		})
 		
-		it( 'should deal with arrays of refs', ()=>{
-			expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
-			expect( newPerson.arrayOfRefs[0].wasLoaded ).toBeFalsy()
-			expect( newPerson.arrayOfRefs[0].id ).toEqual( ref1.id )
-			expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
+		describe( 'Array of references', ()=>{
+		
+			it( 'should create an object with array of refs', ()=>{
+				const obj = person.toObject()
+
+				expect( obj.arrayOfRefs ).toHaveLength( 2 )
+				expect( obj.arrayOfRefs[0] ).toEqual({
+					__documentRef: {
+						collection: 'PersistentClass',
+						className: 'PersistentClass',
+						id: ref1.id
+					}
+				})
+			})
+
+			it( 'should create root reference collection with references in array of references', ()=>{
+				const persistentClassDocs = person.toObject().__rootCollections[ 'PersistentClass' ]
+
+				expect( persistentClassDocs ).toEqual( expect.arrayContaining([
+					expect.objectContaining({	id: ref1.id }),
+					expect.objectContaining({	id: ref2.id }),
+				]))
+			})
+
+			it( 'should deal with arrays of refs', ()=>{
+				expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
+				expect( newPerson.arrayOfRefs[0].wasLoaded ).toBeFalsy()
+				expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
+				expect( newPerson.arrayOfRefs ).toEqual( expect.arrayContaining([ 
+					expect.objectContaining({ id: ref1.id }),
+					expect.objectContaining({ id: ref2.id })
+				]))
+			})
 		})
 		
 	})

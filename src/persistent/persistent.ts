@@ -13,7 +13,7 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 }
 
 export type Collections = {
-	[ collectionPath: string ]: PersistentObject<Persistent>
+	[ collectionPath: string ]: PersistentObject<Persistent>[]
 }
 
 export class Persistent {
@@ -68,9 +68,9 @@ export class Persistent {
 	}
 
 	toObject(): PersistentObject<this> {
-		const rootCollections = {}
+		const rootCollections: Collections = {}
 		const obj = this.toObj( rootCollections )
-		rootCollections[ this.className ] = obj
+		this.pushDocument( rootCollections, this.className, obj )
 
 		return {
 			...obj,
@@ -172,17 +172,22 @@ export class Persistent {
 		if ( Array.isArray( propValue ) ) {
 
 			return propValue.map( item => {
-				rootCollections[ collectionPath( item ) ] = this.toDeepObj( item, rootCollections )
+				this.pushDocument( rootCollections, collectionPath( item ), this.toDeepObj( item, rootCollections ) )
 				return buildRefObject( item )
 			})
 
 		}
 		else {
 
-			rootCollections[ collectionPath( propValue ) ] = this.toDeepObj( propValue, rootCollections )
+			this.pushDocument( rootCollections, collectionPath( propValue ), this.toDeepObj( propValue, rootCollections ) )
 			return buildRefObject( propValue )
 
 		}
+	}
+
+	private pushDocument( collections: Collections, collectionName: string, document: PersistentObject<this> ) {
+		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
+		collections[ collectionName ].push( document )
 	}
 
 	static createInstance<T extends Persistent>( obj: PersistentObject<T>): T {
