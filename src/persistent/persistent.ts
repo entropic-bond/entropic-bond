@@ -89,24 +89,14 @@ export class Persistent {
 			if ( propValue ) {
 
 				if ( prop.isReference ) {
-
-					if ( !obj[ propName ] ) obj[ propName ] = {}
-
-					const collectionPath = prop.storeInCollection || propValue.className
-
-					obj[ propName ].__documentRef = {
-						collection: collectionPath,
-						className: propValue.className,
-						id: propValue.id
-					}
-
-					rootCollections[ collectionPath ] = this.toDeepObj( propValue, rootCollections )
+					obj[ propName ] = this.toReferenceObj( prop, rootCollections )
 				}
 				else {
 					obj[ propName ] = this.toDeepObj( propValue, rootCollections )
 				}
+
 			}
-		} )
+		})
 
 		obj[ '__className' ] = this.className
 
@@ -164,6 +154,35 @@ export class Persistent {
 		}
 
 		return value
+	}
+
+	private toReferenceObj( prop: PersistentProperty, rootCollections: Collections ) {
+		const propValue: Persistent | Persistent[] = this[ prop.name ]
+		
+		const collectionPath = ( value: Persistent ) => prop.storeInCollection || value.className
+		
+		const buildRefObject = ( value: Persistent ) => ({
+			__documentRef: {
+				collection: collectionPath( value ),
+				className: value.className,
+				id: value.id
+			}
+		}) 
+
+		if ( Array.isArray( propValue ) ) {
+
+			return propValue.map( item => {
+				rootCollections[ collectionPath( item ) ] = this.toDeepObj( item, rootCollections )
+				return buildRefObject( item )
+			})
+
+		}
+		else {
+
+			rootCollections[ collectionPath( propValue ) ] = this.toDeepObj( propValue, rootCollections )
+			return buildRefObject( propValue )
+
+		}
 	}
 
 	static createInstance<T extends Persistent>( obj: PersistentObject<T>): T {

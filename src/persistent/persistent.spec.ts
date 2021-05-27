@@ -88,7 +88,7 @@ class Person extends Persistent {
 	@persistent _plainObject: { [ key: string ]: unknown }
 	@persistentReference _document: PersistentClass
 	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
-	@persistentReference private _arrayOfRefs: PersistentClass[]
+	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	private _doNotPersist: number
 }
 
@@ -321,6 +321,19 @@ describe( 'Persistent', ()=>{
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
 
+		it( 'should create an object with array of refs', ()=>{
+			const obj = person.toObject()
+
+			expect( obj.arrayOfRefs ).toHaveLength( 2 )
+			expect( obj.arrayOfRefs[0] ).toEqual({
+				__documentRef: {
+					collection: 'PersistentClass',
+					className: 'PersistentClass',
+					id: ref1.id
+				}
+			})
+		})
+		
 		it( 'should deal with arrays of refs', ()=>{
 			expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
 			expect( newPerson.arrayOfRefs[0].wasLoaded ).toBeFalsy()
