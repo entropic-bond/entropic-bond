@@ -20,9 +20,17 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
-	static populate< T extends Persistent>( instance: T ): Promise<T> {
-		const model = this.getModel( instance )
-		return model.findById( instance.id, instance )
+	static populate< T extends Persistent>( instance: T | T[] ): Promise<T | T[]> {
+		
+		if ( Array.isArray( instance ) ) {
+			const model = this.getModel( instance[0] )
+			const promises = instance.map( item => model.findById( item.id, item ) )
+			return Promise.all( promises )
+		}
+		else {
+			const model = this.getModel( instance )
+			return model.findById( instance.id, instance )
+		}
 	}
 
 	private static _dataSource: DataSource

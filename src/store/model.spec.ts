@@ -138,6 +138,7 @@ describe( 'Model', ()=>{
 			ref1 = new SubClass(); ref1.year = 2081
 			ref2 = new SubClass(); ref2.year = 2082
 			testUser.manyRefs.push( ref1 )
+			testUser.manyRefs.push( ref2 )
 			await model.save( testUser )
 		})
 
@@ -174,6 +175,25 @@ describe( 'Model', ()=>{
 			expect( rawData()[ 'SubClass' ][ ref2.id ] ).toBeDefined()
 			expect( rawData()[ 'SubClass' ][ ref2.id ][ 'year'] ).toBe( 2082 )			
 		})
-		
+
+		it( 'should read an array of references', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+			
+			expect( loadedUser.manyRefs ).toHaveLength( 2 )
+			expect( loadedUser.manyRefs[0] ).toBeInstanceOf( SubClass )
+			expect( loadedUser.manyRefs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: ref1.id }),
+				expect.objectContaining({ id: ref2.id })
+			]))
+			expect( loadedUser.manyRefs[0].year ).toBeUndefined()
+		})
+
+		it( 'should fill array of refs', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+			await Store.populate( loadedUser.manyRefs )
+
+			expect( loadedUser.manyRefs[0].year ).toBe( 2081 )
+			expect( loadedUser.manyRefs[1].year ).toBe( 2082 )
+		})
 	})
 })
