@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/entropic-bond/entropic-bond/compare/v1.0.1...v1.0.2) (2021-05-28)
+
+
+### Bug Fixes
+
+* export missed types ([44a3b56](https://github.com/entropic-bond/entropic-bond/commit/44a3b56f59359f49fbdbe50e6aeb8d80181adbc7))
+
 ## [1.0.1](https://github.com/jseto/entropic-bond/compare/v1.0.0...v1.0.1) (2021-05-28)
 
 
