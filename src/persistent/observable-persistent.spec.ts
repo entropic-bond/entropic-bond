@@ -34,4 +34,10 @@ describe('Observable Persistent', ()=>{
 
 		expect( changed ).toHaveBeenCalledWith({ name: 'Rogue I' })
 	})
+
+	it( 'should return callback reference on subscription', ()=>{
+		const changed = jest.fn()
+		expect( hero.onChange( changed ) ).toBe( changed )
+	})
+	
 })

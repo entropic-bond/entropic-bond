@@ -1,7 +1,5 @@
 import { SignData, UserCredential } from "./user-auth-types";
 
-//auth
-
 export interface CredentialProviders<T> {
 	[ name: string ]: ( signData: SignData ) => Promise<T>;
 }
