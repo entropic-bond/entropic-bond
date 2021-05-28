@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/entropic-bond/entropic-bond/compare/v1.1.1...v1.1.2) (2021-05-28)
+
+
+### Bug Fixes
+
+* build only cjs for compatibility reasons ([5836933](https://github.com/entropic-bond/entropic-bond/commit/58369336577964304a461e810b0f11aeb2c9de8d))
+
 ## [1.1.1](https://github.com/entropic-bond/entropic-bond/compare/v1.1.0...v1.1.1) (2021-05-28)
 
 
