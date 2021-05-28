@@ -3,6 +3,7 @@ export type Callback<T> = ( event: T ) => void
 export class Observable<T> {
 	subscribe( callback: Callback<T> ) {
 		this.subscribers.push(callback)
+		return callback
 	}
 
 	unsubscribe( callback: Callback<T> ) {
