@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/entropic-bond/entropic-bond/compare/v1.1.0...v1.1.1) (2021-05-28)
+
+
+### Bug Fixes
+
+* missed dependency uuid ([3df1492](https://github.com/entropic-bond/entropic-bond/commit/3df1492a0c9132f43e01965771a7bb19e69ae3ba))
+
 # [1.1.0](https://github.com/entropic-bond/entropic-bond/compare/v1.0.2...v1.1.0) (2021-05-28)
 
 
