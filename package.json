@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jseto/entropic-bond.git"
+    "url": "git+https://github.com/entropic-bond/entropic-bond.git"
   },
   "keywords": [
     "persistence",
@@ -40,9 +40,9 @@
   "author": "Josep Seto",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jseto/entropic-bond/issues"
+    "url": "https://github.com/entropic-bond/entropic-bond/issues"
   },
-  "homepage": "https://github.com/jseto/entropic-bond#readme",
+  "homepage": "https://github.com/entropic-bond/entropic-bond#readme",
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
