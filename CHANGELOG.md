@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/entropic-bond/entropic-bond/compare/v1.0.2...v1.1.0) (2021-05-28)
+
+
+### Features
+
+* have vanill ts and commonJS modules ([5c38c35](https://github.com/entropic-bond/entropic-bond/commit/5c38c35ecaa2ada02455affb1627ae7912209aa7))
+
 ## [1.0.2](https://github.com/entropic-bond/entropic-bond/compare/v1.0.1...v1.0.2) (2021-05-28)
 
 
