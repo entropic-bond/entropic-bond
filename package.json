@@ -17,14 +17,14 @@
     ]
   },
   "description": "Tidy up your messy components",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/index.ts",
+  "types": "lib/cjs/index.d.ts",
   "files": [
     "lib"
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsc",
+    "build": "cp -r ./src/ ./lib && tsc -p tsconfig-cjs.json",
     "prepare": "npm run build"
   },
   "repository": {
