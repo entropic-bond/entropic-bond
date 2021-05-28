@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/jseto/entropic-bond/compare/v1.0.0...v1.0.1) (2021-05-28)
+
+
+### Bug Fixes
+
+* set dark ages ([d96276a](https://github.com/jseto/entropic-bond/commit/d96276a681f3862ef13c2c0c37df97576dd71f11))
+
 # 1.0.0 (2021-05-28)
 
 

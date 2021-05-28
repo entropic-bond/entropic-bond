@@ -1,6 +1,6 @@
 {
   "name": "entropic-bond",
-  "version": "1.0.0-dark-ages",
+  "version": "1.0.1",
   "publishConfig": {
     "access": "public",
     "branches": [
