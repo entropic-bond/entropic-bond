@@ -13,14 +13,16 @@ export class Model<T extends Persistent>{
 	findById( id: string, instance?: T ): Promise<T> {
 		return new Promise<T>( ( resolve, reject ) => {
 			this._stream.findById( id, this.collectionName )
-			.then(( data: PersistentObject<T> ) => {
+				.then(( data: PersistentObject<T> ) => {
+					if ( data ) {
+						if ( !instance ) instance = Persistent.createInstance( data )
+						else instance.fromObject( data as PersistentObject<T> ) 
 
-				if ( !instance ) instance = Persistent.createInstance( data )
-				else instance.fromObject( data as PersistentObject<T> ) 
-
-				resolve( instance )
-			})
-			.catch( error => reject( error ) )
+						resolve( instance )
+					}
+					else resolve( undefined )
+				})
+				.catch( error => reject( error ) )
 		})
 	}
 	

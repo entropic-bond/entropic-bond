@@ -60,11 +60,20 @@ export class TestUser extends Persistent {
 		return this._documentRef
 	}
 
+	set manyRefs(value: SubClass[]) {
+		this._manyRefs = value
+	}
+	
+	get manyRefs(): SubClass[] {
+		return this._manyRefs
+	}
+
 	@persistent private _name: Name
 	@persistent private _age: number
 	@persistent private _admin: boolean
 	@persistent private _skills: string[]
 	@persistentReference private _documentRef: SubClass
+	@persistentReference private _manyRefs: SubClass[] = []
 }
 
 @registerClassFactory( 'DerivedUser', ()=>new DerivedUser() )

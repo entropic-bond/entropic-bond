@@ -39,6 +39,22 @@ describe( 'Model', ()=>{
 		expect( user.name.firstName ).toEqual( 'userFirstName1' )
 	})
 
+	it( 'should not throw if a document id doesn\'t exists', ( done )=>{
+		expect( ()=>{
+			model.findById( 'nonExistingId' )
+				.then( done )
+				.catch( done )
+		}).not.toThrow()
+	})
+	
+	it( 'should return undefined if a document id doesn\'t exists', async ()=>{
+		expect( await model.findById( 'nonExistingId' ) ).toBeUndefined()
+	})
+	
+	it( 'should return empty array if no document matches condition', async ()=>{
+		expect( await model.find().where( 'age', '<', 0 ).get() ).toHaveLength( 0 )
+	})
+
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
@@ -99,7 +115,6 @@ describe( 'Model', ()=>{
 
 			await model.save( derived )
 
-			const a = rawData()[ 'TestUser' ]
 			expect( rawData()[ 'TestUser' ][ derived.id ][ 'salary' ] ).toBe( 3900 )
 			expect( rawData()[ 'TestUser' ][ derived.id ][ '__className' ] ).toEqual( 'DerivedUser' )
 		})
@@ -115,9 +130,15 @@ describe( 'Model', ()=>{
 	})
 
 	describe( 'References to documents', ()=>{
+		let ref1: SubClass, ref2: SubClass
+
 		beforeEach( async ()=>{
 			testUser.documentRef = new SubClass()
 			testUser.documentRef.year = 2045	
+			ref1 = new SubClass(); ref1.year = 2081
+			ref2 = new SubClass(); ref2.year = 2082
+			testUser.manyRefs.push( ref1 )
+			testUser.manyRefs.push( ref2 )
 			await model.save( testUser )
 		})
 
@@ -146,6 +167,33 @@ describe( 'Model', ()=>{
 			await Store.populate( loadedUser.documentRef )
 			expect( loadedUser.documentRef.wasLoaded ).toBeTruthy()
 			expect( loadedUser.documentRef.year ).toBe( 2045 )
+		})
+
+		it( 'should save and array of references', ()=>{
+			expect( rawData()[ 'SubClass' ][ ref1.id ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ][ ref1.id ][ 'year'] ).toBe( 2081 )			
+			expect( rawData()[ 'SubClass' ][ ref2.id ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ][ ref2.id ][ 'year'] ).toBe( 2082 )			
+		})
+
+		it( 'should read an array of references', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+			
+			expect( loadedUser.manyRefs ).toHaveLength( 2 )
+			expect( loadedUser.manyRefs[0] ).toBeInstanceOf( SubClass )
+			expect( loadedUser.manyRefs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: ref1.id }),
+				expect.objectContaining({ id: ref2.id })
+			]))
+			expect( loadedUser.manyRefs[0].year ).toBeUndefined()
+		})
+
+		it( 'should fill array of refs', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+			await Store.populate( loadedUser.manyRefs )
+
+			expect( loadedUser.manyRefs[0].year ).toBe( 2081 )
+			expect( loadedUser.manyRefs[1].year ).toBe( 2082 )
 		})
 	})
 })

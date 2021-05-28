@@ -1,6 +1,19 @@
 {
   "name": "entropic-bond",
-  "version": "0.2.16",
+  "version": "0.2.17-dark-ages",
+  "publishConfig": { 
+    "access": "public", 
+    "branches": ["master"] 
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  },
   "description": "Tidy up your messy components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -29,11 +42,14 @@
   },
   "homepage": "https://github.com/jseto/entropic-bond#readme",
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "@types/jest": "^26.0.23",
     "@types/uuid": "^8.3.0",
     "git-branch-is": "^4.0.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
+    "semantic-release": "^17.4.3",
     "ts-jest": "^26.5.6",
     "typescript": "^4.2.4",
     "uuid": "^8.3.2"
