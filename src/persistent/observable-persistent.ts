@@ -2,8 +2,8 @@ import { Callback, Observable } from '../observable/observable';
 import { ClassProps } from '../types/utility-types';
 import { Persistent } from './persistent';
 
-type PropChangeEvent<T> = Partial<ClassProps<T>>
-type PropChangeCallback<T> = Callback<PropChangeEvent<T>>
+export type PropChangeEvent<T> = Partial<ClassProps<T>>
+export type PropChangeCallback<T> = Callback<PropChangeEvent<T>>
 
 export class ObservablePersistent extends Persistent {
 
