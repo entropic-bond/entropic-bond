@@ -1,5 +1,5 @@
 import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
-import { DataSource, DocumentObject, QueryObject } from "./data-source";
+import { DataSource, DocumentObject, QueryObject, QueryOperation, QueryOperations } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -31,10 +31,14 @@ export class JsonStream implements DataSource {
 		return Promise.resolve()
 	}
 
-	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
-		const matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
-			doc => this.isQueryMatched( doc, queryObject )
+	find<T extends Persistent>( queryObject: QueryObject<T>, collectionName: string ): Promise< DocumentObject[] > {
+		let matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
+			doc => this.isQueryMatched( doc, queryObject.operations )
 		)
+
+		if ( queryObject.limit ) {
+			matchingDocs = matchingDocs.slice( 0, queryObject.limit )
+		}
 		return Promise.resolve( matchingDocs )
 	}
 
@@ -47,19 +51,22 @@ export class JsonStream implements DataSource {
 		return this._jsonRawData;
 	}
 
-	private isQueryMatched( doc: DocumentObject, queryObject: QueryObject<DocumentObject> ) {
+	private isQueryMatched<T extends Persistent>( doc: DocumentObject, queryOperations: QueryOperations<T> ) {
 		const queryOperator = {
-			'==': <T>(a: T, b: T) => a === b,
-			'!=': <T>(a: T, b: T) => a !== b,
-			'<': <T>(a: T, b: T) => a < b,
-			'<=': <T>(a: T, b: T) => a <= b,
-			'>': <T>(a: T, b: T) => a > b,
-			'>=': <T>(a: T, b: T) => a >= b,
+			'==': <U>(a: U, b: U) => a === b,
+			'!=': <U>(a: U, b: U) => a !== b,
+			'<': <U>(a: U, b: U) => a < b,
+			'<=': <U>(a: U, b: U) => a <= b,
+			'>': <U>(a: U, b: U) => a > b,
+			'>=': <U>(a: U, b: U) => a >= b,
 		}
 
-		return Object.entries( queryObject ).reduce( ( prevVal, [ key, value ]) => {
+		const isMatch = Object.entries( queryOperations ).reduce( ( prevVal, [ key, val ]) => {
+			const value = val as QueryOperation<unknown>
 			return prevVal && queryOperator[ value.operator ]( doc[ key ], value.value )
 		}, true)
+
+		return isMatch
 	}
 
 	private _jsonRawData: JsonRawData;

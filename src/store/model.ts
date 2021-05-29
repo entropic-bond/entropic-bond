@@ -1,6 +1,6 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
-import { ClassProps } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject } from './data-source'
+import { ClassPropNames, ClassProps } from '../types/utility-types'
+import { DataSource, QueryOperator, QueryObject, QueryOrder } from './data-source'
 
 export class Model<T extends Persistent>{
 	constructor( stream: DataSource, persistentClass: Persistent | string ) {
@@ -69,8 +69,8 @@ class Query<T extends Persistent> {
 		this.model = model	
 	}
 
-	where<P extends keyof ClassProps<T>>( property: P, operator: QueryOperator, value: T[P] ) {
-		this.queryObject[ property ] = {
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: T[P] ) {
+		this.queryObject.operations[ property ] = {
 			operator,
 			value
 		}
@@ -90,6 +90,24 @@ class Query<T extends Persistent> {
 		return this.model.query( this.queryObject )
 	}
 
-	private queryObject: QueryObject<T> = {} as QueryObject<T>
+	limit( maxDocs: number ) {
+		this.queryObject.limit = maxDocs
+		return this
+	}
+
+	next() {
+		// todo
+	}
+
+	prev() {
+		// todo
+	}
+
+	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {
+		this.queryObject.sort = { propertyName, order }
+		return this
+	}
+
+	private queryObject: QueryObject<T> = { operations: {} } as QueryObject<T>
 	private model: Model<T>
 }

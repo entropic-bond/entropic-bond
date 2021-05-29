@@ -55,6 +55,12 @@ describe( 'Model', ()=>{
 		expect( await model.find().where( 'age', '<', 0 ).get() ).toHaveLength( 0 )
 	})
 
+	it( 'should return all documents if no where specified', async ()=>{
+		const docs = await model.find().get()
+		expect( docs.length ).toBeGreaterThan( 1 )
+	})
+	
+
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
@@ -76,9 +82,11 @@ describe( 'Model', ()=>{
 	describe( 'Generic find', ()=>{
 		it( 'should query all admins with query object', async ()=>{
 			const admins = await model.query({
-				admin: {
-					operator: '==',
-					value: true
+				operations: {
+					admin: {
+						operator: '==',
+						value: true
+					}
 				}
 			})
 
@@ -194,6 +202,16 @@ describe( 'Model', ()=>{
 
 			expect( loadedUser.manyRefs[0].year ).toBe( 2081 )
 			expect( loadedUser.manyRefs[1].year ).toBe( 2082 )
+		})
+	})
+
+	describe( 'Operations on queries', ()=>{
+		it( 'should limit the result set', async ()=>{
+			const unlimited = await model.find().get()
+			const limited = await model.find().limit( 2 ).get()
+
+			expect( unlimited.length ).not.toBe( limited.length )
+			expect( limited ).toHaveLength( 2 )
 		})
 	})
 })
