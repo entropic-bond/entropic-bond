@@ -36,7 +36,10 @@ export class JsonStream implements DataSource {
 	}
 
 	find<T extends Persistent>( queryObject: QueryObject<T>, collectionName: string ): Promise< DocumentObject[] > {
-		const matchingDocs = Object.entries( queryObject ).reduce(
+		this._lastLimit = queryObject.limit
+		this._cursor = 0
+
+		this._lastMatchingDocs = Object.entries( queryObject ).reduce(
 			( prevDocs, [ processMethod, value ]) => {
 
 				return this.queryProcessor( prevDocs, processMethod as any, value )
@@ -44,7 +47,7 @@ export class JsonStream implements DataSource {
 			}, Object.values( this._jsonRawData[ collectionName ] )
 		)
 
-		return Promise.resolve( matchingDocs )
+		return Promise.resolve( this._lastMatchingDocs.slice( 0, queryObject.limit ) )
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
@@ -53,18 +56,40 @@ export class JsonStream implements DataSource {
 	}
 
 	next( limit?: number ): Promise< DocumentObject[] > {
-		return Promise.resolve([])
+		if ( limit ) this._lastLimit = limit
+		this.incCursor( this._lastLimit )
+
+		return Promise.resolve( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
 	}
 
 	prev( limit?: number ): Promise< DocumentObject[] > {
-		return Promise.resolve([])
+		if ( limit ) this._lastLimit = limit
+		if ( this.decCursor( this._lastLimit ) ) return Promise.resolve([])
+		
+		return Promise.resolve( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
 	}
 
 	get rawData() {
-		return this._jsonRawData;
+		return this._jsonRawData
 	}
 
-	private queryProcessor<T, P extends keyof QueryObject<T>>(
+	private incCursor( amount: number ) {
+		this._cursor += amount 
+		if ( this._cursor > this._lastMatchingDocs.length ) {
+			this._cursor = this._lastMatchingDocs.length
+		}
+	}
+
+	private decCursor( amount: number ) {
+		this._cursor -= amount 
+		if ( this._cursor < 0 ) {
+			this._cursor = 0
+			return true
+		}
+		return false
+	}
+
+	private queryProcessor<T, P extends keyof QueryProcessors>(
 		docs: DocumentObject[], 
 		processMethod: P, 
 		value: QueryObject<T>[P] 
@@ -72,7 +97,7 @@ export class JsonStream implements DataSource {
 
 		const processors: QueryProcessors = {
 
-			limit: ( limit: number ) => docs.slice( 0, limit ),
+			limit: ( limit: number ) => docs,//.slice( 0, limit ),
 
 			operations: ( operations: QueryOperations<T> ) => docs.filter(
 				doc => this.isQueryMatched( doc, operations )
@@ -126,5 +151,8 @@ export class JsonStream implements DataSource {
 		return [ doc || document, val || value ]
 	}
 
-	private _jsonRawData: JsonRawData;
+	private _jsonRawData: JsonRawData
+	private _lastMatchingDocs: DocumentObject[]
+	private _lastLimit: number
+	private _cursor: number
 }
