@@ -1,10 +1,14 @@
 import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
-import { DataSource, DocumentObject, QueryObject, QueryOperation, QueryOperations } from "./data-source";
+import { DataSource, DocumentObject, QueryObject, QueryOperation, QueryOperations, QueryOrder } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
 		[ documentId: string ]: PersistentObject<Persistent>
 	}
+}
+
+type QueryProcessors = {
+	[ P in keyof Required<QueryObject<unknown>> ]: Function
 }
 
 export class JsonStream implements DataSource {
@@ -32,13 +36,22 @@ export class JsonStream implements DataSource {
 	}
 
 	find<T extends Persistent>( queryObject: QueryObject<T>, collectionName: string ): Promise< DocumentObject[] > {
-		let matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
-			doc => this.isQueryMatched( doc, queryObject.operations )
+		// let matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
+		// 	doc => this.isQueryMatched( doc, queryObject.operations )
+		// )
+
+		// if ( queryObject.limit ) {
+		// 	matchingDocs = matchingDocs.slice( 0, queryObject.limit )
+		// }
+
+		const matchingDocs = Object.entries( queryObject ).reduce(
+			( prevVal, [ processMethod, value ]) => {
+
+				return this.queryProcessor( prevVal, processMethod as any, value )
+
+			}, Object.values( this._jsonRawData[ collectionName ] )
 		)
 
-		if ( queryObject.limit ) {
-			matchingDocs = matchingDocs.slice( 0, queryObject.limit )
-		}
 		return Promise.resolve( matchingDocs )
 	}
 
@@ -51,7 +64,34 @@ export class JsonStream implements DataSource {
 		return this._jsonRawData;
 	}
 
-	private isQueryMatched<T extends Persistent>( doc: DocumentObject, queryOperations: QueryOperations<T> ) {
+	private queryProcessor<T, P extends keyof QueryObject<T>>(
+		docs: DocumentObject[], 
+		processMethod: P, 
+		value: QueryObject<T>[P] 
+	) {
+
+		const processors: QueryProcessors = {
+
+			limit: ( limit: number ) => docs.slice( 0, limit ),
+
+			operations: ( operations: QueryOperations<T> ) => docs.filter(
+				doc => this.isQueryMatched( doc, operations )
+			),
+
+			sort: ( order: QueryOrder ) => docs.sort( ( a, b ) => {
+				if ( order === 'asc' ) {
+					return a > b? 1 : -1 
+				}
+				else {
+					return b < a? 1 : -1
+				}
+			})
+		}
+
+		return processors[ processMethod ]( value )
+	}
+
+	private isQueryMatched<T>( doc: DocumentObject, queryOperations: QueryOperations<T> ) {
 		const queryOperator = {
 			'==': <U>(a: U, b: U) => a === b,
 			'!=': <U>(a: U, b: U) => a !== b,
@@ -62,11 +102,28 @@ export class JsonStream implements DataSource {
 		}
 
 		const isMatch = Object.entries( queryOperations ).reduce( ( prevVal, [ key, val ]) => {
-			const value = val as QueryOperation<unknown>
-			return prevVal && queryOperator[ value.operator ]( doc[ key ], value.value )
+			const operation = val as QueryOperation<unknown>
+	
+			const [ document, value ] = this.retrieveValuesToCompare( doc[ key ], operation )
+
+			return prevVal && queryOperator[ operation.operator ]( document, value )
 		}, true)
 
 		return isMatch
+	}
+
+	private retrieveValuesToCompare( doc: DocumentObject, operation: QueryOperation<unknown> ): [ unknown, unknown ] {
+		let document = doc
+		let value = operation.value
+
+		if ( typeof operation.value === 'object' ) {
+			Object.keys( operation.value ).forEach(	propName => {
+				document = document[ propName ] 
+				value = value[ propName ]
+			})
+		}
+
+		return [ document, value ]
 	}
 
 	private _jsonRawData: JsonRawData;

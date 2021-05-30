@@ -69,7 +69,7 @@ class Query<T extends Persistent> {
 		this.model = model	
 	}
 
-	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: T[P] ) {
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> ) {
 		this.queryObject.operations[ property ] = {
 			operator,
 			value
@@ -104,7 +104,12 @@ class Query<T extends Persistent> {
 	}
 
 	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {
-		this.queryObject.sort = { propertyName, order }
+		
+		this.queryObject.sort = { 
+			propertyName: propertyName as P, 
+			order 
+		}
+		
 		return this
 	}
 

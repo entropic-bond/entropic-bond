@@ -111,6 +111,30 @@ describe( 'Model', ()=>{
 			expect( admins[0].age ).toBeLessThan( 50 )
 		})
 
+		it( 'should query by subproperties', async ()=>{
+			const users = await model.query({
+				operations: {
+					name: {
+						operator: '==',
+						value: { firstName: 'userFirstName3' }
+					},
+					age: {
+						operator: '!=', value: 134
+					}
+
+				}
+			})
+
+			expect( users[0].id ).toBe( 'user3' )
+		})
+
+		it( 'should find by subproperties', async ()=>{
+			const users = await model.find()
+				.where( 'name', '==', { firstName: 'userFirstName3' })
+				.get()
+
+			expect( users[0].id ).toBe( 'user3' )
+		})
 		
 	})
 
@@ -213,5 +237,20 @@ describe( 'Model', ()=>{
 			expect( unlimited.length ).not.toBe( limited.length )
 			expect( limited ).toHaveLength( 2 )
 		})
+
+		xit( 'should sort ascending the result set', async ()=>{
+			const docs = await model.find().orderBy( 'age' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})
+		
+		xit( 'should sort descending the result set', async ()=>{
+			const docs = await model.find().orderBy( 'age', 'desc' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})
+		
 	})
 })

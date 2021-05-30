@@ -7,17 +7,17 @@ export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>='
 
 export interface QueryOperation<T> {
 	operator: QueryOperator
-	value: T
+	value: Partial<T>
 }
 
 export type QueryOperations<T> = {
-	[ P in keyof SomeClassProps<T> ]: QueryOperation<T[P]>
+	[ P in ClassPropNames<T> ]: QueryOperation<T[P]>
 }
 
 export type QueryOrder = 'asc' | 'desc'
 
 export type QueryObject<T> = {
-	operations?: QueryOperations<T>
+	operations?: Partial<QueryOperations<T>>
 	limit?: number
 	sort?: {
 		order: QueryOrder
