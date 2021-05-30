@@ -18,7 +18,7 @@
 				"firstName": "userFirstName2",
 				"lastName": "userLastName2"
 			},
-			"age": 23,
+			"age": 21,
 			"admin": false,
 			"skills": ["skill1", "skill2", "skill3"]
 		},

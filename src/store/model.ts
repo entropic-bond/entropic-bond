@@ -106,7 +106,7 @@ class Query<T extends Persistent> {
 	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {
 		
 		this.queryObject.sort = { 
-			propertyName: propertyName as P, 
+			propertyName, 
 			order 
 		}
 		

@@ -238,18 +238,18 @@ describe( 'Model', ()=>{
 			expect( limited ).toHaveLength( 2 )
 		})
 
-		xit( 'should sort ascending the result set', async ()=>{
+		it( 'should sort ascending the result set', async ()=>{
 			const docs = await model.find().orderBy( 'age' ).get()
 
 			expect( docs[0].id ).toEqual( 'user2' )
 			expect( docs[1].id ).toEqual( 'user1' )
 		})
 		
-		xit( 'should sort descending the result set', async ()=>{
+		it( 'should sort descending the result set', async ()=>{
 			const docs = await model.find().orderBy( 'age', 'desc' ).get()
 
-			expect( docs[0].id ).toEqual( 'user2' )
-			expect( docs[1].id ).toEqual( 'user1' )
+			expect( docs[0].id ).toEqual( 'user3' )
+			expect( docs[1].id ).toEqual( 'user4' )
 		})
 		
 	})

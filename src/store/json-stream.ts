@@ -36,18 +36,10 @@ export class JsonStream implements DataSource {
 	}
 
 	find<T extends Persistent>( queryObject: QueryObject<T>, collectionName: string ): Promise< DocumentObject[] > {
-		// let matchingDocs = Object.values( this._jsonRawData[ collectionName ] ).filter( 
-		// 	doc => this.isQueryMatched( doc, queryObject.operations )
-		// )
-
-		// if ( queryObject.limit ) {
-		// 	matchingDocs = matchingDocs.slice( 0, queryObject.limit )
-		// }
-
 		const matchingDocs = Object.entries( queryObject ).reduce(
-			( prevVal, [ processMethod, value ]) => {
+			( prevDocs, [ processMethod, value ]) => {
 
-				return this.queryProcessor( prevVal, processMethod as any, value )
+				return this.queryProcessor( prevDocs, processMethod as any, value )
 
 			}, Object.values( this._jsonRawData[ collectionName ] )
 		)
@@ -78,12 +70,12 @@ export class JsonStream implements DataSource {
 				doc => this.isQueryMatched( doc, operations )
 			),
 
-			sort: ( order: QueryOrder ) => docs.sort( ( a, b ) => {
+			sort: ({ order, propertyName }) => docs.sort( ( a, b ) => {
 				if ( order === 'asc' ) {
-					return a > b? 1 : -1 
+					return a[ propertyName ] > b[ propertyName ]? 1 : -1 
 				}
 				else {
-					return b < a? 1 : -1
+					return a[ propertyName ] < b[ propertyName ]? 1 : -1
 				}
 			})
 		}
