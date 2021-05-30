@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/entropic-bond/entropic-bond/compare/v1.1.3...v1.2.0) (2021-05-30)
+
+
+### Features
+
+* find by deep properties, next, prev, sort, limit ([8dee858](https://github.com/entropic-bond/entropic-bond/commit/8dee8584fa70a3ecde6fe4b6da784980beae4b0d))
+
 ## [1.1.3](https://github.com/entropic-bond/entropic-bond/compare/v1.1.2...v1.1.3) (2021-05-29)
 
 
