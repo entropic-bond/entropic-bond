@@ -21,7 +21,7 @@ export type QueryObject<T> = {
 	limit?: number
 	sort?: {
 		order: QueryOrder
-		propertyName: ClassPropNames<T>
+		propertyName: ClassPropNames<T> | string
 	}
 }
 

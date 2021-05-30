@@ -251,6 +251,14 @@ describe( 'Model', ()=>{
 			expect( docs[0].id ).toEqual( 'user3' )
 			expect( docs[1].id ).toEqual( 'user4' )
 		})
+
+		it( 'should sort by deep property', async ()=>{
+			const docs = await model.find().orderByDeepProp( 'name.firstName', 'desc' ).get()
+
+			expect( docs[0].id ).toEqual( 'user4' )
+			expect( docs[1].id ).toEqual( 'user3' )
+		})
+		
 		
 	})
 })

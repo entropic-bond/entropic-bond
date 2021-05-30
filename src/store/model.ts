@@ -1,5 +1,5 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
-import { ClassPropNames, ClassProps } from '../types/utility-types'
+import { ClassPropNames } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject, QueryOrder } from './data-source'
 
 export class Model<T extends Persistent>{
@@ -104,9 +104,25 @@ class Query<T extends Persistent> {
 	}
 
 	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {
-		
 		this.queryObject.sort = { 
 			propertyName, 
+			order 
+		}
+		
+		return this
+	}
+
+	/**
+	 * Orders the result set by a deep property
+	 * 
+	 * @param propertyPath The full path of the deep property. It should be 
+	 * 											separated by dots like person.name.firstName.
+	 * @param order The sort direction
+	 * @returns a chainable query object
+	 */
+	orderByDeepProp( propertyPath: string, order: QueryOrder = 'asc' ) {
+		this.queryObject.sort = { 
+			propertyName: propertyPath, 
 			order 
 		}
 		

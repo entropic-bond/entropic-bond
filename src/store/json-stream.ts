@@ -72,15 +72,20 @@ export class JsonStream implements DataSource {
 
 			sort: ({ order, propertyName }) => docs.sort( ( a, b ) => {
 				if ( order === 'asc' ) {
-					return a[ propertyName ] > b[ propertyName ]? 1 : -1 
+					return this.deepValue( a, propertyName ) > this.deepValue( b, propertyName )? 1 : -1 
 				}
 				else {
-					return a[ propertyName ] < b[ propertyName ]? 1 : -1
+					return this.deepValue( a, propertyName ) < this.deepValue( b, propertyName )? 1 : -1
 				}
 			})
 		}
 
 		return processors[ processMethod ]( value )
+	}
+
+	private deepValue( obj: {}, deepProperty: string /*like person.name.firstName*/) {
+		const propChain = deepProperty.split( '.' )
+		return propChain.reduce(( value, prop ) => value[ prop ], obj )
 	}
 
 	private isQueryMatched<T>( doc: DocumentObject, queryOperations: QueryOperations<T> ) {
