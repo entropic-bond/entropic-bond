@@ -1,6 +1,6 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject } from './data-source'
 
 export class Model<T extends Persistent>{
 	constructor( stream: DataSource, persistentClass: Persistent | string ) {
@@ -50,10 +50,24 @@ export class Model<T extends Persistent>{
 	}
 
 	query( queryObject?: QueryObject<T>): Promise<T[]> {
+		return this.mapToPersistent( 
+			() => this._stream.find( queryObject, this.collectionName ) 
+		)
+	}
+
+	next( limit?: number ) {
+		return this.mapToPersistent( () => this._stream.next( limit ) )
+	}
+
+	prev( limit?: number ) {
+		return this.mapToPersistent( () => this._stream.prev( limit ) )
+	}
+
+	private mapToPersistent( from: ()=>Promise<DocumentObject[]> ): Promise<T[]> {
 		return new Promise<T[]>( ( resolve, reject ) => {
-			this._stream.find( queryObject, this.collectionName )
+			from()
 				.then( data => resolve( 
-					data.map( obj => Persistent.createInstance<T>( obj as any )) 
+					data.map( obj => Persistent.createInstance<T>( obj as any ))
 				))
 				.catch( error => reject( error ) )
 		})
@@ -104,21 +118,16 @@ class Query<T extends Persistent> {
 		}
 	}
 
-	get() {
+	get( limit?: number ) {
+		if ( limit ) {
+			this.queryObject.limit = limit
+		}
 		return this.model.query( this.queryObject )
 	}
 
 	limit( maxDocs: number ) {
 		this.queryObject.limit = maxDocs
 		return this
-	}
-
-	next() {
-		// todo
-	}
-
-	prev() {
-		// todo
 	}
 
 	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {

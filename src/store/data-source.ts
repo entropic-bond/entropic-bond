@@ -30,4 +30,6 @@ export interface DataSource {
 	find<T extends Persistent>( queryObject: QueryObject<T>, collectionName: string ): Promise< DocumentObject[] >
 	save( object: Collections ): Promise< void >
 	delete( id: string, collectionName: string ): Promise<void>
+	next( limit?: number ): Promise< DocumentObject[] >
+	prev( limit?: number ): Promise< DocumentObject[] >
 }

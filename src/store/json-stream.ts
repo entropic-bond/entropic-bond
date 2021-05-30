@@ -52,6 +52,14 @@ export class JsonStream implements DataSource {
 		return Promise.resolve()
 	}
 
+	next( limit?: number ): Promise< DocumentObject[] > {
+		return Promise.resolve([])
+	}
+
+	prev( limit?: number ): Promise< DocumentObject[] > {
+		return Promise.resolve([])
+	}
+
 	get rawData() {
 		return this._jsonRawData;
 	}
