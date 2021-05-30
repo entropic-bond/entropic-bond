@@ -55,6 +55,12 @@ describe( 'Model', ()=>{
 		expect( await model.find().where( 'age', '<', 0 ).get() ).toHaveLength( 0 )
 	})
 
+	it( 'should return all documents if no where specified', async ()=>{
+		const docs = await model.find().get()
+		expect( docs.length ).toBeGreaterThan( 1 )
+	})
+	
+
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
@@ -76,9 +82,11 @@ describe( 'Model', ()=>{
 	describe( 'Generic find', ()=>{
 		it( 'should query all admins with query object', async ()=>{
 			const admins = await model.query({
-				admin: {
-					operator: '==',
-					value: true
+				operations: {
+					admin: {
+						operator: '==',
+						value: true
+					}
 				}
 			})
 
@@ -103,7 +111,54 @@ describe( 'Model', ()=>{
 			expect( admins[0].age ).toBeLessThan( 50 )
 		})
 
+		it( 'should query by subproperties', async ()=>{
+			const users = await model.query({
+				operations: {
+					name: {
+						operator: '==',
+						value: { firstName: 'userFirstName3' }
+					},
+					age: {
+						operator: '!=', value: 134
+					}
+
+				}
+			})
+
+			expect( users[0].id ).toBe( 'user3' )
+		})
+
+		it( 'should find by subproperties', async ()=>{
+			const users = await model.find()
+				.where( 'name', '==', { firstName: 'userFirstName3' })
+				.get()
+
+			expect( users[0].id ).toBe( 'user3' )
+		})
 		
+		it( 'should find by property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'name.firstName', '==', 'userFirstName3' )
+				.get()
+
+				expect( users[0].id ).toBe( 'user3' )
+		})
+		
+		it( 'should find by superdeep property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'name.ancestorName.father', '==', 'user3Father')
+				.get()
+
+			expect( users[0].id ).toEqual( 'user3' )
+		})
+
+		it( 'should find by swallow property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'age', '==', 21 )
+				.get()
+
+			expect( users[0].id ).toEqual( 'user2' )
+		})
 	})
 
 	describe( 'Derived classes should fit on parent collection', ()=>{
@@ -194,6 +249,77 @@ describe( 'Model', ()=>{
 
 			expect( loadedUser.manyRefs[0].year ).toBe( 2081 )
 			expect( loadedUser.manyRefs[1].year ).toBe( 2082 )
+		})
+	})
+
+	describe( 'Operations on queries', ()=>{
+		it( 'should limit the result set', async ()=>{
+			const unlimited = await model.find().get()
+			const limited = await model.find().limit( 2 ).get()
+
+			expect( unlimited.length ).not.toBe( limited.length )
+			expect( limited ).toHaveLength( 2 )
+		})
+
+		it( 'should sort ascending the result set', async ()=>{
+			const docs = await model.find().orderBy( 'age' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})
+		
+		it( 'should sort descending the result set', async ()=>{
+			const docs = await model.find().orderBy( 'age', 'desc' ).get()
+
+			expect( docs[0].id ).toEqual( 'user3' )
+			expect( docs[1].id ).toEqual( 'user4' )
+		})
+
+		it( 'should sort by deep property path', async ()=>{
+			const docs = await model.find().orderByDeepProp( 'name.firstName', 'desc' ).get()
+
+			expect( docs[0].id ).toEqual( 'user4' )
+			expect( docs[1].id ).toEqual( 'user3' )
+		})
+		
+		it( 'should sort by swallow property path', async ()=>{
+			const docs = await model.find().orderByDeepProp( 'age' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})		
+
+		describe( 'Data Cursors', ()=>{
+			beforeEach( async ()=>{
+				await model.find().get( 2 )
+			})
+
+			it( 'should get next result set', async ()=>{
+				const docs = await model.next()
+				expect( docs ).toHaveLength( 2 )
+				expect( docs[0].id ).toEqual( 'user3' )
+			})
+			
+			it( 'should get previous result set', async ()=>{
+				await model.next()
+				await model.next()
+				const docs = await model.prev()
+				expect( docs ).toHaveLength( 2 )
+				expect( docs[0].id ).toEqual( 'user3' )
+			})
+
+			it( 'should not go lower than begining of result set', async ()=>{
+				const docs = await model.prev()
+				expect( docs ).toHaveLength( 0 )
+			})
+			
+			it( 'should not go beyond the end of result set', async ()=>{
+				await model.next()
+				await model.next()
+				const docs = await model.next()
+				expect( docs ).toHaveLength( 0 )
+			})
+			
 		})
 	})
 })

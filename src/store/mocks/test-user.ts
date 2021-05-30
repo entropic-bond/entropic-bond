@@ -3,6 +3,10 @@ import { persistent, Persistent, persistentReference, registerClassFactory } fro
 interface Name { 
 	firstName: string, 
 	lastName: string 
+	ancestorName?: {
+		father: string
+		mother: string
+	}
 }
 
 @registerClassFactory( 'SubClass', ()=>new SubClass() )

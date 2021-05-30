@@ -1,6 +1,6 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
-import { ClassProps } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject } from './data-source'
+import { ClassPropNames } from '../types/utility-types'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject } from './data-source'
 
 export class Model<T extends Persistent>{
 	constructor( stream: DataSource, persistentClass: Persistent | string ) {
@@ -50,10 +50,24 @@ export class Model<T extends Persistent>{
 	}
 
 	query( queryObject?: QueryObject<T>): Promise<T[]> {
+		return this.mapToPersistent( 
+			() => this._stream.find( queryObject, this.collectionName ) 
+		)
+	}
+
+	next( limit?: number ) {
+		return this.mapToPersistent( () => this._stream.next( limit ) )
+	}
+
+	prev( limit?: number ) {
+		return this.mapToPersistent( () => this._stream.prev( limit ) )
+	}
+
+	private mapToPersistent( from: ()=>Promise<DocumentObject[]> ): Promise<T[]> {
 		return new Promise<T[]>( ( resolve, reject ) => {
-			this._stream.find( queryObject, this.collectionName )
+			from()
 				.then( data => resolve( 
-					data.map( obj => Persistent.createInstance<T>( obj as any )) 
+					data.map( obj => Persistent.createInstance<T>( obj as any ))
 				))
 				.catch( error => reject( error ) )
 		})
@@ -69,10 +83,28 @@ class Query<T extends Persistent> {
 		this.model = model	
 	}
 
-	where<P extends keyof ClassProps<T>>( property: P, operator: QueryOperator, value: T[P] ) {
-		this.queryObject[ property ] = {
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> ) {
+		this.queryObject.operations[ property ] = {
 			operator,
 			value
+		}
+
+		return this
+	}
+
+	whereDeepProp( propertyPath: string, operator: QueryOperator, value: unknown ) {
+		const props = propertyPath.split( '.' )
+		let obj = {}
+		let result = props.length > 1? obj : value
+
+		props.slice(1).forEach(( prop, i ) => {
+			obj[ prop ] = i < props.length - 2? {} : value 
+			obj = obj[ prop ]
+		})
+
+		this.queryObject.operations[ props[0] ] = {
+			operator,
+			value: result
 		}
 
 		return this
@@ -86,10 +118,44 @@ class Query<T extends Persistent> {
 		}
 	}
 
-	get() {
+	get( limit?: number ) {
+		if ( limit ) {
+			this.queryObject.limit = limit
+		}
 		return this.model.query( this.queryObject )
 	}
 
-	private queryObject: QueryObject<T> = {} as QueryObject<T>
+	limit( maxDocs: number ) {
+		this.queryObject.limit = maxDocs
+		return this
+	}
+
+	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {
+		this.queryObject.sort = { 
+			propertyName, 
+			order 
+		}
+		
+		return this
+	}
+
+	/**
+	 * Orders the result set by a deep property
+	 * 
+	 * @param propertyPath The full path of the deep property. It should be 
+	 * 											separated by dots like person.name.firstName.
+	 * @param order The sort direction
+	 * @returns a chainable query object
+	 */
+	orderByDeepProp( propertyPath: string, order: QueryOrder = 'asc' ) {
+		this.queryObject.sort = { 
+			propertyName: propertyPath, 
+			order 
+		}
+		
+		return this
+	}
+
+	private queryObject: QueryObject<T> = { operations: {} } as QueryObject<T>
 	private model: Model<T>
 }

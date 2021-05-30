@@ -16,9 +16,12 @@
 			"id": "user2",
 			"name": {
 				"firstName": "userFirstName2",
-				"lastName": "userLastName2"
+				"lastName": "userLastName2",
+				"ancestorName": {
+					"father": "user2Father"
+				}
 			},
-			"age": 23,
+			"age": 21,
 			"admin": false,
 			"skills": ["skill1", "skill2", "skill3"]
 		},
@@ -27,7 +30,10 @@
 			"id": "user3",
 			"name": {
 				"firstName": "userFirstName3",
-				"lastName": "userLastName3"
+				"lastName": "userLastName3",
+				"ancestorName": {
+					"father": "user3Father"
+				}
 			},
 			"age": 56,
 			"admin": true,
