@@ -275,13 +275,18 @@ describe( 'Model', ()=>{
 			expect( docs[1].id ).toEqual( 'user4' )
 		})
 
-		it( 'should sort by deep property', async ()=>{
+		it( 'should sort by deep property path', async ()=>{
 			const docs = await model.find().orderByDeepProp( 'name.firstName', 'desc' ).get()
 
 			expect( docs[0].id ).toEqual( 'user4' )
 			expect( docs[1].id ).toEqual( 'user3' )
 		})
 		
-		
+		it( 'should sort by swallow property path', async ()=>{
+			const docs = await model.find().orderByDeepProp( 'age' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})		
 	})
 })
