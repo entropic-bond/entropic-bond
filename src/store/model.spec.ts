@@ -136,6 +136,29 @@ describe( 'Model', ()=>{
 			expect( users[0].id ).toBe( 'user3' )
 		})
 		
+		it( 'should find by property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'name.firstName', '==', 'userFirstName3' )
+				.get()
+
+				expect( users[0].id ).toBe( 'user3' )
+		})
+		
+		it( 'should find by superdeep property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'name.ancestorName.father', '==', 'user3Father')
+				.get()
+
+			expect( users[0].id ).toEqual( 'user3' )
+		})
+
+		it( 'should find by swallow property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'age', '==', 21 )
+				.get()
+
+			expect( users[0].id ).toEqual( 'user2' )
+		})
 	})
 
 	describe( 'Derived classes should fit on parent collection', ()=>{

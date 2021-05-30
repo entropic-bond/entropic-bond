@@ -101,7 +101,7 @@ export class JsonStream implements DataSource {
 		const isMatch = Object.entries( queryOperations ).reduce( ( prevVal, [ key, val ]) => {
 			const operation = val as QueryOperation<unknown>
 	
-			const [ document, value ] = this.retrieveValuesToCompare( doc[ key ], operation )
+			const [ document, value ] = this.retrieveValuesToCompare( doc[ key ], operation.value )
 
 			return prevVal && queryOperator[ operation.operator ]( document, value )
 		}, true)
@@ -109,18 +109,18 @@ export class JsonStream implements DataSource {
 		return isMatch
 	}
 
-	private retrieveValuesToCompare( doc: DocumentObject, operation: QueryOperation<unknown> ): [ unknown, unknown ] {
-		let document = doc
-		let value = operation.value
+	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {
+		// let doc = document
+		// let val = value
 
-		if ( typeof operation.value === 'object' ) {
-			Object.keys( operation.value ).forEach(	propName => {
-				document = document[ propName ] 
-				value = value[ propName ]
-			})
+		if ( typeof value === 'object' ) {
+			const propName = Object.keys( value )[0]
+			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value[ propName ] )
+			// doc = values[0]
+			// val = values[1]
 		}
 
-		return [ document, value ]
+		return [ doc || document, val || value ]
 	}
 
 	private _jsonRawData: JsonRawData;

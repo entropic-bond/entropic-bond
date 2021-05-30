@@ -78,6 +78,24 @@ class Query<T extends Persistent> {
 		return this
 	}
 
+	whereDeepProp( propertyPath: string, operator: QueryOperator, value: unknown ) {
+		const props = propertyPath.split( '.' )
+		let obj = {}
+		let result = props.length > 1? obj : value
+
+		props.slice(1).forEach(( prop, i ) => {
+			obj[ prop ] = i < props.length - 2? {} : value 
+			obj = obj[ prop ]
+		})
+
+		this.queryObject.operations[ props[0] ] = {
+			operator,
+			value: result
+		}
+
+		return this
+	}
+
 	instanceOf<U extends T>( classId: U | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
 		this.queryObject[ '__className' ] = {
