@@ -1,5 +1,5 @@
 import { Persistent, PersistentObject, Collections } from '../persistent/persistent'
-import { ClassPropNames, SomeClassProps } from '../types/utility-types'
+import { ClassPropNames } from '../types/utility-types'
 
 export type DocumentObject = PersistentObject<Persistent>
 

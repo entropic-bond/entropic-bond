@@ -83,8 +83,8 @@ export class JsonStream implements DataSource {
 		return processors[ processMethod ]( value )
 	}
 
-	private deepValue( obj: {}, deepProperty: string /*like person.name.firstName*/) {
-		const propChain = deepProperty.split( '.' )
+	private deepValue( obj: {}, propertyPath: string /*like person.name.firstName*/) {
+		const propChain = propertyPath.split( '.' )
 		return propChain.reduce(( value, prop ) => value[ prop ], obj )
 	}
 
@@ -110,14 +110,9 @@ export class JsonStream implements DataSource {
 	}
 
 	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {
-		// let doc = document
-		// let val = value
-
 		if ( typeof value === 'object' ) {
 			const propName = Object.keys( value )[0]
 			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value[ propName ] )
-			// doc = values[0]
-			// val = values[1]
 		}
 
 		return [ doc || document, val || value ]
