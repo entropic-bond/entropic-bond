@@ -3,6 +3,7 @@ import { DerivedUser, SubClass, TestUser } from './mocks/test-user'
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
+import { DataSource } from './data-source'
 
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
@@ -321,5 +322,45 @@ describe( 'Model', ()=>{
 			})
 			
 		})
+	})
+
+	describe( 'Utility methods', ()=>{
+
+		it( 'should transform deep objects to property path', ()=>{
+			const [ propPath, value ] = DataSource.toPropertyPathValue({
+				name: { ancestorName: { father: 'Juanito' }}
+			})
+
+			expect( propPath ).toEqual( 'name.ancestorName.father' )
+			expect( value ).toEqual( 'Juanito' )
+		})
+		
+		it( 'should transform query object operations to property path', ()=>{
+			const operations = DataSource.toPropertyPathOperations<TestUser>({
+				name: {
+					operator: '==',
+					value: { ancestorName: { father: 'Felipe' }}
+				},
+				age: {
+					operator: '==',
+					value: 23
+				}
+			})
+
+			const [ propPath0, operation0 ] = operations[0]
+			expect( propPath0 ).toEqual( 'name.ancestorName.father' )
+			expect( operation0 ).toEqual({
+				operator: '==',
+				value: 'Felipe'
+			})
+
+			const [ propPath1, operation1 ] = operations[1]
+			expect( propPath1 ).toEqual( 'age' )
+			expect( operation1 ).toEqual({
+				operator: '==',
+				value: 23
+			})
+		})
+
 	})
 })
