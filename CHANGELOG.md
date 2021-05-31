@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/entropic-bond/entropic-bond/compare/v1.2.0...v1.3.0) (2021-05-31)
+
+
+### Features
+
+* helper functions ([3a1a023](https://github.com/entropic-bond/entropic-bond/commit/3a1a023405b0d97fc365990abd819bb7591c62c1))
+
 # [1.2.0](https://github.com/entropic-bond/entropic-bond/compare/v1.1.3...v1.2.0) (2021-05-30)
 
 
