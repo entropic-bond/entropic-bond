@@ -4,8 +4,8 @@ interface Name {
 	firstName: string, 
 	lastName: string 
 	ancestorName?: {
-		father: string
-		mother: string
+		father?: string
+		mother?: string
 	}
 }
 

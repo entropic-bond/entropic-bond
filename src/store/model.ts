@@ -51,7 +51,7 @@ export class Model<T extends Persistent>{
 
 	query( queryObject?: QueryObject<T>): Promise<T[]> {
 		return this.mapToPersistent( 
-			() => this._stream.find( queryObject, this.collectionName ) 
+			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 

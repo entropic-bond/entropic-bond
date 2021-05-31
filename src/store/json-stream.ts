@@ -1,5 +1,5 @@
 import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
-import { DataSource, DocumentObject, QueryObject, QueryOperation, QueryOperations, QueryOrder } from "./data-source";
+import { DataSource, DocumentObject, QueryObject, QueryOperation, QueryOperations } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -35,7 +35,7 @@ export class JsonStream implements DataSource {
 		return Promise.resolve()
 	}
 
-	find<T extends Persistent>( queryObject: QueryObject<T>, collectionName: string ): Promise< DocumentObject[] > {
+	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
 		this._lastLimit = queryObject.limit
 		this._cursor = 0
 
