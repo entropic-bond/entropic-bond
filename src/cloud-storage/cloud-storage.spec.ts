@@ -28,6 +28,8 @@ describe( 'Cloud Storage', ()=>{
 		file = new StoredFile()
 	})
 
+	afterEach( ()=> mockCloudStorage.mockFileSystem = {} )
+
 	it( 'should save a file', async ()=>{
 		await file.store( fileData )
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
@@ -54,7 +56,19 @@ describe( 'Cloud Storage', ()=>{
 		await file.delete()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).not.toBeDefined()		
 	})
-	
+
+	it( 'should overwrite file on subsequent writes', async ()=>{
+		const deleteSpy = jest.spyOn( file, 'delete' )
+
+		await file.store( 'first write' )
+		expect( deleteSpy ).not.toHaveBeenCalled()
+		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( '"first write"' )		
+
+		await file.store( 'second write' )
+		expect( deleteSpy ).toHaveBeenCalled()
+		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( '"second write"' )		
+	})
+
 	describe( 'Streaming', ()=>{
 		const database = {}
 		let model: Model<Test>
@@ -85,7 +99,6 @@ describe( 'Cloud Storage', ()=>{
 
 			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
 			expect( newTestObj.file.url ).toEqual( 'file://' + testObj.file.id )
-		})
-		
+		})		
 	})
 })

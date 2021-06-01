@@ -5,6 +5,8 @@ import { CloudStorage, UploadControl } from './cloud-storage'
 export class StoredFile extends Persistent{
 
 	async store( data: any, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {
+		if ( this._reference ) await this.delete()
+		
 		this.provider = cloudStorageProvider || CloudStorage.defaultCloudStorage
 		this._originalFileName = fileName
 
