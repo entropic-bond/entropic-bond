@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/entropic-bond/entropic-bond/compare/v1.4.0...v1.4.1) (2021-06-01)
+
+
+### Bug Fixes
+
+* missed exports ([123100e](https://github.com/entropic-bond/entropic-bond/commit/123100e80c63737b6fa6fa05643f4e63d04172fd))
+
 # [1.4.0](https://github.com/entropic-bond/entropic-bond/compare/v1.3.0...v1.4.0) (2021-06-01)
 
 
