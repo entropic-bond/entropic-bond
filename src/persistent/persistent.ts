@@ -17,7 +17,7 @@ export type Collections = {
 }
 
 export class Persistent {
-	static registerFactory<T extends Persistent>( className: string, factory: () => T ) {
+	static registerFactory( className: string, factory: () => Persistent ) {
 		this._factoryMap[ className ] = factory
 	}
 

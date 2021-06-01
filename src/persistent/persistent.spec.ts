@@ -1,4 +1,3 @@
-import { SomeClassProps } from '../types/utility-types'
 import { Persistent, persistent, persistentReference, persistentReferenceAt, registerClassFactory } from './persistent'
 
 @registerClassFactory( 'PersistentClass', () => new PersistentClass() )
