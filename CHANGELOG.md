@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/entropic-bond/entropic-bond/compare/v1.3.0...v1.4.0) (2021-06-01)
+
+
+### Features
+
+* cloud storage ([51175e0](https://github.com/entropic-bond/entropic-bond/commit/51175e090b9dcbda87354b2a727c544ad861cd5e))
+
 # [1.3.0](https://github.com/entropic-bond/entropic-bond/compare/v1.2.0...v1.3.0) (2021-05-31)
 
 
