@@ -62,11 +62,11 @@ describe( 'Cloud Storage', ()=>{
 	it( 'should overwrite file on subsequent writes', async ()=>{
 		const deleteSpy = jest.spyOn( file, 'delete' )
 
-		await file.store( 'first write' )
+		await file.store( 'first write' as any )
 		expect( deleteSpy ).not.toHaveBeenCalled()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( '"first write"' )		
 
-		await file.store( 'second write' )
+		await file.store( 'second write' as any )
 		expect( deleteSpy ).toHaveBeenCalled()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( '"second write"' )		
 	})

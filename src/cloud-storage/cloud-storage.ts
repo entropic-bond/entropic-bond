@@ -14,7 +14,7 @@ export interface UploadControl {
 }
 
 export abstract class CloudStorage {
-	abstract store( id: string, data: any ): Promise<string>
+	abstract store( id: string, data: Blob | Uint8Array | ArrayBuffer ): Promise<string>
 	abstract getUrl( reference: string ): Promise<string>
 	abstract uploadControl(): UploadControl
 	abstract delete( reference: string ): Promise<void>

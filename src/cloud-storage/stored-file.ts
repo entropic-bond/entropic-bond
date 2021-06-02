@@ -4,7 +4,7 @@ import { CloudStorage, UploadControl } from './cloud-storage'
 @registerClassFactory( 'StoredFile', ()=>new StoredFile() )
 export class StoredFile extends Persistent{
 
-	async store( data: any, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {
+	async store( data: Blob | Uint8Array | ArrayBuffer, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {
 		if ( this._reference ) await this.delete()
 
 		this.provider = cloudStorageProvider || CloudStorage.defaultCloudStorage

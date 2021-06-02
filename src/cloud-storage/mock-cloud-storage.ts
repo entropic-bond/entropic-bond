@@ -3,7 +3,7 @@ import { CloudStorage, registerCloudStorage, UploadControl, UploadProgress } fro
 @registerCloudStorage( 'MockCloudStorage', ()=>new MockCloudStorage() )
 export class MockCloudStorage extends CloudStorage {
 
-	store( id: string, data: any ): Promise<string> {
+	store( id: string, data: Blob | Uint8Array | ArrayBuffer ): Promise<string> {
 		const fullPath = id
 
 		if ( this._onProgress ) this._onProgress( 0, 100 )
