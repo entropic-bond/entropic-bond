@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/entropic-bond/entropic-bond/compare/v1.4.1...v1.4.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* on delete reference and url still existed ([b97644a](https://github.com/entropic-bond/entropic-bond/commit/b97644af836eefb485ea403c15a47a5e7c9bf033))
+
 ## [1.4.1](https://github.com/entropic-bond/entropic-bond/compare/v1.4.0...v1.4.1) (2021-06-01)
 
 
