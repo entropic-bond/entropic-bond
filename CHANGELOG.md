@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/entropic-bond/entropic-bond/compare/v1.4.2...v1.4.3) (2021-06-02)
+
+
+### Bug Fixes
+
+* stroger typing in store ([2b77e45](https://github.com/entropic-bond/entropic-bond/commit/2b77e450fae3b86106fd071caeaaf78a4bf21356))
+
 ## [1.4.2](https://github.com/entropic-bond/entropic-bond/compare/v1.4.1...v1.4.2) (2021-06-02)
 
 
