@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/entropic-bond/entropic-bond/compare/v1.4.3...v1.4.4) (2021-06-02)
+
+
+### Bug Fixes
+
+* removed uneed refreshUrl ([52348c6](https://github.com/entropic-bond/entropic-bond/commit/52348c6d3b4193bd4749d73fbd9965f1d4f78339))
+
 ## [1.4.3](https://github.com/entropic-bond/entropic-bond/compare/v1.4.2...v1.4.3) (2021-06-02)
 
 
