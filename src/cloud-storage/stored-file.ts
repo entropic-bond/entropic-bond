@@ -6,7 +6,7 @@ export class StoredFile extends Persistent{
 
 	async store( data: any, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {
 		if ( this._reference ) await this.delete()
-		
+
 		this.provider = cloudStorageProvider || CloudStorage.defaultCloudStorage
 		this._originalFileName = fileName
 
@@ -23,7 +23,10 @@ export class StoredFile extends Persistent{
 	}
 
 	delete(): Promise<void> {
-		return this.provider.delete( this._reference )
+		const ref = this._reference
+		this._reference = undefined
+		this._url = undefined
+		return this.provider.delete( ref )
 	}
 
 	set provider( value: CloudStorage ) {

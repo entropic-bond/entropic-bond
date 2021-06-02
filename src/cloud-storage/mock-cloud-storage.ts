@@ -23,7 +23,7 @@ export class MockCloudStorage extends CloudStorage {
 	}
 
 	getUrl( reference: string ): Promise<string> {
-		return Promise.resolve( 'file://' + reference )
+		return Promise.resolve( reference && 'file://' + reference )
 	}
 
 	delete( reference: string ) {
