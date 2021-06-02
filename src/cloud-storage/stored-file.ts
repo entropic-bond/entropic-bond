@@ -14,19 +14,14 @@ export class StoredFile extends Persistent{
 		this._url = await this.provider.getUrl( this._reference )
 	}
 
-	async refreshUrl(): Promise<string> {
-		return this.provider.getUrl( this._reference )
-	}
-
 	uploadControl(): UploadControl {
 		return this.provider.uploadControl()
 	}
 
-	delete(): Promise<void> {
-		const ref = this._reference
+	async delete(): Promise<void> {
+		await this.provider.delete( this._reference )
 		this._reference = undefined
 		this._url = undefined
-		return this.provider.delete( ref )
 	}
 
 	set provider( value: CloudStorage ) {

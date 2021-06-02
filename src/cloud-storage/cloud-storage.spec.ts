@@ -55,7 +55,6 @@ describe( 'Cloud Storage', ()=>{
 
 		await file.delete()
 		expect( file.url ).toBeUndefined()
-		expect( await file.refreshUrl() ).toBeUndefined()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).not.toBeDefined()		
 	})
 
