@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/entropic-bond/entropic-bond/compare/v1.4.4...v1.5.0) (2021-06-04)
+
+
+### Features
+
+* reads filename from File ([e55e7cd](https://github.com/entropic-bond/entropic-bond/commit/e55e7cdb0d9dfa2d2b3b4b9fb2eb5a9bee856af1))
+
 ## [1.4.4](https://github.com/entropic-bond/entropic-bond/compare/v1.4.3...v1.4.4) (2021-06-02)
 
 
