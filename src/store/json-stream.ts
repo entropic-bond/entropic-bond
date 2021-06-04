@@ -44,7 +44,7 @@ export class JsonStream implements DataSource {
 
 				return this.queryProcessor( prevDocs, processMethod as any, value )
 
-			}, Object.values( this._jsonRawData[ collectionName ] )
+			}, Object.values( this._jsonRawData[ collectionName ] || {} )
 		)
 
 		return Promise.resolve( this._lastMatchingDocs.slice( 0, queryObject.limit ) )

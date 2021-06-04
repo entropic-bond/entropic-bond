@@ -13,8 +13,10 @@ export interface UploadControl {
 	onProgress: ( callback: UploadProgress )=>void
 }
 
+export type StorableData = File | Blob | Uint8Array | ArrayBuffer
+
 export abstract class CloudStorage {
-	abstract store( id: string, data: Blob | Uint8Array | ArrayBuffer ): Promise<string>
+	abstract store( id: string, data: StorableData ): Promise<string>
 	abstract getUrl( reference: string ): Promise<string>
 	abstract uploadControl(): UploadControl
 	abstract delete( reference: string ): Promise<void>

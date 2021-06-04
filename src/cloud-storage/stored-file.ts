@@ -1,17 +1,21 @@
 import { persistent, Persistent, registerClassFactory } from '../persistent/persistent'
-import { CloudStorage, UploadControl } from './cloud-storage'
+import { CloudStorage, StorableData, UploadControl } from './cloud-storage'
 
 @registerClassFactory( 'StoredFile', ()=>new StoredFile() )
 export class StoredFile extends Persistent{
 
-	async store( data: Blob | Uint8Array | ArrayBuffer, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {
+	async store( data?: StorableData, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {
+		const dataToStore = data || this._pendingData
+		if ( !dataToStore ) return
 		if ( this._reference ) await this.delete()
 
 		this.provider = cloudStorageProvider || CloudStorage.defaultCloudStorage
-		this._originalFileName = fileName
+		this._originalFileName = fileName || ( dataToStore instanceof File? dataToStore.name : undefined )
 
-		this._reference = await this.provider.store( this.id, data )
+		this._reference = await this.provider.store( this.id, dataToStore )
 		this._url = await this.provider.getUrl( this._reference )
+
+		this._pendingData = null
 	}
 
 	uploadControl(): UploadControl {
@@ -40,6 +44,12 @@ export class StoredFile extends Persistent{
 		return this._url
 	}
 
+	setDataToStore( file: StorableData ) {
+		this._pendingData = file
+		this._originalFileName = file instanceof File && file.name
+		return this
+	}
+
 	get originalFileName() {
 		return this._originalFileName
 	}
@@ -49,4 +59,5 @@ export class StoredFile extends Persistent{
 	@persistent private _cloudStorageProviderName: string
 	@persistent private _originalFileName: string
 	private _provider: CloudStorage
+	private _pendingData: StorableData
 }
