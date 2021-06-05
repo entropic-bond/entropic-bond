@@ -2,6 +2,10 @@ import { Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject } from './data-source'
 
+/**
+ * Provides abstraction to the database access. You should gain access to a Model
+ * object through the Store.getModel method instead of its constructor.
+ */
 export class Model<T extends Persistent>{
 	constructor( stream: DataSource, persistentClass: Persistent | string ) {
 		this.collectionName = persistentClass instanceof Persistent
@@ -10,6 +14,15 @@ export class Model<T extends Persistent>{
 		this._stream = stream
 	}
 
+	/**
+	 * Finds an stored object in the database by its id. The field id is provided
+	 * by the Persistent parent class and it is automatically managed. Therefore,
+	 * you should obtain the id by looking at the id field of the object.
+	 * 
+	 * @param id the id to look for
+	 * @param instance you can pass an instace that will be filled with the found data
+	 * @returns a promise resolving to an instance with the found data
+	 */
 	findById( id: string, instance?: T ): Promise<T> {
 		return new Promise<T>( ( resolve, reject ) => {
 			this._stream.findById( id, this.collectionName )
@@ -26,6 +39,12 @@ export class Model<T extends Persistent>{
 		})
 	}
 	
+	/**
+	 * Stores an object in the database
+	 * 
+	 * @param instance the object instance to store
+	 * @returns a promise 
+	 */
 	save( instance: T ): Promise<void> {
 		const obj = instance.toObject()
 		
@@ -41,6 +60,11 @@ export class Model<T extends Persistent>{
 		})
 	}
 	
+	/**
+	 * Removes an element from the database by id
+	 * @param id the id of the element to be removed
+	 * @returns a promise
+	 */
 	delete( id: string ): Promise<void> {
 		return this._stream.delete( id, this.collectionName )
 	}
@@ -50,20 +74,20 @@ export class Model<T extends Persistent>{
 	}
 
 	query( queryObject?: QueryObject<T>): Promise<T[]> {
-		return this.mapToPersistent( 
+		return this.mapToInstance( 
 			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 
 	next( limit?: number ) {
-		return this.mapToPersistent( () => this._stream.next( limit ) )
+		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
 	prev( limit?: number ) {
-		return this.mapToPersistent( () => this._stream.prev( limit ) )
+		return this.mapToInstance( () => this._stream.prev( limit ) )
 	}
 
-	private mapToPersistent( from: ()=>Promise<DocumentObject[]> ): Promise<T[]> {
+	private mapToInstance( from: ()=>Promise<DocumentObject[]> ): Promise<T[]> {
 		return new Promise<T[]>( ( resolve, reject ) => {
 			from()
 				.then( data => resolve( 
