@@ -38,9 +38,9 @@ class MyEntity extends EntropicBond {
 }
 ```
 
-### Storing and querying the persistent entities
+#### Storing and querying the persistent entities
 
-The database abstraction is provided by the `Store` object. To learn how to setup a concrete database, see below.
+The database abstraction is provided by the `Store` object. To learn how to setup a concrete database, [see below](setup_the_database_access).
 
 The `Store.getModel` method will produce and object with methods to access the data in the database.
 
@@ -64,4 +64,26 @@ foundEntity = await entityModel.find().
 
 entityModel.delete( '0340d-349ab' )									// deletes from database
 ```
+
+#### Setup the database access
+
+The database access is encapsulated in a `DataSource` object. A concrete implementation of a _JSON_ `DataSource` is provided as `JsonDataSource`. You can use this implementation for testing purposes.
+
+Currently, there is an official plugin to connect to a **Firebase** _Firestore_ database. To install the plugin, run:
+
+```sh
+npm i entropic-bond-firebase
+```
+
+You can develop new plugins following the [plugin developer's](plugin_development) section.
+
+You should instantiate the concrete implementation of the `DataSource` and pass it to the `useDataSource` method of the `Store` object.
+
+```ts
+Store.useDataSource( new JsonDataSource() )
+```
+
+### Observability
+
+
 
