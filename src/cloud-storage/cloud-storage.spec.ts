@@ -1,5 +1,5 @@
 import { Persistent, persistent, registerClassFactory } from '../persistent/persistent'
-import { JsonStream } from '../store/json-stream'
+import { JsonDataSource } from '../store/json-data-source'
 import { Model } from '../store/model'
 import { Store } from '../store/store'
 import { CloudStorage } from './cloud-storage'
@@ -112,7 +112,7 @@ describe( 'Cloud Storage', ()=>{
 		let testObj: Test
 
 		beforeEach(()=>{
-			Store.useDataSource( new JsonStream( database ) )
+			Store.useDataSource( new JsonDataSource( database ) )
 			testObj = new Test()
 			model = Store.getModel<Test>( testObj )
 		})

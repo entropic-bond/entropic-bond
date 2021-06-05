@@ -1,4 +1,4 @@
-import { JsonStream } from './json-stream'
+import { JsonDataSource } from './json-data-source'
 import { Store } from './store'
 
 describe( 'Store', ()=>{
@@ -9,9 +9,9 @@ describe( 'Store', ()=>{
 	})
 
 	it( 'should allow to register a concrete data source', ()=>{
-		Store.useDataSource( new JsonStream() )
+		Store.useDataSource( new JsonDataSource() )
 
 		expect( ()=>Store.getModel( '' ) ).not.toThrow( Store.error.shouldBeRegistered )
-		expect( Store.dataSource ).toBeInstanceOf( JsonStream )
+		expect( Store.dataSource ).toBeInstanceOf( JsonDataSource )
 	})
 })

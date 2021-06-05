@@ -11,7 +11,7 @@ type QueryProcessors = {
 	[ P in keyof Required<QueryObject<unknown>> ]: Function
 }
 
-export class JsonStream implements DataSource {
+export class JsonDataSource implements DataSource {
 	constructor( jsonRawData?: JsonRawData ) {
 		this._jsonRawData = jsonRawData;
 	}
