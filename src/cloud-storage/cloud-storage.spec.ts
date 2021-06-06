@@ -4,7 +4,7 @@ import { Model } from '../store/model'
 import { Store } from '../store/store'
 import { CloudStorage } from './cloud-storage'
 import { MockCloudStorage } from './mock-cloud-storage'
-import { StoredFile } from './stored-file'
+import { StoredFile, StoredFileEvent } from './stored-file'
 
 class MockFile {
 	constructor( data: BlobPart[], filename: string ) {
@@ -86,6 +86,20 @@ describe( 'Cloud Storage', ()=>{
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).not.toBeDefined()		
 	})
 
+	it( 'should throw if not stored file', async ()=>{
+		let thrown = false
+		
+		try{
+			await file.delete()
+		}
+		catch {
+			thrown = true
+		}
+
+		expect( thrown ).toBeTruthy()
+	})
+	
+
 	it( 'should overwrite file on subsequent writes', async ()=>{
 		const deleteSpy = jest.spyOn( file, 'delete' )
 
@@ -105,6 +119,45 @@ describe( 'Cloud Storage', ()=>{
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( blobData1 ) )		
 	})
+
+	describe( 'Notify on change', ()=>{
+		let spy: jest.Mock
+
+		beforeEach(()=>{
+			spy = jest.fn()
+			file.onChange( spy )
+		})
+
+		afterEach( ()=>	spy.mockClear() )
+
+		it( 'should notify on seting pendind data to store', ()=>{
+			file.setDataToStore( fileData )
+			expect( spy ).toHaveBeenNthCalledWith( 1, { 
+				event: StoredFileEvent.pendingDataSet,
+				pendingData: fileData,
+				storedFile: file 
+			})
+		})
+
+		it( 'should notify on data store', async ()=>{
+			await file.store( fileData )
+			expect( spy ).toHaveBeenNthCalledWith( 1, { 
+				event: StoredFileEvent.stored,
+				storedFile: file 
+			})
+		})
+
+		it( 'should notify on delete', async ()=>{
+			await file.store( fileData )
+			spy.mockClear()
+
+			await file.delete()
+			expect( spy ).toHaveBeenNthCalledWith( 1, { 
+				event: StoredFileEvent.deleted,
+				storedFile: file 
+			})
+		})
+	})	
 
 	describe( 'Streaming', ()=>{
 		const database = {}
