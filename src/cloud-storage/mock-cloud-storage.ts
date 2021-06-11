@@ -12,9 +12,7 @@ export class MockCloudStorage extends CloudStorage {
 
 		if ( this._onProgress ) this._onProgress( 0, 100 )
 
-		this.mockFileSystem[ id ] = JSON.stringify( 
-			data instanceof File? data['data'] : data 
-		) 
+		this.mockFileSystem[ id ] = JSON.stringify( data ) 
 
 		if ( this._onProgress ) this._onProgress( 100, 100 )
 

@@ -7,19 +7,19 @@ import { MockCloudStorage } from './mock-cloud-storage'
 import { StoredFile, StoredFileEvent } from './stored-file'
 
 class MockFile {
-	constructor( data: BlobPart[], filename: string ) {
-		this.data = data[0] as any
+	constructor( data: any[], filename: string ) {
+		this.data = data as any[]
 		this.name = filename
 	}
-	data: Uint8Array
+	data: any
 	name: string
 	lastModified: any
 	size: number
 	type: any
-	arrayBuffer: any
-	slice: any
-	stream: any
-	text: any
+	slice( ..._args: any[] ) { return this.data }
+	stream() { return this.data }
+	text() { return Promise.resolve( this.data )}
+	arrayBuffer() { return Promise.resolve( this.data ) }
 }
 global.File = MockFile
 
@@ -59,7 +59,7 @@ describe( 'Cloud Storage', ()=>{
 	it( 'should save a file from File', async ()=>{
 		await file.store( fileData )
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
-		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( blobData1 ) )		
+		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( {data:[blobData1], name: 'pepe.dat'} ) )		
 		expect( file.originalFileName ).toEqual( 'pepe.dat'  )
 		expect( file.url ).toEqual( 'mock-data-folder/pepe.dat' )
 	})
@@ -117,7 +117,7 @@ describe( 'Cloud Storage', ()=>{
 		await file.store()
 
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
-		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( blobData1 ) )		
+		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( {data:[blobData1], name: 'pepe.dat'} ) )		
 	})
 
 	describe( 'Notify on change', ()=>{
