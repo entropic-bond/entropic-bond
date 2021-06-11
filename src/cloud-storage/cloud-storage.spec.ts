@@ -1,10 +1,27 @@
 import { Persistent, persistent, registerClassFactory } from '../persistent/persistent'
-import { JsonStream } from '../store/json-stream'
+import { JsonDataSource } from '../store/json-data-source'
 import { Model } from '../store/model'
 import { Store } from '../store/store'
 import { CloudStorage } from './cloud-storage'
-import { MockCloudStorage, MockFile } from './mock-cloud-storage'
-import { StoredFile } from './stored-file'
+import { MockCloudStorage } from './mock-cloud-storage'
+import { StoredFile, StoredFileEvent } from './stored-file'
+
+class MockFile {
+	constructor( data: BlobPart[], filename: string ) {
+		this.data = data[0] as any
+		this.name = filename
+	}
+	data: Uint8Array
+	name: string
+	lastModified: any
+	size: number
+	type: any
+	arrayBuffer: any
+	slice: any
+	stream: any
+	text: any
+}
+global.File = MockFile
 
 @registerClassFactory( 'Test', ()=>new Test() )
 class Test extends Persistent {
@@ -23,7 +40,7 @@ describe( 'Cloud Storage', ()=>{
 	const blobData2 = new Uint8Array([0x6c, 0x6c, 0x6f, 0x2c, 0x48, 0x65, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x21]);
 	const fileData = new MockFile( [blobData1], 'pepe.dat' )
 
-	const mockCloudStorage = new MockCloudStorage()
+	const mockCloudStorage = new MockCloudStorage( 'mock-data-folder/' )
 
 	beforeEach(()=>{
 		CloudStorage.useCloudStorage( mockCloudStorage )
@@ -43,13 +60,14 @@ describe( 'Cloud Storage', ()=>{
 		await file.store( fileData )
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( blobData1 ) )		
-		expect( file.originalFileName ).toEqual( 'pepe.dat' )
+		expect( file.originalFileName ).toEqual( 'pepe.dat'  )
+		expect( file.url ).toEqual( 'mock-data-folder/pepe.dat' )
 	})
 	
 	it( 'should get a url', async ()=>{
 		await file.store( blobData1 )
 
-		expect( file.url ).toEqual( 'file://' + file.id )
+		expect( file.url ).toEqual( 'mock-data-folder/' + file.id )
 	})
 	
 	it( 'should report metadata', async ()=>{
@@ -67,6 +85,20 @@ describe( 'Cloud Storage', ()=>{
 		expect( file.url ).toBeUndefined()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).not.toBeDefined()		
 	})
+
+	it( 'should throw if not stored file', async ()=>{
+		let thrown = false
+		
+		try{
+			await file.delete()
+		}
+		catch {
+			thrown = true
+		}
+
+		expect( thrown ).toBeTruthy()
+	})
+	
 
 	it( 'should overwrite file on subsequent writes', async ()=>{
 		const deleteSpy = jest.spyOn( file, 'delete' )
@@ -88,13 +120,52 @@ describe( 'Cloud Storage', ()=>{
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( blobData1 ) )		
 	})
 
+	describe( 'Notify on change', ()=>{
+		let spy: jest.Mock
+
+		beforeEach(()=>{
+			spy = jest.fn()
+			file.onChange( spy )
+		})
+
+		afterEach( ()=>	spy.mockClear() )
+
+		it( 'should notify on seting pendind data to store', ()=>{
+			file.setDataToStore( fileData )
+			expect( spy ).toHaveBeenNthCalledWith( 1, { 
+				event: StoredFileEvent.pendingDataSet,
+				pendingData: fileData,
+				storedFile: file 
+			})
+		})
+
+		it( 'should notify on data store', async ()=>{
+			await file.store( fileData )
+			expect( spy ).toHaveBeenNthCalledWith( 1, { 
+				event: StoredFileEvent.stored,
+				storedFile: file 
+			})
+		})
+
+		it( 'should notify on delete', async ()=>{
+			await file.store( fileData )
+			spy.mockClear()
+
+			await file.delete()
+			expect( spy ).toHaveBeenNthCalledWith( 1, { 
+				event: StoredFileEvent.deleted,
+				storedFile: file 
+			})
+		})
+	})	
+
 	describe( 'Streaming', ()=>{
 		const database = {}
 		let model: Model<Test>
 		let testObj: Test
 
 		beforeEach(()=>{
-			Store.useDataSource( new JsonStream( database ) )
+			Store.useDataSource( new JsonDataSource( database ) )
 			testObj = new Test()
 			model = Store.getModel<Test>( testObj )
 		})
@@ -105,7 +176,7 @@ describe( 'Cloud Storage', ()=>{
 
 			expect( database[ testObj.className ][ testObj.id ].file ).toBeDefined()
 			expect( database[ testObj.className ][ testObj.id ].file.reference ).toEqual( testObj.file.id )
-			expect( database[ testObj.className ][ testObj.id ].file.url ).toEqual( 'file://' + testObj.file.id )
+			expect( database[ testObj.className ][ testObj.id ].file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
 			expect( database[ testObj.className ][ testObj.id ].file.cloudStorageProviderName ).toEqual( 'MockCloudStorage' )
 			expect( database[ testObj.className ][ testObj.id ].file.originalFileName ).toEqual( 'test.dat' )
 		})
@@ -117,7 +188,7 @@ describe( 'Cloud Storage', ()=>{
 			const newTestObj = await model.findById( testObj.id )
 
 			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
-			expect( newTestObj.file.url ).toEqual( 'file://' + testObj.file.id )
+			expect( newTestObj.file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
 		})
 
 		it( 'should replace file on save after load', async ()=>{
@@ -129,7 +200,7 @@ describe( 'Cloud Storage', ()=>{
 			const newTestObj = await model.findById( testObj.id )
 
 			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
-			expect( newTestObj.file.url ).toEqual( 'file://' + testObj.file.id )
+			expect( newTestObj.file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
 			expect( deleteSpy ).not.toHaveBeenCalled()
 
 			testObj.file.setDataToStore( blobData2 )

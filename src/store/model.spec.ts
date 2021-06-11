@@ -1,4 +1,4 @@
-import { JsonStream } from './json-stream'
+import { JsonDataSource } from './json-data-source'
 import { DerivedUser, SubClass, TestUser } from './mocks/test-user'
 import { Model } from './model'
 import { Store } from './store'
@@ -8,10 +8,10 @@ import { DataSource } from './data-source'
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
-	const rawData = ()=> ( Store.dataSource as JsonStream ).rawData 
+	const rawData = ()=> ( Store.dataSource as JsonDataSource ).rawData 
 
 	beforeEach(()=> {
-		Store.useDataSource( new JsonStream( JSON.parse( JSON.stringify( testData ) ) ) )
+		Store.useDataSource( new JsonDataSource( JSON.parse( JSON.stringify( testData ) ) ) )
 		
 		testUser = new TestUser()
 		testUser.name = {
