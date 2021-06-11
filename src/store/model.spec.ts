@@ -176,14 +176,14 @@ describe( 'Model', ()=>{
 		})
 
 		it( 'should retrieve derived object by id ', async ()=>{
-			const derived = await model.findById( 'user4' )
+			const derived = await model.findById<DerivedUser>( 'user4' )
 
 			expect( derived ).toBeInstanceOf( DerivedUser )
 			expect( ( derived as DerivedUser ).salary ).toBe( 2800 )
 		})
 
 		it( 'should find instances of derived classes', async ()=>{
-			const derived = await model.find().instanceOf( 'DerivedUser' ).get()
+			const derived = await model.find().instanceOf<DerivedUser>( 'DerivedUser' ).get()
 
 			expect( derived[0] ).toBeInstanceOf( DerivedUser )
 			expect( ( derived[0] as DerivedUser ).salary ).toBe( 2800 )

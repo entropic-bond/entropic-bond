@@ -23,13 +23,14 @@ export class Model<T extends Persistent>{
 	 * @param instance you can pass an instace that will be filled with the found data
 	 * @returns a promise resolving to an instance with the found data
 	 */
-	findById( id: string, instance?: T ): Promise<T> {
-		return new Promise<T>( ( resolve, reject ) => {
+	findById<D extends T>( id: string, instance?: D ): Promise<D> {
+		return new Promise<D>( ( resolve, reject ) => {
 			this._stream.findById( id, this.collectionName )
-				.then(( data: PersistentObject<T> ) => {
+				.then(( data: PersistentObject<D> ) => {
 					if ( data ) {
+
 						if ( !instance ) instance = Persistent.createInstance( data )
-						else instance.fromObject( data as PersistentObject<T> ) 
+						else instance.fromObject( data ) 
 
 						resolve( instance )
 					}
@@ -73,25 +74,25 @@ export class Model<T extends Persistent>{
 		return new Query<T>( this )
 	}
 
-	query( queryObject?: QueryObject<T>): Promise<T[]> {
+	query<D extends T>( queryObject?: QueryObject<T>): Promise<D[]> {
 		return this.mapToInstance( 
 			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 
-	next( limit?: number ) {
+	next<D extends T>( limit?: number ): Promise<D[]> {
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
-	prev( limit?: number ) {
+	prev<D extends T>( limit?: number ): Promise<D[]> {
 		return this.mapToInstance( () => this._stream.prev( limit ) )
 	}
 
-	private mapToInstance( from: ()=>Promise<DocumentObject[]> ): Promise<T[]> {
-		return new Promise<T[]>( ( resolve, reject ) => {
+	private mapToInstance<D extends T>( from: ()=>Promise<DocumentObject[]> ): Promise<D[]> {
+		return new Promise<D[]>( ( resolve, reject ) => {
 			from()
 				.then( data => resolve( 
-					data.map( obj => Persistent.createInstance<T>( obj as any ))
+					data.map( obj => Persistent.createInstance( obj as any ))
 				))
 				.catch( error => reject( error ) )
 		})
@@ -134,7 +135,7 @@ class Query<T extends Persistent> {
 		return this
 	}
 
-	instanceOf<U extends T>( classId: U | string ) {
+	instanceOf<D extends T>( classId: D | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
 		this.queryObject.operations[ '__className' ] = {
 			operator: '==',
@@ -143,7 +144,7 @@ class Query<T extends Persistent> {
 		return this
 	}
 
-	get( limit?: number ) {
+	get<D extends T>( limit?: number ): Promise<D[]> {
 		if ( limit ) {
 			this.queryObject.limit = limit
 		}
