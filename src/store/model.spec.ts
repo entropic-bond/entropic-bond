@@ -181,7 +181,13 @@ describe( 'Model', ()=>{
 			expect( derived ).toBeInstanceOf( DerivedUser )
 			expect( ( derived as DerivedUser ).salary ).toBe( 2800 )
 		})
-		
+
+		it( 'should find instances of derived classes', async ()=>{
+			const derived = await model.find().instanceOf( 'DerivedUser' ).get()
+
+			expect( derived[0] ).toBeInstanceOf( DerivedUser )
+			expect( ( derived[0] as DerivedUser ).salary ).toBe( 2800 )
+		})
 		
 	})
 

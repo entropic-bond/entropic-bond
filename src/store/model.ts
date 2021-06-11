@@ -136,10 +136,11 @@ class Query<T extends Persistent> {
 
 	instanceOf<U extends T>( classId: U | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
-		this.queryObject[ '__className' ] = {
+		this.queryObject.operations[ '__className' ] = {
 			operator: '==',
 			value: className
 		}
+		return this
 	}
 
 	get( limit?: number ) {
