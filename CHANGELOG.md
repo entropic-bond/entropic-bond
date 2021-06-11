@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/entropic-bond/entropic-bond/compare/v1.5.0...v1.6.0) (2021-06-11)
+
+
+### Bug Fixes
+
+* instanceOf not working ([852235f](https://github.com/entropic-bond/entropic-bond/commit/852235f26f6a70e74157020f597312bd6d7c5b1b))
+
+
+### Features
+
+* StoredFile notifies on change ([1cce47e](https://github.com/entropic-bond/entropic-bond/commit/1cce47e4a541276468c606fc440a0e9190169cc0))
+
 # [1.5.0](https://github.com/entropic-bond/entropic-bond/compare/v1.4.4...v1.5.0) (2021-06-04)
 
 
