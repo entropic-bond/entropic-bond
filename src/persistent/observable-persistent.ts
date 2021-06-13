@@ -73,7 +73,7 @@ export class ObservablePersistent extends Persistent {
 	 * 									value will be	pushed into the array. 
 	 * @returns the inserted element or undefined if the element was not inserted.
 	 */
-	protected pushElement<T extends ObservablePersistent>( 
+	protected pushAndNotify<T extends ObservablePersistent>( 
 		arrayPropName: ClassArrayPropNames<T>, 
 		element: ArrayPropsElem<T>, 
 		isUnique?: CompareFunction<T> 
@@ -102,7 +102,7 @@ export class ObservablePersistent extends Persistent {
 	 * 									value will be	removed from the array. 
 	 * @returns the removed element or undefined if the element was not removed.
 	 */
-	protected removeElement<T extends ObservablePersistent>( 
+	protected removeAndNotify<T extends ObservablePersistent>( 
 		arrayPropName: ClassArrayPropNames<T>, 
 		element: ArrayPropsElem<T>,
 		isEqual: CompareFunction<T>

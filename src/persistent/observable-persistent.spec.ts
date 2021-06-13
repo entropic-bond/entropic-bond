@@ -11,11 +11,11 @@ class Character extends ObservablePersistent {
 	}
 
 	pushFriend( name: string, isUnique?: CompareFunction<string> ) {
-		return this.pushElement<Character>( 'friends', name, isUnique )
+		return this.pushAndNotify<Character>( 'friends', name, isUnique )
 	}
 
 	removeFriend( name: string, isEqual: CompareFunction<string> ) {
-		return this.removeElement<Character>( 'friends', name, isEqual )
+		return this.removeAndNotify<Character>( 'friends', name, isEqual )
 	}
 
 	get friends(): readonly string[] {
