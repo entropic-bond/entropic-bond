@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/entropic-bond/entropic-bond/compare/v1.7.0...v1.7.1) (2021-06-13)
+
+
+### Bug Fixes
+
+* renamed to pushAndNotify and removeAndNotify ([1fc2e04](https://github.com/entropic-bond/entropic-bond/commit/1fc2e04e24d6d441a6f959e0c4ab1214e2c50ce6))
+
 # [1.7.0](https://github.com/entropic-bond/entropic-bond/compare/v1.6.0...v1.7.0) (2021-06-13)
 
 
