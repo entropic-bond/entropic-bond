@@ -1,9 +1,11 @@
 import { Callback, Observable } from '../observable/observable';
-import { ClassArrayPropNames, ClassArrayProps, ClassPropNames, ClassProps, Elements } from '../types/utility-types';
+import { ClassArrayPropNames, ClassProps, Elements } from '../types/utility-types';
 import { Persistent } from './persistent';
 
 export type PropChangeEvent<T> = Partial<ClassProps<T>>
 export type PropChangeCallback<T> = Callback<PropChangeEvent<T>>
+type ArrayPropsElem<T> = Elements<T[ClassArrayPropNames<T>]>
+export type CompareFunction<T> = ( a: ArrayPropsElem<T>, b: ArrayPropsElem<T> )=>boolean
 
 export class ObservablePersistent extends Persistent {
 
@@ -59,37 +61,68 @@ export class ObservablePersistent extends Persistent {
 	}
 
 	/**
-	 * Inserts a new element in the arrayPropName member array. To keep all the 
-	 * elements unique, pass a function to in the isUnique parameter. If the
-	 * elements is successfully inserted, a notification with a property change event
-	 * will be fired.
+	 * Inserts a new element in an arbitrary array property of this class and 
+	 * fires a change event if successfully inserted. To avoid repeated elements
+	 * to be inserted, you can pass a function that checks for inequity.
 	 * 
-	 * @param arrayPropName the name of the array property of T where to insert the
-	 * 											new element.
-	 * @param value the element value to be inserted
-	 * @param isUnique a function that checks for inequity of the two elements passed 
-	 * 							as parameter. If the returned value is true, the value wil be
-	 * 							pushed into the array. 
-	 * @returns the inserted element or undefined if the element was not inserted
+	 * @param arrayPropName the name of the array property of this class where you
+	 * 											want to insert the	new element.
+	 * @param element the element to be inserted
+	 * @param isUnique a function that checks for inequity of the two elements 
+	 * 									passed as parameter. If the returned value is true, the 
+	 * 									value will be	pushed into the array. 
+	 * @returns the inserted element or undefined if the element was not inserted.
 	 */
-	pushElement<T extends ObservablePersistent>( 
+	protected pushElement<T extends ObservablePersistent>( 
 		arrayPropName: ClassArrayPropNames<T>, 
-		value: Elements<T[ClassArrayPropNames<T>]>, 
-		isUnique?: ( a: Elements<T[ClassArrayPropNames<T>]>, b: Elements<T[ClassArrayPropNames<T>]> )=>boolean 
-	): Elements<T[ClassArrayPropNames<T>]> {
+		element: ArrayPropsElem<T>, 
+		isUnique?: CompareFunction<T> 
+	): ArrayPropsElem<T> {
 
 		const pName = '_' + arrayPropName;
 		const alreadyIn = isUnique && this[ pName ].find( 
-			( element: Elements<T[ClassArrayPropNames<T>]> ) => !isUnique( element, value ) 
+			( item: ArrayPropsElem<T> ) => !isUnique( item, element ) 
 		)
 		if ( alreadyIn ) return undefined
 
-		this[ pName ].push( value )
+		this[ pName ].push( element )
 		this.notify({ [arrayPropName]: this[ arrayPropName as string ] })
-		return value
+		return element
 	}
 
-	removeElement( is?: number ){}
+	/**
+	 * Removes an element from an arbitrary array property of this class and fires
+	 * a change event on operation success.
+	 * 
+	 * @param arrayPropName the name of the array property of this class where you
+	 * 											want to insert the	new element.
+	 * @param element the element to be inserted
+	 * @param isEqual a function that checks for equity of the two elements 
+	 * 									passed as parameter. If the returned value is true, the 
+	 * 									value will be	removed from the array. 
+	 * @returns the removed element or undefined if the element was not removed.
+	 */
+	protected removeElement<T extends ObservablePersistent>( 
+		arrayPropName: ClassArrayPropNames<T>, 
+		element: ArrayPropsElem<T>,
+		isEqual: CompareFunction<T>
+	): ArrayPropsElem<T> {
+
+		const pName = '_' + arrayPropName;
+
+		const originalLength = this[ pName ].length
+
+		this[ pName ] = this[ pName ].filter( 
+			( item: ArrayPropsElem<T> ) => !isEqual( item, element ) 
+		)
+
+		if ( originalLength === this[ pName ].length ) {
+			return undefined
+		}
+
+		this.notify({ [arrayPropName]: this[ arrayPropName as string ] })
+		return element
+	}
 
 	private _onChange: Observable<PropChangeEvent<ObservablePersistent>> = new Observable<PropChangeEvent<ObservablePersistent>>()
 }

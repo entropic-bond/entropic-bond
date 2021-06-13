@@ -1,4 +1,4 @@
-import { ObservablePersistent } from './observable-persistent'
+import { CompareFunction, ObservablePersistent } from './observable-persistent'
 
 class Character extends ObservablePersistent {
 	setName( value: string ) {
@@ -10,8 +10,12 @@ class Character extends ObservablePersistent {
 		return this._name
 	}
 
-	pushFriend( name: string, isUnique?: (a: string, b: string)=>boolean ) {
+	pushFriend( name: string, isUnique?: CompareFunction<string> ) {
 		return this.pushElement<Character>( 'friends', name, isUnique )
+	}
+
+	removeFriend( name: string, isEqual: CompareFunction<string> ) {
+		return this.removeElement<Character>( 'friends', name, isEqual )
 	}
 
 	get friends(): readonly string[] {
@@ -100,5 +104,35 @@ describe('Observable Persistent', ()=>{
 			expect( hero.friends ).toHaveLength( 1 )
 			expect( spy ).toHaveBeenCalledTimes( 1 )
 		})
+		
+		it( 'should remove an element from array member and notify', ()=>{
+			const isEqual = ( a: string, b: string ) => a===b
+			hero.pushFriend( 'John' )
+			hero.pushFriend( 'Jaume' )
+			spy.mockReset()
+			expect( hero.friends ).toHaveLength( 2 )
+
+			const res = hero.removeFriend( 'John', isEqual )
+			expect( res ).toEqual( 'John' )
+			expect( hero.friends ).not.toContain( 'John' )
+			expect( hero.friends ).toContain( 'Jaume' )
+			expect( spy ).toHaveBeenCalledTimes(1)
+			expect( spy ).toHaveBeenCalledWith({ friends: ['Jaume'] })
+		})
+		
+		it( 'should not notify on element not removed', ()=>{
+			const isEqual = ( a: string, b: string ) => a===b
+			hero.pushFriend( 'John' )
+			hero.pushFriend( 'Jaume' )
+			spy.mockReset()
+			expect( hero.friends ).toHaveLength( 2 )
+
+			const res = hero.removeFriend( 'Nobody', isEqual )
+			expect( res ).toBeUndefined()
+			expect( hero.friends ).toContain( 'John' )
+			expect( hero.friends ).toContain( 'Jaume' )
+			expect( spy ).not.toHaveBeenCalled()
+		})
+		
 	})
 })
