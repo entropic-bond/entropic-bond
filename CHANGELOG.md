@@ -1,3 +1,17 @@
+# [1.7.0](https://github.com/entropic-bond/entropic-bond/compare/v1.6.0...v1.7.0) (2021-06-13)
+
+
+### Bug Fixes
+
+* bug in MockCloudStorage ([c14a764](https://github.com/entropic-bond/entropic-bond/commit/c14a764bad258f296f7ef58b4fa93086ebb5c0c1))
+* some model methods can typecast at prefix ([2b60d26](https://github.com/entropic-bond/entropic-bond/commit/2b60d26bf1c0a66267b8f8f3d255a1c11a47de28))
+
+
+### Features
+
+* pushElement ([53398cc](https://github.com/entropic-bond/entropic-bond/commit/53398cc61dfaa1395381ba67e161da99349b4328))
+* removeElement ([410a45d](https://github.com/entropic-bond/entropic-bond/commit/410a45d8c055fcee7d6fb55f6fa58459336f4a92))
+
 # [1.6.0](https://github.com/entropic-bond/entropic-bond/compare/v1.5.0...v1.6.0) (2021-06-11)
 
 
