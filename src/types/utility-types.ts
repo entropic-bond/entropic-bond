@@ -12,6 +12,22 @@ export type ClassProps<T> = Pick<T, ClassPropNames<T>>
 
 export type SomeClassProps<T> = Partial< ClassProps< T > >
 
+export type ClassArrayPropNames<T> = {
+	[ K in keyof T]: T[K] extends unknown[] | Readonly<unknown[]>? K : never
+}[keyof T]
+
+export type ClassArrayProps<T> = Pick<T, ClassArrayPropNames<T>>
+
+export type Elements<
+  T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any>
+> = T extends ReadonlyArray<any>
+  ? T[number]
+  : T extends ArrayLike<any>
+  ? T[number]
+  : T extends object
+  ? T[keyof T]
+  : never;
+
 /*
 // How to use 
 

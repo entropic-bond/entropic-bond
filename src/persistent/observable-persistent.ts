@@ -1,5 +1,5 @@
 import { Callback, Observable } from '../observable/observable';
-import { ClassProps } from '../types/utility-types';
+import { ClassArrayPropNames, ClassArrayProps, ClassPropNames, ClassProps, Elements } from '../types/utility-types';
 import { Persistent } from './persistent';
 
 export type PropChangeEvent<T> = Partial<ClassProps<T>>
@@ -57,6 +57,39 @@ export class ObservablePersistent extends Persistent {
 	protected notify<T extends ObservablePersistent>( event: PropChangeEvent<T> ) {
 		this._onChange.notify(event)
 	}
+
+	/**
+	 * Inserts a new element in the arrayPropName member array. To keep all the 
+	 * elements unique, pass a function to in the isUnique parameter. If the
+	 * elements is successfully inserted, a notification with a property change event
+	 * will be fired.
+	 * 
+	 * @param arrayPropName the name of the array property of T where to insert the
+	 * 											new element.
+	 * @param value the element value to be inserted
+	 * @param isUnique a function that checks for inequity of the two elements passed 
+	 * 							as parameter. If the returned value is true, the value wil be
+	 * 							pushed into the array. 
+	 * @returns the inserted element or undefined if the element was not inserted
+	 */
+	pushElement<T extends ObservablePersistent>( 
+		arrayPropName: ClassArrayPropNames<T>, 
+		value: Elements<T[ClassArrayPropNames<T>]>, 
+		isUnique?: ( a: Elements<T[ClassArrayPropNames<T>]>, b: Elements<T[ClassArrayPropNames<T>]> )=>boolean 
+	): Elements<T[ClassArrayPropNames<T>]> {
+
+		const pName = '_' + arrayPropName;
+		const alreadyIn = isUnique && this[ pName ].find( 
+			( element: Elements<T[ClassArrayPropNames<T>]> ) => !isUnique( element, value ) 
+		)
+		if ( alreadyIn ) return undefined
+
+		this[ pName ].push( value )
+		this.notify({ [arrayPropName]: this[ arrayPropName as string ] })
+		return value
+	}
+
+	removeElement( is?: number ){}
 
 	private _onChange: Observable<PropChangeEvent<ObservablePersistent>> = new Observable<PropChangeEvent<ObservablePersistent>>()
 }
