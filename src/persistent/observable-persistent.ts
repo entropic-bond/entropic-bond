@@ -1,4 +1,4 @@
-import { Callback, Observable } from '../observable/observable';
+import { Callback, Observable, Unsubscriber } from '../observable/observable';
 import { ClassArrayPropNames, ClassProps, Elements } from '../types/utility-types';
 import { Persistent } from './persistent';
 
@@ -14,11 +14,10 @@ export class ObservablePersistent extends Persistent {
 	 * the listener callback will be called with the property change event.
 	 * 
 	 * @param listenerCallback the listener callback
-	 * @returns a reference to the passed listener callback 
+	 * @returns a function to unsubscribe the listener from further notifications
 	 */
-	onChange( listenerCallback: PropChangeCallback<this> ) {
-		this._onChange.subscribe( listenerCallback )
-		return listenerCallback
+	onChange( listenerCallback: PropChangeCallback<this> ): Unsubscriber {
+		return this._onChange.subscribe( listenerCallback )
 	}
 
 	/**

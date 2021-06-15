@@ -22,8 +22,7 @@ describe('observer', () => {
 		const mockObserver = new ObserverTest();
 		const changedSpy = jest.spyOn( mockObserver, 'userChanged' )
 		
-		const result = observable.subscribe(()=>mockObserver.userChanged()); 
-		
+		observable.subscribe( ()=>mockObserver.userChanged() )
 		observable.notify()
 		
 		expect( changedSpy ).toBeCalledTimes(1)
@@ -52,6 +51,7 @@ describe('observer', () => {
 		expect(callbackTwo).toHaveBeenCalledTimes(1)
 		expect(callbackThree).toHaveBeenCalledTimes(1)
 	})
+
 	it( 'should notify with event', ()=>{
 		const myCallback = jest.fn()
 		const obj: MockEvent = {name: 'Juan'};
@@ -85,4 +85,13 @@ describe('observer', () => {
 		expect(callbackThree).toHaveBeenCalledTimes(1)
 	})
 
+	it( 'should return an unsubscribe function on subscribe', ()=>{
+		const cb = jest.fn()
+		const unsubscriber = observable.subscribe( cb )	
+		unsubscriber()
+
+		observable.notify()
+		expect( cb ).not.toHaveBeenCalled()
+	})
+	
 })

@@ -212,7 +212,6 @@ export class Persistent {
 	}
 
 	@persistent private _id: string
-	// @persistent private __documentReference: DocumentReference
 	private _loaded: boolean
 	private _persistentProperties: PersistentProperty[]
 	private static _factoryMap: FactoryMap = {}
@@ -272,7 +271,3 @@ export function registerClassFactory( className: string, factory: PersistentFact
 		constructor.prototype.__className = className
 	}
 }
-
-
-
-

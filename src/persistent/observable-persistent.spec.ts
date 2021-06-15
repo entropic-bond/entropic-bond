@@ -48,9 +48,14 @@ describe('Observable Persistent', ()=>{
 		expect( changed ).toHaveBeenCalledWith({ name: 'Rogue I' })
 	})
 
-	it( 'should return callback reference on subscription', ()=>{
+	it( 'should return a unsubscribe function on subscription', ()=>{
 		const changed = jest.fn()
-		expect( hero.onChange( changed ) ).toBe( changed )
+
+		const unsubscribe = hero.onChange( changed )
+		unsubscribe()
+		hero.setName( 'Rogue II' )
+
+		expect( changed ).not.toHaveBeenCalled()
 	})
 
 	describe( 'Array Props', ()=>{
