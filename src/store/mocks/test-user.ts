@@ -1,4 +1,4 @@
-import { persistent, Persistent, persistentReference, registerClassFactory } from '../../persistent/persistent'
+import { persistent, Persistent, persistentReference, persistentReferenceAt, registerClassFactory } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
@@ -72,12 +72,30 @@ export class TestUser extends Persistent {
 		return this._manyRefs
 	}
 
+	set derived( value: DerivedUser ) {
+		this._derived = value
+	}
+	
+	get derived(): DerivedUser {
+		return this._derived
+	}
+	
+	set manyDerived( value: DerivedUser[] ) {
+		this._manyDerived = value
+	}
+	
+	get manyDerived(): DerivedUser[] {
+		return this._manyDerived
+	}
+	
 	@persistent private _name: Name
 	@persistent private _age: number
 	@persistent private _admin: boolean
 	@persistent private _skills: string[]
 	@persistentReference private _documentRef: SubClass
 	@persistentReference private _manyRefs: SubClass[] = []
+	@persistentReferenceAt('TestUser') private _derived: DerivedUser
+	@persistentReferenceAt('TestUser') private _manyDerived: DerivedUser[]
 }
 
 @registerClassFactory( 'DerivedUser', ()=>new DerivedUser() )

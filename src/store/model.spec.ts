@@ -201,6 +201,11 @@ describe( 'Model', ()=>{
 			ref2 = new SubClass(); ref2.year = 2082
 			testUser.manyRefs.push( ref1 )
 			testUser.manyRefs.push( ref2 )
+			testUser.derived = new DerivedUser()
+			testUser.derived.salary = 1350
+			testUser.manyDerived = [ new DerivedUser(), new DerivedUser() ]
+			testUser.manyDerived[0].salary = 990
+			testUser.manyDerived[1].salary = 1990
 			await model.save( testUser )
 		})
 
@@ -257,6 +262,45 @@ describe( 'Model', ()=>{
 			expect( loadedUser.manyRefs[0].year ).toBe( 2081 )
 			expect( loadedUser.manyRefs[1].year ).toBe( 2082 )
 		})
+
+		it( 'should save a reference when declared @persistentAt', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+
+			expect( loadedUser.derived.wasLoaded ).toBeFalsy()
+			expect( 
+				loadedUser.derived.getCollectionWhereReferenceIsStored() 
+			).toEqual( 'TestUser' )
+
+			await Store.populate( loadedUser.derived )
+
+			expect( loadedUser.derived.wasLoaded ).toBeTruthy()
+			expect( loadedUser.derived.salary ).toBe( 1350 )
+		})
+
+		it( 'should populate from special collection when declared with @persistentRefAt', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			await Store.populate( loadedUser.derived )
+
+			expect( loadedUser.derived.wasLoaded ).toBeTruthy()
+			expect( loadedUser.derived.salary ).toBe( 2800 )
+		})
+		
+		it( 'should save a reference when declared @persistentAt as array', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+
+			expect( loadedUser.manyDerived[0].wasLoaded ).toBeFalsy()
+			expect( 
+				loadedUser.manyDerived[0].getCollectionWhereReferenceIsStored() 
+			).toEqual( 'TestUser' )
+
+			await Store.populate( loadedUser.manyDerived )
+
+			expect( loadedUser.manyDerived[0].wasLoaded ).toBeTruthy()
+			expect( loadedUser.manyDerived[0].salary ).toBe( 990 )
+			expect( loadedUser.manyDerived[1].wasLoaded ).toBeTruthy()
+			expect( loadedUser.manyDerived[1].salary ).toBe( 1990 )
+		})
+
 	})
 
 	describe( 'Operations on queries', ()=>{
@@ -279,14 +323,14 @@ describe( 'Model', ()=>{
 			const docs = await model.find().orderBy( 'age', 'desc' ).get()
 
 			expect( docs[0].id ).toEqual( 'user3' )
-			expect( docs[1].id ).toEqual( 'user4' )
+			expect( docs[1].id ).toEqual( 'user5' )
 		})
 
 		it( 'should sort by deep property path', async ()=>{
 			const docs = await model.find().orderByDeepProp( 'name.firstName', 'desc' ).get()
 
-			expect( docs[0].id ).toEqual( 'user4' )
-			expect( docs[1].id ).toEqual( 'user3' )
+			expect( docs[0].id ).toEqual( 'user6' )
+			expect( docs[1].id ).toEqual( 'user5' )
 		})
 		
 		it( 'should sort by swallow property path', async ()=>{

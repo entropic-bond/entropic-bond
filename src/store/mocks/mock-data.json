@@ -50,6 +50,59 @@
 			"admin": false,
 			"skills": ["skill41", "skill42", "skill43"],
 			"salary": 2800
+		},
+		"user5": {
+			"__className": "TestUser",
+			"id": "user5",
+			"name": {
+				"firstName": "userFirstName5",
+				"lastName": "userLastName5",
+				"ancestorName": {
+					"father": "user5Father"
+				}
+			},
+			"age": "41",
+			"skills": ["skill21", "skill22", "skill23"],
+			"derived": {
+				"__documentReference": {
+					"id": "user5",
+					"className": "DerivedUser",
+					"storedInCollection": "DerivedUser"
+				}
+			}	
+		},
+		"user6": {
+			"__className": "TestUser",
+			"id": "user6",
+			"name": {
+				"firstName": "userFirstName6",
+				"lastName": "userLastName6",
+				"ancestorName": {
+					"father": "user6Father"
+				}
+			},
+			"age": 40,
+			"skills": ["skill21", "skill22", "skill23"],
+			"derived": {
+				"__documentReference": {
+					"id": "user4",
+					"className": "DerivedUser",
+					"storedInCollection": "TestUser"
+				}
+			}
+		}
+	},
+	"DerivedUser": {
+		"user4": {
+			"__className": "DerivedUser",
+			"id": "user5",
+			"name": {
+				"firstName": "userFirstName5",
+				"lastName": "userLastName5"
+			},
+			"age": 35,
+			"admin": false,
+			"salary": 2300
 		}
 	}
 }

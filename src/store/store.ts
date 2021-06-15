@@ -21,14 +21,18 @@ export class Store {
 	}
 
 	static populate< T extends Persistent>( instance: T | T[] ): Promise<T | T[]> {
-		
+				
 		if ( Array.isArray( instance ) ) {
-			const model = this.getModel( instance[0] )
+			const storedInCollection = instance[0].getCollectionWhereReferenceIsStored()
+
+			const model = this.getModel( storedInCollection )
 			const promises = instance.map( item => model.findById( item.id, item ) )
 			return Promise.all( promises )
 		}
 		else {
-			const model = this.getModel( instance )
+			const storedInCollection = instance.getCollectionWhereReferenceIsStored()
+
+			const model = this.getModel( storedInCollection )
 			return model.findById( instance.id, instance )
 		}
 	}

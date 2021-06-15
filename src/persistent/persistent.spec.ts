@@ -331,8 +331,8 @@ describe( 'Persistent', ()=>{
 
 				expect( obj.arrayOfRefs ).toHaveLength( 2 )
 				expect( obj.arrayOfRefs[0] ).toEqual({
-					__documentRef: {
-						collection: 'PersistentClass',
+					__documentReference: {
+						storedInCollection: 'PersistentClass',
 						className: 'PersistentClass',
 						id: ref1.id
 					}

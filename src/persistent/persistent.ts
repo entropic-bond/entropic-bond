@@ -16,6 +16,12 @@ export type Collections = {
 	[ collectionPath: string ]: PersistentObject<Persistent>[]
 }
 
+interface DocumentReference {
+	id: string
+	className: string
+	storedInCollection: string
+}
+
 export class Persistent {
 	static registerFactory( className: string, factory: () => Persistent ) {
 		this._factoryMap[ className ] = factory
@@ -56,7 +62,7 @@ export class Persistent {
 	private fromObj( obj: PersistentObject<this> ) {
 
 		this._persistentProperties.forEach( prop => {
-			const propName = prop.name.slice( 1 )		//removes leading underscore
+			const propName = this.removeUnderscore( prop )
 
 			const value = obj[ propName ]
 			if ( value ) {
@@ -84,7 +90,7 @@ export class Persistent {
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
-			const propName = prop.name.slice( 1 )		//removes leading underscore
+			const propName = this.removeUnderscore( prop )
 			
 			if ( propValue ) {
 
@@ -113,9 +119,11 @@ export class Persistent {
 			return Persistent.createInstance( value as PersistentObject<Persistent> )
 		}
 
-		if ( value[ '__documentRef' ] ) {
-			const emptyInstance = Persistent.classFactory( value[ '__documentRef' ].className )()
-			emptyInstance.fromObj( value[ '__documentRef' ] )
+		if ( value[ '__documentReference' ] ) {
+			const ref: DocumentReference = value[ '__documentReference' ]
+			const emptyInstance = Persistent.classFactory( ref.className )()
+			emptyInstance.fromObj( ref )
+			emptyInstance[ '__referenceStoredInCollection' ] = ref.storedInCollection
 
 			return emptyInstance
 		}
@@ -162,11 +170,11 @@ export class Persistent {
 		const collectionPath = ( value: Persistent ) => prop.storeInCollection || value.className
 		
 		const buildRefObject = ( value: Persistent ) => ({
-			__documentRef: {
-				collection: collectionPath( value ),
+			__documentReference: {
+				storedInCollection: collectionPath( value ),
 				className: value.className,
 				id: value.id
-			}
+			} as DocumentReference
 		}) 
 
 		if ( Array.isArray( propValue ) ) {
@@ -185,9 +193,17 @@ export class Persistent {
 		}
 	}
 
+	getCollectionWhereReferenceIsStored(): string {
+		return this['__referenceStoredInCollection']
+	}
+
 	private pushDocument( collections: Collections, collectionName: string, document: PersistentObject<this> ) {
 		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
 		collections[ collectionName ].push( document )
+	}
+
+	private removeUnderscore( prop: PersistentProperty ) {
+		return prop.name.slice(1)
 	}
 
 	static createInstance<T extends Persistent>( obj: PersistentObject<T>): T {
@@ -196,6 +212,7 @@ export class Persistent {
 	}
 
 	@persistent private _id: string
+	// @persistent private __documentReference: DocumentReference
 	private _loaded: boolean
 	private _persistentProperties: PersistentProperty[]
 	private static _factoryMap: FactoryMap = {}
