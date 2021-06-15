@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/entropic-bond/entropic-bond/compare/v1.7.1...v1.7.2) (2021-06-15)
+
+
+### Bug Fixes
+
+* [@persistent](https://github.com/persistent)At not setting proper storing collection ([33ee00e](https://github.com/entropic-bond/entropic-bond/commit/33ee00e5dc05f0fbc57eed3a92a0591a792aa7a5))
+
 ## [1.7.1](https://github.com/entropic-bond/entropic-bond/compare/v1.7.0...v1.7.1) (2021-06-13)
 
 
