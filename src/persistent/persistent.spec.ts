@@ -315,6 +315,11 @@ describe( 'Persistent', ()=>{
 			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
 		})
 		
+		it( 'should not create root reference for existing references', ()=>{
+			expect( Object.values(
+				newPerson.toObject().__rootCollections 
+			)).toHaveLength( 1 )
+		})
 		
 		it( 'should read swallow object document as reference', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )

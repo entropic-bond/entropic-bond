@@ -192,7 +192,8 @@ export class Persistent {
 		}
 	}
 
-	private pushDocument( collections: Collections, collectionName: string, document: PersistentObject<this> ) {
+	private pushDocument( collections: Collections, collectionName: string, document: PersistentObject<Persistent> ) {
+		if ( !document.id ) return
 		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
 		collections[ collectionName ].push( document )
 	}
