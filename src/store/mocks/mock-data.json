@@ -65,7 +65,7 @@
 			"skills": ["skill21", "skill22", "skill23"],
 			"derived": {
 				"__documentReference": {
-					"id": "user5",
+					"id": "user3",
 					"className": "DerivedUser",
 					"storedInCollection": "DerivedUser"
 				}

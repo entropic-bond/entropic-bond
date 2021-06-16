@@ -162,13 +162,16 @@ export class Persistent {
 		
 		const collectionPath = ( value: Persistent ) => prop.storeInCollection || value.className
 		
-		const buildRefObject = ( value: Persistent ) => ({
-			__documentReference: {
-				storedInCollection: collectionPath( value ),
-				className: value.className,
-				id: value.id
-			} as DocumentReference
-		}) 
+		const buildRefObject = ( value: Persistent ) => {
+			if ( value[ '__documentReference' ] ) return value
+			else return {
+				__documentReference: {
+					storedInCollection: collectionPath( value ),
+					className: value.className,
+					id: value.id
+				} as DocumentReference
+			}
+		}
 
 		if ( Array.isArray( propValue ) ) {
 

@@ -6,11 +6,11 @@ import testData from './mocks/mock-data.json'
 import { DataSource } from './data-source'
 
 describe( 'Model', ()=>{
-	let model: Model< TestUser >
+	let model: Model< TestUser >/*  */
 	let testUser: TestUser
 	const rawData = ()=> ( Store.dataSource as JsonDataSource ).rawData 
 
-	beforeEach(()=> {
+	beforeEach( async ()=> {
 		Store.useDataSource( new JsonDataSource( JSON.parse( JSON.stringify( testData ) ) ) )
 		
 		testUser = new TestUser()
@@ -218,7 +218,7 @@ describe( 'Model', ()=>{
 				})
 			)
 		})
-
+		
 		it( 'should read a swallow document reference', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 

@@ -321,7 +321,14 @@ describe( 'Persistent', ()=>{
 			})
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
-		
+
+		it( 'should save existing refs properly', ()=>{
+			const res = newPerson.toObject()
+
+			expect( res.document.id ).not.toBeDefined()
+			expect( res.document ).toEqual( newPerson.document )
+		})
+
 		describe( 'Array of references', ()=>{
 		
 			it( 'should create an object with array of refs', ()=>{
