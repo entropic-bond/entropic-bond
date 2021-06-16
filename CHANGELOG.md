@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/entropic-bond/entropic-bond/compare/v1.7.2...v1.7.3) (2021-06-16)
+
+
+### Bug Fixes
+
+* saving unmodified refs overwrite original data in the database ([6880c3c](https://github.com/entropic-bond/entropic-bond/commit/6880c3cc0eb707dbdbd6ee1a06d494db37b76278))
+
 ## [1.7.2](https://github.com/entropic-bond/entropic-bond/compare/v1.7.1...v1.7.2) (2021-06-15)
 
 
