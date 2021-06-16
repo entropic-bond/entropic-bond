@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/entropic-bond/entropic-bond/compare/v1.7.4...v1.7.5) (2021-06-16)
+
+
+### Bug Fixes
+
+* toReferenceObj returning an incorrect value ([293c400](https://github.com/entropic-bond/entropic-bond/commit/293c400470458206f4906f4945a27052a55f6b72))
+
 ## [1.7.4](https://github.com/entropic-bond/entropic-bond/compare/v1.7.3...v1.7.4) (2021-06-16)
 
 
