@@ -1,4 +1,4 @@
-import { Callback, Observable } from '../observable/observable'
+import { Callback, Observable, Unsubscriber } from '../observable/observable'
 import { persistent, Persistent, registerClassFactory } from '../persistent/persistent'
 import { CloudStorage, StorableData, UploadControl } from './cloud-storage'
 
@@ -70,12 +70,8 @@ export class StoredFile extends Persistent{
 		return this._originalFileName
 	}
 
-	onChange( listenerCallback: Callback<StoredFileChange> ) {
+	onChange( listenerCallback: Callback<StoredFileChange> ): Unsubscriber {
 		return this._onChange.subscribe( listenerCallback )
-	}
-
-	removeOnChange( listenerCallback: Callback<StoredFileChange> ) {
-		return this._onChange.unsubscribe( listenerCallback )
 	}
 
 	@persistent private _reference: string
