@@ -43,14 +43,8 @@ export class Persistent {
 	get id() {
 		return this._id;
 	}
-	
-	get wasLoaded() {
-		return this._loaded
-	}
 
-	protected loaded(){
-		this._loaded = true
-	}
+	protected loaded(){}
 
 	fromObject( obj: PersistentObject<this> ) {
 		this.fromObj( obj )

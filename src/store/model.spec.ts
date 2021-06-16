@@ -225,14 +225,13 @@ describe( 'Model', ()=>{
 			expect( loadedUser.documentRef ).toBeInstanceOf( SubClass )
 			expect( loadedUser.documentRef.id ).toBeUndefined()
 			expect( loadedUser.documentRef.year ).toBeUndefined()
-			expect( loadedUser.documentRef.wasLoaded ).toBeFalsy()
 		})
 
 		it( 'should fill data of swallow document reference', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
 			await Store.populate( loadedUser.documentRef )
-			expect( loadedUser.documentRef.wasLoaded ).toBeTruthy()
+			expect( loadedUser.documentRef.id ).toBeDefined()
 			expect( loadedUser.documentRef.year ).toBe( 2045 )
 		})
 
@@ -250,11 +249,9 @@ describe( 'Model', ()=>{
 			expect( loadedUser.manyRefs[0] ).toBeInstanceOf( SubClass )
 			expect( loadedUser.manyRefs[0].id ).toBeUndefined()
 			expect( loadedUser.manyRefs[0].year ).toBeUndefined()
-			expect( loadedUser.manyRefs[0].wasLoaded ).toBeFalsy()
 			expect( loadedUser.manyRefs[1] ).toBeInstanceOf( SubClass )
 			expect( loadedUser.manyRefs[1].id ).toBeUndefined()
 			expect( loadedUser.manyRefs[1].year ).toBeUndefined()
-			expect( loadedUser.manyRefs[1].wasLoaded ).toBeFalsy()
 		})
 
 		it( 'should fill array of refs', async ()=>{
@@ -268,11 +265,10 @@ describe( 'Model', ()=>{
 		it( 'should save a reference when declared @persistentAt', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.derived.wasLoaded ).toBeFalsy()
+			expect( loadedUser.derived.id ).toBeUndefined()
 
 			await Store.populate( loadedUser.derived )
 
-			expect( loadedUser.derived.wasLoaded ).toBeTruthy()
 			expect( loadedUser.derived.salary ).toBe( 1350 )
 			expect( loadedUser.derived.id ).toBe( testUser.derived.id )
 		})
@@ -281,7 +277,6 @@ describe( 'Model', ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			await Store.populate( loadedUser.derived )
 
-			expect( loadedUser.derived.wasLoaded ).toBeTruthy()
 			expect( loadedUser.derived.salary ).toBe( 2800 )
 			expect( loadedUser.derived.id ).toBe( 'user4' )
 		})
@@ -289,14 +284,12 @@ describe( 'Model', ()=>{
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.manyDerived[0].wasLoaded ).toBeFalsy()
+			expect( loadedUser.manyDerived[0].id ).toBeUndefined()
 
 			await Store.populate( loadedUser.manyDerived )
 
-			expect( loadedUser.manyDerived[0].wasLoaded ).toBeTruthy()
 			expect( loadedUser.manyDerived[0].salary ).toBe( 990 )
 			expect( loadedUser.manyDerived[0].id ).toBe( testUser.manyDerived[0].id )
-			expect( loadedUser.manyDerived[1].wasLoaded ).toBeTruthy()
 			expect( loadedUser.manyDerived[1].salary ).toBe( 1990 )
 			expect( loadedUser.manyDerived[1].id ).toBe( testUser.manyDerived[1].id )
 		})

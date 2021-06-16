@@ -231,18 +231,6 @@ describe( 'Persistent', ()=>{
 			expect( newPerson.anObjectProperty ).toBeInstanceOf( PersistentClass )
 		})
 
-		it( 'should set loaded flag', ()=>{
-			const obj = JSON.stringify( person.toObject() )
-			const newPerson = new Person()
-
-			expect( newPerson.wasLoaded ).toBeFalsy()
-
-			newPerson.fromObject( JSON.parse( obj ) )
-
-			expect( newPerson.wasLoaded ).toBeTruthy()
-			expect( newPerson.anObjectProperty.wasLoaded ).toBeTruthy()
-		})
-		
 		it( 'should throw if class not registered on writing to a stream', ()=>{
 			person._notRegistered = new NotRegistered()
 
@@ -323,8 +311,6 @@ describe( 'Persistent', ()=>{
 		
 		it( 'should read swallow object document as reference', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
-			expect( newPerson.wasLoaded ).toBeTruthy()
-			expect( newPerson.document.wasLoaded ).toBeFalsy()
 			expect( newPerson.document.id ).toBeUndefined()
 			expect( newPerson.document ).toEqual({
 				__documentReference: {
@@ -362,7 +348,6 @@ describe( 'Persistent', ()=>{
 
 			it( 'should deal with arrays of refs', ()=>{
 				expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
-				expect( newPerson.arrayOfRefs[0].wasLoaded ).toBeFalsy()
 				expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
 				expect( newPerson.arrayOfRefs ).toEqual( expect.arrayContaining([ 
 					expect.objectContaining({ __documentReference: {
