@@ -325,6 +325,7 @@ describe( 'Persistent', ()=>{
 		it( 'should save existing refs properly', ()=>{
 			const res = newPerson.toObject()
 
+			expect( res.document ).not.toBeInstanceOf( PersistentClass )
 			expect( res.document.id ).not.toBeDefined()
 			expect( res.document ).toEqual( newPerson.document )
 		})

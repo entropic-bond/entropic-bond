@@ -163,7 +163,7 @@ export class Persistent {
 		const collectionPath = ( value: Persistent ) => prop.storeInCollection || value.className
 		
 		const buildRefObject = ( value: Persistent ) => {
-			if ( value[ '__documentReference' ] ) return value
+			if ( value[ '__documentReference' ] ) return {...value}
 			else return {
 				__documentReference: {
 					storedInCollection: collectionPath( value ),
