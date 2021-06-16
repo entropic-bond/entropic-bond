@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/entropic-bond/entropic-bond/compare/v1.7.3...v1.7.4) (2021-06-16)
+
+
+### Bug Fixes
+
+* create rootCollections with null id for unfilled refs ([7fcbf1b](https://github.com/entropic-bond/entropic-bond/commit/7fcbf1b2736c2571db3ecc9423a23a85f077bbbd))
+
 ## [1.7.3](https://github.com/entropic-bond/entropic-bond/compare/v1.7.2...v1.7.3) (2021-06-16)
 
 
