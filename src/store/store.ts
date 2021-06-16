@@ -1,4 +1,4 @@
-import { Persistent } from '../persistent/persistent';
+import { DocumentReference, Persistent } from '../persistent/persistent';
 import { DataSource } from './data-source';
 import { Model } from './model';
 
@@ -21,19 +21,20 @@ export class Store {
 	}
 
 	static populate< T extends Persistent>( instance: T | T[] ): Promise<T | T[]> {
-				
-		if ( Array.isArray( instance ) ) {
-			const storedInCollection = instance[0].getCollectionWhereReferenceIsStored()
 
-			const model = this.getModel( storedInCollection )
-			const promises = instance.map( item => model.findById( item.id, item ) )
+		const populateItem = ( item: T ) => {
+			const ref: DocumentReference = item[ '__documentReference' ]
+			const model = this.getModel( ref.storedInCollection )
+
+			return model.findById( ref.id, item ) 
+		}
+		
+		if ( Array.isArray( instance ) ) {
+			const promises = instance.map( item => populateItem( item ) )
 			return Promise.all( promises )
 		}
 		else {
-			const storedInCollection = instance.getCollectionWhereReferenceIsStored()
-
-			const model = this.getModel( storedInCollection )
-			return model.findById( instance.id, instance )
+			return populateItem( instance )
 		}
 	}
 

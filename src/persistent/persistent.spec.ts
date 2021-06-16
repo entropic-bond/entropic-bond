@@ -320,7 +320,14 @@ describe( 'Persistent', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
 			expect( newPerson.wasLoaded ).toBeTruthy()
 			expect( newPerson.document.wasLoaded ).toBeFalsy()
-			expect( newPerson.document.id ).toEqual( person.document.id )
+			expect( newPerson.document.id ).toBeUndefined()
+			expect( newPerson.document ).toEqual({
+				__documentReference: {
+					id: person.document.id,
+					storedInCollection: 'PersistentClass',
+					className: 'PersistentClass'
+				}
+			})
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
 		
@@ -353,8 +360,16 @@ describe( 'Persistent', ()=>{
 				expect( newPerson.arrayOfRefs[0].wasLoaded ).toBeFalsy()
 				expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
 				expect( newPerson.arrayOfRefs ).toEqual( expect.arrayContaining([ 
-					expect.objectContaining({ id: ref1.id }),
-					expect.objectContaining({ id: ref2.id })
+					expect.objectContaining({ __documentReference: {
+						id: ref1.id,
+						storedInCollection: 'PersistentClass',
+						className: 'PersistentClass'
+					}}),
+					expect.objectContaining({ __documentReference: {
+						id: ref2.id,
+						storedInCollection: 'PersistentClass',
+						className: 'PersistentClass'
+					}})
 				]))
 			})
 		})

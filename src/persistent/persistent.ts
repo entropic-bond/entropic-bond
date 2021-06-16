@@ -16,7 +16,7 @@ export type Collections = {
 	[ collectionPath: string ]: PersistentObject<Persistent>[]
 }
 
-interface DocumentReference {
+export interface DocumentReference {
 	id: string
 	className: string
 	storedInCollection: string
@@ -122,9 +122,8 @@ export class Persistent {
 		if ( value[ '__documentReference' ] ) {
 			const ref: DocumentReference = value[ '__documentReference' ]
 			const emptyInstance = Persistent.classFactory( ref.className )()
-			emptyInstance.fromObj( ref )
-			emptyInstance[ '__referenceStoredInCollection' ] = ref.storedInCollection
-
+			emptyInstance['__documentReference'] = value[ '__documentReference' ]
+			delete emptyInstance['_id']
 			return emptyInstance
 		}
 
@@ -191,10 +190,6 @@ export class Persistent {
 			return buildRefObject( propValue )
 
 		}
-	}
-
-	getCollectionWhereReferenceIsStored(): string {
-		return this['__referenceStoredInCollection']
 	}
 
 	private pushDocument( collections: Collections, collectionName: string, document: PersistentObject<this> ) {

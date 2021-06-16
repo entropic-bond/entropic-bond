@@ -61,7 +61,7 @@
 					"father": "user5Father"
 				}
 			},
-			"age": "41",
+			"age": 41,
 			"skills": ["skill21", "skill22", "skill23"],
 			"derived": {
 				"__documentReference": {

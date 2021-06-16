@@ -223,7 +223,7 @@ describe( 'Model', ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
 			expect( loadedUser.documentRef ).toBeInstanceOf( SubClass )
-			expect( loadedUser.documentRef.id ).toEqual( testUser.documentRef.id )
+			expect( loadedUser.documentRef.id ).toBeUndefined()
 			expect( loadedUser.documentRef.year ).toBeUndefined()
 			expect( loadedUser.documentRef.wasLoaded ).toBeFalsy()
 		})
@@ -248,11 +248,13 @@ describe( 'Model', ()=>{
 			
 			expect( loadedUser.manyRefs ).toHaveLength( 2 )
 			expect( loadedUser.manyRefs[0] ).toBeInstanceOf( SubClass )
-			expect( loadedUser.manyRefs ).toEqual( expect.arrayContaining([
-				expect.objectContaining({ id: ref1.id }),
-				expect.objectContaining({ id: ref2.id })
-			]))
+			expect( loadedUser.manyRefs[0].id ).toBeUndefined()
 			expect( loadedUser.manyRefs[0].year ).toBeUndefined()
+			expect( loadedUser.manyRefs[0].wasLoaded ).toBeFalsy()
+			expect( loadedUser.manyRefs[1] ).toBeInstanceOf( SubClass )
+			expect( loadedUser.manyRefs[1].id ).toBeUndefined()
+			expect( loadedUser.manyRefs[1].year ).toBeUndefined()
+			expect( loadedUser.manyRefs[1].wasLoaded ).toBeFalsy()
 		})
 
 		it( 'should fill array of refs', async ()=>{
@@ -267,14 +269,12 @@ describe( 'Model', ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
 			expect( loadedUser.derived.wasLoaded ).toBeFalsy()
-			expect( 
-				loadedUser.derived.getCollectionWhereReferenceIsStored() 
-			).toEqual( 'TestUser' )
 
 			await Store.populate( loadedUser.derived )
 
 			expect( loadedUser.derived.wasLoaded ).toBeTruthy()
 			expect( loadedUser.derived.salary ).toBe( 1350 )
+			expect( loadedUser.derived.id ).toBe( testUser.derived.id )
 		})
 
 		it( 'should populate from special collection when declared with @persistentRefAt', async ()=>{
@@ -283,24 +283,51 @@ describe( 'Model', ()=>{
 
 			expect( loadedUser.derived.wasLoaded ).toBeTruthy()
 			expect( loadedUser.derived.salary ).toBe( 2800 )
+			expect( loadedUser.derived.id ).toBe( 'user4' )
 		})
 		
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
 			expect( loadedUser.manyDerived[0].wasLoaded ).toBeFalsy()
-			expect( 
-				loadedUser.manyDerived[0].getCollectionWhereReferenceIsStored() 
-			).toEqual( 'TestUser' )
 
 			await Store.populate( loadedUser.manyDerived )
 
 			expect( loadedUser.manyDerived[0].wasLoaded ).toBeTruthy()
 			expect( loadedUser.manyDerived[0].salary ).toBe( 990 )
+			expect( loadedUser.manyDerived[0].id ).toBe( testUser.manyDerived[0].id )
 			expect( loadedUser.manyDerived[1].wasLoaded ).toBeTruthy()
 			expect( loadedUser.manyDerived[1].salary ).toBe( 1990 )
+			expect( loadedUser.manyDerived[1].id ).toBe( testUser.manyDerived[1].id )
 		})
 
+		it( 'should not overwrite not filled ref in collection', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			await model.save( loadedUser )
+			const refInCollection = await model.findById<DerivedUser>( 'user4' )
+
+			expect( refInCollection.salary ).toBe( 2800 )
+		})
+
+		it( 'should save loaded ref with assigned new instance', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			loadedUser.derived = new DerivedUser()
+			loadedUser.derived.salary = 345
+			await model.save( loadedUser )
+
+			const refInCollection = await model.findById<DerivedUser>( loadedUser.derived.id )
+			expect( refInCollection.salary ).toBe( 345 )
+		})
+
+		it( 'should save loaded ref with modified ref data', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			await Store.populate( loadedUser.derived )
+			loadedUser.derived.salary = 1623
+			await model.save( loadedUser )
+
+			const refInCollection = await model.findById<DerivedUser>( 'user4' )
+			expect( refInCollection.salary ).toBe( 1623 )
+		})
 	})
 
 	describe( 'Operations on queries', ()=>{
