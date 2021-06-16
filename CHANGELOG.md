@@ -1,3 +1,10 @@
+## [1.7.6](https://github.com/entropic-bond/entropic-bond/compare/v1.7.5...v1.7.6) (2021-06-16)
+
+
+### Bug Fixes
+
+* reference returning a Persistent descendent. Should return a plain object ([a22a803](https://github.com/entropic-bond/entropic-bond/commit/a22a803841f78e8aacae11c21847d139afd7e04b))
+
 ## [1.7.5](https://github.com/entropic-bond/entropic-bond/compare/v1.7.4...v1.7.5) (2021-06-16)
 
 
