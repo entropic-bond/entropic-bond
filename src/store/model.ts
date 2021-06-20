@@ -1,6 +1,6 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation } from './data-source'
 
 /**
  * Provides abstraction to the database access. You should gain access to a Model
@@ -109,10 +109,11 @@ class Query<T extends Persistent> {
 	}
 
 	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> ) {
-		this.queryObject.operations[ property ] = {
+		this.queryObject.operations.push({
+			property,
 			operator,
 			value
-		}
+		})
 
 		return this
 	}
@@ -127,20 +128,22 @@ class Query<T extends Persistent> {
 			obj = obj[ prop ]
 		})
 
-		this.queryObject.operations[ props[0] ] = {
+		this.queryObject.operations.push({
+			property: props[0],
 			operator,
 			value: result
-		}
+		} as QueryOperation<T>)
 
 		return this
 	}
 
 	instanceOf<D extends T>( classId: D | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
-		this.queryObject.operations[ '__className' ] = {
+		this.queryObject.operations.push({
+			property: '__className' as any,
 			operator: '==',
-			value: className
-		}
+			value: className as any
+		})
 		return this
 	}
 
@@ -182,6 +185,6 @@ class Query<T extends Persistent> {
 		return this
 	}
 
-	private queryObject: QueryObject<T> = { operations: {} } as QueryObject<T>
+	private queryObject: QueryObject<T> = { operations: [] } as QueryObject<T>
 	private model: Model<T>
 }

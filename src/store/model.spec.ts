@@ -83,12 +83,11 @@ describe( 'Model', ()=>{
 	describe( 'Generic find', ()=>{
 		it( 'should query all admins with query object', async ()=>{
 			const admins = await model.query({
-				operations: {
-					admin: {
-						operator: '==',
-						value: true
-					}
-				}
+				operations: [{
+					property: 'admin',
+					operator: '==',
+					value: true
+				}]
 			})
 
 			expect( admins[0] ).toBeInstanceOf( TestUser )
@@ -114,16 +113,14 @@ describe( 'Model', ()=>{
 
 		it( 'should query by subproperties', async ()=>{
 			const users = await model.query({
-				operations: {
-					name: {
+				operations: [
+					{
+						property: 'name',
 						operator: '==',
 						value: { firstName: 'userFirstName3' }
 					},
-					age: {
-						operator: '!=', value: 134
-					}
-
-				}
+					{ property: 'age', operator: '!=', value: 134	}
+				]
 			})
 
 			expect( users[0].id ).toBe( 'user3' )
@@ -406,27 +403,27 @@ describe( 'Model', ()=>{
 		})
 		
 		it( 'should transform query object operations to property path', ()=>{
-			const operations = DataSource.toPropertyPathOperations<TestUser>({
-				name: {
+			const operations = DataSource.toPropertyPathOperations<TestUser>([
+				{
+					property: 'name',
 					operator: '==',
 					value: { ancestorName: { father: 'Felipe' }}
 				},
-				age: {
+				{
+					property: 'age',
 					operator: '==',
 					value: 23
 				}
-			})
+			])
 
-			const [ propPath0, operation0 ] = operations[0]
-			expect( propPath0 ).toEqual( 'name.ancestorName.father' )
-			expect( operation0 ).toEqual({
+			expect( operations[0] ).toEqual({
+				property: 'name.ancestorName.father',
 				operator: '==',
 				value: 'Felipe'
 			})
 
-			const [ propPath1, operation1 ] = operations[1]
-			expect( propPath1 ).toEqual( 'age' )
-			expect( operation1 ).toEqual({
+			expect( operations[1] ).toEqual({
+				property: 'age',
 				operator: '==',
 				value: 23
 			})

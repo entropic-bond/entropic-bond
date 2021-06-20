@@ -5,19 +5,16 @@ export type DocumentObject = PersistentObject<Persistent>
 
 export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>='
 
-export interface QueryOperation<T> {
+export type QueryOperation<T> = {
+	property: ClassPropNames<T>
 	operator: QueryOperator
-	value: Partial<T>
-}
-
-export type QueryOperations<T> = {
-	[ P in ClassPropNames<T> ]?: QueryOperation<T[P]>
+	value: Partial<T[ClassPropNames<T>]> | {[key:string]: unknown}
 }
 
 export type QueryOrder = 'asc' | 'desc'
 
 export type QueryObject<T> = {
-	operations?: Partial<QueryOperations<T>>
+	operations?: QueryOperation<T>[]
 	limit?: number
 	sort?: {
 		order: QueryOrder
@@ -33,17 +30,15 @@ export abstract class DataSource {
 	abstract next( limit?: number ): Promise< DocumentObject[] >
 	abstract prev( limit?: number ): Promise< DocumentObject[] >
 
-	static toPropertyPathOperations<T extends Persistent>( operations: QueryOperations<T> ): [ string, QueryOperation<T>][] {
-		return Object.entries( operations ).map(([ propName, operation ]: [string, QueryOperation<T>] ) => {
+	static toPropertyPathOperations<T extends Persistent>( operations: QueryOperation<T>[] ): QueryOperation<T>[] {
+		return operations.map( operation => {
 			const [ path, value ] = this.toPropertyPathValue( operation.value )
-			const propPath = `${ propName }${ path? '.'+path : '' }` 
-			return [ 
-				propPath, 
-				{ 
-					operator:	operation.operator,
-					value
-				} as QueryOperation<T>
-			]
+			const propPath = `${ operation.property }${ path? '.'+path : '' }` 
+			return { 
+				property: propPath, 
+				operator:	operation.operator,
+				value
+			} as QueryOperation<T>
 		})
 	}
 

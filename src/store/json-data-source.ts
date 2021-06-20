@@ -1,5 +1,5 @@
 import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
-import { DataSource, DocumentObject, QueryObject, QueryOperation, QueryOperations } from "./data-source";
+import { DataSource, DocumentObject, QueryObject, QueryOperation } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -99,7 +99,7 @@ export class JsonDataSource implements DataSource {
 
 			limit: ( limit: number ) => docs,//.slice( 0, limit ),
 
-			operations: ( operations: QueryOperations<T> ) => docs.filter(
+			operations: ( operations: QueryOperation<T>[] ) => docs.filter(
 				doc => this.isQueryMatched( doc, operations )
 			),
 
@@ -121,7 +121,7 @@ export class JsonDataSource implements DataSource {
 		return propChain.reduce(( value, prop ) => value[ prop ], obj )
 	}
 
-	private isQueryMatched<T>( doc: DocumentObject, queryOperations: QueryOperations<T> ) {
+	private isQueryMatched<T>( doc: DocumentObject, queryOperations: QueryOperation<T>[] ) {
 		const queryOperator = {
 			'==': <U>(a: U, b: U) => a === b,
 			'!=': <U>(a: U, b: U) => a !== b,
@@ -131,12 +131,12 @@ export class JsonDataSource implements DataSource {
 			'>=': <U>(a: U, b: U) => a >= b,
 		}
 
-		const isMatch = Object.entries( queryOperations ).reduce( ( prevVal, [ key, val ]) => {
-			const operation = val as QueryOperation<unknown>
+		const isMatch = queryOperations.reduce( ( prevVal, val ) => {
+			const { property, value, operator } = val as QueryOperation<unknown>
 	
-			const [ document, value ] = this.retrieveValuesToCompare( doc[ key ], operation.value )
+			const [ document, v ] = this.retrieveValuesToCompare( doc[property], value )
 
-			return prevVal && queryOperator[ operation.operator ]( document, value )
+			return prevVal && queryOperator[ operator ]( document, v )
 		}, true)
 
 		return isMatch
