@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/entropic-bond/entropic-bond/compare/v1.7.6...v1.8.0) (2021-06-20)
+
+
+### Features
+
+* refactor QueryOperation ([85bba4e](https://github.com/entropic-bond/entropic-bond/commit/85bba4e92825055468d090f2ea1a999d11cfb8a9))
+
 ## [1.7.6](https://github.com/entropic-bond/entropic-bond/compare/v1.7.5...v1.7.6) (2021-06-16)
 
 
