@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/entropic-bond/entropic-bond/compare/v1.8.0...v1.8.1) (2021-06-23)
+
+
+### Bug Fixes
+
+* model to work with generic descendants ([bc1d369](https://github.com/entropic-bond/entropic-bond/commit/bc1d36900ecbbb3d6d969c49c03896cec1a32013))
+
 # [1.8.0](https://github.com/entropic-bond/entropic-bond/compare/v1.7.6...v1.8.0) (2021-06-20)
 
 
