@@ -1,10 +1,11 @@
 import { v4 as uuid } from "uuid"
 import { SomeClassProps } from '../types/utility-types';
 
-export type PersistentFactory = () => Persistent
+type PersistentConstructor = new () => Persistent
+// export type PersistentFactory = () => Persistent | PersistentConstructor
 
 interface FactoryMap {
-	[ id: string ]: PersistentFactory
+	[ id: string ]: PersistentConstructor
 }
 
 export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
@@ -23,7 +24,7 @@ export interface DocumentReference {
 }
 
 export class Persistent {
-	static registerFactory( className: string, factory: () => Persistent ) {
+	static registerFactory( className: string, factory: PersistentConstructor ) {
 		this._factoryMap[ className ] = factory
 	}
 
@@ -115,7 +116,7 @@ export class Persistent {
 
 		if ( value[ '__documentReference' ] ) {
 			const ref: DocumentReference = value[ '__documentReference' ]
-			const emptyInstance = Persistent.classFactory( ref.className )()
+			const emptyInstance = Persistent.createInstance( ref.className )
 			emptyInstance['__documentReference'] = value[ '__documentReference' ]
 			delete emptyInstance['_id']
 			return emptyInstance
@@ -199,9 +200,14 @@ export class Persistent {
 		return prop.name.slice(1)
 	}
 
-	static createInstance<T extends Persistent>( obj: PersistentObject<T>): T {
-		const instance = Persistent.classFactory( obj.__className )()
-		return instance.fromObject( obj ) as T
+	static createInstance<T extends Persistent>( obj: PersistentObject<T> | string ): T {
+		if ( typeof obj === 'string' ) {
+			return new ( Persistent.classFactory( obj ) ) as T
+		}
+		else {
+			const instance = new ( Persistent.classFactory( obj.__className ) )
+			return instance.fromObject( obj ) as T
+		}
 	}
 
 	@persistent private _id: string
@@ -258,9 +264,9 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 	}
 }
 
-export function registerClassFactory( className: string, factory: PersistentFactory ) {
-	Persistent.registerFactory( className, factory )
-	return ( constructor: Function ) => {
+export function registerPersistentClass( className: string ) {
+	return ( constructor: PersistentConstructor ) => {
+		Persistent.registerFactory( className, constructor )
 		constructor.prototype.__className = className
 	}
 }

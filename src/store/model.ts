@@ -70,26 +70,26 @@ export class Model<T extends Persistent>{
 		return this._stream.delete( id, this.collectionName )
 	}
 
-	find(): Query<T> {
-		return new Query<T>( this )
+	find<U extends T>(): Query<U> {
+		return new Query<U>( this as unknown as Model<U> )
 	}
 
-	query<D extends T>( queryObject?: QueryObject<T>): Promise<D[]> {
+	query<U extends T>( queryObject?: QueryObject<U>): Promise<U[]> {
 		return this.mapToInstance( 
 			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 
-	next<D extends T>( limit?: number ): Promise<D[]> {
+	next<U extends T>( limit?: number ): Promise<U[]> {
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
-	prev<D extends T>( limit?: number ): Promise<D[]> {
+	prev<U extends T>( limit?: number ): Promise<U[]> {
 		return this.mapToInstance( () => this._stream.prev( limit ) )
 	}
 
-	private mapToInstance<D extends T>( from: ()=>Promise<DocumentObject[]> ): Promise<D[]> {
-		return new Promise<D[]>( ( resolve, reject ) => {
+	private mapToInstance<U extends T>( from: ()=>Promise<DocumentObject[]> ): Promise<U[]> {
+		return new Promise<U[]>( ( resolve, reject ) => {
 			from()
 				.then( data => resolve( 
 					data.map( obj => Persistent.createInstance( obj as any ))
@@ -137,7 +137,7 @@ class Query<T extends Persistent> {
 		return this
 	}
 
-	instanceOf<D extends T>( classId: D | string ) {
+	instanceOf<U extends T>( classId: U | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
 		this.queryObject.operations.push({
 			property: '__className' as any,
@@ -147,11 +147,11 @@ class Query<T extends Persistent> {
 		return this
 	}
 
-	get<D extends T>( limit?: number ): Promise<D[]> {
+	get<U extends T>( limit?: number ): Promise<U[]> {
 		if ( limit ) {
 			this.queryObject.limit = limit
 		}
-		return this.model.query( this.queryObject )
+		return this.model.query( this.queryObject as unknown as QueryObject<U> )
 	}
 
 	limit( maxDocs: number ) {

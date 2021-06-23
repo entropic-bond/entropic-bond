@@ -1,4 +1,4 @@
-import { Persistent, persistent, registerClassFactory } from '../persistent/persistent'
+import { Persistent, persistent, registerPersistentClass } from '../persistent/persistent'
 import { JsonDataSource } from '../store/json-data-source'
 import { Model } from '../store/model'
 import { Store } from '../store/store'
@@ -23,7 +23,7 @@ class MockFile {
 }
 global.File = MockFile
 
-@registerClassFactory( 'Test', ()=>new Test() )
+@registerPersistentClass( 'Test' )
 class Test extends Persistent {
 
 	get file(): StoredFile {

@@ -1,5 +1,5 @@
 import { Callback, Observable, Unsubscriber } from '../observable/observable'
-import { persistent, Persistent, registerClassFactory } from '../persistent/persistent'
+import { persistent, Persistent, registerPersistentClass } from '../persistent/persistent'
 import { CloudStorage, StorableData, UploadControl } from './cloud-storage'
 
 export enum  StoredFileEvent { stored, pendingDataSet, deleted }
@@ -9,7 +9,7 @@ export interface StoredFileChange {
 	storedFile: StoredFile
 }
 
-@registerClassFactory( 'StoredFile', ()=>new StoredFile() )
+@registerPersistentClass( 'StoredFile' )
 export class StoredFile extends Persistent{
 
 	async store( data?: StorableData, fileName: string = '', cloudStorageProvider?: CloudStorage ): Promise<void> {

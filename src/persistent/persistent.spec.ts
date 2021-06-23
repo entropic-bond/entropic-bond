@@ -1,6 +1,6 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerClassFactory } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass } from './persistent'
 
-@registerClassFactory( 'PersistentClass', () => new PersistentClass() )
+@registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
 	get persistentProp() { return this._persistentProp }
 	@persistent _persistentProp: number
@@ -10,7 +10,7 @@ class PersistentClass extends Persistent {
 
 class NotRegistered extends Persistent {}
 
-@registerClassFactory( 'Person', () => new Person() )
+@registerPersistentClass( 'Person' )
 class Person extends Persistent {
 	set name( value: string ) {
 		this._name = value
