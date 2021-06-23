@@ -1,4 +1,4 @@
-import { persistent, Persistent, persistentReference, persistentReferenceAt, registerClassFactory } from '../../persistent/persistent'
+import { persistent, Persistent, persistentReference, persistentReferenceAt, registerPersistentClass } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
@@ -9,7 +9,7 @@ interface Name {
 	}
 }
 
-@registerClassFactory( 'SubClass', ()=>new SubClass() )
+@registerPersistentClass( 'SubClass' )
 export class SubClass extends Persistent {
 	set year( value: number ) {
 		this._year = value
@@ -22,7 +22,7 @@ export class SubClass extends Persistent {
 	@persistent private _year: number
 }
 
-@registerClassFactory( 'TestUser', ()=>new TestUser() )
+@registerPersistentClass( 'TestUser' )
 export class TestUser extends Persistent {
 	set name( value: Name ) {
 		this._name = value
@@ -98,7 +98,7 @@ export class TestUser extends Persistent {
 	@persistentReferenceAt('TestUser') private _manyDerived: DerivedUser[]
 }
 
-@registerClassFactory( 'DerivedUser', ()=>new DerivedUser() )
+@registerPersistentClass( 'DerivedUser' )
 export class DerivedUser extends TestUser {
 	set salary(value: number) {
 		this._salary = value
