@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/entropic-bond/entropic-bond/compare/v1.8.1...v1.8.2) (2021-06-24)
+
+
+### Bug Fixes
+
+* removed unneed prev method ([a85f8a1](https://github.com/entropic-bond/entropic-bond/commit/a85f8a18def32903a4e359b231264ff0b5c4f1ef))
+
 ## [1.8.1](https://github.com/entropic-bond/entropic-bond/compare/v1.8.0...v1.8.1) (2021-06-23)
 
 
