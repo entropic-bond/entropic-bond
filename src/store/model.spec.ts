@@ -368,19 +368,6 @@ describe( 'Model', ()=>{
 				expect( docs[0].id ).toEqual( 'user3' )
 			})
 			
-			it( 'should get previous result set', async ()=>{
-				await model.next()
-				await model.next()
-				const docs = await model.prev()
-				expect( docs ).toHaveLength( 2 )
-				expect( docs[0].id ).toEqual( 'user3' )
-			})
-
-			it( 'should not go lower than begining of result set', async ()=>{
-				const docs = await model.prev()
-				expect( docs ).toHaveLength( 0 )
-			})
-			
 			it( 'should not go beyond the end of result set', async ()=>{
 				await model.next()
 				await model.next()

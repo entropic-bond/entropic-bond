@@ -84,9 +84,10 @@ export class Model<T extends Persistent>{
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
-	prev<U extends T>( limit?: number ): Promise<U[]> {
-		return this.mapToInstance( () => this._stream.prev( limit ) )
-	}
+	// NOTE: You should implement prev functionality by using next in reverse order
+	// prev<U extends T>( limit?: number ): Promise<U[]> {
+	// 	return this.mapToInstance( () => this._stream.prev( limit ) )
+	// }
 
 	private mapToInstance<U extends T>( from: ()=>Promise<DocumentObject[]> ): Promise<U[]> {
 		return new Promise<U[]>( ( resolve, reject ) => {
