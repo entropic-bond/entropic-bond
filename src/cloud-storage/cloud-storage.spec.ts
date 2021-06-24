@@ -21,7 +21,7 @@ class MockFile {
 	text() { return Promise.resolve( this.data )}
 	arrayBuffer() { return Promise.resolve( this.data ) }
 }
-global.File = MockFile
+global['File'] = MockFile
 
 @registerPersistentClass( 'Test' )
 class Test extends Persistent {
