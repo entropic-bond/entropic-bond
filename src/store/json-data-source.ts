@@ -62,13 +62,6 @@ export class JsonDataSource implements DataSource {
 		return Promise.resolve( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
 	}
 
-	prev( limit?: number ): Promise< DocumentObject[] > {
-		if ( limit ) this._lastLimit = limit
-		if ( this.decCursor( this._lastLimit ) ) return Promise.resolve([])
-		
-		return Promise.resolve( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
-	}
-
 	get rawData() {
 		return this._jsonRawData
 	}
