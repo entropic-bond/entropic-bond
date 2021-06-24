@@ -1,3 +1,11 @@
+## [1.8.3](https://github.com/entropic-bond/entropic-bond/compare/v1.8.2...v1.8.3) (2021-06-24)
+
+
+### Bug Fixes
+
+* datasource does not enforce implementing prev method anymore ([419bd62](https://github.com/entropic-bond/entropic-bond/commit/419bd62a044f0ee0a772f7daeb008cb53f5e05b2))
+* prev is not enforced to be implemented ([6cd2b2a](https://github.com/entropic-bond/entropic-bond/commit/6cd2b2a880e838817d3227d1f414053eb1b237b0))
+
 ## [1.8.2](https://github.com/entropic-bond/entropic-bond/compare/v1.8.1...v1.8.2) (2021-06-24)
 
 
