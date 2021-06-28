@@ -20,7 +20,7 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
-	static populate< T extends Persistent>( instance: T | T[] ): Promise<T | T[]> {
+	static populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
 
 		const populateItem = ( item: T ) => {
 			const ref: DocumentReference = item[ '__documentReference' ]
@@ -34,7 +34,7 @@ export class Store {
 			return Promise.all( promises )
 		}
 		else {
-			return populateItem( instance )
+			return populateItem( instance as T )
 		}
 	}
 
