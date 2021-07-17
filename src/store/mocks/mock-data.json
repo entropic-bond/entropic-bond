@@ -64,9 +64,9 @@
 			"age": 41,
 			"skills": ["skill21", "skill22", "skill23"],
 			"derived": {
+				"id": "user3",
+				"__className": "DerivedUser",
 				"__documentReference": {
-					"id": "user3",
-					"className": "DerivedUser",
 					"storedInCollection": "DerivedUser"
 				}
 			}	
@@ -84,9 +84,9 @@
 			"age": 40,
 			"skills": ["skill21", "skill22", "skill23"],
 			"derived": {
+				"id": "user4",
+				"__className": "DerivedUser",
 				"__documentReference": {
-					"id": "user4",
-					"className": "DerivedUser",
 					"storedInCollection": "TestUser"
 				}
 			}

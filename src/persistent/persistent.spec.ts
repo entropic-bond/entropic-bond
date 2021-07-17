@@ -311,13 +311,9 @@ describe( 'Persistent', ()=>{
 		
 		it( 'should read swallow object document as reference', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
-			expect( newPerson.document.id ).toBeUndefined()
-			expect( newPerson.document ).toEqual({
-				__documentReference: {
-					id: person.document.id,
-					storedInCollection: 'PersistentClass',
-					className: 'PersistentClass'
-				}
+			expect( newPerson.document.id ).toEqual( person.document.id )
+			expect( newPerson.document['__documentReference'] ).toEqual({
+				storedInCollection: 'PersistentClass'
 			})
 			expect( newPerson.document.persistentProp ).toBeUndefined()
 		})
@@ -337,10 +333,10 @@ describe( 'Persistent', ()=>{
 
 				expect( obj.arrayOfRefs ).toHaveLength( 2 )
 				expect( obj.arrayOfRefs[0] ).toEqual({
+					id: ref1.id,
+					__className: 'PersistentClass',
 					__documentReference: {
-						storedInCollection: 'PersistentClass',
-						className: 'PersistentClass',
-						id: ref1.id
+						storedInCollection: 'PersistentClass'
 					}
 				})
 			})
@@ -358,16 +354,20 @@ describe( 'Persistent', ()=>{
 				expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
 				expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
 				expect( newPerson.arrayOfRefs ).toEqual( expect.arrayContaining([ 
-					expect.objectContaining({ __documentReference: {
+					expect.objectContaining({ 
 						id: ref1.id,
-						storedInCollection: 'PersistentClass',
-						className: 'PersistentClass'
-					}}),
-					expect.objectContaining({ __documentReference: {
+						__className: 'PersistentClass',
+						__documentReference: {
+							storedInCollection: 'PersistentClass'
+						}
+					}),
+					expect.objectContaining({ 
 						id: ref2.id,
-						storedInCollection: 'PersistentClass',
-						className: 'PersistentClass'
-					}})
+						__className: 'PersistentClass',
+						__documentReference: {
+							storedInCollection: 'PersistentClass'
+						}
+					})
 				]))
 			})
 		})

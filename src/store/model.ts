@@ -109,11 +109,13 @@ class Query<T extends Persistent> {
 		this.model = model	
 	}
 
-	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> ) {
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+		let val = value instanceof Persistent? { id: value.id } : value
+
 		this.queryObject.operations.push({
 			property,
 			operator,
-			value
+			value: val
 		})
 
 		return this
@@ -122,7 +124,7 @@ class Query<T extends Persistent> {
 	whereDeepProp( propertyPath: string, operator: QueryOperator, value: unknown ) {
 		const props = propertyPath.split( '.' )
 		let obj = {}
-		let result = props.length > 1? obj : value
+		let result = props.length > 1? obj : value  // TODO: review
 
 		props.slice(1).forEach(( prop, i ) => {
 			obj[ prop ] = i < props.length - 2? {} : value 

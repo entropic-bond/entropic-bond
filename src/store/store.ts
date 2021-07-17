@@ -22,11 +22,13 @@ export class Store {
 
 	static populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
 
-		const populateItem = ( item: T ) => {
-			const ref: DocumentReference = item[ '__documentReference' ]
-			const model = this.getModel( ref.storedInCollection )
+		const populateItem = async ( item: T ) => {
+			const ref: DocumentReference = item as any
+			const model = this.getModel( ref.__documentReference.storedInCollection )
 
-			return model.findById( ref.id, item ) 
+			const populated = await model.findById( ref.id, item ) 
+			populated['__documentReference' ] = undefined
+			return populated
 		}
 		
 		if ( Array.isArray( instance ) ) {

@@ -2,15 +2,18 @@ import { v4 as uuid } from "uuid"
 import { SomeClassProps } from '../types/utility-types';
 
 type PersistentConstructor = new () => Persistent
-// export type PersistentFactory = () => Persistent | PersistentConstructor
 
 interface FactoryMap {
 	[ id: string ]: PersistentConstructor
 }
 
+// TODO: review and compare with DocumentReference
 export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
 	__className?: string
 	__rootCollections?: Collections
+	__documentReference?: {
+		storedInCollection: string
+	}
 }
 
 export type Collections = {
@@ -19,8 +22,10 @@ export type Collections = {
 
 export interface DocumentReference {
 	id: string
-	className: string
-	storedInCollection: string
+	__className: string
+	__documentReference: {
+		storedInCollection: string
+	}
 }
 
 export class Persistent {
@@ -110,16 +115,16 @@ export class Persistent {
 			return value.map( item => this.fromDeepObject( item ) )
 		}
 
-		if ( value[ '__className' ] ) {
-			return Persistent.createInstance( value as PersistentObject<Persistent> )
+		if ( value[ '__documentReference' ] ) {
+			const ref: DocumentReference = value as DocumentReference
+			const emptyInstance = Persistent.createInstance( ref.__className )
+			emptyInstance._id = ref.id
+			emptyInstance['__documentReference'] = value[ '__documentReference' ]
+			return emptyInstance
 		}
 
-		if ( value[ '__documentReference' ] ) {
-			const ref: DocumentReference = value[ '__documentReference' ]
-			const emptyInstance = Persistent.createInstance( ref.className )
-			emptyInstance['__documentReference'] = value[ '__documentReference' ]
-			delete emptyInstance['_id']
-			return emptyInstance
+		if ( value[ '__className' ] ) {
+			return Persistent.createInstance( value as PersistentObject<Persistent> )
 		}
 
 		if ( typeof value === 'object' ) {
@@ -163,35 +168,37 @@ export class Persistent {
 		
 		const collectionPath = ( value: Persistent ) => prop.storeInCollection || value.className
 		
-		const buildRefObject = ( value: Persistent ) => {
-			if ( value[ '__documentReference' ] ) return {...value}
-			else return {
-				__documentReference: {
-					storedInCollection: collectionPath( value ),
-					className: value.className,
-					id: value.id
-				} as DocumentReference
-			}
-		}
-
 		if ( Array.isArray( propValue ) ) {
 
 			return propValue.map( item => {
-				this.pushDocument( rootCollections, collectionPath( item ), this.toDeepObj( item, rootCollections ) )
-				return buildRefObject( item )
+				this.pushDocument( rootCollections, collectionPath( item ), item )
+				return this.buildRefObject( item, collectionPath( item ) )
 			})
 
 		}
 		else {
 
-			this.pushDocument( rootCollections, collectionPath( propValue ), this.toDeepObj( propValue, rootCollections ) )
-			return buildRefObject( propValue )
+			this.pushDocument( rootCollections, collectionPath( propValue ), propValue )
+			return this.buildRefObject( propValue, collectionPath( propValue ) )
 
 		}
 	}
 
-	private pushDocument( collections: Collections, collectionName: string, document: PersistentObject<Persistent> ) {
-		if ( !document.id ) return
+	private buildRefObject( value: Persistent, storeInCollection: string ) {
+		if ( value[ '__documentReference' ] ) return {...value}
+		else return {
+			id: value.id,
+			__className: value.className,
+			__documentReference: {
+				storedInCollection: storeInCollection
+			} 
+		} as DocumentReference
+	}
+
+	private pushDocument( collections: Collections, collectionName: string, value: PersistentObject<Persistent> ) {
+		if ( value.__documentReference ) return
+		const document = this.toDeepObj( value, collections )
+
 		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
 		collections[ collectionName ].push( document )
 	}
