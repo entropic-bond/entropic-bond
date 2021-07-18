@@ -40,7 +40,7 @@ class MyEntity extends EntropicBond {
 
 #### Storing and querying the persistent entities
 
-The database abstraction is provided by the `Store` object. To learn how to setup a concrete database, [see below](setup_the_database_access).
+The database abstraction is provided by the `Store` object. To learn how to set up a concrete database, [see below](setup_the_database_access).
 
 The `Store.getModel` method will produce and object with methods to access the data in the database.
 
@@ -65,7 +65,7 @@ foundEntity = await entityModel.find().
 entityModel.delete( '0340d-349ab' )									// deletes from database
 ```
 
-#### Setup the database access
+#### Set up the database access
 
 The database access is encapsulated in a `DataSource` object. A concrete implementation of a _JSON_ `DataSource` is provided as `JsonDataSource`. You can use this implementation for testing purposes.
 

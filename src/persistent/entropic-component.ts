@@ -7,7 +7,13 @@ export type PropChangeCallback<T> = Callback<PropChangeEvent<T>>
 type ArrayPropsElem<T> = Elements<T[ClassArrayPropNames<T>]>
 export type CompareFunction<T> = ( a: ArrayPropsElem<T>, b: ArrayPropsElem<T> )=>boolean
 
-export class ObservablePersistent extends Persistent {
+/**
+ * Derived classes from EntropicComponent will have the ability to notify 
+ * property changes by calling one of the provided notification methods.
+ * It extends Persistent class therefore EntropicComponent children will have
+ * persistance through the Entropic Bond persistence mechanism
+ */
+export class EntropicComponent extends Persistent {
 
 	/**
 	 * Subscribes a listener callback function. Every time a property is changed, 
@@ -55,7 +61,7 @@ export class ObservablePersistent extends Persistent {
 	 * 
 	 * @param event the event with the changed properties
 	 */
-	protected notify<T extends ObservablePersistent>( event: PropChangeEvent<T> ) {
+	protected notify<T extends EntropicComponent>( event: PropChangeEvent<T> ) {
 		this._onChange.notify(event)
 	}
 
@@ -72,7 +78,7 @@ export class ObservablePersistent extends Persistent {
 	 * 									value will be	pushed into the array. 
 	 * @returns the inserted element or undefined if the element was not inserted.
 	 */
-	protected pushAndNotify<T extends ObservablePersistent>( 
+	protected pushAndNotify<T extends EntropicComponent>( 
 		arrayPropName: ClassArrayPropNames<T>, 
 		element: ArrayPropsElem<T>, 
 		isUnique?: CompareFunction<T> 
@@ -101,7 +107,7 @@ export class ObservablePersistent extends Persistent {
 	 * 									value will be	removed from the array. 
 	 * @returns the removed element or undefined if the element was not removed.
 	 */
-	protected removeAndNotify<T extends ObservablePersistent>( 
+	protected removeAndNotify<T extends EntropicComponent>( 
 		arrayPropName: ClassArrayPropNames<T>, 
 		element: ArrayPropsElem<T>,
 		isEqual: CompareFunction<T>
@@ -123,5 +129,5 @@ export class ObservablePersistent extends Persistent {
 		return element
 	}
 
-	private _onChange: Observable<PropChangeEvent<ObservablePersistent>> = new Observable<PropChangeEvent<ObservablePersistent>>()
+	private _onChange: Observable<PropChangeEvent<EntropicComponent>> = new Observable<PropChangeEvent<EntropicComponent>>()
 }
