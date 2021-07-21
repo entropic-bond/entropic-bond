@@ -1,3 +1,16 @@
+# [1.9.0](https://github.com/entropic-bond/entropic-bond/compare/v1.8.3...v1.9.0) (2021-07-21)
+
+
+### Bug Fixes
+
+* populate to accept readonly arrays ([eda99fe](https://github.com/entropic-bond/entropic-bond/commit/eda99fe540b5af18d2bef74943805830f7ee46c9))
+* renamed to entropic bond ([34b2af5](https://github.com/entropic-bond/entropic-bond/commit/34b2af5da5d616e34f2e3f81c2968e62c39c2b06))
+
+
+### Features
+
+* auth ([e7f97c1](https://github.com/entropic-bond/entropic-bond/commit/e7f97c1f03e3986241d97b83de5fb08ca5f78afe))
+
 ## [1.8.3](https://github.com/entropic-bond/entropic-bond/compare/v1.8.2...v1.8.3) (2021-06-24)
 
 
