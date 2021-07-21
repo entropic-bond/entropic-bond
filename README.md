@@ -20,9 +20,9 @@ Typically, you will derive all your business logic entities from the `EntropicCo
 
 The persistence mechanism allows defining which entities and which properties of those entities should be stored in the database. To make an entity persistent, it should derive from the `EntropicComponent` class or the `Persistent` class. 
 
-In order to allow the persistence mechanism to automatically instantiate entities from the database, you should use the `@registerPersistentClass` decorator passing the class name and a function that produces new instances of the class.
+In order to allow the persistence mechanism to automatically instantiate entities from the database, you should use the `@registerPersistentClass` decorator passing the class name as a parameter.
 
-The properties or attributes that you want to be streamed should be preceded by the `@persistent` decorator in the attribute declaration and the attribute name is expected to be private and prefixed with an underscore (_). Access to the public attributes should be done using accessors.
+The properties or attributes that you want to be streamed should be preceded by the `@persistent` decorator in the attribute declaration. The property name must be private and prefixed with an underscore (_). Access to the public attributes should be done by the use of accessors.
 
 ```ts
 @registerPersistentClass( 'MyEntity' )
@@ -42,7 +42,7 @@ class MyEntity extends EntropicBond {
 
 The database abstraction is provided by the `Store` object. To learn how to set up a concrete database, [see below](setup_the_database_access).
 
-The `Store.getModel` method will produce and object with methods to access the data in the database.
+The `Store.getModel` method will return an object with methods to access the database.
 
 ```ts
 let foundEntity: MyEntity
