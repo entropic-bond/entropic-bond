@@ -22,33 +22,34 @@ export abstract class AuthService<T> extends AuthServiceBase {
 export enum AuthErrorCode { 'auth/wrong-password', 'auth/popup-closed-by-user' }
 
 export class Auth {
-	protected constructor( serviceFactory: () => AuthServiceBase ) {
-		if (!serviceFactory) throw (new Error('You should register an auth service before using Auth.'))
-		this._authService = serviceFactory()
-		this._authService.onAuthStateChange( userCredentials => this.authStateChanged( userCredentials ) )
+	protected constructor() {
+		if (!Auth._authService ) throw (new Error('You should register an auth service before using Auth.'))
+		Auth._authService.onAuthStateChange( 
+			userCredentials => this.authStateChanged( userCredentials ) 
+		)
 	}
 
-	static registerAuthServiceFactory( authServiceFactory: ()=> AuthServiceBase ) {
-		if ( this._serviceFactory != authServiceFactory ) {
-			this._serviceFactory = authServiceFactory
+	static registerAuthService( authService: AuthServiceBase ) {
+		if ( Auth._authService != authService ) {
+			Auth._authService = authService
 			this._instance = undefined
 		}
 	}
 
 	static get instance() {
-		return this._instance || (this._instance = new this( this._serviceFactory ) )
+		return this._instance || (this._instance = new this() )
 	}
 
 	signUp( singData: SignData ): Promise<UserCredential> {
-		return this._authService.signUp( singData )
+		return Auth._authService.signUp( singData )
 	}
 
 	login( singData: SignData ): Promise<UserCredential> {
-		return this._authService.login( singData )
+		return Auth._authService.login( singData )
 	}
 	
 	logout(): Promise<void> {
-		return this._authService.logout()
+		return Auth._authService.logout()
 	}
 
 	onAuthStateChange( onChange: ( userCredential: UserCredential )=>void ) {
@@ -63,12 +64,7 @@ export class Auth {
 		this._onAuthStateChange.notify( userCredential )
 	}
 
-	get service() {
-		return this._authService
-	}
-	
 	private static _instance: Auth = null
-	private static _serviceFactory: () => AuthServiceBase
-	private _authService: AuthServiceBase
+	private static _authService: AuthServiceBase
 	private _onAuthStateChange: Observable<UserCredential> = new Observable<UserCredential>()
 }
