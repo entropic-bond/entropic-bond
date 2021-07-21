@@ -20,13 +20,15 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
-	static populate< T extends Persistent>( instance: T | T[] ): Promise<T | T[]> {
+	static populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
 
-		const populateItem = ( item: T ) => {
-			const ref: DocumentReference = item[ '__documentReference' ]
-			const model = this.getModel( ref.storedInCollection )
+		const populateItem = async ( item: T ) => {
+			const ref: DocumentReference = item as any
+			const model = this.getModel( ref.__documentReference.storedInCollection )
 
-			return model.findById( ref.id, item ) 
+			const populated = await model.findById( ref.id, item ) 
+			populated['__documentReference' ] = undefined
+			return populated
 		}
 		
 		if ( Array.isArray( instance ) ) {
@@ -34,7 +36,7 @@ export class Store {
 			return Promise.all( promises )
 		}
 		else {
-			return populateItem( instance )
+			return populateItem( instance as T )
 		}
 	}
 

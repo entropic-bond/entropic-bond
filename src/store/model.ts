@@ -70,16 +70,32 @@ export class Model<T extends Persistent>{
 		return this._stream.delete( id, this.collectionName )
 	}
 
+	/**
+	 * Call find to retrieve a Query object used to define the search conditions
+	 * @returns a Query object
+	 */
 	find<U extends T>(): Query<U> {
 		return new Query<U>( this as unknown as Model<U> )
 	}
 
+	/**
+	 * Define the search conditions. You pass query operations and how the query
+	 * results are returned to the QueryObject
+	 * @param queryObject the QueryObject with the search constrains
+	 * @returns a promise resolving to a collection of matched documents
+	 */
 	query<U extends T>( queryObject?: QueryObject<U>): Promise<U[]> {
 		return this.mapToInstance( 
 			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 
+	/**
+	 * Get the next bunch of documents matching the last query
+	 * @param limit the max amount of documents to retrieve. If not set, uses the
+	 * last limit set
+	 * @returns a promise resolving to a collection of matched documents
+	 */
 	next<U extends T>( limit?: number ): Promise<U[]> {
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
@@ -109,11 +125,13 @@ class Query<T extends Persistent> {
 		this.model = model	
 	}
 
-	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> ) {
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+		let val = value instanceof Persistent? { id: value.id } : value
+
 		this.queryObject.operations.push({
 			property,
 			operator,
-			value
+			value: val
 		})
 
 		return this
@@ -122,7 +140,7 @@ class Query<T extends Persistent> {
 	whereDeepProp( propertyPath: string, operator: QueryOperator, value: unknown ) {
 		const props = propertyPath.split( '.' )
 		let obj = {}
-		let result = props.length > 1? obj : value
+		let result = props.length > 1? obj : value  // TODO: review
 
 		props.slice(1).forEach(( prop, i ) => {
 			obj[ prop ] = i < props.length - 2? {} : value 

@@ -1,6 +1,6 @@
-import { CompareFunction, ObservablePersistent } from './observable-persistent'
+import { CompareFunction, EntropicComponent } from './entropic-component'
 
-class Character extends ObservablePersistent {
+class Character extends EntropicComponent {
 	setName( value: string ) {
 		this.changeProp( 'name', value )
 		return this
