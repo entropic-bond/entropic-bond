@@ -184,15 +184,14 @@ export class Persistent {
 		}
 	}
 
-	private buildRefObject( value: Persistent, storeInCollection: string ) {
-		if ( value[ '__documentReference' ] ) return {...value}
-		else return {
+	private buildRefObject( value: Persistent, storeInCollection: string ): DocumentReference {
+		return {
 			id: value.id,
 			__className: value.className,
 			__documentReference: {
 				storedInCollection: storeInCollection
 			} 
-		} as DocumentReference
+		}
 	}
 
 	private pushDocument( collections: Collections, collectionName: string, value: PersistentObject<Persistent> ) {

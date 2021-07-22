@@ -322,8 +322,11 @@ describe( 'Persistent', ()=>{
 			const res = newPerson.toObject()
 
 			expect( res.document ).not.toBeInstanceOf( PersistentClass )
-			expect( res.document.id ).not.toBeDefined()
-			expect( res.document ).toEqual( newPerson.document )
+			expect( res.document ).toEqual({
+				__className: 'PersistentClass',
+				id: newPerson.document.id,
+				__documentReference: { storedInCollection: 'PersistentClass' },
+			})
 		})
 
 		describe( 'Array of references', ()=>{
