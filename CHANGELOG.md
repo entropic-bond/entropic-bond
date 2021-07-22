@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/entropic-bond/entropic-bond/compare/v1.9.3...v1.9.4) (2021-07-22)
+
+
+### Bug Fixes
+
+* id can be optionally passed in persistent constructor ([03ed481](https://github.com/entropic-bond/entropic-bond/commit/03ed4815188956a71be9f3e80894245fdb2924f8))
+
 ## [1.9.3](https://github.com/entropic-bond/entropic-bond/compare/v1.9.2...v1.9.3) (2021-07-22)
 
 
