@@ -38,8 +38,8 @@ export class Persistent {
 		return this._factoryMap[ className ]
 	}
 
-	constructor() {
-		this._id = uuid()
+	constructor( id: string = uuid() ) {
+		this._id = id
 	}
 
 	get className(): string {
