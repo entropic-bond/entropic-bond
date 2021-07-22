@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/entropic-bond/entropic-bond/compare/v1.9.1...v1.9.2) (2021-07-22)
+
+
+### Bug Fixes
+
+* export auth ([168d75c](https://github.com/entropic-bond/entropic-bond/commit/168d75c97c6387a02c26ce58348220859331cd1a))
+
 ## [1.9.1](https://github.com/entropic-bond/entropic-bond/compare/v1.9.0...v1.9.1) (2021-07-22)
 
 
