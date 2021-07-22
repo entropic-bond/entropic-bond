@@ -1,15 +1,15 @@
 import { Observable } from '../observable/observable'
-import { SignData, UserCredential } from "./user-auth-types"
+import { SignData, UserCredentials } from "./user-auth-types"
 
 export interface CredentialProviders<T> {
 	[ name: string ]: ( signData: SignData ) => Promise<T>
 }
 
 abstract class AuthServiceBase {
-	abstract signUp( signData: SignData ): Promise<UserCredential>
-	abstract login( signData: SignData ): Promise<UserCredential>
+	abstract signUp( signData: SignData ): Promise<UserCredentials>
+	abstract login( signData: SignData ): Promise<UserCredentials>
 	abstract logout(): Promise<void>
-	abstract onAuthStateChange( onChange: (userCredential: UserCredential) => void ): void
+	abstract onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ): void
 }
 
 export abstract class AuthService<T> extends AuthServiceBase {
@@ -40,11 +40,11 @@ export class Auth {
 		return this._instance || (this._instance = new this() )
 	}
 
-	signUp( singData: SignData ): Promise<UserCredential> {
+	signUp( singData: SignData ): Promise<UserCredentials> {
 		return Auth._authService.signUp( singData )
 	}
 
-	login( singData: SignData ): Promise<UserCredential> {
+	login( singData: SignData ): Promise<UserCredentials> {
 		return Auth._authService.login( singData )
 	}
 	
@@ -52,19 +52,19 @@ export class Auth {
 		return Auth._authService.logout()
 	}
 
-	onAuthStateChange( onChange: ( userCredential: UserCredential )=>void ) {
+	onAuthStateChange( onChange: ( userCredentials: UserCredentials )=>void ) {
 		return this._onAuthStateChange.subscribe( onChange )
 	}
 
-	removeAuthStateChange( onChange: ( userCredential: UserCredential )=>void ) {
+	removeAuthStateChange( onChange: ( userCredentials: UserCredentials )=>void ) {
 		this._onAuthStateChange.unsubscribe( onChange )
 	}
 
-	private authStateChanged( userCredential: UserCredential ) {
-		this._onAuthStateChange.notify( userCredential )
+	private authStateChanged( userCredentials: UserCredentials ) {
+		this._onAuthStateChange.notify( userCredentials )
 	}
 
 	private static _instance: Auth = null
 	private static _authService: AuthServiceBase
-	private _onAuthStateChange: Observable<UserCredential> = new Observable<UserCredential>()
+	private _onAuthStateChange: Observable<UserCredentials> = new Observable<UserCredentials>()
 }

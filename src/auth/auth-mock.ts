@@ -1,18 +1,18 @@
 import { AuthService } from "./auth"
-import { UserCredential, SignData } from "./user-auth-types"
+import { UserCredentials, SignData } from "./user-auth-types"
 
-export class AuthMock extends AuthService<UserCredential> {
+export class AuthMock extends AuthService<UserCredentials> {
 	constructor() {
 		super()
 		this.pendingPromises = []
 	}
 
-	signUp( signData: SignData ): Promise<UserCredential> {
-		const { authProvider, verificationLink } = signData
+	signUp( signData: SignData ): Promise<UserCredentials> {
+		const { authProvider, verificationLink, email } = signData
 	
-		const promise = new Promise<UserCredential>( async ( resolve, reject ) => {
-			if ( authProvider !== 'fail' && signData.email !== 'fail' ) {
-				this._loggedUser = this.userCredential( signData )
+		const promise = new Promise<UserCredentials>( async ( resolve, reject ) => {
+			if ( authProvider !== 'fail' && email !== 'fail' ) {
+				this._loggedUser = this.userCredentials( signData )
 				this.notifyChange?.( this._loggedUser )
 				resolve( this._loggedUser )
 			} 
@@ -25,15 +25,15 @@ export class AuthMock extends AuthService<UserCredential> {
 		return promise
 	}
 
-	login( signData: SignData ): Promise<UserCredential> {
-		if ( signData.authProvider === 'email' && signData.email !== this._fakeRegisteredUser.email ) {
+	login( signData: SignData ): Promise<UserCredentials> {
+		if ( signData.authProvider === 'email' && signData.email !== this._fakeRegisteredUser?.email ) {
 			signData.email = 'fail'
 		}
 
 		return this.signUp( signData )
 	}
 
-	onAuthStateChange( onChange: ( userCredential: UserCredential )=>void ) {
+	onAuthStateChange( onChange: ( userCredentials: UserCredentials )=>void ) {
 		this.notifyChange = onChange
 		this.notifyChange( this._loggedUser )
 	}
@@ -52,11 +52,12 @@ export class AuthMock extends AuthService<UserCredential> {
     this.pendingPromises = []
 	}
 
-	fakeRegisteredUser( userCredential: UserCredential ) {
-		this._fakeRegisteredUser = userCredential
+	fakeRegisteredUser( userCredentials: UserCredentials ) {
+		this._fakeRegisteredUser = userCredentials
+		return this
 	}
 
-	private userCredential( signData: SignData ): UserCredential {
+	private userCredentials( signData: SignData ): UserCredentials {
 		if ( this._fakeRegisteredUser ) {
 			return { ...this._fakeRegisteredUser, email: signData.email }
 		}
@@ -78,7 +79,7 @@ export class AuthMock extends AuthService<UserCredential> {
 	}
 
 	private pendingPromises: Promise<any>[]
-	private _loggedUser: UserCredential
-	private notifyChange: ( userCredential: UserCredential ) => void
-	private _fakeRegisteredUser: UserCredential
+	private _loggedUser: UserCredentials
+	private notifyChange: ( userCredentials: UserCredentials ) => void
+	private _fakeRegisteredUser: UserCredentials
 }

@@ -1,5 +1,4 @@
-
-export interface UserCredential {
+export interface UserCredentials {
 	id: string
 	email: string
 	name?: string

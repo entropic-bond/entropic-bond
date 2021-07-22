@@ -22,19 +22,19 @@ describe( 'Auth Mock', ()=>{
 	})
 
 	it( 'should emulate sign-up', async ()=>{
-		const userCredential = await Auth.instance.signUp({
+		const userCredentials = await Auth.instance.signUp({
 			authProvider: 'google',
 			email: 'test@test.com',
 			password: 'password'
 		})
 
-		expect( userCredential.email ).toEqual( 'test@test.com' )
-		expect( authChangeSpy ).toHaveBeenCalledWith( userCredential )
+		expect( userCredentials.email ).toEqual( 'test@test.com' )
+		expect( authChangeSpy ).toHaveBeenCalledWith( userCredentials )
 	})
 
 	it( 'should emulate failed sign-up', async ()=>{
 		try {
-			var userCredential = await Auth.instance.signUp({
+			var userCredentials = await Auth.instance.signUp({
 				authProvider: 'fail',
 				email: 'test@test.com',
 				password: 'password'
@@ -42,7 +42,7 @@ describe( 'Auth Mock', ()=>{
 		}
 		catch {}
 
-		expect( userCredential ).toBeUndefined()
+		expect( userCredentials ).toBeUndefined()
 		expect( authChangeSpy ).toHaveBeenCalledWith( undefined )
 	})
 
