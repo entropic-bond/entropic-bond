@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/entropic-bond/entropic-bond/compare/v1.9.0...v1.9.1) (2021-07-22)
+
+
+### Bug Fixes
+
+* toObject producing incorrect reference ([064588d](https://github.com/entropic-bond/entropic-bond/commit/064588d4f9539c168a5f90a09568fa07afed9c05))
+
 # [1.9.0](https://github.com/entropic-bond/entropic-bond/compare/v1.8.3...v1.9.0) (2021-07-21)
 
 
