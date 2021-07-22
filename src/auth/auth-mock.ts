@@ -1,4 +1,4 @@
-import { AuthService } from "./auth"
+import { AuthService, RejectedCallback, ResovedCallback } from "./auth"
 import { UserCredentials, SignData } from "./user-auth-types"
 
 export class AuthMock extends AuthService<UserCredentials> {
@@ -10,7 +10,7 @@ export class AuthMock extends AuthService<UserCredentials> {
 	signUp( signData: SignData ): Promise<UserCredentials> {
 		const { authProvider, verificationLink, email } = signData
 	
-		const promise = new Promise<UserCredentials>( async ( resolve, reject ) => {
+		const promise = new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
 			if ( authProvider !== 'fail' && email !== 'fail' ) {
 				this._loggedUser = this.userCredentials( signData )
 				this.notifyChange?.( this._loggedUser )
@@ -18,7 +18,7 @@ export class AuthMock extends AuthService<UserCredentials> {
 			} 
 			else {
 				this.notifyChange?.( undefined )
-				reject( verificationLink || 'testError' )
+				reject({ code: 'userNotFound', message: verificationLink || 'Test auth error' })
 			}
 		})
 		this.pendingPromises.push( promise )

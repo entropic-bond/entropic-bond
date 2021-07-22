@@ -19,7 +19,15 @@ export abstract class AuthService<T> extends AuthServiceBase {
 	readonly credentialProviders: CredentialProviders<T> = {}
 }
 
-export enum AuthErrorCode { 'auth/wrong-password', 'auth/popup-closed-by-user' }
+export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail'
+
+export interface AuthError {
+	code: AuthErrorCode
+	message: string
+}
+
+export type ResovedCallback = ( credentials: UserCredentials ) => void
+export type RejectedCallback = ( reason: AuthError ) => void
 
 export class Auth {
 	protected constructor() {
