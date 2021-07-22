@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/entropic-bond/entropic-bond/compare/v1.9.2...v1.9.3) (2021-07-22)
+
+
+### Bug Fixes
+
+* credentials rename ([7ab7f70](https://github.com/entropic-bond/entropic-bond/commit/7ab7f701271ce7e5fc98b95304af107e96abea76))
+
 ## [1.9.2](https://github.com/entropic-bond/entropic-bond/compare/v1.9.1...v1.9.2) (2021-07-22)
 
 
