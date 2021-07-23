@@ -1,3 +1,10 @@
+## [1.9.7](https://github.com/entropic-bond/entropic-bond/compare/v1.9.6...v1.9.7) (2021-07-23)
+
+
+### Bug Fixes
+
+* downgrade to ES5 ([d9b40f8](https://github.com/entropic-bond/entropic-bond/commit/d9b40f8438a1ee1aa4a27a2322f70ef66be2a1b5))
+
 ## [1.9.6](https://github.com/entropic-bond/entropic-bond/compare/v1.9.5...v1.9.6) (2021-07-23)
 
 
