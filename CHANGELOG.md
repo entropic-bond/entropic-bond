@@ -1,3 +1,10 @@
+## [1.9.6](https://github.com/entropic-bond/entropic-bond/compare/v1.9.5...v1.9.6) (2021-07-23)
+
+
+### Bug Fixes
+
+* multiple fake users allowed ([6a595c0](https://github.com/entropic-bond/entropic-bond/commit/6a595c05f85d32a3ec0e7d40ecd8bb674c89d953))
+
 ## [1.9.5](https://github.com/entropic-bond/entropic-bond/compare/v1.9.4...v1.9.5) (2021-07-22)
 
 
