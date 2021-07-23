@@ -26,7 +26,9 @@ export class AuthMock extends AuthService<UserCredentials> {
 	}
 
 	login( signData: SignData ): Promise<UserCredentials> {
-		if ( signData.authProvider === 'email' && signData.email !== this._fakeRegisteredUser?.email ) {
+		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
+
+		if ( signData.authProvider === 'email' && !fakeUser ) {
 			signData.email = 'fail'
 		}
 
@@ -53,13 +55,14 @@ export class AuthMock extends AuthService<UserCredentials> {
 	}
 
 	fakeRegisteredUser( userCredentials: UserCredentials ) {
-		this._fakeRegisteredUser = userCredentials
+		this._fakeRegisteredUsers.push( userCredentials )
 		return this
 	}
 
 	private userCredentials( signData: SignData ): UserCredentials {
-		if ( this._fakeRegisteredUser ) {
-			return { ...this._fakeRegisteredUser, email: signData.email }
+		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
+		if ( fakeUser ) {
+			return { ...fakeUser }
 		}
 		else {
 			return ({
@@ -68,9 +71,7 @@ export class AuthMock extends AuthService<UserCredentials> {
 				name: signData.authProvider || `testName${ signData.email? ' ' + signData.email : '' }` ,
 				phoneNumber: 'testPhone',
 				customData: {
-					gdprConsent: true,
-					subscriptionPlan: 'user',
-					planExpireDate: 0
+					role: 'test'
 				},
 				lastLogin: 0,
 				creationDate: 0
@@ -81,5 +82,5 @@ export class AuthMock extends AuthService<UserCredentials> {
 	private pendingPromises: Promise<any>[]
 	private _loggedUser: UserCredentials
 	private notifyChange: ( userCredentials: UserCredentials ) => void
-	private _fakeRegisteredUser: UserCredentials
+	private _fakeRegisteredUsers: UserCredentials[] = []
 }
