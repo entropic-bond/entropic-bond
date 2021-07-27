@@ -1,3 +1,10 @@
+## [1.9.8](https://github.com/entropic-bond/entropic-bond/compare/v1.9.7...v1.9.8) (2021-07-27)
+
+
+### Bug Fixes
+
+* derived persistent classes can change id ([68b2d93](https://github.com/entropic-bond/entropic-bond/commit/68b2d93fed6100da18388afcaf784d70260a1a2a))
+
 ## [1.9.7](https://github.com/entropic-bond/entropic-bond/compare/v1.9.6...v1.9.7) (2021-07-23)
 
 
