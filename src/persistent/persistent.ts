@@ -46,6 +46,10 @@ export class Persistent {
 		return this[ '__className' ];
 	}
 
+	protected setId( value: string ) {
+		this._id = value
+	}
+
 	get id() {
 		return this._id;
 	}

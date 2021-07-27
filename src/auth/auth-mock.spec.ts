@@ -53,8 +53,13 @@ describe( 'Auth Mock', ()=>{
 			authProvider: 'google'
 		})
 
-		expect( userCredentials ).toEqual( fakeUseCredentials )
-		expect( authChangeSpy ).toHaveBeenCalledWith( fakeUseCredentials )
+		const modUserCredentials = { 
+			...fakeUseCredentials, 
+			id: fakeUseCredentials.id + '__from_auth'
+		}
+
+		expect( userCredentials ).toEqual( modUserCredentials )
+		expect( authChangeSpy ).toHaveBeenCalledWith( modUserCredentials )
 	})
 
 	it( 'should fail login with email auth provider if does not match fake user credentials', async ()=>{
