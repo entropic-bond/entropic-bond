@@ -10,10 +10,12 @@ export interface UserCredentials {
 	creationDate: number
 }
 
+export type AuthProvider = 'email' | 'facebook' | 'google' | 'twitter'
+
 export interface SignData {
-	authProvider: string
-	email?: string
-	password?: string
+	authProvider?: AuthProvider
+	email: string
+	password: string
 	name?: string
 	verificationLink?: string
 }

@@ -2,16 +2,12 @@ import { AuthService, RejectedCallback, ResovedCallback } from "./auth"
 import { UserCredentials, SignData } from "./user-auth-types"
 
 export class AuthMock extends AuthService<UserCredentials> {
-	constructor() {
-		super()
-		this.pendingPromises = []
-	}
 
 	signUp( signData: SignData ): Promise<UserCredentials> {
-		const { authProvider, verificationLink, email } = signData
+		const { verificationLink, email, password } = signData
 	
 		const promise = new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
-			if ( authProvider !== 'fail' && email !== 'fail' ) {
+			if ( password !== 'fail' && email !== 'fail' ) {
 				this._loggedUser = this.userCredentials( signData )
 				this._loggedUser.id += '__from_auth' 
 				this._fakeRegisteredUsers.push( this._loggedUser )
@@ -81,7 +77,7 @@ export class AuthMock extends AuthService<UserCredentials> {
 		}
 	}
 
-	private pendingPromises: Promise<any>[]
+	private pendingPromises: Promise<any>[] = []
 	private _loggedUser: UserCredentials
 	private notifyChange: ( userCredentials: UserCredentials ) => void
 	private _fakeRegisteredUsers: UserCredentials[] = []

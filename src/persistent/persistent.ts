@@ -221,7 +221,6 @@ export class Persistent {
 	}
 
 	@persistent private _id: string
-	private _loaded: boolean
 	private _persistentProperties: PersistentProperty[]
 	private static _factoryMap: FactoryMap = {}
 }

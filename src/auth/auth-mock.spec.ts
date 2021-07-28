@@ -35,9 +35,8 @@ describe( 'Auth Mock', ()=>{
 	it( 'should emulate failed sign-up', async ()=>{
 		try {
 			var userCredentials = await Auth.instance.signUp({
-				authProvider: 'fail',
 				email: 'test@test.com',
-				password: 'password'
+				password: 'fail'
 			})
 		}
 		catch {}
