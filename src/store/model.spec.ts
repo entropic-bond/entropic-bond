@@ -328,6 +328,20 @@ describe( 'Model', ()=>{
 
 			expect( loadedUser[0].id ).toEqual( 'user6' )
 		})
+
+		it( 'should not throw on calling populate several times on same object', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			await Store.populate( loadedUser.derived )
+			expect( loadedUser.derived['_documentRef'] ).not.toBeDefined()
+
+			try {
+				await Store.populate( loadedUser.derived )
+			} 
+			catch ( err ) {
+				var thrown = true
+			}
+			expect( thrown ).toBeFalsy()
+		})
 		
 	})
 

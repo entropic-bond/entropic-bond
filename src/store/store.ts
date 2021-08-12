@@ -24,6 +24,7 @@ export class Store {
 
 		const populateItem = async ( item: T ) => {
 			const ref: DocumentReference = item as any
+			if ( !ref.__documentReference ) return item
 			const model = this.getModel( ref.__documentReference.storedInCollection )
 
 			const populated = await model.findById( ref.id, item ) 
