@@ -1,3 +1,10 @@
+## [1.9.9](https://github.com/entropic-bond/entropic-bond/compare/v1.9.8...v1.9.9) (2021-07-31)
+
+
+### Bug Fixes
+
+* export AuthProvider ([b47fb80](https://github.com/entropic-bond/entropic-bond/commit/b47fb80845173ab286baf42ee8f945be854413ba))
+
 ## [1.9.8](https://github.com/entropic-bond/entropic-bond/compare/v1.9.7...v1.9.8) (2021-07-27)
 
 
