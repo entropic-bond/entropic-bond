@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/entropic-bond/entropic-bond/compare/v1.9.10...v1.10.0) (2021-08-22)
+
+
+### Features
+
+* Annotations ([477f891](https://github.com/entropic-bond/entropic-bond/commit/477f8911916f3e755fcf4741f33f989c7801a59d))
+
 ## [1.9.10](https://github.com/entropic-bond/entropic-bond/compare/v1.9.9...v1.9.10) (2021-08-12)
 
 
