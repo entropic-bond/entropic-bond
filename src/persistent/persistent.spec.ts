@@ -376,4 +376,18 @@ describe( 'Persistent', ()=>{
 		})
 		
 	})
+
+	describe( 'Arbitrary Properties', ()=>{
+		beforeEach(()=>{
+			Persistent.registerFactory( 'WithAnnotations', PersistentClass, { 
+				menu: 'main', 
+				subType: 'NiceClass',
+				showInDashboard: false
+			})
+		})
+
+		it( 'should allow register persistent class with arbitrary annotations', ()=>{
+			expect( Persistent.persistentClases['WithAnnotations'].annotations.menu ).toBe('main')
+		})
+	})
 })
