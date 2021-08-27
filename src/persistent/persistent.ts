@@ -288,3 +288,4 @@ export function registerPersistentClass( className: string, annotations?: any ) 
 		constructor.prototype.__className = className
 	}
 }
+
