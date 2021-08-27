@@ -91,6 +91,34 @@ class Person extends Persistent {
 	private _doNotPersist: number
 }
 
+
+interface	CustomAnnotation {
+	menu: string 
+	subType: string
+	showInDashboard: boolean
+}
+
+@registerPersistentClass( 'WithAnnotations', { 
+	menu: 'main', 
+	subType: 'NiceClass',
+	showInDashboard: false
+} as CustomAnnotation )
+export class WithAnnotations extends Persistent {}
+
+@registerPersistentClass( 'WithAnnotations2', { 
+	menu: 'main', 
+	subType: 'UglyClass',
+	showInDashboard: false
+}as CustomAnnotation)
+export class WithAnnotations2 extends Persistent {}
+
+@registerPersistentClass( 'WithAnnotations3', { 
+	menu: 'subMenu', 
+	showInDashboard: true
+}as CustomAnnotation)
+export class WithAnnotations3 extends Persistent {}
+
+
 describe( 'Persistent', ()=>{
 	let person: Person
 	let newPerson: Person
@@ -378,16 +406,34 @@ describe( 'Persistent', ()=>{
 	})
 
 	describe( 'Arbitrary Properties', ()=>{
-		beforeEach(()=>{
-			Persistent.registerFactory( 'WithAnnotations', PersistentClass, { 
-				menu: 'main', 
-				subType: 'NiceClass',
-				showInDashboard: false
-			})
-		})
 
 		it( 'should allow register persistent class with arbitrary annotations', ()=>{
-			expect( Persistent.persistentClases['WithAnnotations'].annotations.menu ).toBe('main')
+			const annotatedClasses = Persistent.annotatedClasses()
+			expect( annotatedClasses ).toEqual(expect.arrayContaining([{
+				className: 'WithAnnotations',
+				annotations: {
+					menu: 'main', 
+					subType: 'NiceClass',
+					showInDashboard: false
+				}
+			}]))
+			expect( annotatedClasses ).toHaveLength( 3 )
+		})
+
+		it( 'should retrieve specific annotated classes', ()=>{
+			const annotatedClasses = Persistent.annotatedClasses<CustomAnnotation>( 
+				annotation => annotation.showInDashboard 
+			)
+
+			expect( annotatedClasses[0] ).toEqual({
+				className: 'WithAnnotations3',
+				annotations: {
+					menu: 'subMenu', 
+					showInDashboard: true
+				}
+			})
+
+			expect( annotatedClasses ).toHaveLength( 1 )
 		})
 	})
 })

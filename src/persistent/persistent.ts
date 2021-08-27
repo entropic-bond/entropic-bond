@@ -2,14 +2,11 @@ import { v4 as uuid } from "uuid"
 import { SomeClassProps } from '../types/utility-types';
 
 type PersistentConstructor = new () => Persistent
-interface Annotations {
-	[ key: string ]: unknown
-}
 
 interface FactoryMap {
 	[ id: string ]: {
 		factory: PersistentConstructor
-		annotations: Annotations
+		annotations: any
 	}
 }
 
@@ -35,7 +32,7 @@ export interface DocumentReference {
 }
 
 export class Persistent {
-	static registerFactory( className: string, factory: PersistentConstructor, annotations?: Annotations ) {
+	static registerFactory( className: string, factory: PersistentConstructor, annotations?: any ) {
 		this._factoryMap[ className ] = { factory, annotations }
 	}
 
@@ -44,8 +41,10 @@ export class Persistent {
 		return this._factoryMap[ className ].factory
 	}
 
-	static get persistentClases() {
-		return Object.freeze({...this._factoryMap})
+	static annotatedClasses<T>( filter?: ( annotations: T )=>boolean ) {
+		return Object.entries( this._factoryMap )
+			.map(([ className, obj ]) => ({	className, annotations: obj.annotations as T }))
+			.filter( obj => obj.annotations && ( !filter || filter?.( obj.annotations as T ) ) )
 	}
 
 	constructor( id: string = uuid() ) {
@@ -283,7 +282,7 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 	}
 }
 
-export function registerPersistentClass( className: string, annotations?: Annotations ) {
+export function registerPersistentClass( className: string, annotations?: any ) {
 	return ( constructor: PersistentConstructor ) => {
 		Persistent.registerFactory( className, constructor, annotations )
 		constructor.prototype.__className = className
