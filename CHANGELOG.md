@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/entropic-bond/entropic-bond/compare/v1.10.0...v1.11.0) (2021-08-27)
+
+
+### Features
+
+* force update ([08cf031](https://github.com/entropic-bond/entropic-bond/commit/08cf031d7216427bde60453b4a4bf28131615474))
+
 # [1.10.0](https://github.com/entropic-bond/entropic-bond/compare/v1.9.10...v1.10.0) (2021-08-22)
 
 
