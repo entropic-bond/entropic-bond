@@ -6,8 +6,13 @@ type PersistentConstructor = new () => Persistent
 interface FactoryMap {
 	[ id: string ]: {
 		factory: PersistentConstructor
-		annotations: any
+		annotation: unknown
 	}
+}
+
+interface AnnotationWrapper<T> {
+	className: string
+	annotation: T
 }
 
 // TODO: review and compare with DocumentReference
@@ -32,8 +37,8 @@ export interface DocumentReference {
 }
 
 export class Persistent {
-	static registerFactory( className: string, factory: PersistentConstructor, annotations?: any ) {
-		this._factoryMap[ className ] = { factory, annotations }
+	static registerFactory( className: string, factory: PersistentConstructor, annotation?: unknown ) {
+		this._factoryMap[ className ] = { factory, annotation }
 	}
 
 	static classFactory( className: string ) {
@@ -41,10 +46,23 @@ export class Persistent {
 		return this._factoryMap[ className ].factory
 	}
 
-	static annotatedClasses<T>( filter?: ( annotations: T )=>boolean ) {
+	static registeredClasses() {
+		return Object.keys( this._factoryMap )
+	}
+
+	static classesExtending( derivedFrom: PersistentConstructor ) {
 		return Object.entries( this._factoryMap )
-			.map(([ className, obj ]) => ({	className, annotations: obj.annotations as T }))
-			.filter( obj => obj.annotations && ( !filter || filter?.( obj.annotations as T ) ) )
+			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom )
+			.map(([ className ]) => className )
+	}
+
+	static annotations( className: string | Persistent | PersistentConstructor ) {
+		if ( className instanceof Persistent ) className = className.className
+		else if ( typeof className === 'string' ) className
+		else className = new className().className
+
+		if ( !this._factoryMap[ className ] ) throw new Error( `You should register class ${ className } prior to use.` )
+		return this._factoryMap[ className ].annotation
 	}
 
 	constructor( id: string = uuid() ) {
@@ -282,9 +300,9 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 	}
 }
 
-export function registerPersistentClass( className: string, annotations?: any ) {
+export function registerPersistentClass( className: string, annotation?: unknown ) {
 	return ( constructor: PersistentConstructor ) => {
-		Persistent.registerFactory( className, constructor, annotations )
+		Persistent.registerFactory( className, constructor, annotation )
 		constructor.prototype.__className = className
 	}
 }

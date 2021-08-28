@@ -103,20 +103,20 @@ interface	CustomAnnotation {
 	subType: 'NiceClass',
 	showInDashboard: false
 } as CustomAnnotation )
-export class WithAnnotations extends Persistent {}
+export class WithAnnotations extends PersistentClass {}
 
 @registerPersistentClass( 'WithAnnotations2', { 
 	menu: 'main', 
 	subType: 'UglyClass',
 	showInDashboard: false
 }as CustomAnnotation)
-export class WithAnnotations2 extends Persistent {}
+export class WithAnnotations2 extends PersistentClass {}
 
 @registerPersistentClass( 'WithAnnotations3', { 
 	menu: 'subMenu', 
 	showInDashboard: true
 }as CustomAnnotation)
-export class WithAnnotations3 extends Persistent {}
+export class WithAnnotations3 extends PersistentClass {}
 
 
 describe( 'Persistent', ()=>{
@@ -405,35 +405,32 @@ describe( 'Persistent', ()=>{
 		
 	})
 
-	describe( 'Arbitrary Properties', ()=>{
+	describe( 'Annotations', ()=>{
 
 		it( 'should allow register persistent class with arbitrary annotations', ()=>{
-			const annotatedClasses = Persistent.annotatedClasses()
-			expect( annotatedClasses ).toEqual(expect.arrayContaining([{
-				className: 'WithAnnotations',
-				annotations: {
-					menu: 'main', 
-					subType: 'NiceClass',
-					showInDashboard: false
-				}
-			}]))
-			expect( annotatedClasses ).toHaveLength( 3 )
-		})
-
-		it( 'should retrieve specific annotated classes', ()=>{
-			const annotatedClasses = Persistent.annotatedClasses<CustomAnnotation>( 
-				annotation => annotation.showInDashboard 
-			)
-
-			expect( annotatedClasses[0] ).toEqual({
-				className: 'WithAnnotations3',
-				annotations: {
-					menu: 'subMenu', 
-					showInDashboard: true
-				}
+			expect( Persistent.annotations( WithAnnotations ) ).toEqual({
+				menu: 'main', 
+				subType: 'NiceClass',
+				showInDashboard: false
 			})
-
-			expect( annotatedClasses ).toHaveLength( 1 )
 		})
+
+	})
+
+	describe( 'Persisten Class collection retrieval', ()=>{
+
+		it( 'should retrieve all registered classes by class name', ()=>{
+			expect( Persistent.registeredClasses() ).toHaveLength( 5 )
+			expect( Persistent.registeredClasses() ).toContain( 'Person' )
+			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
+		})
+		
+		it( 'should retrieve classes by type', ()=>{
+			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 4 )
+			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'PersistentClass' )
+			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations' )
+			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations3' )
+		})
+		
 	})
 })
