@@ -1,4 +1,4 @@
-export type UploadProgress = ( uploadedSize: number, fileSize: number ) => void
+export type UploadProgress = ( uploadedBytes: number, fileSize: number ) => void
 
 type CloudStorageFactory = ()=>CloudStorage
 
@@ -16,7 +16,7 @@ export interface UploadControl {
 export type StorableData = File | Blob | Uint8Array | ArrayBuffer
 
 export abstract class CloudStorage {
-	abstract store( id: string, data: StorableData ): Promise<string>
+	abstract save( id: string, data: StorableData, progress: UploadProgress ): Promise<string>
 	abstract getUrl( reference: string ): Promise<string>
 	abstract uploadControl(): UploadControl
 	abstract delete( reference: string ): Promise<void>

@@ -21,7 +21,7 @@ class MockFile {
 	text() { return Promise.resolve( this.data )}
 	arrayBuffer() { return Promise.resolve( this.data ) }
 }
-global['File'] = MockFile
+global.File = MockFile
 
 @registerPersistentClass( 'Test' )
 class Test extends Persistent {
@@ -51,13 +51,13 @@ describe( 'Cloud Storage', ()=>{
 	afterEach( ()=> mockCloudStorage.mockFileSystem = {} )
 
 	it( 'should save a file from Blob', async ()=>{
-		await file.store( blobData1 )
+		await file.save({ data: blobData1 })
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( blobData1 ) )		
 	})
 	
 	it( 'should save a file from File', async ()=>{
-		await file.store( fileData )
+		await file.save({ data: fileData })
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( {data:[blobData1], name: 'pepe.dat'} ) )		
 		expect( file.originalFileName ).toEqual( 'pepe.dat'  )
@@ -65,20 +65,20 @@ describe( 'Cloud Storage', ()=>{
 	})
 	
 	it( 'should get a url', async ()=>{
-		await file.store( blobData1 )
+		await file.save({ data: blobData1 })
 
 		expect( file.url ).toEqual( 'mock-data-folder/' + file.id )
 	})
 	
 	it( 'should report metadata', async ()=>{
-		await file.store( blobData1, 'test.dat' )
+		await file.save({ data: blobData1, fileName: 'test.dat' })
 
 		expect( file.originalFileName ).toEqual( 'test.dat' )
 		expect( file.provider.className ).toEqual( 'MockCloudStorage' )
 	})
 
 	it( 'should delete file', async ()=>{
-		await file.store( blobData1 )
+		await file.save({ data: blobData1 })
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
 
 		await file.delete()
@@ -103,18 +103,18 @@ describe( 'Cloud Storage', ()=>{
 	it( 'should overwrite file on subsequent writes', async ()=>{
 		const deleteSpy = jest.spyOn( file, 'delete' )
 
-		await file.store( 'first write' as any )
+		await file.save({ data: 'first write' as any })
 		expect( deleteSpy ).not.toHaveBeenCalled()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( '"first write"' )		
 
-		await file.store( 'second write' as any )
+		await file.save({ data: 'second write' as any })
 		expect( deleteSpy ).toHaveBeenCalled()
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( '"second write"' )		
 	})
 
 	it( 'should save from pending file', async ()=>{
 		file.setDataToStore( fileData )
-		await file.store()
+		await file.save()
 
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toBeDefined()		
 		expect( mockCloudStorage.mockFileSystem[ file.id ] ).toEqual( JSON.stringify( {data:[blobData1], name: 'pepe.dat'} ) )		
@@ -140,7 +140,7 @@ describe( 'Cloud Storage', ()=>{
 		})
 
 		it( 'should notify on data store', async ()=>{
-			await file.store( fileData )
+			await file.save( fileData )
 			expect( spy ).toHaveBeenNthCalledWith( 1, { 
 				event: StoredFileEvent.stored,
 				storedFile: file 
@@ -148,7 +148,7 @@ describe( 'Cloud Storage', ()=>{
 		})
 
 		it( 'should notify on delete', async ()=>{
-			await file.store( fileData )
+			await file.save( fileData )
 			spy.mockClear()
 
 			await file.delete()
@@ -171,7 +171,7 @@ describe( 'Cloud Storage', ()=>{
 		})
 
 		it( 'should save object with StoredFile', async ()=>{
-			await testObj.file.store( blobData1, 'test.dat' )
+			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )
 
 			expect( database[ testObj.className ][ testObj.id ].file ).toBeDefined()
@@ -182,7 +182,7 @@ describe( 'Cloud Storage', ()=>{
 		})
 
 		it( 'should load object with StoredFile', async ()=>{
-			await testObj.file.store( blobData1, 'test.dat' )
+			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )
 
 			const newTestObj = await model.findById( testObj.id )
@@ -194,7 +194,7 @@ describe( 'Cloud Storage', ()=>{
 		it( 'should replace file on save after load', async ()=>{
 			const deleteSpy = jest.spyOn( testObj.file, 'delete' )
 
-			await testObj.file.store( blobData1, 'test.dat' )
+			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )
 
 			const newTestObj = await model.findById( testObj.id )
@@ -204,7 +204,7 @@ describe( 'Cloud Storage', ()=>{
 			expect( deleteSpy ).not.toHaveBeenCalled()
 
 			testObj.file.setDataToStore( blobData2 )
-			await testObj.file.store()
+			await testObj.file.save()
 
 			expect( 
 				mockCloudStorage.mockFileSystem[ testObj.file.id ] 

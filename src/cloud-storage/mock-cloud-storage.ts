@@ -7,7 +7,7 @@ export class MockCloudStorage extends CloudStorage {
 		this._pathToMockFiles = pathToMockFiles
 	}
 
-	store( id: string, data: StorableData ): Promise<string> {
+	save( id: string, data: StorableData ): Promise<string> {
 		const fullPath = id
 
 		if ( this._onProgress ) this._onProgress( 0, 100 )
