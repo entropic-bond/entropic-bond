@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/entropic-bond/entropic-bond/compare/v1.11.0...v1.12.0) (2021-08-28)
+
+
+### Features
+
+* better annotation access and registered class browsing ([b956300](https://github.com/entropic-bond/entropic-bond/commit/b9563005675ab04d1dc0881ddeb40823175cc0ec))
+
 # [1.11.0](https://github.com/entropic-bond/entropic-bond/compare/v1.10.0...v1.11.0) (2021-08-27)
 
 
