@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/entropic-bond/entropic-bond/compare/v1.12.0...v1.13.0) (2021-08-30)
+
+
+### Features
+
+* improve onProgress notification. ([aaa1588](https://github.com/entropic-bond/entropic-bond/commit/aaa1588f73f405a08f151668a63f4e6542590ac3))
+
 # [1.12.0](https://github.com/entropic-bond/entropic-bond/compare/v1.11.0...v1.12.0) (2021-08-28)
 
 
