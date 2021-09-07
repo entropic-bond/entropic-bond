@@ -10,11 +10,6 @@ interface FactoryMap {
 	}
 }
 
-interface AnnotationWrapper<T> {
-	className: string
-	annotation: T
-}
-
 // TODO: review and compare with DocumentReference
 export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
 	__className?: string
@@ -141,7 +136,8 @@ export class Persistent {
 	}
 
 	private fromDeepObject( value: unknown ) {
-
+		if ( value === undefined || value === null ) return value
+		
 		if ( Array.isArray( value ) ) {
 			return value.map( item => this.fromDeepObject( item ) )
 		}

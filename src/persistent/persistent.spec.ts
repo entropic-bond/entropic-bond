@@ -231,6 +231,17 @@ describe( 'Persistent', ()=>{
 		})
 	})
 
+	it( 'should deal with undefined values', ()=>{
+		obj.plainObject.prop1 = undefined
+		obj.plainObject.prop2 = null
+		let aPerson: Person
+
+		expect( ()=>{ aPerson = new Person().fromObject( obj ) } ).not.toThrow()
+		expect( aPerson._plainObject.prop1 ).toBeUndefined()
+		expect( aPerson._plainObject.prop2 ).toBeNull()
+	})
+	
+
 	describe( 'Properties instance of Persistent type', ()=>{
 		beforeEach(()=>{
 			const subObject = new PersistentClass()
