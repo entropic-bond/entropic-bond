@@ -1,22 +1,12 @@
 import { Observable } from '../observable/observable'
 import { SignData, UserCredentials } from "./user-auth-types"
 
-export interface CredentialProviders<T> {
-	[ name: string ]: ( signData: SignData ) => Promise<T>
-}
-
-abstract class AuthServiceBase {
+export abstract class AuthService {
 	abstract signUp( signData: SignData ): Promise<UserCredentials>
 	abstract login( signData: SignData ): Promise<UserCredentials>
 	abstract logout(): Promise<void>
+	abstract linkAdditionalProvider( signData: SignData ): Promise<UserCredentials>
 	abstract onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ): void
-}
-
-export abstract class AuthService<T> extends AuthServiceBase {
-	registerCredentialProvider( name: string, providerFactory: ( singData?: SignData ) => Promise<T> ) {
-		this.credentialProviders[ name ] = providerFactory		
-	}
-	readonly credentialProviders: CredentialProviders<T> = {}
 }
 
 export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail'
@@ -29,15 +19,16 @@ export interface AuthError {
 export type ResovedCallback = ( credentials: UserCredentials ) => void
 export type RejectedCallback = ( reason: AuthError ) => void
 
-export class Auth {
+export class Auth extends AuthService {
 	protected constructor() {
+		super()
 		if (!Auth._authService ) throw (new Error('You should register an auth service before using Auth.'))
 		Auth._authService.onAuthStateChange( 
 			userCredentials => this.authStateChanged( userCredentials ) 
 		)
 	}
 
-	static registerAuthService( authService: AuthServiceBase ) {
+	static registerAuthService( authService: AuthService ) {
 		if ( Auth._authService != authService ) {
 			Auth._authService = authService
 			this._instance = undefined
@@ -68,11 +59,15 @@ export class Auth {
 		this._onAuthStateChange.unsubscribe( onChange )
 	}
 
+	linkAdditionalProvider( singData: SignData ): Promise<UserCredentials> {
+		return Auth._authService.linkAdditionalProvider( singData )
+	}
+
 	private authStateChanged( userCredentials: UserCredentials ) {
 		this._onAuthStateChange.notify( userCredentials )
 	}
 
 	private static _instance: Auth = null
-	private static _authService: AuthServiceBase
+	private static _authService: AuthService
 	private _onAuthStateChange: Observable<UserCredentials> = new Observable<UserCredentials>()
 }

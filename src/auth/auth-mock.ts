@@ -1,7 +1,7 @@
 import { AuthService, RejectedCallback, ResovedCallback } from "./auth"
 import { UserCredentials, SignData } from "./user-auth-types"
 
-export class AuthMock extends AuthService<UserCredentials> {
+export class AuthMock extends AuthService {
 
 	signUp( signData: SignData ): Promise<UserCredentials> {
 		const { verificationLink, email, password } = signData
@@ -47,6 +47,10 @@ export class AuthMock extends AuthService<UserCredentials> {
 		return promise
 	}
 
+	linkAdditionalProvider( signData: SignData ): Promise<UserCredentials> {
+		return this.login( signData )
+	}
+	
 	async flush() {
 		await Promise.all(this.pendingPromises)
     this.pendingPromises = []
