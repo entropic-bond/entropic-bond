@@ -13,9 +13,9 @@ export interface UserCredentials {
 export type AuthProvider = 'email' | 'facebook' | 'google' | 'twitter'
 
 export interface SignData {
-	authProvider?: AuthProvider
-	email: string
-	password: string
+	authProvider: AuthProvider
+	email?: string
+	password?: string
 	name?: string
 	verificationLink?: string
 }
