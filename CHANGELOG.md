@@ -1,3 +1,15 @@
+# [1.14.0](https://github.com/entropic-bond/entropic-bond/compare/v1.13.1...v1.14.0) (2021-09-14)
+
+
+### Bug Fixes
+
+* link additional auth provider ([f0e9e7e](https://github.com/entropic-bond/entropic-bond/commit/f0e9e7e9740eb2a42b9338ee14dc6a894cad2206))
+
+
+### Features
+
+* link additional provider ([f17be50](https://github.com/entropic-bond/entropic-bond/commit/f17be50c8b5ba88db01a754c818964b6eafc86bd))
+
 ## [1.13.1](https://github.com/entropic-bond/entropic-bond/compare/v1.13.0...v1.13.1) (2021-09-11)
 
 
