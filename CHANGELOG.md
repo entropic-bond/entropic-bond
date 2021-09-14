@@ -1,3 +1,11 @@
+## [1.13.1](https://github.com/entropic-bond/entropic-bond/compare/v1.13.0...v1.13.1) (2021-09-11)
+
+
+### Bug Fixes
+
+* bug on undefined subproperties ([ac710fb](https://github.com/entropic-bond/entropic-bond/commit/ac710fbf1283ea416631b111b5a21511dabc78de))
+* optional email and password in SignData ([bef39f7](https://github.com/entropic-bond/entropic-bond/commit/bef39f70e48ed1346e457d145ed2df22b3ddf877))
+
 # [1.13.0](https://github.com/entropic-bond/entropic-bond/compare/v1.12.0...v1.13.0) (2021-08-30)
 
 
