@@ -1,11 +1,11 @@
 import { Observable } from '../observable/observable'
-import { SignData, UserCredentials } from "./user-auth-types"
+import { AdditionalProvider, SignData, UserCredentials } from "./user-auth-types"
 
 export abstract class AuthService {
 	abstract signUp( signData: SignData ): Promise<UserCredentials>
 	abstract login( signData: SignData ): Promise<UserCredentials>
 	abstract logout(): Promise<void>
-	abstract linkAdditionalProvider( signData: SignData ): Promise<UserCredentials>
+	abstract linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials>
 	abstract onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ): void
 }
 
@@ -59,8 +59,8 @@ export class Auth extends AuthService {
 		this._onAuthStateChange.unsubscribe( onChange )
 	}
 
-	linkAdditionalProvider( singData: SignData ): Promise<UserCredentials> {
-		return Auth._authService.linkAdditionalProvider( singData )
+	linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials> {
+		return Auth._authService.linkAdditionalProvider( provider )
 	}
 
 	private authStateChanged( userCredentials: UserCredentials ) {
