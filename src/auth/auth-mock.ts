@@ -47,11 +47,11 @@ export class AuthMock extends AuthService {
 		return promise
 	}
 
-	linkAdditionalProvider<UserCredentials>( provider: AuthProvider ): Promise<UserCredentials> {
+	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
 		throw new Error('Not implemented.')
 	}
 	
-	unlinkProvider<User>( provider: AuthProvider ): Promise<User> {
+	unlinkProvider( provider: AuthProvider ): Promise<unknown> {
 		throw new Error('Not implemented.')
 	}
 	
