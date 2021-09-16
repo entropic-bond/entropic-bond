@@ -1,3 +1,10 @@
+## [1.14.3](https://github.com/entropic-bond/entropic-bond/compare/v1.14.2...v1.14.3) (2021-09-16)
+
+
+### Bug Fixes
+
+* generics in link provider ([c23a96e](https://github.com/entropic-bond/entropic-bond/commit/c23a96eb8713e4a6839abee0eb88767b187ba78c))
+
 ## [1.14.2](https://github.com/entropic-bond/entropic-bond/compare/v1.14.1...v1.14.2) (2021-09-16)
 
 
