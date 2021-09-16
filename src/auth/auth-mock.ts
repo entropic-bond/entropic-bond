@@ -1,6 +1,5 @@
-import { AdditionalProvider } from '..'
 import { AuthService, RejectedCallback, ResovedCallback } from "./auth"
-import { UserCredentials, SignData } from "./user-auth-types"
+import { UserCredentials, SignData, AuthProvider } from "./user-auth-types"
 
 export class AuthMock extends AuthService {
 
@@ -48,11 +47,11 @@ export class AuthMock extends AuthService {
 		return promise
 	}
 
-	linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials> {
+	linkAdditionalProvider( provider: AuthProvider ): Promise<UserCredentials> {
 		throw new Error('Not implemented.')
 	}
 	
-	unlinkProvider( provider: AdditionalProvider ): Promise<void> {
+	unlinkProvider( provider: AuthProvider ): Promise<void> {
 		throw new Error('Not implemented.')
 	}
 	
