@@ -52,6 +52,10 @@ export class AuthMock extends AuthService {
 		throw new Error('Not implemented.')
 	}
 	
+	unlinkProvider( provider: AdditionalProvider ): Promise<void> {
+		throw new Error('Not implemented.')
+	}
+	
 	async flush() {
 		await Promise.all(this.pendingPromises)
     this.pendingPromises = []
