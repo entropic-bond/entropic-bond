@@ -1,3 +1,11 @@
+## [1.14.1](https://github.com/entropic-bond/entropic-bond/compare/v1.14.0...v1.14.1) (2021-09-16)
+
+
+### Bug Fixes
+
+* AuthMock to implement unlinkProvider ([adf2913](https://github.com/entropic-bond/entropic-bond/commit/adf2913b2f6b28e7558d6b946574e307e6e05260))
+* unlinkProvider ([3a5daca](https://github.com/entropic-bond/entropic-bond/commit/3a5daca88aa20bcb83711c26a07d3f545000a74a))
+
 # [1.14.0](https://github.com/entropic-bond/entropic-bond/compare/v1.13.1...v1.14.0) (2021-09-14)
 
 
