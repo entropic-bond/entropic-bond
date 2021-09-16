@@ -1,3 +1,10 @@
+## [1.14.4](https://github.com/entropic-bond/entropic-bond/compare/v1.14.3...v1.14.4) (2021-09-16)
+
+
+### Bug Fixes
+
+* remove additional providers return type ([7e98131](https://github.com/entropic-bond/entropic-bond/commit/7e981317b9251368c4f4f43eaf2f8051b9bff0b1))
+
 ## [1.14.3](https://github.com/entropic-bond/entropic-bond/compare/v1.14.2...v1.14.3) (2021-09-16)
 
 
