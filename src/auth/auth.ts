@@ -6,6 +6,7 @@ export abstract class AuthService {
 	abstract login( signData: SignData ): Promise<UserCredentials>
 	abstract logout(): Promise<void>
 	abstract linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials>
+	abstract unlinkProvider( provider: AdditionalProvider ): Promise<void>
 	abstract onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ): void
 }
 
@@ -61,6 +62,10 @@ export class Auth extends AuthService {
 
 	linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials> {
 		return Auth._authService.linkAdditionalProvider( provider )
+	}
+
+	unlinkProvider( provider: AdditionalProvider ): Promise<void> {
+		return Auth._authService.unlinkProvider( provider )
 	}
 
 	private authStateChanged( userCredentials: UserCredentials ) {
