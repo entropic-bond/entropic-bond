@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/entropic-bond/entropic-bond/compare/v1.14.4...v1.15.0) (2021-09-19)
+
+
+### Features
+
+* getPersistentProperties and query by instance ([24fc650](https://github.com/entropic-bond/entropic-bond/commit/24fc650dee1c390ace570172c249d88d99e2496c))
+
 ## [1.14.4](https://github.com/entropic-bond/entropic-bond/compare/v1.14.3...v1.14.4) (2021-09-16)
 
 
