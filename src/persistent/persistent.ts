@@ -78,6 +78,13 @@ export class Persistent {
 
 	protected loaded(){}
 
+	getPersistentProperties(): readonly PersistentProperty[] {
+		return this._persistentProperties.map( prop => ({
+			...prop,
+			name: prop.name.slice( 1 ) 
+		}))
+	}
+
 	fromObject( obj: PersistentObject<this> ) {
 		this.fromObj( obj )
 		this.loaded()

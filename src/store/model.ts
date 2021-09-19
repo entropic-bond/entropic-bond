@@ -84,7 +84,15 @@ export class Model<T extends Persistent>{
 	 * @param queryObject the QueryObject with the search constrains
 	 * @returns a promise resolving to a collection of matched documents
 	 */
-	query<U extends T>( queryObject?: QueryObject<U>): Promise<U[]> {
+	query<U extends T>( queryObject?: QueryObject<U>, objectType?: U | string ): Promise<U[]> {
+		if ( objectType ) {
+			const className = objectType instanceof Persistent ? objectType.className : objectType
+			if ( !queryObject.operations ) queryObject.operations = []
+			queryObject.operations.push(
+				{ property: '__className', operator: '==', value: className } as any 
+			)
+		}
+
 		return this.mapToInstance( 
 			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)

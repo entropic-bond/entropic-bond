@@ -304,6 +304,21 @@ describe( 'Persistent', ()=>{
 		it( 'should persist properties of type Persistent in plain object', ()=>{
 			expect( newPerson._plainObject.prop1 ).toBeInstanceOf( PersistentClass )
 		})
+
+		it( 'should return registered properties', ()=>{
+			expect( new PersistentClass().getPersistentProperties() ).toEqual([
+				{ name: 'id' }, 
+				{ name: 'persistentProp' }, 
+				{ name: 'persistentArray' },
+			])
+
+			expect( new Person().getPersistentProperties() ).toEqual( expect.arrayContaining([
+				{ name: 'name' },
+				{ name: 'document', isReference: true },
+				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName' }
+			]))
+		})
+		
 	})
 
 	describe( 'Document as reference', ()=>{

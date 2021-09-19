@@ -94,6 +94,12 @@ describe( 'Model', ()=>{
 			expect( admins ).toHaveLength( 2 )
 		})
 
+		it( 'should query by instance', async ()=>{
+			expect( await model.query({}) ).toHaveLength( 6 )
+			expect( await model.query({}, new DerivedUser() ) ).toHaveLength( 1 )
+			expect( await model.query({}, 'TestUser' ) ).toHaveLength( 5 )
+		})
+		
 		it( 'should find all admins with where methods', async ()=>{
 			const admins = await model.find().where( 'admin', '==', true ).get()
 
