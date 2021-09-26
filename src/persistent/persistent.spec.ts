@@ -119,6 +119,15 @@ export class WithAnnotations2 extends PersistentClass {}
 export class WithAnnotations3 extends PersistentClass {}
 
 
+abstract class AbstractClass extends Persistent {
+	abstract pp(): any
+}
+
+@registerPersistentClass( 'ConcreteClass' )
+class ConcreteClass extends AbstractClass {
+	pp(){}
+}
+
 describe( 'Persistent', ()=>{
 	let person: Person
 	let newPerson: Person
@@ -446,7 +455,7 @@ describe( 'Persistent', ()=>{
 	describe( 'Persisten Class collection retrieval', ()=>{
 
 		it( 'should retrieve all registered classes by class name', ()=>{
-			expect( Persistent.registeredClasses() ).toHaveLength( 5 )
+			expect( Persistent.registeredClasses() ).toHaveLength( 6 )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
 		})
@@ -456,6 +465,11 @@ describe( 'Persistent', ()=>{
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'PersistentClass' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations3' )
+		})
+
+		it( 'should retrieve classes by abstract class', ()=>{
+			expect( Persistent.classesExtending( AbstractClass as any ) ).toHaveLength( 1 )
+			expect( Persistent.classesExtending( AbstractClass as any ) ).toContain( 'ConcreteClass' )
 		})
 		
 	})
