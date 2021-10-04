@@ -36,6 +36,9 @@ export class JsonDataSource implements DataSource {
 	}
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
+		const rawDataArray = Object.values( this._jsonRawData[ collectionName ] || {} )
+		if ( !queryObject ) return Promise.resolve( rawDataArray )
+		
 		this._lastLimit = queryObject.limit
 		this._cursor = 0
 
@@ -44,7 +47,7 @@ export class JsonDataSource implements DataSource {
 
 				return this.queryProcessor( prevDocs, processMethod as any, value )
 
-			}, Object.values( this._jsonRawData[ collectionName ] || {} )
+			}, Object.values( rawDataArray )
 		)
 
 		return Promise.resolve( this._lastMatchingDocs.slice( 0, queryObject.limit ) )

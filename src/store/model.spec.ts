@@ -163,6 +163,19 @@ describe( 'Model', ()=>{
 
 			expect( users[0].id ).toEqual( 'user2' )
 		})
+
+		it( 'should return the whole collection on undefined query object', async ()=>{
+			const users = await model.query()
+
+			expect( users ).toHaveLength( 6 )
+		})
+
+		it( 'should return the whole collection on empty query object', async ()=>{
+			const users = await model.query({})
+
+			expect( users ).toHaveLength( 6 )
+		})
+		
 	})
 
 	describe( 'Derived classes should fit on parent collection', ()=>{
