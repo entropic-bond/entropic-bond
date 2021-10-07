@@ -361,6 +361,19 @@ describe( 'Model', ()=>{
 			}
 			expect( thrown ).toBeFalsy()
 		})
+
+		it( 'should not throw on populating undefined instances', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			loadedUser.derived = undefined
+			try {
+				await Store.populate( loadedUser.derived )
+			} 
+			catch ( err ) {
+				var thrown = true
+			}
+			expect( thrown ).toBeFalsy()
+		})
+		
 		
 	})
 

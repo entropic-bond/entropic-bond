@@ -21,7 +21,8 @@ export class Store {
 	}
 
 	static populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
-
+		if ( !instance ) return
+		
 		const populateItem = async ( item: T ) => {
 			const ref: DocumentReference = item as any
 			if ( !ref.__documentReference ) return item

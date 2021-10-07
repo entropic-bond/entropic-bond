@@ -30,6 +30,7 @@ export abstract class DataSource {
 	abstract next( limit?: number ): Promise< DocumentObject[] >
 
 	static toPropertyPathOperations<T extends Persistent>( operations: QueryOperation<T>[] ): QueryOperation<T>[] {
+		if ( !operations ) return []
 		return operations.map( operation => {
 			const [ path, value ] = this.toPropertyPathValue( operation.value )
 			const propPath = `${ operation.property }${ path? '.'+path : '' }` 
