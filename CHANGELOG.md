@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/entropic-bond/entropic-bond/compare/v1.15.1...v1.15.2) (2021-11-16)
+
+
+### Bug Fixes
+
+* bug on null properties ([7936924](https://github.com/entropic-bond/entropic-bond/commit/7936924cf5eb564e1cffac43f6af9ce77d343e62))
+
 ## [1.15.1](https://github.com/entropic-bond/entropic-bond/compare/v1.15.0...v1.15.1) (2021-10-07)
 
 
