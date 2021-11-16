@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/entropic-bond/entropic-bond/compare/v1.15.0...v1.15.1) (2021-10-07)
+
+
+### Bug Fixes
+
+* trhow on empty query object ([fd63b3a](https://github.com/entropic-bond/entropic-bond/commit/fd63b3a15cae569587fb9a577aaa8edb1637c236))
+
 # [1.15.0](https://github.com/entropic-bond/entropic-bond/compare/v1.14.4...v1.15.0) (2021-09-19)
 
 
