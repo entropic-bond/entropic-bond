@@ -175,6 +175,9 @@ export class Persistent {
 	}
 
 	private toDeepObj( value: unknown, rootCollections: Collections ) {
+		if ( value === null || value === undefined ) {
+			return undefined
+		}
 
 		if ( Array.isArray( value ) ) {
 			return value.map( item => this.toDeepObj( item, rootCollections ) )

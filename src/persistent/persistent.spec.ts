@@ -249,7 +249,22 @@ describe( 'Persistent', ()=>{
 		expect( aPerson._plainObject.prop1 ).toBeUndefined()
 		expect( aPerson._plainObject.prop2 ).toBeNull()
 	})
-	
+
+	it( 'should not throw on null property when toObject', ()=>{
+		newPerson._plainObject.prop1 = null
+
+		expect( ()=>{
+			newPerson.toObject()
+		}).not.toThrow()
+	})
+
+	it( 'should not throw on null property when toObject', ()=>{
+		newPerson._plainObject.prop1 = undefined
+
+		expect( ()=>{
+			newPerson.toObject()
+		}).not.toThrow()
+	})
 
 	describe( 'Properties instance of Persistent type', ()=>{
 		beforeEach(()=>{
