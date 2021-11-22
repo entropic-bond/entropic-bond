@@ -373,7 +373,20 @@ describe( 'Model', ()=>{
 			}
 			expect( thrown ).toBeFalsy()
 		})
-		
+
+		it( 'should not throw on populating non existing reference', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+
+			loadedUser.derived[ '_id' ] = 'non-existing'
+
+			try {
+				await Store.populate( loadedUser.derived )
+			} 
+			catch ( err ) {
+				var thrown = true
+			}
+			expect( thrown ).toBeFalsy()
+		})
 		
 	})
 

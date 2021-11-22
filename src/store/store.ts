@@ -29,7 +29,9 @@ export class Store {
 			const model = this.getModel( ref.__documentReference.storedInCollection )
 
 			const populated = await model.findById( ref.id, item ) 
-			populated['__documentReference' ] = undefined
+			if ( populated ) {
+				populated['__documentReference' ] = undefined
+			}
 			return populated
 		}
 		
