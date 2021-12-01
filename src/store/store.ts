@@ -20,7 +20,7 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
-	static populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
+	static async populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
 		if ( !instance ) return
 		
 		const populateItem = async ( item: T ) => {
@@ -37,7 +37,8 @@ export class Store {
 		
 		if ( Array.isArray( instance ) ) {
 			const promises = instance.map( item => populateItem( item ) )
-			return Promise.all( promises )
+			const items = await Promise.all( promises )
+			return items.filter( item => item )
 		}
 		else {
 			return populateItem( instance as T )

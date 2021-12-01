@@ -387,6 +387,17 @@ describe( 'Model', ()=>{
 			}
 			expect( thrown ).toBeFalsy()
 		})
+
+		it( 'should remove deleted references when populating from the returned array', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+			const deletedId = loadedUser.manyDerived[0].id
+			await model.delete( deletedId )
+
+			const manyDerived = await Store.populate( loadedUser.manyDerived )
+
+			expect( manyDerived[0].id ).not.toBe( deletedId )
+			expect( manyDerived ).toHaveLength( 1 )
+		})
 		
 	})
 
