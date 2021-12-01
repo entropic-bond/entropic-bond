@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/entropic-bond/entropic-bond/compare/v1.15.2...v1.15.3) (2021-11-22)
+
+
+### Bug Fixes
+
+* not to throw on non-existing references when populate ([87d0388](https://github.com/entropic-bond/entropic-bond/commit/87d0388e057c8fe8f5981a59a9d324ed1a7c157f))
+
 ## [1.15.2](https://github.com/entropic-bond/entropic-bond/compare/v1.15.1...v1.15.2) (2021-11-16)
 
 
