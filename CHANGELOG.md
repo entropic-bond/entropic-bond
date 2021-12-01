@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/entropic-bond/entropic-bond/compare/v1.15.3...v1.16.0) (2021-12-01)
+
+
+### Features
+
+* remove deleted references from populate ([f96891f](https://github.com/entropic-bond/entropic-bond/commit/f96891ff89fe2836e8948473024bcfdbf141b158))
+
 ## [1.15.3](https://github.com/entropic-bond/entropic-bond/compare/v1.15.2...v1.15.3) (2021-11-22)
 
 
