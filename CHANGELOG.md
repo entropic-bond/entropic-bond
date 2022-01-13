@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/entropic-bond/entropic-bond/compare/v1.16.0...v1.17.0) (2022-01-13)
+
+
+### Features
+
+* introduce utils ([ebe7fa8](https://github.com/entropic-bond/entropic-bond/commit/ebe7fa8e5d9f39fff6c2492ff6d50a6920f54561))
+
 # [1.16.0](https://github.com/entropic-bond/entropic-bond/compare/v1.15.3...v1.16.0) (2021-12-01)
 
 
