@@ -18,10 +18,16 @@ export class JsonDataSource implements DataSource {
 
 	setDataStore( rawDataStore: JsonRawData ) {
 		this._jsonRawData = rawDataStore;
+		return this
+	}
+
+	simulateDelay( miliSeconds: number ) {
+		this._simulateDelay = miliSeconds
+		return this
 	}
 
 	findById( id: string, collectionName: string ): Promise< DocumentObject > {
-		return Promise.resolve( this._jsonRawData[ collectionName ][ id ] )
+		return this.resolveWithDelay( this._jsonRawData[ collectionName ][ id ] )
 	}
 
 	save( collections: Collections ): Promise< void > {
@@ -32,12 +38,12 @@ export class JsonDataSource implements DataSource {
 			})
 		})
 
-		return Promise.resolve()
+		return this.resolveWithDelay()
 	}
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
 		const rawDataArray = Object.values( this._jsonRawData[ collectionName ] || {} )
-		if ( !queryObject ) return Promise.resolve( rawDataArray )
+		if ( !queryObject ) return this.resolveWithDelay( rawDataArray )
 		
 		this._lastLimit = queryObject.limit
 		this._cursor = 0
@@ -50,19 +56,19 @@ export class JsonDataSource implements DataSource {
 			}, Object.values( rawDataArray )
 		)
 
-		return Promise.resolve( this._lastMatchingDocs.slice( 0, queryObject.limit ) )
+		return this.resolveWithDelay( this._lastMatchingDocs.slice( 0, queryObject.limit ) )
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
 		delete this._jsonRawData[ collectionName ][ id ]
-		return Promise.resolve()
+		return this.resolveWithDelay()
 	}
 
 	next( limit?: number ): Promise< DocumentObject[] > {
 		if ( limit ) this._lastLimit = limit
 		this.incCursor( this._lastLimit )
 
-		return Promise.resolve( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
+		return this.resolveWithDelay( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
 	}
 
 	get rawData() {
@@ -147,8 +153,18 @@ export class JsonDataSource implements DataSource {
 		return [ doc || document, val || value ]
 	}
 
+	private resolveWithDelay<T>( data?: T ): Promise<T> {
+		return new Promise<T>( resolve => {
+			setTimeout(
+				()=> resolve( data ),
+				this._simulateDelay
+			)
+		})
+	}
+
 	private _jsonRawData: JsonRawData
 	private _lastMatchingDocs: DocumentObject[]
 	private _lastLimit: number
 	private _cursor: number
+	private _simulateDelay: number = 0
 }
