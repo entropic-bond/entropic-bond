@@ -46,16 +46,16 @@
   },
   "homepage": "https://github.com/entropic-bond/entropic-bond#readme",
   "devDependencies": {
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/git": "^9.0.0",
-    "@types/jest": "^26.0.23",
-    "@types/uuid": "^8.3.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@types/jest": "^27.4.0",
+    "@types/uuid": "^8.3.4",
     "git-branch-is": "^4.0.0",
-    "husky": "^6.0.0",
-    "jest": "^27.0.5",
-    "semantic-release": "^17.4.4",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.3.4"
+    "husky": "^7.0.4",
+    "jest": "^27.4.7",
+    "semantic-release": "^18.0.1",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "uuid": "^8.3.2"

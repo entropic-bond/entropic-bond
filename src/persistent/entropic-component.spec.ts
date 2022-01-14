@@ -10,11 +10,11 @@ class Character extends EntropicComponent {
 		return this._name
 	}
 
-	pushFriend( name: string, isUnique?: CompareFunction<string> ) {
+	pushFriend( name: string, isUnique?: CompareFunction<Character> ) {
 		return this.pushAndNotify<Character>( 'friends', name, isUnique )
 	}
 
-	removeFriend( name: string, isEqual: CompareFunction<string> ) {
+	removeFriend( name: string, isEqual: CompareFunction<Character> ) {
 		return this.removeAndNotify<Character>( 'friends', name, isEqual )
 	}
 
