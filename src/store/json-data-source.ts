@@ -75,6 +75,10 @@ export class JsonDataSource implements DataSource {
 		return this._jsonRawData
 	}
 
+	wait() {
+		return Promise.all([ ...this._pendingPromises ])
+	}
+
 	private incCursor( amount: number ) {
 		this._cursor += amount 
 		if ( this._cursor > this._lastMatchingDocs.length ) {
@@ -154,12 +158,19 @@ export class JsonDataSource implements DataSource {
 	}
 
 	private resolveWithDelay<T>( data?: T ): Promise<T> {
-		return new Promise<T>( resolve => {
+		if ( this._simulateDelay <=0 ) return Promise.resolve( data )
+
+		const promise = new Promise<T>( resolve => {
 			setTimeout(
 				()=> resolve( data ),
 				this._simulateDelay
 			)
 		})
+		this._pendingPromises.push( promise )
+		promise.finally(
+			()=> this._pendingPromises = this._pendingPromises.filter( p => p === promise )
+		)
+		return promise
 	}
 
 	private _jsonRawData: JsonRawData
@@ -167,4 +178,5 @@ export class JsonDataSource implements DataSource {
 	private _lastLimit: number
 	private _cursor: number
 	private _simulateDelay: number = 0
+	private _pendingPromises: Promise<any>[] = []
 }
