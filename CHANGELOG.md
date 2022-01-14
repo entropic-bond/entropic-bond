@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/entropic-bond/entropic-bond/compare/v1.17.2...v1.18.0) (2022-01-14)
+
+
+### Features
+
+* JsonDataSource can return delayed promises ([b99c558](https://github.com/entropic-bond/entropic-bond/commit/b99c55810982a2e385041f5f2ef5a6e345b2459f))
+
 ## [1.17.2](https://github.com/entropic-bond/entropic-bond/compare/v1.17.1...v1.17.2) (2022-01-14)
 
 
