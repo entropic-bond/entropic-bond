@@ -1,4 +1,5 @@
-import { DocumentObject, JsonDataSource, Store } from '..'
+import { DocumentObject, JsonDataSource, Persistent, Store } from '..'
+import { TestUser } from './mocks/test-user'
 
 describe( 'Json DataSource', ()=>{
 	let datasource: JsonDataSource
@@ -48,6 +49,23 @@ describe( 'Json DataSource', ()=>{
 				},
 				resolveDelay * 3
 			)
+		})
+
+		it( 'should work with save', async ()=>{
+			datasource.save({ testCollection: [{ id: "id" }]})
+			await datasource.wait()
+			expect( datasource.rawData ).toEqual( expect.objectContaining({
+				testCollection: { id: { id: "id" } }
+			}))
+		})
+		
+		it( 'should work with model', async ()=>{
+			const model = Store.getModel( 'TestUser' )
+			model.save( new TestUser('id456') )
+			await datasource.wait()
+			expect( datasource.rawData.TestUser ).toEqual( expect.objectContaining({
+				id456: expect.anything()
+			}))
 		})
 		
 	})
