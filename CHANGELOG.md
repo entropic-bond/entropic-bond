@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/entropic-bond/entropic-bond/compare/v1.18.0...v1.19.0) (2022-01-14)
+
+
+### Features
+
+* introduce wait to wait for pending promises ([20aa832](https://github.com/entropic-bond/entropic-bond/commit/20aa8325fcd36e92ae3be215db769ccc4a632c0f))
+
 # [1.18.0](https://github.com/entropic-bond/entropic-bond/compare/v1.17.2...v1.18.0) (2022-01-14)
 
 
