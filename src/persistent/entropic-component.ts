@@ -75,7 +75,9 @@ export class EntropicComponent extends Persistent {
 	 * @param element the element to be inserted
 	 * @param isUnique a function that checks for inequity of the two elements 
 	 * 									passed as parameter. If the returned value is true, the 
-	 * 									value will be	pushed into the array. 
+	 * 									value will be	pushed into the array. When the function is 
+	 * 									not provided, the element will be inserted regardless it is
+	 * 									already in the array.
 	 * @returns the inserted element or undefined if the element was not inserted.
 	 */
 	protected pushAndNotify<T extends EntropicComponent>( 

@@ -41,10 +41,13 @@ describe( 'Utils', ()=>{
 		it( 'should convert to camel case', ()=>{
 			expect( camelCase( 'snake_case' ) ).toEqual( 'snakeCase' )
 			expect( camelCase( 'snake-case' ) ).toEqual( 'snakeCase' )
+			expect( camelCase( 'snake case' ) ).toEqual( 'snakeCase' )
 			expect( camelCase( 'snake-Case' ) ).toEqual( 'snakeCase' )
 			expect( camelCase( 'snake_Case' ) ).toEqual( 'snakeCase' )
+			expect( camelCase( 'snake Case' ) ).toEqual( 'snakeCase' )
 			expect( camelCase( 'Snake-Case' ) ).toEqual( 'SnakeCase' )
 			expect( camelCase( 'Snake_Case' ) ).toEqual( 'SnakeCase' )
+			expect( camelCase( 'Snake Case' ) ).toEqual( 'SnakeCase' )
 		})
 
 		it( 'should return empty string on invalid original string for camel case', ()=>{
@@ -54,10 +57,12 @@ describe( 'Utils', ()=>{
 		})
 
 		it( 'should convert to snake case', ()=>{
-			expect( snakeCase( 'snakeCase' ) ).toEqual( 'snake-case' )
 			expect( snakeCase( 'snakeCase', '_' ) ).toEqual( 'snake_case' )
 			expect( snakeCase( 'SnakeCase' ) ).toEqual( 'snake-case' )
 			expect( snakeCase( 'SnakeCase', '_' ) ).toEqual( 'snake_case' )
+			expect( snakeCase( 'snake case' ) ).toEqual( 'snake-case' )
+			expect( snakeCase( 'snake Case' ) ).toEqual( 'snake-case' )
+			expect( snakeCase( 'Snake Case' ) ).toEqual( 'snake-case' )
 		})
 
 		it( 'should return empty string on invalid original string for snake case', ()=>{
