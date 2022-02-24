@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/entropic-bond/entropic-bond/compare/v1.19.0...v1.20.0) (2022-02-24)
+
+
+### Features
+
+* camelCase and snakeCase to deal with spaces ([5653e66](https://github.com/entropic-bond/entropic-bond/commit/5653e663602fddb1a0e8390c64ad5e5357dfac72))
+
 # [1.19.0](https://github.com/entropic-bond/entropic-bond/compare/v1.18.0...v1.19.0) (2022-01-14)
 
 
