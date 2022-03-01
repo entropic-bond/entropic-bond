@@ -127,7 +127,6 @@ export class Model<T extends Persistent>{
 	private _stream: DataSource
 }
 
-
 class Query<T extends Persistent> {
 	constructor( model: Model<T> ) {
 		this.model = model	

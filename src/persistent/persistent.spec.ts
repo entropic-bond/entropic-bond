@@ -266,6 +266,12 @@ describe( 'Persistent', ()=>{
 		}).not.toThrow()
 	})
 
+	it( 'should throw with object info if available on creating a persistent instance', ()=>{
+		expect(()=>{
+			Persistent.createInstance({ id: 'id' })
+		}).toThrow( 'You should register class undefined prior to use. Class name not found in object {"id":"id"}' )
+	})
+
 	describe( 'Properties instance of Persistent type', ()=>{
 		beforeEach(()=>{
 			const subObject = new PersistentClass()

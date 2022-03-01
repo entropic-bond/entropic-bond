@@ -248,8 +248,13 @@ export class Persistent {
 			return new ( Persistent.classFactory( obj ) ) as T
 		}
 		else {
-			const instance = new ( Persistent.classFactory( obj.__className ) )
-			return instance.fromObject( obj ) as T
+			try {
+				const instance = new ( Persistent.classFactory( obj.__className ) )
+				return instance.fromObject( obj ) as T
+			}
+			catch ( e ) {
+				throw new Error( `${ e } Class name not found in object ${ JSON.stringify( obj ) }.` )
+			}
 		}
 	}
 
