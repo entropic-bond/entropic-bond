@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/entropic-bond/entropic-bond/compare/v1.20.0...v1.20.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* exception on class not found shows object producing the error. ([07468ac](https://github.com/entropic-bond/entropic-bond/commit/07468ac08844158cdf4bed8da40535131de489df))
+
 # [1.20.0](https://github.com/entropic-bond/entropic-bond/compare/v1.19.0...v1.20.0) (2022-02-24)
 
 
