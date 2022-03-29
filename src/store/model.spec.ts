@@ -398,6 +398,23 @@ describe( 'Model', ()=>{
 			expect( manyDerived[0].id ).not.toBe( deletedId )
 			expect( manyDerived ).toHaveLength( 1 )
 		})
+
+		it( 'should report if populated for single reference', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			expect( Store.isPopulated( loadedUser.derived ) ).toBeFalsy()
+
+			await Store.populate( loadedUser.derived )
+			expect( Store.isPopulated( loadedUser.derived ) ).toBeTruthy()
+		})
+		
+		it( 'should report if populated for multiple references', async ()=>{
+			const loadedUser = await model.findById( testUser.id )
+
+			expect( Store.isPopulated( loadedUser.manyDerived ) ).toBeFalsy()
+
+			await Store.populate( loadedUser.manyDerived )
+			expect( Store.isPopulated( loadedUser.manyDerived ) ).toBeTruthy()
+		})
 		
 	})
 

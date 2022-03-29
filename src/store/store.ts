@@ -45,5 +45,18 @@ export class Store {
 		}
 	}
 
+	static isPopulated< T extends Persistent>( instance: T | readonly T[] ): boolean {
+
+		if ( Array.isArray( instance ) ) {
+			return instance.reduce(
+				( prevVal, item ) => prevVal && item['__documentReference'] === undefined,
+				true 
+			)
+		}
+		else {
+			return instance['__documentReference'] === undefined
+		}
+	}
+
 	private static _dataSource: DataSource
 }
