@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/entropic-bond/entropic-bond/compare/v1.20.1...v1.21.0) (2022-03-29)
+
+
+### Features
+
+* check if reference is populated ([3aec3d2](https://github.com/entropic-bond/entropic-bond/commit/3aec3d2a1981fe57b0a6162427f3325dd455b1f4))
+
 ## [1.20.1](https://github.com/entropic-bond/entropic-bond/compare/v1.20.0...v1.20.1) (2022-03-01)
 
 
