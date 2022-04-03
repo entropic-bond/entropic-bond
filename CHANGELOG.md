@@ -1,3 +1,10 @@
+## [1.21.1](https://github.com/entropic-bond/entropic-bond/compare/v1.21.0...v1.21.1) (2022-04-03)
+
+
+### Bug Fixes
+
+* resolve/reject mock auth before notify ([be78937](https://github.com/entropic-bond/entropic-bond/commit/be78937788a86ec61fbcab1f5a82c6663c586356))
+
 # [1.21.0](https://github.com/entropic-bond/entropic-bond/compare/v1.20.1...v1.21.0) (2022-03-29)
 
 
