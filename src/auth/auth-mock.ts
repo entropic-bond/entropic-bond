@@ -11,12 +11,12 @@ export class AuthMock extends AuthService {
 				this._loggedUser = this.userCredentials( signData )
 				this._loggedUser.id += '__from_auth' 
 				this._fakeRegisteredUsers.push( this._loggedUser )
-				this.notifyChange?.( this._loggedUser )
 				resolve( this._loggedUser )
+				this.notifyChange?.( this._loggedUser )
 			} 
 			else {
-				this.notifyChange?.( undefined )
 				reject({ code: 'userNotFound', message: verificationLink || 'Test auth error' })
+				this.notifyChange?.( undefined )
 			}
 		})
 		this.pendingPromises.push( promise )
