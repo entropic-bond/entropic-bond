@@ -47,6 +47,10 @@ export class AuthMock extends AuthService {
 		return promise
 	}
 
+	resetEmailPassword( email: string ) {
+		return Promise.resolve()
+	}
+
 	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
 		throw new Error('Not implemented.')
 	}
