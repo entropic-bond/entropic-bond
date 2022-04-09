@@ -39,10 +39,11 @@ export class AuthMock extends AuthService {
 	}
 
 	async logout(): Promise<void> {
-		this._loggedUser = undefined
-		this.notifyChange( this._loggedUser )
-
-		const promise = new Promise<void>( resolve => resolve() )
+		const promise = new Promise<void>( resolve => {
+			this._loggedUser = undefined
+			resolve() 
+			this.notifyChange( undefined )
+		})
 		this.pendingPromises.push( promise )
 		return promise
 	}
