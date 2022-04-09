@@ -1,3 +1,10 @@
+## [1.22.1](https://github.com/entropic-bond/entropic-bond/compare/v1.22.0...v1.22.1) (2022-04-09)
+
+
+### Bug Fixes
+
+* better mock logout ([1cfdd8c](https://github.com/entropic-bond/entropic-bond/commit/1cfdd8c3158f04c21c7d0eb02ab8995c54eb4f16))
+
 # [1.22.0](https://github.com/entropic-bond/entropic-bond/compare/v1.21.1...v1.22.0) (2022-04-08)
 
 
