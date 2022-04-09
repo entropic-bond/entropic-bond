@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/entropic-bond/entropic-bond/compare/v1.21.1...v1.22.0) (2022-04-08)
+
+
+### Features
+
+* reset password ([e2e38a8](https://github.com/entropic-bond/entropic-bond/commit/e2e38a8537d6dd43b26209b9404ec7b4a57afd6d))
+
 ## [1.21.1](https://github.com/entropic-bond/entropic-bond/compare/v1.21.0...v1.21.1) (2022-04-03)
 
 
