@@ -1,3 +1,10 @@
+## [1.22.2](https://github.com/entropic-bond/entropic-bond/compare/v1.22.1...v1.22.2) (2022-04-25)
+
+
+### Bug Fixes
+
+* streaming numbers with value 0 didn't work ([ee781bc](https://github.com/entropic-bond/entropic-bond/commit/ee781bc159b1aca8a75d075a6cb58abd14d0e2b3))
+
 ## [1.22.1](https://github.com/entropic-bond/entropic-bond/compare/v1.22.0...v1.22.1) (2022-04-09)
 
 
