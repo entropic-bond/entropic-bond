@@ -98,7 +98,7 @@ export class Persistent {
 			const propName = this.removeUnderscore( prop )
 
 			const value = obj[ propName ]
-			if ( value ) {
+			if ( value !== undefined && value !== null ) {
 				this[ prop.name ] = this.fromDeepObject( value )
 			}
 		})

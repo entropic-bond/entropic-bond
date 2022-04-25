@@ -203,8 +203,9 @@ describe( 'Persistent', ()=>{
 
 		expect( object.salary ).toBe( 0 )
 		
-		person.fromObject( object )
-		expect( person.salary ).toBe( 0 )
+		const newPerson = new Person()
+		newPerson.fromObject( object )
+		expect( newPerson.salary ).toBe( 0 )
 	})
 
 	it( 'should deal with undefined strings', ()=>{
