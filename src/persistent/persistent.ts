@@ -125,7 +125,7 @@ export class Persistent {
 			const propValue = this[ prop.name ]
 			const propName = this.removeUnderscore( prop )
 			
-			if ( propValue ) {
+			if ( propValue !== undefined && propValue !== null ) {
 
 				if ( prop.isReference ) {
 					obj[ propName ] = this.toReferenceObj( prop, rootCollections )
@@ -271,6 +271,7 @@ interface PersistentProperty {
 	name: string
 	isReference?: boolean
 	storeInCollection?: string
+	subCollection?: string
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 }
@@ -290,6 +291,10 @@ export function persistentReferenceAt( collectionPath: string ) {
 
 export function persistentReference( target: Persistent, property: string ) {
 	return persistentParser({ isReference: true })( target, property )
+}
+
+export function persistentCollection( target: Persistent, property: string ) {
+	return persistentParser({ subCollection: target[ property ].className })( target, property )
 }
 
 export function persistentParser( options?: Partial<PersistentProperty> ) {

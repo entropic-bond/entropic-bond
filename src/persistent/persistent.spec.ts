@@ -197,6 +197,16 @@ describe( 'Persistent', ()=>{
 		expect( person.salary ).toBe( 2500 )
 	})
 
+	it( 'should persist number with value of 0', ()=>{
+		person.salary = 0
+		const object = person.toObject()
+
+		expect( object.salary ).toBe( 0 )
+		
+		person.fromObject( object )
+		expect( person.salary ).toBe( 0 )
+	})
+
 	it( 'should deal with undefined strings', ()=>{
 		person.name = undefined
 		expect( person.name ).toBeUndefined()
