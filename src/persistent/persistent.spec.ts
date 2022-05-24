@@ -500,8 +500,8 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should retrieve classes by abstract class', ()=>{
-			expect( Persistent.classesExtending( AbstractClass as any ) ).toHaveLength( 1 )
-			expect( Persistent.classesExtending( AbstractClass as any ) ).toContain( 'ConcreteClass' )
+			expect( Persistent.classesExtending( AbstractClass ) ).toHaveLength( 1 )
+			expect( Persistent.classesExtending( AbstractClass ) ).toContain( 'ConcreteClass' )
 		})
 		
 	})

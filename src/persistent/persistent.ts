@@ -45,7 +45,7 @@ export class Persistent {
 		return Object.keys( this._factoryMap )
 	}
 
-	static classesExtending( derivedFrom: PersistentConstructor ) {
+	static classesExtending( derivedFrom: PersistentConstructor | Function ) {
 		return Object.entries( this._factoryMap )
 			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom )
 			.map(([ className ]) => className )
