@@ -1,3 +1,10 @@
+## [1.22.3](https://github.com/entropic-bond/entropic-bond/compare/v1.22.2...v1.22.3) (2022-04-25)
+
+
+### Bug Fixes
+
+* numbers with value 0 fromObject ([e26f2a3](https://github.com/entropic-bond/entropic-bond/commit/e26f2a3631bbc621be7951182349c3cfc2391049))
+
 ## [1.22.2](https://github.com/entropic-bond/entropic-bond/compare/v1.22.1...v1.22.2) (2022-04-25)
 
 
