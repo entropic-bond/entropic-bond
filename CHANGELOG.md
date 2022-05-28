@@ -1,3 +1,10 @@
+## [1.22.4](https://github.com/entropic-bond/entropic-bond/compare/v1.22.3...v1.22.4) (2022-05-24)
+
+
+### Bug Fixes
+
+* allow to pass abstract class as parameter ([203da9a](https://github.com/entropic-bond/entropic-bond/commit/203da9aec49a52c9ac5c3d1e6bb52c9983301937))
+
 ## [1.22.3](https://github.com/entropic-bond/entropic-bond/compare/v1.22.2...v1.22.3) (2022-04-25)
 
 
