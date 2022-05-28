@@ -1,3 +1,10 @@
+## [1.22.5](https://github.com/entropic-bond/entropic-bond/compare/v1.22.4...v1.22.5) (2022-05-28)
+
+
+### Bug Fixes
+
+* upgrade ts4.7 ([e1a0987](https://github.com/entropic-bond/entropic-bond/commit/e1a09874604276e36abc417443fa24fd62bc79f0))
+
 ## [1.22.4](https://github.com/entropic-bond/entropic-bond/compare/v1.22.3...v1.22.4) (2022-05-24)
 
 
