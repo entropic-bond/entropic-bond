@@ -33,7 +33,7 @@ export abstract class DataSource {
 		if ( !operations ) return []
 		return operations.map( operation => {
 			const [ path, value ] = this.toPropertyPathValue( operation.value )
-			const propPath = `${ operation.property }${ path? '.'+path : '' }` 
+			const propPath = `${ String( operation.property ) }${ path? '.'+path : '' }` 
 			return { 
 				property: propPath, 
 				operator:	operation.operator,

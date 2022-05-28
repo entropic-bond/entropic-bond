@@ -44,7 +44,7 @@ export class EntropicComponent extends Persistent {
 	 * @returns true in case the property has been effectively changed, false otherwise
 	 */
 	protected changeProp<P extends keyof this>( propName: P, value: this[ P ] ): boolean {
-		const pName = '_' + propName;
+		const pName = '_' + String( propName );
 
 		if ( this[ pName ] !== value ) {
 			this[ pName ] = value;
@@ -86,7 +86,7 @@ export class EntropicComponent extends Persistent {
 		isUnique?: CompareFunction<T> 
 	): ArrayPropsElem<T> {
 
-		const pName = '_' + arrayPropName;
+		const pName = '_' + String( arrayPropName );
 		const alreadyIn = isUnique && this[ pName ].find( 
 			( item: ArrayPropsElem<T> ) => !isUnique( item, element ) 
 		)
@@ -115,7 +115,7 @@ export class EntropicComponent extends Persistent {
 		isEqual: CompareFunction<T>
 	): ArrayPropsElem<T> {
 
-		const pName = '_' + arrayPropName;
+		const pName = '_' + String( arrayPropName );
 
 		const originalLength = this[ pName ].length
 
