@@ -36,7 +36,7 @@ export class EntropicComponent extends Persistent {
 	}
 
 	/**
-	 * Changes the value of the property and notifies the subcribers about the change.
+	 * Changes the value of the property and notifies the subscribers about the change.
 	 * This is a helper method that can be used in the property setter.
 	 * 
 	 * @param propName the name of the property to be changed
