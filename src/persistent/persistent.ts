@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid"
 import { SomeClassProps } from '../types/utility-types';
 
-type PersistentConstructor = new () => Persistent
+export type PersistentConstructor = new () => Persistent
 
 interface FactoryMap {
 	[ id: string ]: {
