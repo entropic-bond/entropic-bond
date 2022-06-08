@@ -1,3 +1,10 @@
+## [1.22.6](https://github.com/entropic-bond/entropic-bond/compare/v1.22.5...v1.22.6) (2022-06-08)
+
+
+### Bug Fixes
+
+* export PersistentConstructor ([9d1a39f](https://github.com/entropic-bond/entropic-bond/commit/9d1a39f233885109fc424409c54691fb586bc4ee))
+
 ## [1.22.5](https://github.com/entropic-bond/entropic-bond/compare/v1.22.4...v1.22.5) (2022-05-28)
 
 
