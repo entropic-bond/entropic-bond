@@ -20,6 +20,11 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
+	static getModelForSubCollection< T extends Persistent>( document: Persistent, subCollection: string ): Model<T> {
+		if ( !Store._dataSource ) throw new Error( this.error.shouldBeRegistered )
+		return new Model<T>( Store._dataSource, document, subCollection )		
+	}
+
 	static async populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
 		if ( !instance ) return
 		

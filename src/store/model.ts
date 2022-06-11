@@ -7,9 +7,19 @@ import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, Que
  * object through the Store.getModel method instead of its constructor.
  */
 export class Model<T extends Persistent>{
-	constructor( stream: DataSource, persistentClass: Persistent | string ) {
-		this.collectionName = persistentClass instanceof Persistent
-			? persistentClass.className : persistentClass
+	static error = { persistentNeedForSubCollection: 'The document parameter for a sub-collection should be a Persistent instace'	}
+
+	constructor( stream: DataSource, persistentClass: Persistent | string, subCollection?: string ) {
+		if ( subCollection ) {
+			if( !( persistentClass instanceof Persistent ) ) throw new Error( Model.error.persistentNeedForSubCollection )
+
+			this.collectionName = `${ persistentClass.className }/${ persistentClass.id }/${ subCollection }`
+		}
+		else {
+			this.collectionName = persistentClass instanceof Persistent
+				? persistentClass.className 
+				: persistentClass
+		}
 
 		this._stream = stream
 	}
