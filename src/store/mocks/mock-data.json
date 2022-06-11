@@ -104,5 +104,12 @@
 			"admin": false,
 			"salary": 2300
 		}
+	},
+	"TestUser/user1/SubClass": {
+		"subClass1": {
+			"id": "subClass1",
+			"__className": "SubClass",
+			"year": 1326
+		}
 	}
 }

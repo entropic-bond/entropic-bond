@@ -515,4 +515,36 @@ describe( 'Model', ()=>{
 		})
 
 	})
+
+	describe( 'SubCollections', ()=>{
+		let subCollectionModel: Model<SubClass>
+
+		beforeEach(async ()=>{
+			const user = await model.findById( 'user1' )
+			subCollectionModel = Store.getModelForSubCollection<SubClass>( user, 'SubClass' )
+		})
+		
+		it( 'should get model for subCollection', ()=>{
+			const model = Store.getModelForSubCollection<SubClass>( testUser, 'SubClass' )
+			expect( model.collectionName ).toEqual( `TestUser/${ testUser.id }/SubClass` )
+		})
+
+		it( 'should find subCollection document by id', async ()=>{
+			const subClass = await subCollectionModel.findById( 'subClass1' )
+
+			expect( subClass ).toBeInstanceOf( SubClass )
+			expect( subClass.year ).toBe( 1326 )
+		})
+
+		it( 'should save data to subCollection', async ()=>{
+			const subClass = new SubClass()
+			subClass.year = 3452
+
+			await subCollectionModel.save( subClass )
+			const loaded = await subCollectionModel.findById( subClass.id )
+
+			expect( loaded.year ).toBe( 3452 )
+		})
+		
+	})
 })
