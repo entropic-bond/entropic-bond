@@ -20,6 +20,12 @@ export class Store {
 		return new Model<T>( Store._dataSource, classId )		
 	}
 
+	/**
+	 * Retrieves a model for a subcollection 
+	 * @param document the persistent object that owns the subcollection
+	 * @param subCollection the name of the subcollection
+	 * @returns the model for the subcollection
+	 */
 	static getModelForSubCollection< T extends Persistent>( document: Persistent, subCollection: string ): Model<T> {
 		if ( !Store._dataSource ) throw new Error( this.error.shouldBeRegistered )
 		return new Model<T>( Store._dataSource, document, subCollection )		
