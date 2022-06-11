@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/entropic-bond/entropic-bond/compare/v1.22.6...v1.23.0) (2022-06-11)
+
+
+### Features
+
+* model for subcollections ([9b758bb](https://github.com/entropic-bond/entropic-bond/commit/9b758bb467e11380a2da317c5a90892113e3fe2b))
+
 ## [1.22.6](https://github.com/entropic-bond/entropic-bond/compare/v1.22.5...v1.22.6) (2022-06-08)
 
 
