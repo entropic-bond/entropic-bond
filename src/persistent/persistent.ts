@@ -293,10 +293,6 @@ export function persistentReference( target: Persistent, property: string ) {
 	return persistentParser({ isReference: true })( target, property )
 }
 
-export function persistentCollection( target: Persistent, property: string ) {
-	return persistentParser({ subCollection: target[ property ].className })( target, property )
-}
-
 export function persistentParser( options?: Partial<PersistentProperty> ) {
 	return function( target: Persistent, property: string ) {
 
