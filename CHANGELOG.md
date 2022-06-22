@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/entropic-bond/entropic-bond/compare/v1.23.0...v1.24.0) (2022-06-22)
+
+
+### Features
+
+* beforeSerialize onSerialized ([b6ffc10](https://github.com/entropic-bond/entropic-bond/commit/b6ffc108391b9030440e9bed9ae9f03e11f625a2))
+
 # [1.23.0](https://github.com/entropic-bond/entropic-bond/compare/v1.22.6...v1.23.0) (2022-06-11)
 
 
