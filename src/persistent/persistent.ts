@@ -76,7 +76,8 @@ export class Persistent {
 		return this._id;
 	}
 
-	protected loaded(){}
+	protected onSerialized() {}
+	protected beforeSerialize() {}
 
 	getPersistentProperties(): readonly PersistentProperty[] {
 		return this._persistentProperties.map( prop => ({
@@ -87,7 +88,7 @@ export class Persistent {
 
 	fromObject( obj: PersistentObject<this> ) {
 		this.fromObj( obj )
-		this.loaded()
+		this.onSerialized()
 
 		return this
 	}
@@ -107,6 +108,7 @@ export class Persistent {
 	}
 
 	toObject(): PersistentObject<this> {
+		this.beforeSerialize()
 		const rootCollections: Collections = {}
 		const obj = this.toObj( rootCollections )
 		this.pushDocument( rootCollections, this.className, obj )
