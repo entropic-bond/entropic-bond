@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/entropic-bond/entropic-bond/compare/v1.24.0...v1.24.1) (2022-06-25)
+
+
+### Bug Fixes
+
+* reject on non existing user when resetEmaiPassword ([e74f4ce](https://github.com/entropic-bond/entropic-bond/commit/e74f4ce4abf64688c21e5150288f4bb635b675ac))
+
 # [1.24.0](https://github.com/entropic-bond/entropic-bond/compare/v1.23.0...v1.24.0) (2022-06-22)
 
 
