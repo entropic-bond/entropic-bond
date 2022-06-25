@@ -92,5 +92,9 @@ describe( 'Auth Mock', ()=>{
 		expect( authChangeSpy ).toHaveBeenCalledWith( undefined )
 	})
 	
-	
+	it( 'should throw if email does not exists in resetEmailPassword', async ()=>{
+		return expect(
+			Auth.instance.resetEmailPassword( 'non-existing-email@test.com' )
+		).rejects.toEqual( expect.objectContaining({ code: 'userNotFound' }) )
+	})
 })
