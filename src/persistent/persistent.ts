@@ -176,7 +176,7 @@ export class Persistent {
 		return value
 	}
 
-	private toDeepObj( value: unknown, rootCollections: Collections ) {
+	private toDeepObj( value: any, rootCollections: Collections ) {
 		if ( value === null || value === undefined ) {
 			return undefined
 		}
@@ -186,7 +186,13 @@ export class Persistent {
 		}
 
 		if ( value[ '__documentReference' ] ) {
-			return value 
+			return {
+				id: value.id,
+				__className: value.className,
+				__documentReference: {
+					storedInCollection: value.__documentReference.storeInCollection
+				} 
+			}
 		}
 		
 		if ( value instanceof Persistent ) {
