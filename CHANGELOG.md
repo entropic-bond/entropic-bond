@@ -1,3 +1,11 @@
+## [1.25.1](https://github.com/entropic-bond/entropic-bond/compare/v1.25.0...v1.25.1) (2022-07-16)
+
+
+### Bug Fixes
+
+* clean ref data structure ([4dcae0f](https://github.com/entropic-bond/entropic-bond/commit/4dcae0fa36ef474fea0abbe1eb70299dc6119be1))
+* return proper structure for deep references ([12324ea](https://github.com/entropic-bond/entropic-bond/commit/12324eaf9955cbf64683f2aacf805833470eb844))
+
 # [1.25.0](https://github.com/entropic-bond/entropic-bond/compare/v1.24.1...v1.25.0) (2022-07-16)
 
 
