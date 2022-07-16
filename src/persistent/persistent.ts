@@ -188,9 +188,9 @@ export class Persistent {
 		if ( value[ '__documentReference' ] ) {
 			return {
 				id: value.id,
-				__className: value.className,
+				__className: value.__className,
 				__documentReference: {
-					storedInCollection: value.__documentReference.storeInCollection
+					storedInCollection: value.__documentReference.storedInCollection
 				} 
 			}
 		}

@@ -500,6 +500,7 @@ describe( 'Persistent', ()=>{
 				const obj = newPerson.toObject()
 				expect( obj.persistentObject.nonPersistedReferences ).toHaveLength( 1 )
 				expect( obj.persistentObject.nonPersistedReferences[0].id ).toBeDefined()
+				expect( obj.persistentObject.nonPersistedReferences[0]['__className'] ).toBeDefined()
 				expect( obj.persistentObject.nonPersistedReferences[0]['__documentReference'] ).toBeDefined()
 				expect( obj.persistentObject.nonPersistedReferences[0].persistentProp ).not.toBeDefined()
 			})
