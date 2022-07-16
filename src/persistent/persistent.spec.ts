@@ -492,7 +492,7 @@ describe( 'Persistent', ()=>{
 						__documentReference: {
 							storedInCollection: 'PersistentClass'
 						}
-					} as any]
+					} as any ]
 				}
 
 				const newPerson = Persistent.createInstance<Person>( personObj )
