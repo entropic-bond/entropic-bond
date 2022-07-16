@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/entropic-bond/entropic-bond/compare/v1.24.1...v1.25.0) (2022-07-16)
+
+
+### Features
+
+* allow deep not persisted references ([0b9a722](https://github.com/entropic-bond/entropic-bond/commit/0b9a7222fd63de22fc83e9a6d23268441da84f0a))
+
 ## [1.24.1](https://github.com/entropic-bond/entropic-bond/compare/v1.24.0...v1.24.1) (2022-06-25)
 
 
