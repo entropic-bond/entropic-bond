@@ -185,6 +185,10 @@ export class Persistent {
 			return value.map( item => this.toDeepObj( item, rootCollections ) )
 		}
 
+		if ( value[ '__documentReference' ] ) {
+			return value 
+		}
+		
 		if ( value instanceof Persistent ) {
 			return value.toObj( rootCollections )
 		}

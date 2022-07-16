@@ -1,5 +1,9 @@
 import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass } from './persistent'
 
+interface InnerObject {
+	nonPersistedReferences: PersistentClass[]
+}
+
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
 	get persistentProp() { return this._persistentProp }
@@ -76,6 +80,14 @@ class Person extends Persistent {
 		return this._arrayOfRefs
 	}
 	
+	set persistentObject( value: InnerObject ) {
+		this._persistentObject = value
+	}
+
+	get persistentObject() {
+		return this._persistentObject
+	}
+
 	@persistent private _name: string
 	@persistent private _salary: number
 	@persistent private _skills: string[]
@@ -88,6 +100,7 @@ class Person extends Persistent {
 	@persistentReference _document: PersistentClass
 	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
+	@persistent private _persistentObject: InnerObject
 	private _doNotPersist: number
 }
 
@@ -467,6 +480,27 @@ describe( 'Persistent', ()=>{
 						}
 					})
 				]))
+			})
+
+			it( 'should produce proper formed references from object', ()=>{
+				const personObj = person.toObject()
+
+				personObj.persistentObject = {
+					nonPersistedReferences: [{
+						id: ref1.id,
+						__className: 'PersistentClass',
+						__documentReference: {
+							storedInCollection: 'PersistentClass'
+						}
+					} as any]
+				}
+
+				const newPerson = Persistent.createInstance<Person>( personObj )
+
+				const obj = newPerson.toObject()
+				expect( obj.persistentObject.nonPersistedReferences ).toHaveLength( 1 )
+				expect( obj.persistentObject.nonPersistedReferences[0].id ).toBeDefined()
+				expect( obj.persistentObject.nonPersistedReferences[0]['__documentReference'] ).toBeDefined()
 			})
 		})
 		
