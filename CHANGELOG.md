@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/entropic-bond/entropic-bond/compare/v1.25.1...v1.26.0) (2022-07-17)
+
+
+### Features
+
+* persistentReferenceAt decorator to accept function as parameter ([662ea8e](https://github.com/entropic-bond/entropic-bond/commit/662ea8eb4e817cde2585f4395984149297d9a3e7))
+
 ## [1.25.1](https://github.com/entropic-bond/entropic-bond/compare/v1.25.0...v1.25.1) (2022-07-16)
 
 
