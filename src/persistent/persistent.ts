@@ -215,7 +215,17 @@ export class Persistent {
 	private toReferenceObj( prop: PersistentProperty, rootCollections: Collections ) {
 		const propValue: Persistent | Persistent[] = this[ prop.name ]
 		
-		const collectionPath = ( value: Persistent ) => prop.storeInCollection || value.className
+		const collectionPath = ( value: Persistent ) => {
+			let storeInCollection: string
+
+			if ( typeof prop.storeInCollection === 'function' ) {
+				storeInCollection = prop.storeInCollection( value.className )
+			}
+			else {
+				storeInCollection = prop.storeInCollection || value.className
+			}
+			return storeInCollection
+		}
 		
 		if ( Array.isArray( propValue ) ) {
 
@@ -279,10 +289,12 @@ export class Persistent {
 //Decorators
 ///////////////////////////////////
 
+type CollectionPathCallback = ( className: string ) => string
+
 interface PersistentProperty {
 	name: string
 	isReference?: boolean
-	storeInCollection?: string
+	storeInCollection?: string | CollectionPathCallback
 	subCollection?: string
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
@@ -292,7 +304,7 @@ export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property );
 }
 
-export function persistentReferenceAt( collectionPath: string ) {
+export function persistentReferenceAt( collectionPath: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			storeInCollection: collectionPath,

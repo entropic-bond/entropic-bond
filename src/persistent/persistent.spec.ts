@@ -99,6 +99,7 @@ class Person extends Persistent {
 	@persistent _plainObject: { [ key: string ]: unknown }
 	@persistentReference _document: PersistentClass
 	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
+	@persistentReferenceAt( className => `ArbitraryCollectionName/${ className }` ) _docAtArbitraryCollectionRefFunc: PersistentClass
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject
 	private _doNotPersist: number
@@ -383,6 +384,7 @@ describe( 'Persistent', ()=>{
 			person.document._persistentProp = 345
 			person._docAtArbitraryCollection = new PersistentClass()
 			person._docAtArbitraryCollection._persistentProp = 3989
+			person._docAtArbitraryCollectionRefFunc = person._docAtArbitraryCollection
 			ref1 = new PersistentClass(); ref1._persistentProp = 2091
 			ref2 = new PersistentClass(); ref2._persistentProp = 2092
 			person.arrayOfRefs.push( ref1 )
@@ -411,6 +413,18 @@ describe( 'Persistent', ()=>{
 			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
 		})
 		
+		it( 'should create root reference collection with arbitrary name based on function call', ()=>{
+			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName/PersistentClass' ] 
+			expect( collectionDocs	).toBeDefined()
+
+			expect( collectionDocs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ persistentProp: 3989 })
+			]))
+			expect( newPerson._docAtArbitraryCollection ).toBeInstanceOf( PersistentClass )
+			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
+		})
+		
+
 		it( 'should not create root reference for existing references', ()=>{
 			expect( Object.values(
 				newPerson.toObject().__rootCollections 
