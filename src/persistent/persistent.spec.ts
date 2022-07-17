@@ -414,7 +414,7 @@ describe( 'Persistent', ()=>{
 		})
 		
 		it( 'should create root reference collection with arbitrary name based on function call', ()=>{
-			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName/PersistentClass' ] 
+			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName/PersistentClass' ]
 			expect( collectionDocs	).toBeDefined()
 
 			expect( collectionDocs ).toEqual( expect.arrayContaining([
