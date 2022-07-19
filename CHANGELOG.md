@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/entropic-bond/entropic-bond/compare/v1.26.0...v1.27.0) (2022-07-19)
+
+
+### Features
+
+* persistentPureReference decorator ([6bec42f](https://github.com/entropic-bond/entropic-bond/commit/6bec42fb94ee31d051e8d1f2e7c4eaafbc1c8629))
+
 # [1.26.0](https://github.com/entropic-bond/entropic-bond/compare/v1.25.1...v1.26.0) (2022-07-17)
 
 
