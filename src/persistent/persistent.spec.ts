@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass } from './persistent'
+import { Persistent, persistent, persistentPureReference, persistentReference, persistentReferenceAt, registerPersistentClass } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -7,8 +7,11 @@ interface InnerObject {
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
 	get persistentProp() { return this._persistentProp }
+	set person( value: Person ) { this._person = value }
+	get person() { return this._person }
 	@persistent _persistentProp: number
 	@persistent _persistentArray: PersistentClass[]
+	@persistentPureReference _person: Person
 	_nonPersistentProp: number
 }
 
@@ -365,6 +368,7 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray' },
+				{ name: 'person', isReference: true, isPureReference: true }
 			])
 
 			expect( new Person().getPersistentProperties() ).toEqual( expect.arrayContaining([
@@ -448,6 +452,18 @@ describe( 'Persistent', ()=>{
 				__className: 'PersistentClass',
 				id: newPerson.document.id,
 				__documentReference: { storedInCollection: 'PersistentClass' },
+			})
+		})
+
+		it( 'should not store pure references', ()=>{
+			person.anObjectProperty.person = person
+			const obj = person.toObject()
+
+			expect( obj.__rootCollections['Person'][ person.id ] ).not.toBeDefined()
+			expect( obj.anObjectProperty.person ).toEqual({
+				__className: 'Person',
+				id: person.id,
+				__documentReference: { storedInCollection: 'Person' }
 			})
 		})
 

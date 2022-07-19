@@ -230,14 +230,17 @@ export class Persistent {
 		if ( Array.isArray( propValue ) ) {
 
 			return propValue.map( item => {
-				this.pushDocument( rootCollections, collectionPath( item ), item )
+				if ( !prop.isPureReference ) {
+					this.pushDocument( rootCollections, collectionPath( item ), item )
+				}
 				return this.buildRefObject( item, collectionPath( item ) )
 			})
 
 		}
 		else {
-
-			this.pushDocument( rootCollections, collectionPath( propValue ), propValue )
+			if ( !prop.isPureReference ) {
+				this.pushDocument( rootCollections, collectionPath( propValue ), propValue )
+			}
 			return this.buildRefObject( propValue, collectionPath( propValue ) )
 
 		}
@@ -255,9 +258,9 @@ export class Persistent {
 
 	private pushDocument( collections: Collections, collectionName: string, value: PersistentObject<Persistent> ) {
 		if ( value.__documentReference ) return
-		const document = this.toDeepObj( value, collections )
-
+		
 		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
+		const document = this.toDeepObj( value, collections )
 		collections[ collectionName ].push( document )
 	}
 
@@ -294,6 +297,7 @@ type CollectionPathCallback = ( className: string ) => string
 interface PersistentProperty {
 	name: string
 	isReference?: boolean
+	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
 	subCollection?: string
 	toObjectSpecial?: ( classObj: any ) => any
@@ -313,8 +317,24 @@ export function persistentReferenceAt( collectionPath: string | CollectionPathCa
 	}
 }
 
+/**
+ * Decorator for a property that is a reference to a persistent object. 
+ * The reference content is automatically stored in a collection. The collection 
+ * is determined by the class name of the decorated property. 
+ * @see persistentPureReference
+ */
 export function persistentReference( target: Persistent, property: string ) {
 	return persistentParser({ isReference: true })( target, property )
+}
+
+/**
+ * Decorator for a property that is a reference to a persistent object. 
+ * In this case, and contrary to the @persistentReference decorator, the reference 
+ * contents is not stored. Only the reference information is stored.
+ * @see persistentReference
+ */
+ export function persistentPureReference( target: Persistent, property: string ) {
+	return persistentParser({ isReference: true, isPureReference: true })( target, property )
 }
 
 export function persistentParser( options?: Partial<PersistentProperty> ) {
