@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/entropic-bond/entropic-bond/compare/v1.27.0...v1.27.1) (2022-07-24)
+
+
+### Bug Fixes
+
+* make some UserCredential fields optional ([0f13d38](https://github.com/entropic-bond/entropic-bond/commit/0f13d38f3bed34fe98da91878979241f6b554f04))
+
 # [1.27.0](https://github.com/entropic-bond/entropic-bond/compare/v1.26.0...v1.27.0) (2022-07-19)
 
 
