@@ -5,9 +5,9 @@ export interface UserCredentials {
 	pictureUrl?: string
 	phoneNumber?: string
 	emailVerified?: boolean
-	customData: {[ key: string ]: unknown }
-	lastLogin: number
-	creationDate: number
+	customData?: {[ key: string ]: unknown }
+	lastLogin?: number
+	creationDate?: number
 }
 
 export type AuthProvider = 'email' | 'facebook' | 'google' | 'twitter'
