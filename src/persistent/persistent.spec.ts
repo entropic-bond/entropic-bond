@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentPureReference, persistentReference, persistentReferenceAt, registerPersistentClass } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -11,7 +11,7 @@ class PersistentClass extends Persistent {
 	get person() { return this._person }
 	@persistent _persistentProp: number
 	@persistent _persistentArray: PersistentClass[]
-	@persistentPureReference _person: Person
+	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _person: Person
 	_nonPersistentProp: number
 }
 
@@ -105,6 +105,7 @@ class Person extends Persistent {
 	@persistentReferenceAt( className => `ArbitraryCollectionName/${ className }` ) _docAtArbitraryCollectionRefFunc: PersistentClass
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject
+	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ]) _referenceWithStoredValues: PersistentClass
 	private _doNotPersist: number
 }
 
@@ -368,7 +369,7 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray' },
-				{ name: 'person', isReference: true, isPureReference: true }
+				{ name: 'person', isReference: true, isPureReference: true, forcedPersistentProps: [ 'name', 'salary' ] }
 			])
 
 			expect( new Person().getPersistentProperties() ).toEqual( expect.arrayContaining([
@@ -393,6 +394,7 @@ describe( 'Persistent', ()=>{
 			ref2 = new PersistentClass(); ref2._persistentProp = 2092
 			person.arrayOfRefs.push( ref1 )
 			person.arrayOfRefs.push( ref2 )
+			person._referenceWithStoredValues = new PersistentClass(); person._referenceWithStoredValues._persistentProp = 2093
 			const obj = JSON.stringify( person.toObject() )
 			newPerson = Persistent.createInstance<Person>( JSON.parse( obj ) )
 		})
@@ -463,7 +465,20 @@ describe( 'Persistent', ()=>{
 			expect( obj.anObjectProperty.person ).toEqual({
 				__className: 'Person',
 				id: person.id,
-				__documentReference: { storedInCollection: 'Person' }
+				__documentReference: { storedInCollection: 'Person' },
+				name: 'Maria',
+				salary: 3000
+			})
+		})
+
+		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
+			const res = person.toObject()
+
+			expect( res['referenceWithStoredValues' ] ).toEqual({
+				__className: 'PersistentClass',
+				id: newPerson._referenceWithStoredValues.id,
+				__documentReference: { storedInCollection: 'PersistentClass' },
+				persistentProp: 2093
 			})
 		})
 

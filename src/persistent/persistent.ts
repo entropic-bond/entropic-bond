@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { SomeClassProps } from '../types/utility-types';
+import { ClassPropNames, ClassProps, SomeClassProps } from '../types/utility-types';
 
 export type PersistentConstructor = new () => Persistent
 
@@ -233,7 +233,7 @@ export class Persistent {
 				if ( !prop.isPureReference ) {
 					this.pushDocument( rootCollections, collectionPath( item ), item )
 				}
-				return this.buildRefObject( item, collectionPath( item ) )
+				return this.buildRefObject( item, collectionPath( item ), prop.forcedPersistentProps )
 			})
 
 		}
@@ -241,18 +241,24 @@ export class Persistent {
 			if ( !prop.isPureReference ) {
 				this.pushDocument( rootCollections, collectionPath( propValue ), propValue )
 			}
-			return this.buildRefObject( propValue, collectionPath( propValue ) )
+			return this.buildRefObject( propValue, collectionPath( propValue ), prop.forcedPersistentProps )
 
 		}
 	}
 
-	private buildRefObject( value: Persistent, storeInCollection: string ): DocumentReference {
+	private buildRefObject( value: Persistent, storeInCollection: string, forcedPersistentProps: ClassPropNames<Persistent>[] ): DocumentReference {
+		const forcedObject = forcedPersistentProps?.reduce( ( obj, propName ) => {
+			obj[ propName ] = value[ propName ]
+			return obj
+		}, {})
+
 		return {
 			id: value.id,
 			__className: value.className,
 			__documentReference: {
 				storedInCollection: storeInCollection
-			} 
+			}, 
+			...forcedObject	
 		}
 	}
 
@@ -300,6 +306,7 @@ interface PersistentProperty {
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
 	subCollection?: string
+	forcedPersistentProps?: ClassPropNames<Persistent>[]
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 }
@@ -328,6 +335,18 @@ export function persistentReference( target: Persistent, property: string ) {
 }
 
 /**
+ * Decorator to declare a persistent reference (see @persistentReference) that stores
+ * the values in forcedPersistentProps as values in the reference object. This is useful
+ * when you are not able to wait for population of referenced properties.
+ * @param forcedPersistentProps the properties whose values should be stored in the reference object
+ */
+ export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps?: ClassPropNames<T>[] ) {
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ isReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[] })( target, property )
+	}
+}
+
+/**
  * Decorator for a property that is a reference to a persistent object. 
  * In this case, and contrary to the @persistentReference decorator, the reference 
  * contents is not stored. Only the reference information is stored.
@@ -335,6 +354,18 @@ export function persistentReference( target: Persistent, property: string ) {
  */
  export function persistentPureReference( target: Persistent, property: string ) {
 	return persistentParser({ isReference: true, isPureReference: true })( target, property )
+}
+
+/**
+ * Decorator to declare a persistent reference (see @persistentReference) that stores
+ * the values in forcedPersistentProps as values in the reference object. This is useful
+ * when you are not able to wait for population of referenced properties.
+ * @param forcedPersistentProps the properties whose values should be stored in the reference object
+ */
+ export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps?: ClassPropNames<T>[] ) {
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ isReference: true, isPureReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[] })( target, property )
+	}
 }
 
 export function persistentParser( options?: Partial<PersistentProperty> ) {
