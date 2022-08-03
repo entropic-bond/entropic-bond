@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/entropic-bond/entropic-bond/compare/v1.27.1...v1.28.0) (2022-08-03)
+
+
+### Features
+
+* references to contain selected values ([33d9b4d](https://github.com/entropic-bond/entropic-bond/commit/33d9b4d77f4710177a2efe25d5ca9dc3ac7b8db6))
+
 ## [1.27.1](https://github.com/entropic-bond/entropic-bond/compare/v1.27.0...v1.27.1) (2022-07-24)
 
 
