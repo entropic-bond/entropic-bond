@@ -7,11 +7,11 @@ interface InnerObject {
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
 	get persistentProp() { return this._persistentProp }
-	set person( value: Person ) { this._person = value }
-	get person() { return this._person }
+	set personPureRef( value: Person ) { this._personPureRef = value }
+	get personPureRef() { return this._personPureRef }
 	@persistent _persistentProp: number
 	@persistent _persistentArray: PersistentClass[]
-	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _person: Person
+	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _personPureRef: Person
 	_nonPersistentProp: number
 }
 
@@ -162,7 +162,7 @@ describe( 'Persistent', ()=>{
 	}
 
 	beforeEach(()=>{
-		person = new Person()
+		person = new Person( 'person1' )
 		person.name = 'Maria'
 		person.salary = 3000
 		person.skills = [ 'diligent', 'smart' ]
@@ -175,7 +175,7 @@ describe( 'Persistent', ()=>{
 	})
 
 	it( 'should keep a persistent properties list for each class', ()=>{
-		const a = new Person()
+		const a = new Person( 'person2' )
 		const b = new PersistentClass()
 
 		// we are testing a decorator that manipulates the class definition. 
@@ -221,7 +221,7 @@ describe( 'Persistent', ()=>{
 
 		expect( object.salary ).toBe( 0 )
 		
-		const newPerson = new Person()
+		const newPerson = new Person( 'person3' )
 		newPerson.fromObject( object )
 		expect( newPerson.salary ).toBe( 0 )
 	})
@@ -274,7 +274,7 @@ describe( 'Persistent', ()=>{
 		obj.plainObject.prop2 = null
 		let aPerson: Person
 
-		expect( ()=>{ aPerson = new Person().fromObject( obj ) } ).not.toThrow()
+		expect( ()=>{ aPerson = new Person( 'person4' ).fromObject( obj ) } ).not.toThrow()
 		expect( aPerson._plainObject.prop1 ).toBeUndefined()
 		expect( aPerson._plainObject.prop2 ).toBeNull()
 	})
@@ -344,7 +344,7 @@ describe( 'Persistent', ()=>{
 			}
 
 			expect(()=>{
-				new Person().fromObject( obj )
+				new Person( 'person5' ).fromObject( obj )
 			}).toThrow( 'You should register class NotRegistered prior to use.' )
 		})
 
@@ -369,10 +369,10 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray' },
-				{ name: 'person', isReference: true, isPureReference: true, forcedPersistentProps: [ 'name', 'salary' ] }
+				{ name: 'personPureRef', isReference: true, isPureReference: true, forcedPersistentProps: [ 'name', 'salary' ] }
 			])
 
-			expect( new Person().getPersistentProperties() ).toEqual( expect.arrayContaining([
+			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
 				{ name: 'name' },
 				{ name: 'document', isReference: true },
 				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName' }
@@ -458,26 +458,55 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should not store pure references', ()=>{
-			person.anObjectProperty.person = person
+			person.anObjectProperty.personPureRef = new Person( 'person7' )
 			const obj = person.toObject()
 
-			expect( obj.__rootCollections['Person'][ person.id ] ).not.toBeDefined()
-			expect( obj.anObjectProperty.person ).toEqual({
+			expect( obj.__rootCollections['Person'] ).toHaveLength( 1 )
+			expect( obj.__rootCollections['Person'][0].id ).not.toEqual( 'person7' )
+		})
+			
+		it( 'should fill reference object when store pure reference', ()=>{
+			const personPureRef =new Person( 'person7' )
+			personPureRef.name = 'James'
+			personPureRef.salary = 5643
+			person.anObjectProperty.personPureRef = personPureRef
+			const obj = person.toObject()
+
+			expect( obj.anObjectProperty.personPureRef ).toEqual({
 				__className: 'Person',
-				id: person.id,
+				id: personPureRef.id,
 				__documentReference: { storedInCollection: 'Person' },
-				name: 'Maria',
-				salary: 3000
+				name: 'James',
+				salary: 5643
+			})
+			
+			expect( obj.__rootCollections.Person[ 0 ]['anObjectProperty'].personPureRef ).toEqual({
+				__className: 'Person',
+				id: personPureRef.id,
+				__documentReference: { storedInCollection: 'Person' },
+				name: 'James',
+				salary: 5643
 			})
 		})
 
 		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
-			const res = person.toObject()
+			const obj = person.toObject()
 
-			expect( res['referenceWithStoredValues' ] ).toEqual({
+			expect( obj.__rootCollections.Person[0].id ).toEqual( person.id )
+			expect( obj['referenceWithStoredValues'] ).toEqual({
 				__className: 'PersistentClass',
-				id: newPerson._referenceWithStoredValues.id,
+				id: person._referenceWithStoredValues.id,
 				__documentReference: { storedInCollection: 'PersistentClass' },
+				persistentProp: 2093
+			})
+			
+			const referenceWithValuesInRootCollections = obj.__rootCollections.PersistentClass.find( 
+				persistent => persistent.id === person._referenceWithStoredValues.id 
+			)
+
+			expect( referenceWithValuesInRootCollections ).toEqual({
+				__className: 'PersistentClass',
+				id: person._referenceWithStoredValues.id,
 				persistentProp: 2093
 			})
 		})

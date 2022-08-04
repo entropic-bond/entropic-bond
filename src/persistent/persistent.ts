@@ -186,13 +186,16 @@ export class Persistent {
 		}
 
 		if ( value[ '__documentReference' ] ) {
-			return {
-				id: value.id,
-				__className: value.__className,
-				__documentReference: {
-					storedInCollection: value.__documentReference.storedInCollection
-				} 
-			}
+			return value
+			return this.buildRefObject( value, value.__documentReference.storedInCollection, undefined )
+
+			// return {
+			// 	id: value.id,
+			// 	__className: value.__className,
+			// 	__documentReference: {
+			// 		storedInCollection: value.__documentReference.storedInCollection
+			// 	} 
+			// }
 		}
 		
 		if ( value instanceof Persistent ) {
@@ -254,7 +257,7 @@ export class Persistent {
 
 		return {
 			id: value.id,
-			__className: value.className,
+			__className: value.className || value['__className'],
 			__documentReference: {
 				storedInCollection: storeInCollection
 			}, 
