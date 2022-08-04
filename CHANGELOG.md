@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/entropic-bond/entropic-bond/compare/v1.28.0...v1.28.1) (2022-08-04)
+
+
+### Bug Fixes
+
+* problem with pure references and selected values ([228f5a3](https://github.com/entropic-bond/entropic-bond/commit/228f5a38bdd416722be521c70f06d5ca7b963f5a))
+
 # [1.28.0](https://github.com/entropic-bond/entropic-bond/compare/v1.27.1...v1.28.0) (2022-08-03)
 
 
