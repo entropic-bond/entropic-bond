@@ -489,6 +489,20 @@ describe( 'Persistent', ()=>{
 			})
 		})
 
+		it( 'should create an instance from pure reference with the referenced persistent props', ()=>{
+			const personPureRef =new Person( 'person7' )
+			personPureRef.name = 'James'
+			personPureRef.salary = 5643
+			person.anObjectProperty.personPureRef = personPureRef
+			const obj = person.toObject()
+			const instance = Persistent.createInstance( obj )
+
+			expect( instance.anObjectProperty.personPureRef ).toBeInstanceOf( Person )
+			expect( instance.anObjectProperty.personPureRef.name ).toEqual( 'James' )
+			expect( instance.anObjectProperty.personPureRef.salary ).toBe( 5643 )
+		})
+		
+
 		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
 			const obj = person.toObject()
 
@@ -509,6 +523,14 @@ describe( 'Persistent', ()=>{
 				id: person._referenceWithStoredValues.id,
 				persistentProp: 2093
 			})
+		})
+
+		it( 'should create an instance from reference with the referenced persistent props', ()=>{
+			const obj = person.toObject()
+			const instance = Persistent.createInstance( obj )
+
+			expect( instance._referenceWithStoredValues ).toBeInstanceOf( PersistentClass )
+			expect( instance._referenceWithStoredValues.persistentProp ).toBe( 2093 )
 		})
 
 		describe( 'Array of references', ()=>{

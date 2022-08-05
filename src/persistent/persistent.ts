@@ -153,8 +153,8 @@ export class Persistent {
 
 		if ( value[ '__documentReference' ] ) {
 			const ref: DocumentReference = value as DocumentReference
-			const emptyInstance = Persistent.createInstance( ref.__className )
-			emptyInstance._id = ref.id
+			const emptyInstance = Persistent.createInstance( ref )
+			// emptyInstance._id = ref.id
 			emptyInstance['__documentReference'] = value[ '__documentReference' ]
 			return emptyInstance
 		}
