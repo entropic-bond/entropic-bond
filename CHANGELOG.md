@@ -1,3 +1,10 @@
+## [1.28.2](https://github.com/entropic-bond/entropic-bond/compare/v1.28.1...v1.28.2) (2022-08-05)
+
+
+### Bug Fixes
+
+* create instance from references having forcedProps ([f3229e5](https://github.com/entropic-bond/entropic-bond/commit/f3229e5d5c6faad406d333c275b28fb3b9935810))
+
 ## [1.28.1](https://github.com/entropic-bond/entropic-bond/compare/v1.28.0...v1.28.1) (2022-08-04)
 
 
