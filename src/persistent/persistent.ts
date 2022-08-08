@@ -185,18 +185,7 @@ export class Persistent {
 			return value.map( item => this.toDeepObj( item, rootCollections ) )
 		}
 
-		if ( value[ '__documentReference' ] ) {
-			return value
-			return this.buildRefObject( value, value.__documentReference.storedInCollection, undefined )
-
-			// return {
-			// 	id: value.id,
-			// 	__className: value.__className,
-			// 	__documentReference: {
-			// 		storedInCollection: value.__documentReference.storedInCollection
-			// 	} 
-			// }
-		}
+		if ( value[ '__documentReference' ] ) return value
 		
 		if ( value instanceof Persistent ) {
 			return value.toObj( rootCollections )
@@ -251,7 +240,7 @@ export class Persistent {
 
 	private buildRefObject( value: Persistent, storeInCollection: string, forcedPersistentProps: ClassPropNames<Persistent>[] ): DocumentReference {
 		const forcedObject = forcedPersistentProps?.reduce( ( obj, propName ) => {
-			obj[ propName ] = value[ propName ]
+			if ( value[ propName ] !== undefined ) obj[ propName ] = value[ propName ]
 			return obj
 		}, {})
 

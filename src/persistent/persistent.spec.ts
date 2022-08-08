@@ -6,6 +6,7 @@ interface InnerObject {
 
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
+	set persistentProp( val: number ) { this._persistentProp = val }
 	get persistentProp() { return this._persistentProp }
 	set personPureRef( value: Person ) { this._personPureRef = value }
 	get personPureRef() { return this._personPureRef }
@@ -489,6 +490,22 @@ describe( 'Persistent', ()=>{
 			})
 		})
 
+		it( 'should NOT fill reference object when store pure reference and value is undefined', ()=>{
+			const personPureRef =new Person( 'person7' )
+			personPureRef.name = undefined
+			personPureRef.salary = 5643
+			person.anObjectProperty.personPureRef = personPureRef
+			const obj = person.toObject()
+
+			expect( obj.anObjectProperty.personPureRef ).toEqual({
+				__className: 'Person',
+				id: personPureRef.id,
+				__documentReference: { storedInCollection: 'Person' },
+				salary: 5643
+			})
+			expect( obj.anObjectProperty.personPureRef ).not.toHaveProperty( 'name' )
+		})
+
 		it( 'should create an instance from pure reference with the referenced persistent props', ()=>{
 			const personPureRef =new Person( 'person7' )
 			personPureRef.name = 'James'
@@ -523,6 +540,18 @@ describe( 'Persistent', ()=>{
 				id: person._referenceWithStoredValues.id,
 				persistentProp: 2093
 			})
+		})
+
+		it( 'should not store values of persistentReferenceWithPersistentProps if value is undefined', ()=>{
+			person._referenceWithStoredValues.persistentProp = undefined
+			const obj = person.toObject()
+
+			expect( obj['referenceWithStoredValues'] ).toEqual({
+				__className: 'PersistentClass',
+				id: person._referenceWithStoredValues.id,
+				__documentReference: { storedInCollection: 'PersistentClass' },
+			})
+			expect( obj['referenceWithStoredValues'] ).not.toHaveProperty( 'persistentProp' )
 		})
 
 		it( 'should create an instance from reference with the referenced persistent props', ()=>{
