@@ -1,3 +1,10 @@
+## [1.28.3](https://github.com/entropic-bond/entropic-bond/compare/v1.28.2...v1.28.3) (2022-08-08)
+
+
+### Bug Fixes
+
+* remove properties with undefined value in reference with persistent props ([2d25b87](https://github.com/entropic-bond/entropic-bond/commit/2d25b871330656135f0a103063583831c0d9d32b))
+
 ## [1.28.2](https://github.com/entropic-bond/entropic-bond/compare/v1.28.1...v1.28.2) (2022-08-05)
 
 
