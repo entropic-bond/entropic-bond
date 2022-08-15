@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/entropic-bond/entropic-bond/compare/v1.28.3...v1.29.0) (2022-08-15)
+
+
+### Features
+
+* cloud-functions ([41cfc37](https://github.com/entropic-bond/entropic-bond/commit/41cfc372c6a24c6aac702d3f79aac3d1b3bd4bf9))
+
 ## [1.28.3](https://github.com/entropic-bond/entropic-bond/compare/v1.28.2...v1.28.3) (2022-08-08)
 
 
