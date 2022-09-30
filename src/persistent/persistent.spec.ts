@@ -103,10 +103,10 @@ class Person extends Persistent {
 	@persistent _plainObject: { [ key: string ]: unknown }
 	@persistentReference _document: PersistentClass
 	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
-	@persistentReferenceAt( className => `ArbitraryCollectionName/${ className }` ) _docAtArbitraryCollectionRefFunc: PersistentClass
+	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject
-	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ]) _referenceWithStoredValues: PersistentClass
+	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass
 	private _doNotPersist: number
 }
 
@@ -421,7 +421,7 @@ describe( 'Persistent', ()=>{
 		})
 		
 		it( 'should create root reference collection with arbitrary name based on function call', ()=>{
-			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName/PersistentClass' ]
+			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName/PersistentClass/_docAtArbitraryCollectionRefFunc' ]
 			expect( collectionDocs	).toBeDefined()
 
 			expect( collectionDocs ).toEqual( expect.arrayContaining([
@@ -527,11 +527,11 @@ describe( 'Persistent', ()=>{
 			expect( obj['referenceWithStoredValues'] ).toEqual({
 				__className: 'PersistentClass',
 				id: person._referenceWithStoredValues.id,
-				__documentReference: { storedInCollection: 'PersistentClass' },
+				__documentReference: { storedInCollection: 'ArbitraryCollectionName/PersistentClass' },
 				persistentProp: 2093
 			})
 			
-			const referenceWithValuesInRootCollections = obj.__rootCollections.PersistentClass.find( 
+			const referenceWithValuesInRootCollections = obj.__rootCollections['ArbitraryCollectionName/PersistentClass'].find( 
 				persistent => persistent.id === person._referenceWithStoredValues.id 
 			)
 
@@ -549,7 +549,7 @@ describe( 'Persistent', ()=>{
 			expect( obj['referenceWithStoredValues'] ).toEqual({
 				__className: 'PersistentClass',
 				id: person._referenceWithStoredValues.id,
-				__documentReference: { storedInCollection: 'PersistentClass' },
+				__documentReference: { storedInCollection: 'ArbitraryCollectionName/PersistentClass' },
 			})
 			expect( obj['referenceWithStoredValues'] ).not.toHaveProperty( 'persistentProp' )
 		})

@@ -211,7 +211,7 @@ export class Persistent {
 			let storeInCollection: string
 
 			if ( typeof prop.storeInCollection === 'function' ) {
-				storeInCollection = prop.storeInCollection( value.className )
+				storeInCollection = prop.storeInCollection( value, prop )
 			}
 			else {
 				storeInCollection = prop.storeInCollection || value.className
@@ -290,7 +290,7 @@ export class Persistent {
 //Decorators
 ///////////////////////////////////
 
-type CollectionPathCallback = ( className: string ) => string
+type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
 
 interface PersistentProperty {
 	name: string
@@ -331,10 +331,16 @@ export function persistentReference( target: Persistent, property: string ) {
  * the values in forcedPersistentProps as values in the reference object. This is useful
  * when you are not able to wait for population of referenced properties.
  * @param forcedPersistentProps the properties whose values should be stored in the reference object
+ * @param storedInCollection indicates the path of the collection where this reference is stored
  */
- export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps?: ClassPropNames<T>[] ) {
+ export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps?: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
-		return persistentParser({ isReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[] })( target, property )
+		const persistentProps: Partial<PersistentProperty> = { 
+			isReference: true, 
+			forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[],
+			storeInCollection: storeInCollection
+		}
+		return persistentParser( persistentProps )( target, property )
 	}
 }
 
