@@ -1,3 +1,10 @@
+## [1.31.1](https://github.com/entropic-bond/entropic-bond/compare/v1.31.0...v1.31.1) (2022-10-02)
+
+
+### Bug Fixes
+
+* missing export ([376c364](https://github.com/entropic-bond/entropic-bond/commit/376c364ecd0dd86a58257d218f7d2f8d29dacb40))
+
 # [1.31.0](https://github.com/entropic-bond/entropic-bond/compare/v1.30.0...v1.31.0) (2022-10-02)
 
 
