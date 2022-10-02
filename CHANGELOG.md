@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/entropic-bond/entropic-bond/compare/v1.29.1...v1.30.0) (2022-09-30)
+
+
+### Features
+
+* extended info passed to storeInCollection callback ([461fdc6](https://github.com/entropic-bond/entropic-bond/commit/461fdc677b40bfa31f0beac062783ae2b1dfd1a7))
+
 ## [1.29.1](https://github.com/entropic-bond/entropic-bond/compare/v1.29.0...v1.29.1) (2022-08-15)
 
 
