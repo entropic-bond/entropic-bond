@@ -13,7 +13,7 @@ export abstract class ServerAuthService {
 export class ServerAuth extends ServerAuthService {
 	protected constructor(){ super() }
 
-	static registerserverAuthService( authService: ServerAuthService ) {
+	static useServerAuthService( authService: ServerAuthService ) {
 		if ( ServerAuth._authService != authService ) {
 			ServerAuth._authService = authService
 			this._instance = undefined
