@@ -1,3 +1,10 @@
+# [1.32.0](https://github.com/entropic-bond/entropic-bond/compare/v1.31.1...v1.32.0) (2022-10-02)
+
+
+### Features
+
+* server auth mock ([476b857](https://github.com/entropic-bond/entropic-bond/commit/476b857c6347102e06264837b76d5d25e20d4c3e))
+
 ## [1.31.1](https://github.com/entropic-bond/entropic-bond/compare/v1.31.0...v1.31.1) (2022-10-02)
 
 
