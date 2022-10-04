@@ -22,15 +22,17 @@ export type ResovedCallback = ( credentials: UserCredentials ) => void
 export type RejectedCallback = ( reason: AuthError ) => void
 
 export class Auth extends AuthService {
+	static error = { shouldBeRegistered: 'You should register an auth service before using Auth.' }
+
 	protected constructor() {
 		super()
-		if (!Auth._authService ) throw (new Error('You should register an auth service before using Auth.'))
+		if (!Auth._authService ) throw (new Error())
 		Auth._authService.onAuthStateChange( 
 			userCredentials => this.authStateChanged( userCredentials ) 
 		)
 	}
 
-	static registerAuthService( authService: AuthService ) {
+	static useAuthService( authService: AuthService ) {
 		if ( Auth._authService != authService ) {
 			Auth._authService = authService
 			this._instance = undefined

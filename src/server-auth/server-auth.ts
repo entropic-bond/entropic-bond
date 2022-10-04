@@ -11,6 +11,8 @@ export abstract class ServerAuthService {
 }
 
 export class ServerAuth extends ServerAuthService {
+	static error = { shouldBeRegistered: 'You should register a Server Auth service before using the data Store.' }
+
 	protected constructor(){ super() }
 
 	static useServerAuthService( authService: ServerAuthService ) {
@@ -21,6 +23,7 @@ export class ServerAuth extends ServerAuthService {
 	}
 
 	static get instance() {
+		if ( !this._authService ) throw new Error( ServerAuth.error. shouldBeRegistered )
 		return this._instance || (this._instance = new this() )
 	}
 

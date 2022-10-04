@@ -14,7 +14,7 @@ describe( 'Auth Mock', ()=>{
 	}
 
 	beforeEach(()=>{
-		Auth.registerAuthService( mockAuthService = new AuthMock() )
+		Auth.useAuthService( mockAuthService = new AuthMock() )
 		Auth.instance.onAuthStateChange( authChangeSpy ) 
 
 		mockAuthService.fakeRegisteredUser( fakeUseCredentials )
