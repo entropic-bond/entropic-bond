@@ -23,19 +23,21 @@ export class ServerAuth extends ServerAuthService {
 	}
 
 	static get instance() {
-		if ( !this._authService ) throw new Error( ServerAuth.error. shouldBeRegistered )
 		return this._instance || (this._instance = new this() )
 	}
-
+	
 	getUser( userId: string ): Promise<UserCredentials> {
+		if ( !ServerAuth._authService ) throw new Error( ServerAuth.error.shouldBeRegistered )
 		return ServerAuth._authService.getUser( userId )
 	}
 
 	updateUser( userId: string, credentials: UserCredentials ): Promise<UserCredentials> {
+		if ( !ServerAuth._authService ) throw new Error( ServerAuth.error.shouldBeRegistered )
 		return ServerAuth._authService.updateUser( userId, credentials )
 	}
-
+	
 	setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void> {
+		if ( !ServerAuth._authService ) throw new Error( ServerAuth.error.shouldBeRegistered )
 		return ServerAuth._authService.setCustomCredentials( userId, customCredentials )
 	}
 
