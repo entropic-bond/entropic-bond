@@ -23,7 +23,7 @@ export class ServerAuth extends ServerAuthService {
 	}
 
 	static get instance() {
-		return this._instance || (this._instance = new this() )
+		return this._instance || (this._instance = new ServerAuth() )
 	}
 	
 	getUser( userId: string ): Promise<UserCredentials> {
@@ -41,6 +41,6 @@ export class ServerAuth extends ServerAuthService {
 		return ServerAuth._authService.setCustomCredentials( userId, customCredentials )
 	}
 
-	private static _instance: ServerAuth = null
+	private static _instance: ServerAuth = undefined
 	private static _authService: ServerAuthService
 }
