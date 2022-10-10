@@ -26,7 +26,7 @@ export class Auth extends AuthService {
 
 	protected constructor() {
 		super()
-		if (!Auth._authService ) throw (new Error())
+		if (!Auth._authService ) throw ( new Error( Auth.error.shouldBeRegistered ) )
 		Auth._authService.onAuthStateChange( 
 			userCredentials => this.authStateChanged( userCredentials ) 
 		)

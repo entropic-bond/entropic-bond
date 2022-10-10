@@ -21,6 +21,14 @@ describe( 'Auth Mock', ()=>{
 
 	})
 
+	it( 'should throw if AuthService not set', ()=>{
+		Auth.useAuthService( undefined )
+		expect(
+			()=>Auth.instance
+		).toThrow( Auth.error.shouldBeRegistered )
+	})
+	
+
 	it( 'should emulate sign-up', async ()=>{
 		const userCredentials = await Auth.instance.signUp({
 			authProvider: 'google',
