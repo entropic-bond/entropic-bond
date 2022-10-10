@@ -1,3 +1,10 @@
+## [1.32.2](https://github.com/entropic-bond/entropic-bond/compare/v1.32.1...v1.32.2) (2022-10-10)
+
+
+### Bug Fixes
+
+* should throw with error message if Auth service not set ([d383f5f](https://github.com/entropic-bond/entropic-bond/commit/d383f5f0652a7ade7e74c40306fef7202cd97157))
+
 ## [1.32.1](https://github.com/entropic-bond/entropic-bond/compare/v1.32.0...v1.32.1) (2022-10-10)
 
 
