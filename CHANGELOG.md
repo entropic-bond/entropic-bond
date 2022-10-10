@@ -1,3 +1,11 @@
+## [1.32.1](https://github.com/entropic-bond/entropic-bond/compare/v1.32.0...v1.32.1) (2022-10-10)
+
+
+### Bug Fixes
+
+* Singleton initialization ([a0d2bd2](https://github.com/entropic-bond/entropic-bond/commit/a0d2bd26e8baa951af363a875ce838d1813cb0bb))
+* throw if not registered server auth service ([94fcd2c](https://github.com/entropic-bond/entropic-bond/commit/94fcd2cb7ce74f1e6eb591f0813ee2923df8ad15))
+
 # [1.32.0](https://github.com/entropic-bond/entropic-bond/compare/v1.31.1...v1.32.0) (2022-10-02)
 
 
