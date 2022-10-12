@@ -33,7 +33,7 @@ export class AuthMock extends AuthService {
 		return this.signUp( signData )
 	}
 
-	onAuthStateChange( onChange: ( userCredentials: UserCredentials )=>void ) {
+	onAuthStateChange<T extends {}>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
 		this.notifyChange = onChange
 		this.notifyChange( this._loggedUser )
 	}
@@ -68,7 +68,7 @@ export class AuthMock extends AuthService {
     this.pendingPromises = []
 	}
 
-	fakeRegisteredUser( userCredentials: UserCredentials ) {
+	fakeRegisteredUser<T extends {}>( userCredentials: UserCredentials<T> ) {
 		this._fakeRegisteredUsers.push( userCredentials )
 		return this
 	}
@@ -94,7 +94,7 @@ export class AuthMock extends AuthService {
 	}
 
 	private pendingPromises: Promise<any>[] = []
-	private _loggedUser: UserCredentials
-	private notifyChange: ( userCredentials: UserCredentials ) => void
-	private _fakeRegisteredUsers: UserCredentials[] = []
+	private _loggedUser: UserCredentials<{}>
+	private notifyChange: ( userCredentials: UserCredentials<{}> ) => void
+	private _fakeRegisteredUsers: UserCredentials<{}>[] = []
 }

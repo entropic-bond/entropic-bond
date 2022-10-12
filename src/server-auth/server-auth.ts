@@ -6,8 +6,8 @@ export interface CustomCredentials {
 
 export abstract class ServerAuthService {
 	abstract setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void>
-	abstract getUser( userId: string ): Promise<UserCredentials>
-	abstract updateUser( userId: string, credentials: UserCredentials ): Promise<UserCredentials>
+	abstract getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>>
+	abstract updateUser<T extends CustomCredentials>( userId: string, credentials: UserCredentials<T> ): Promise<UserCredentials<T>>
 }
 
 export class ServerAuth extends ServerAuthService {
@@ -26,12 +26,12 @@ export class ServerAuth extends ServerAuthService {
 		return this._instance || (this._instance = new ServerAuth() )
 	}
 	
-	getUser( userId: string ): Promise<UserCredentials> {
+	getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>> {
 		if ( !ServerAuth._authService ) throw new Error( ServerAuth.error.shouldBeRegistered )
 		return ServerAuth._authService.getUser( userId )
 	}
 
-	updateUser( userId: string, credentials: UserCredentials ): Promise<UserCredentials> {
+	updateUser<T extends CustomCredentials>( userId: string, credentials: UserCredentials<T> ): Promise<UserCredentials<T>> {
 		if ( !ServerAuth._authService ) throw new Error( ServerAuth.error.shouldBeRegistered )
 		return ServerAuth._authService.updateUser( userId, credentials )
 	}

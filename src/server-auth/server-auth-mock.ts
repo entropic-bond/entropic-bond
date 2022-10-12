@@ -2,10 +2,10 @@ import { UserCredentials } from '../auth/user-auth-types'
 import { ServerAuthService, CustomCredentials } from './server-auth'
 
 export class ServerAuthMock extends ServerAuthService {
-	getUser( _userId: string ): Promise<UserCredentials> {
+	getUser<T extends CustomCredentials>( _userId: string ): Promise<UserCredentials<T>> {
 		return Promise.resolve({
 			id: 'testUser'
-		} as UserCredentials) 
+		} as UserCredentials<T>) 
 	}
 
 	setCustomCredentials( _userId: string, customCredentials: CustomCredentials ): Promise<void> {
@@ -13,16 +13,16 @@ export class ServerAuthMock extends ServerAuthService {
 		return Promise.resolve()
 	}
 
-	updateUser( _userId: string, credentials: UserCredentials ): Promise<UserCredentials> {
+	updateUser<T extends CustomCredentials>( _userId: string, credentials: UserCredentials<T> ): Promise<UserCredentials<T>> {
 		this._userCredentials = {
 			...this._userCredentials,
 			...credentials
 		}
-		return Promise.resolve( this._userCredentials )
+		return Promise.resolve( this._userCredentials as UserCredentials<T> )
 	}
 
 	get userCredentials() {
 		return this._userCredentials
 	}
-	private _userCredentials: UserCredentials
+	private _userCredentials: UserCredentials<{}>
 }

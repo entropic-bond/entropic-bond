@@ -8,7 +8,7 @@ export abstract class AuthService {
 	abstract resetEmailPassword( email: string ): Promise<void>
 	abstract linkAdditionalProvider( provider: AuthProvider ): Promise<unknown>
 	abstract unlinkProvider( provider: AuthProvider ): Promise<unknown>
-	abstract onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ): void
+	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T>) => void ): void
 }
 
 export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail'
@@ -59,11 +59,11 @@ export class Auth extends AuthService {
 		return Auth._authService.resetEmailPassword( email )
 	}
 
-	onAuthStateChange( onChange: ( userCredentials: UserCredentials )=>void ) {
+	onAuthStateChange<T extends {}>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
 		return this._onAuthStateChange.subscribe( onChange )
 	}
 
-	removeAuthStateChange( onChange: ( userCredentials: UserCredentials )=>void ) {
+	removeAuthStateChange<T extends {}>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
 		this._onAuthStateChange.unsubscribe( onChange )
 	}
 
@@ -75,11 +75,11 @@ export class Auth extends AuthService {
 		return Auth._authService.unlinkProvider( provider )
 	}
 
-	private authStateChanged( userCredentials: UserCredentials ) {
+	private authStateChanged( userCredentials: UserCredentials<{}> ) {
 		this._onAuthStateChange.notify( userCredentials )
 	}
 
 	private static _instance: Auth = null
 	private static _authService: AuthService
-	private _onAuthStateChange: Observable<UserCredentials> = new Observable<UserCredentials>()
+	private _onAuthStateChange: Observable<UserCredentials<{}>> = new Observable<UserCredentials<{}>>()
 }
