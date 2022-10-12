@@ -1,3 +1,10 @@
+## [1.33.1](https://github.com/entropic-bond/entropic-bond/compare/v1.33.0...v1.33.1) (2022-10-12)
+
+
+### Bug Fixes
+
+* server auth to have generics for custom claims ([44ceeed](https://github.com/entropic-bond/entropic-bond/commit/44ceeed09c8ba1fe0e9b5f3625b16d621f64ce17))
+
 # [1.33.0](https://github.com/entropic-bond/entropic-bond/compare/v1.32.2...v1.33.0) (2022-10-12)
 
 
