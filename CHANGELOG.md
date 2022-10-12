@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/entropic-bond/entropic-bond/compare/v1.32.2...v1.33.0) (2022-10-12)
+
+
+### Features
+
+* generic custom claims in UserCredentials ([69a0b18](https://github.com/entropic-bond/entropic-bond/commit/69a0b18e3656c1987a8bbbb390f096cf486eb05f))
+
 ## [1.32.2](https://github.com/entropic-bond/entropic-bond/compare/v1.32.1...v1.32.2) (2022-10-10)
 
 
