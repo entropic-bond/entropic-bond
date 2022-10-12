@@ -58,3 +58,7 @@ const obj2: ClassProps2<A> = {
 	saySomething: ()=>{}
 }
 */
+
+export interface Collection<T> {
+	[ key: string | symbol ]: T
+}

@@ -3,15 +3,15 @@ import { UserCredentials, SignData, AuthProvider } from "./user-auth-types"
 
 export class AuthMock extends AuthService {
 
-	signUp( signData: SignData ): Promise<UserCredentials> {
+	signUp<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
 		const { verificationLink, email, password } = signData
 	
-		const promise = new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
+		const promise = new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 			if ( password !== 'fail' && email !== 'fail' ) {
-				this._loggedUser = this.userCredentials( signData )
+				this._loggedUser = this.userCredentials<T>( signData )
 				this._loggedUser.id += '__from_auth' 
 				this._fakeRegisteredUsers.push( this._loggedUser )
-				resolve( this._loggedUser )
+				resolve( this._loggedUser as UserCredentials<T> )
 				this.notifyChange?.( this._loggedUser )
 			} 
 			else {
@@ -23,7 +23,7 @@ export class AuthMock extends AuthService {
 		return promise
 	}
 
-	login( signData: SignData ): Promise<UserCredentials> {
+	login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
 		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
 
 		if ( signData.authProvider === 'email' && !fakeUser ) {
@@ -73,10 +73,10 @@ export class AuthMock extends AuthService {
 		return this
 	}
 
-	private userCredentials( signData: SignData ): UserCredentials {
+	private userCredentials<T extends {}>( signData: SignData ): UserCredentials<T> {
 		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
 		if ( fakeUser ) {
-			return { ...fakeUser }
+			return { ...fakeUser as UserCredentials<T> }
 		}
 		else {
 			return ({
@@ -86,10 +86,10 @@ export class AuthMock extends AuthService {
 				phoneNumber: 'testPhone',
 				customData: {
 					role: 'test'
-				},
+				} as unknown as T,
 				lastLogin: 0,
 				creationDate: 0
-			})
+			} as UserCredentials<T>)
 		}
 	}
 

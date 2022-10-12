@@ -1,5 +1,11 @@
 import { Auth } from './auth'
 import { AuthMock } from './auth-mock'
+import { UserCredentials } from './user-auth-types'
+
+interface CustomCredentials {
+	role: string
+	customer: string
+}
 
 describe( 'Auth Mock', ()=>{
 	let authChangeSpy = jest.fn()
@@ -9,9 +15,12 @@ describe( 'Auth Mock', ()=>{
 		emailVerified: true,
 		creationDate: new Date( '2017-01-01' ).getDate(),
 		lastLogin: new Date( '2017-01-03' ).getDate(),
-		customData: {},
+		customData: {
+			role: 'testRole',
+			customer: 'testCustomer'
+		},
 		id: 'fakeUser',
-	}
+	} as UserCredentials<CustomCredentials>
 
 	beforeEach(()=>{
 		Auth.useAuthService( mockAuthService = new AuthMock() )
@@ -105,4 +114,15 @@ describe( 'Auth Mock', ()=>{
 			Auth.instance.resetEmailPassword( 'non-existing-email@test.com' )
 		).rejects.toEqual( expect.objectContaining({ code: 'userNotFound' }) )
 	})
+
+	it( 'should retrieve custom credentials', async ()=>{
+		const userCredentials = await Auth.instance.login<CustomCredentials>({
+			email: 'fakeUser@test.com',
+			password: 'password',
+			authProvider: 'google'
+		})
+
+		expect( userCredentials.customData.role ).toEqual( 'testRole' )
+	})
+	
 })

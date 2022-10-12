@@ -1,11 +1,11 @@
-export interface UserCredentials {
+export interface UserCredentials<T extends {} = {}> {
 	id: string
 	email: string
 	name?: string
 	pictureUrl?: string
 	phoneNumber?: string
 	emailVerified?: boolean
-	customData?: {[ key: string ]: unknown }
+	customData?: T
 	lastLogin?: number
 	creationDate?: number
 }

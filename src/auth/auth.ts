@@ -2,8 +2,8 @@ import { Observable } from '../observable/observable'
 import { AuthProvider, SignData, UserCredentials } from "./user-auth-types"
 
 export abstract class AuthService {
-	abstract signUp( signData: SignData ): Promise<UserCredentials>
-	abstract login( signData: SignData ): Promise<UserCredentials>
+	abstract signUp<T extends {}>( signData: SignData ): Promise<UserCredentials<T>>
+	abstract login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>>
 	abstract logout(): Promise<void>
 	abstract resetEmailPassword( email: string ): Promise<void>
 	abstract linkAdditionalProvider( provider: AuthProvider ): Promise<unknown>
@@ -18,7 +18,7 @@ export interface AuthError {
 	message: string
 }
 
-export type ResovedCallback = ( credentials: UserCredentials ) => void
+export type ResovedCallback<T extends {}> = ( credentials: UserCredentials<T> ) => void
 export type RejectedCallback = ( reason: AuthError ) => void
 
 export class Auth extends AuthService {
@@ -43,11 +43,11 @@ export class Auth extends AuthService {
 		return this._instance || (this._instance = new this() )
 	}
 
-	signUp( singData: SignData ): Promise<UserCredentials> {
+	signUp<T extends {}>( singData: SignData ): Promise<UserCredentials<T>> {
 		return Auth._authService.signUp( singData )
 	}
 
-	login( singData: SignData ): Promise<UserCredentials> {
+	login<T extends {}>( singData: SignData ): Promise<UserCredentials<T>> {
 		return Auth._authService.login( singData )
 	}
 	
