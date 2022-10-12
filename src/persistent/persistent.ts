@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { ClassPropNames, ClassProps, SomeClassProps } from '../types/utility-types';
+import { ClassPropNames, SomeClassProps } from '../types/utility-types';
 
 export type PersistentConstructor = new () => Persistent
 
@@ -17,6 +17,10 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 	__documentReference?: {
 		storedInCollection: string
 	}
+}
+
+export type MakePersistentObjects<T> = {
+  [A in keyof T]: T[A] extends Persistent? PersistentObject<T[A]> : T[A]
 }
 
 export type Collections = {
