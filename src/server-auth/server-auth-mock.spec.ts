@@ -45,4 +45,9 @@ describe( 'Server Auth Mock', ()=>{
 		expect( user.email ).toEqual( 'nonExistingUser@acme.com' )
 		expect( user.customData.a ).toEqual( 'aTestCustomData' )
 	})
+
+	it( 'should return undefined if user does not exists', async ()=>{
+		expect( await ServerAuth.instance.getUser( 'nonExistingUser' ) ).toBeUndefined()
+	})
+	
 })

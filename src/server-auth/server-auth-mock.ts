@@ -9,10 +9,9 @@ export class ServerAuthMock extends ServerAuthService {
 	}
 
 	getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>> {
-		return Promise.resolve({
-			id: userId,
-			...this._userCredentials[ userId ]
-		} as UserCredentials<T>) 
+		if ( !this._userCredentials[ userId ] ) return undefined
+
+		return Promise.resolve( this._userCredentials[ userId ] as UserCredentials<T> )
 	}
 
 	setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void> {
