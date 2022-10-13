@@ -1,3 +1,10 @@
+## [1.34.4](https://github.com/entropic-bond/entropic-bond/compare/v1.34.3...v1.34.4) (2022-10-13)
+
+
+### Bug Fixes
+
+* return undefined if user does not exist in ServerAuthMock ([ffad7b9](https://github.com/entropic-bond/entropic-bond/commit/ffad7b9077995951284c9d5cab8a2711cbfaa133))
+
 ## [1.34.3](https://github.com/entropic-bond/entropic-bond/compare/v1.34.2...v1.34.3) (2022-10-13)
 
 
