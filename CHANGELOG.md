@@ -1,3 +1,10 @@
+## [1.34.2](https://github.com/entropic-bond/entropic-bond/compare/v1.34.1...v1.34.2) (2022-10-13)
+
+
+### Bug Fixes
+
+* get fake registered users ([29dace6](https://github.com/entropic-bond/entropic-bond/commit/29dace604e4cf5df2bd59e8d9866b6be633d1e8c))
+
 ## [1.34.1](https://github.com/entropic-bond/entropic-bond/compare/v1.34.0...v1.34.1) (2022-10-13)
 
 
