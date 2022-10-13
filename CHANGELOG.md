@@ -1,3 +1,10 @@
+## [1.34.1](https://github.com/entropic-bond/entropic-bond/compare/v1.34.0...v1.34.1) (2022-10-13)
+
+
+### Bug Fixes
+
+* better server auth mocks ([78d77b4](https://github.com/entropic-bond/entropic-bond/commit/78d77b44ecebfbe5c870f77ce7310f6bf94274b9))
+
 # [1.34.0](https://github.com/entropic-bond/entropic-bond/compare/v1.33.1...v1.34.0) (2022-10-12)
 
 
