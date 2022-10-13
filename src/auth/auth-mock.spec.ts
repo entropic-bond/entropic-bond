@@ -72,7 +72,7 @@ describe( 'Auth Mock', ()=>{
 
 		const modUserCredentials = { 
 			...fakeUseCredentials, 
-			id: fakeUseCredentials.id + '__from_auth'
+			id: fakeUseCredentials.id
 		}
 
 		expect( userCredentials ).toEqual( modUserCredentials )

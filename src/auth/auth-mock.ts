@@ -1,3 +1,4 @@
+import { Collection } from '../types/utility-types'
 import { AuthService, RejectedCallback, ResovedCallback } from "./auth"
 import { UserCredentials, SignData, AuthProvider } from "./user-auth-types"
 
@@ -9,8 +10,8 @@ export class AuthMock extends AuthService {
 		const promise = new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 			if ( password !== 'fail' && email !== 'fail' ) {
 				this._loggedUser = this.userCredentials<T>( signData )
-				this._loggedUser.id += '__from_auth' 
-				this._fakeRegisteredUsers.push( this._loggedUser )
+				// this._loggedUser.id += '__from_auth' 
+				this._fakeRegisteredUsers[ this._loggedUser.id ] = this._loggedUser 
 				resolve( this._loggedUser as UserCredentials<T> )
 				this.notifyChange?.( this._loggedUser )
 			} 
@@ -24,7 +25,9 @@ export class AuthMock extends AuthService {
 	}
 
 	login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
-		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
+		const fakeUser = Object.values( this._fakeRegisteredUsers ).find( 
+			user => user.email === signData.email 
+		)
 
 		if ( signData.authProvider === 'email' && !fakeUser ) {
 			signData.email = 'fail'
@@ -49,7 +52,9 @@ export class AuthMock extends AuthService {
 	}
 
 	resetEmailPassword( email: string ) {
-		const fakeUserExists = this._fakeRegisteredUsers.find( user => user.email === email )
+		const fakeUserExists = Object.values( this._fakeRegisteredUsers ).find( 
+			user => user.email === email 
+		)
 
 		if ( fakeUserExists ) return Promise.resolve()
 		else return Promise.reject({ code: 'userNotFound', message: 'Test auth error' })
@@ -69,7 +74,8 @@ export class AuthMock extends AuthService {
 	}
 
 	fakeRegisteredUser<T extends {}>( userCredentials: UserCredentials<T> ) {
-		this._fakeRegisteredUsers.push( userCredentials )
+		if ( this._fakeRegisteredUsers[ userCredentials.id ] ) throw new Error( `User with id ${ userCredentials.id } already exists in fake user list`)
+		this._fakeRegisteredUsers[ userCredentials.id ] = userCredentials
 		return this
 	}
 
@@ -78,7 +84,10 @@ export class AuthMock extends AuthService {
 	}
 
 	private userCredentials<T extends {}>( signData: SignData ): UserCredentials<T> {
-		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
+		const fakeUser = Object.values( this._fakeRegisteredUsers ).find( 
+			user => user.email === signData.email 
+		)
+		
 		if ( fakeUser ) {
 			return { ...fakeUser as UserCredentials<T> }
 		}
@@ -100,5 +109,5 @@ export class AuthMock extends AuthService {
 	private pendingPromises: Promise<any>[] = []
 	private _loggedUser: UserCredentials<{}>
 	private notifyChange: ( userCredentials: UserCredentials<{}> ) => void
-	private _fakeRegisteredUsers: UserCredentials<{}>[] = []
+	private _fakeRegisteredUsers: Collection<UserCredentials<{}>> = {}
 }

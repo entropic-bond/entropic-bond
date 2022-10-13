@@ -17,16 +17,17 @@ export class ServerAuthMock extends ServerAuthService {
 	setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void> {
 		if ( !this._userCredentials[ userId ] ) throw new Error( `User ${ userId } not found in the auth system` )
 		this._userCredentials[ userId ].customData = { ...customCredentials }
+
 		return Promise.resolve()
 	}
 
 	updateUser<T extends CustomCredentials>( userId: string, credentials: Partial<UserCredentials<T>> ): Promise<UserCredentials<T>> {
-		if ( !this._userCredentials[ userId ] ) this._userCredentials[ userId ] = { id: userId } as UserCredentials<CustomCredentials>
-
 		this._userCredentials[ userId ] = {
 			...this._userCredentials,
-			...credentials
+			...credentials,
+			id: userId
 		} as UserCredentials<T>
+
 		return Promise.resolve( this._userCredentials[ userId ] as UserCredentials<T> )
 	}
 
@@ -34,5 +35,5 @@ export class ServerAuthMock extends ServerAuthService {
 		return this._userCredentials
 	}
 
-	private _userCredentials: {[userId: string]:UserCredentials<{}>}
+	private _userCredentials: Collection<UserCredentials<{}>>
 }
