@@ -73,6 +73,10 @@ export class AuthMock extends AuthService {
 		return this
 	}
 
+	get fakeRegisteredUsers() {
+		return this._fakeRegisteredUsers
+	}
+
 	private userCredentials<T extends {}>( signData: SignData ): UserCredentials<T> {
 		const fakeUser = this._fakeRegisteredUsers.find( user => user.email === signData.email )
 		if ( fakeUser ) {
