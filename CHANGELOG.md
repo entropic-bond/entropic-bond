@@ -1,3 +1,11 @@
+## [1.34.3](https://github.com/entropic-bond/entropic-bond/compare/v1.34.2...v1.34.3) (2022-10-13)
+
+
+### Bug Fixes
+
+* throw when getting instance ServerAuth if not has registered service ([d393d3f](https://github.com/entropic-bond/entropic-bond/commit/d393d3f061af184a45a0ac4d821d3278acfc18f9))
+* wording ([2361bd7](https://github.com/entropic-bond/entropic-bond/commit/2361bd712999f347d97f4ca274dea79ede8ddb01))
+
 ## [1.34.2](https://github.com/entropic-bond/entropic-bond/compare/v1.34.1...v1.34.2) (2022-10-13)
 
 
