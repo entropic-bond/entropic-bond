@@ -32,7 +32,7 @@ export class CloudFunctions {
 		const func = CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
 		return async ( param?: P ) => {
 			const result = await func( param?.toObject() ) as R
-			if ( result instanceof Persistent ) {
+			if ( typeof result !== 'undefined' ) {
 				return Persistent.createInstance( result ) as R
 			}
 		}
