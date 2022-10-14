@@ -1,3 +1,10 @@
+## [1.34.6](https://github.com/entropic-bond/entropic-bond/compare/v1.34.5...v1.34.6) (2022-10-14)
+
+
+### Bug Fixes
+
+* cloudFunctions to manage persistents ([176b48e](https://github.com/entropic-bond/entropic-bond/commit/176b48eb1c91b22c17d717bae78f908be191415c))
+
 ## [1.34.5](https://github.com/entropic-bond/entropic-bond/compare/v1.34.4...v1.34.5) (2022-10-13)
 
 
