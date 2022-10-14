@@ -1,3 +1,10 @@
+## [1.34.5](https://github.com/entropic-bond/entropic-bond/compare/v1.34.4...v1.34.5) (2022-10-13)
+
+
+### Bug Fixes
+
+* remove __from_auth in user id ([10f1555](https://github.com/entropic-bond/entropic-bond/commit/10f1555e448beb4ae5f1f6ef9df2dcac0ab0a9f0))
+
 ## [1.34.4](https://github.com/entropic-bond/entropic-bond/compare/v1.34.3...v1.34.4) (2022-10-13)
 
 
