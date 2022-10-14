@@ -1,10 +1,14 @@
+import { Persistent, PersistentObject } from '../persistent/persistent'
+
+
 export type CloudFunction<P,R> = ( param?: P ) => Promise<R>
 
 export interface CloudFunctionsService {
-	getFunction<P, R>( cloudFunction: string ): CloudFunction<P,R>
+	// retrieveFunction<P extends Persistent | never, R extends Persistent>( cloudFunction: string ): CloudFunction<PersistentObject<P>, PersistentObject<R>>
+	retrieveFunction<P, R>( cloudFunction: string ): CloudFunction<P, R>
 }
 
-export class CloudFunctions implements CloudFunctionsService {
+export class CloudFunctions {
 	private constructor() {}
 
 	static error = { shouldBeRegistered: 'You should register a cloud functions service with useCloudFunctionsService static method before using CloudFunctions.' }
@@ -20,8 +24,16 @@ export class CloudFunctions implements CloudFunctionsService {
 		return CloudFunctions._instance || ( CloudFunctions._instance = new CloudFunctions() )
 	}
 
-	getFunction<P, R>( cloudFunction: string ): CloudFunction<P,R> {
-		return CloudFunctions._cloudFunctionsService.getFunction( cloudFunction )
+	getRawFunction<P, R>( cloudFunction: string ): CloudFunction<P,R> {
+		return CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
+	}
+
+	getFunction<P extends Persistent | undefined, R extends Persistent>( cloudFunction: string ): CloudFunction<P,R> {
+		const func = CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
+		return async ( param?: P ) => {
+			const result = await func( param?.toObject() ) as R
+			return Persistent.createInstance<R>( result )
+		}
 	}
 
 	private static _cloudFunctionsService: CloudFunctionsService

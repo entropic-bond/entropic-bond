@@ -9,7 +9,7 @@ export class CloudFunctionsMock implements CloudFunctionsService {
 		this._registeredFunctions = registeredFunctions
 	}
 
-	getFunction<P, R>( cloudFunction: string ): CloudFunction<P,R> {
+	retrieveFunction<P, R>( cloudFunction: string ): CloudFunction<P,R> {
 		return this._registeredFunctions[ cloudFunction ]
 	}
 
