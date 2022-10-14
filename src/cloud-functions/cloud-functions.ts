@@ -28,11 +28,13 @@ export class CloudFunctions {
 		return CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
 	}
 
-	getFunction<P extends Persistent | undefined, R extends Persistent>( cloudFunction: string ): CloudFunction<P,R> {
+	getFunction<P extends Persistent | undefined = undefined, R extends Persistent | void = void>( cloudFunction: string ): CloudFunction<P,R> {
 		const func = CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
 		return async ( param?: P ) => {
 			const result = await func( param?.toObject() ) as R
-			return Persistent.createInstance<R>( result )
+			if ( result instanceof Persistent ) {
+				return Persistent.createInstance( result ) as R
+			}
 		}
 	}
 
