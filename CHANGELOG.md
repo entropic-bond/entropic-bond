@@ -1,3 +1,11 @@
+## [1.34.7](https://github.com/entropic-bond/entropic-bond/compare/v1.34.6...v1.34.7) (2022-10-14)
+
+
+### Bug Fixes
+
+* problem with types ([09757aa](https://github.com/entropic-bond/entropic-bond/commit/09757aa7cba2b2f1e93a904b3b1909eb2b965e52))
+* some types ([bff08ee](https://github.com/entropic-bond/entropic-bond/commit/bff08eed9244f0e80031c7808e8fcecb1eae57d9))
+
 ## [1.34.6](https://github.com/entropic-bond/entropic-bond/compare/v1.34.5...v1.34.6) (2022-10-14)
 
 
