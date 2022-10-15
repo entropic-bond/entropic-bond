@@ -1,4 +1,4 @@
-import { Persistent, PersistentObject } from '../persistent/persistent'
+import { Persistent } from '../persistent/persistent'
 
 
 export type CloudFunction<P,R> = ( param?: P ) => Promise<R>
