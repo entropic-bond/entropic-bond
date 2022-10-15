@@ -13,5 +13,9 @@ export class CloudFunctionsMock implements CloudFunctionsService {
 		return this._registeredFunctions[ cloudFunction ]
 	}
 
+	callFunction<P, R>( func: CloudFunction<P, R>, params: P ): Promise<R> {
+		return func( params )
+	}
+
 	private _registeredFunctions: FunctionCollection
 }

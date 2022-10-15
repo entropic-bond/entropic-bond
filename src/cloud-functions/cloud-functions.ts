@@ -1,11 +1,11 @@
-import { Persistent } from '../persistent/persistent'
+import { Persistent, PersistentObject } from '../persistent/persistent'
 
 
 export type CloudFunction<P,R> = ( param?: P ) => Promise<R>
 
 export interface CloudFunctionsService {
-	// retrieveFunction<P extends Persistent | never, R extends Persistent>( cloudFunction: string ): CloudFunction<PersistentObject<P>, PersistentObject<R>>
 	retrieveFunction<P, R>( cloudFunction: string ): CloudFunction<P, R>
+	callFunction<P,R>( func: CloudFunction<P, R>, params: P ): Promise<R>
 }
 
 export class CloudFunctions {
@@ -28,10 +28,12 @@ export class CloudFunctions {
 		return CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
 	}
 
-	getFunction<P extends Persistent | undefined = undefined, R extends Persistent | void = void>( cloudFunction: string ): CloudFunction<P,R> {
-		const func = CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
+	getFunction<P extends Persistent | undefined = undefined, R extends Persistent | undefined = undefined>( cloudFunction: string ): CloudFunction<P,R> {
+		const callFunction = CloudFunctions._cloudFunctionsService.callFunction
+
+		const func = CloudFunctions._cloudFunctionsService.retrieveFunction<P,R>( cloudFunction )
 		return async ( param?: P ) => {
-			const result = await func( param?.toObject() ) as R
+			const result = await callFunction<PersistentObject<P>,PersistentObject<R>>( func, param?.toObject() )
 			if ( typeof result !== 'undefined' ) {
 				return Persistent.createInstance( result ) as R
 			}
