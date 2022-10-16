@@ -1,3 +1,10 @@
+## [1.34.9](https://github.com/entropic-bond/entropic-bond/compare/v1.34.8...v1.34.9) (2022-10-16)
+
+
+### Bug Fixes
+
+* getFunction to deal with plain and persistent types ([1ca80e5](https://github.com/entropic-bond/entropic-bond/commit/1ca80e576519121f37dc26ede362800bacb9ab5a))
+
 ## [1.34.8](https://github.com/entropic-bond/entropic-bond/compare/v1.34.7...v1.34.8) (2022-10-15)
 
 
