@@ -1,3 +1,10 @@
+## [1.34.8](https://github.com/entropic-bond/entropic-bond/compare/v1.34.7...v1.34.8) (2022-10-15)
+
+
+### Bug Fixes
+
+* call function adapter ([744ead2](https://github.com/entropic-bond/entropic-bond/commit/744ead2a6627215f5b07a566a621ced4954f156e))
+
 ## [1.34.7](https://github.com/entropic-bond/entropic-bond/compare/v1.34.6...v1.34.7) (2022-10-14)
 
 
