@@ -20,7 +20,7 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 }
 
 export type MakePersistentObjects<T> = {
-  [A in keyof T]: T[A] extends Persistent? PersistentObject<T[A]> : T[A]
+  [A in keyof T]: T[A] extends Persistent? PersistentObject<T[A]> : MakePersistentObjects<T[A]>
 }
 
 export type Collections = {
