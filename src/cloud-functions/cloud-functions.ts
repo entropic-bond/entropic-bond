@@ -28,18 +28,6 @@ export class CloudFunctions {
 		return CloudFunctions._cloudFunctionsService.retrieveFunction( cloudFunction )
 	}
 
-	getFunctionForPersistent<P extends Persistent | undefined = undefined, R extends Persistent | undefined = undefined>( cloudFunction: string ): CloudFunction<P,R> {
-		const callFunction = CloudFunctions._cloudFunctionsService.callFunction
-
-		const func = CloudFunctions._cloudFunctionsService.retrieveFunction<P,R>( cloudFunction )
-		return async ( param?: P ) => {
-			const result = await callFunction<PersistentObject<P>,PersistentObject<R>>( func, param?.toObject() )
-			if ( typeof result !== 'undefined' ) {
-				return Persistent.createInstance( result ) as R
-			}
-		}
-	}
-
 	getFunction<P, R=void>( cloudFunction: string ): CloudFunction<P,R> {
 		const callFunction = CloudFunctions._cloudFunctionsService.callFunction
 		const func = this.getRawFunction<P, R>( cloudFunction )
@@ -52,15 +40,41 @@ export class CloudFunctions {
 
 	private processParam<P>( param: P ): P | PersistentObject<P & Persistent> {
 		if ( !param ) return undefined
+
 		if ( param instanceof Persistent ) return param.toObject()
+
+		if ( Array.isArray( param ) ) {
+			return param.map( p => this.processParam( p ) ) as unknown as P
+		}
+
+		if ( typeof param === 'object' ) {
+			return Object.entries( param ).reduce(( newParam, [ key, value ])=>{
+				newParam[ key ] = this.processParam( value )
+				return newParam
+			}, {}) as P
+		}
+
 		return param
 	}
 
 	private processResult<R>( value: R | PersistentObject<R & Persistent> ): R {
 		if ( !value ) return undefined
+
 		if ( ( value as PersistentObject<R & Persistent> ).__className ) {
 			return Persistent.createInstance( value as PersistentObject<R & Persistent> ) as R
 		}
+
+		if ( Array.isArray( value ) ) {
+			return value.map( elem => this.processResult( elem ) ) as unknown as R
+		}
+
+		if ( typeof value === 'object' ) {
+			return Object.entries( value ).reduce((newVal, [ key, val ]) => {
+				newVal[ key ] = this.processResult( val )
+				return newVal
+			}, {}) as R
+		}
+
 		return value as R
 	}
 

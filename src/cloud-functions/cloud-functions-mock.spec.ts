@@ -21,7 +21,16 @@ describe( 'Cloud functions', ()=>{
 				return Promise.resolve( user )
 			},
 			testWithoutParam: (): Promise<string> => Promise.resolve( 'Hello from the other side' ),
-			testWithoutReturn: ( data: string ): Promise<void> => Promise.resolve()
+			testWithoutReturn: ( _data: string ): Promise<void> => Promise.resolve(),
+			testArrayParam: ( data: PersistentObject<TestUser>[] ) => Promise.resolve( data.map( d => d.id ) ),
+			testObjectParam: ( data: {[key:string]:PersistentObject<TestUser>} ) => Promise.resolve( 
+				Object.entries( data ).reduce(( obj, [k,v] ) => {
+					obj[k] = v.id
+					return obj 
+				}, {}) 
+			),
+			testArrayResult: () => Promise.resolve([ new TestUser('userA').toObject(), new TestUser('userB').toObject() ]),
+			testObjectResult: () => Promise.resolve({ user1: new TestUser('userA').toObject(), user2: new TestUser('userB').toObject() })
 		}))
 
 	})
@@ -81,12 +90,47 @@ describe( 'Cloud functions', ()=>{
 		expect( result.age ).toEqual( 35 )
 	})
 
-	// it( 'should execute cloud function with params and return as Persistent', async ()=>{
-	// 	const testPersistentParamAndReturn = CloudFunctions.instance.getFunction<ParamWrapper, ParamWrapper>( 'testPersistentParamAndReturn' )
+	it( 'should execute cloud function with params as an array of Persistents', async ()=>{
+		const testArrayParam = CloudFunctions.instance.getFunction<TestUser[], string[]>( 'testArrayParam' )
 
-	// 	const paramWrapper = new ParamWrapper( 'test', 30 )
-	// 	const result = await testPersistentParamAndReturn( paramWrapper )
-	// 	expect( result._a ).toEqual( 'test' )
-	// 	expect( result._b ).toBe( 30 )
-	// })
+		const result = await testArrayParam([
+			new TestUser('userA'),
+			new TestUser('userB')
+		])
+
+		expect( result ).toEqual([ 'userA', 'userB' ])
+	})
+
+	it( 'should execute cloud functions that return array of Persistent', async ()=>{
+		const testArrayResult = CloudFunctions.instance.getFunction<void, TestUser[]>( 'testArrayResult' )
+
+		const result = await testArrayResult()
+
+		expect( result[0] ).toBeInstanceOf( TestUser )
+		expect( result[0].id ).toEqual( 'userA' )
+		expect( result[1].id ).toEqual( 'userB' )
+	})
+	
+	it( 'should execute cloud function with params as an object containing Persistents', async ()=>{
+		const testObjectParam = CloudFunctions.instance.getFunction<{[key: string]:TestUser}, {[key: string]:string}>( 'testObjectParam' )
+
+		const result = await testObjectParam({
+			user1: new TestUser('userA'),
+			user2: new TestUser('userB')
+	})
+
+		expect( result ).toEqual({ user1: 'userA', user2: 'userB' })
+	})
+
+	it( 'should execute cloud functions that return an object with Persistent', async ()=>{
+		const testObjectResult = CloudFunctions.instance.getFunction<void, {[key: string]:TestUser}>( 'testObjectResult' )
+
+		const result = await testObjectResult()
+
+		expect( result.user1 ).toBeInstanceOf( TestUser )
+		expect( result.user1.id ).toEqual( 'userA' )
+		expect( result.user2.id ).toEqual( 'userB' )
+	})
+	
+	
 })
