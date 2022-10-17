@@ -1,3 +1,10 @@
+## [1.34.10](https://github.com/entropic-bond/entropic-bond/compare/v1.34.9...v1.34.10) (2022-10-17)
+
+
+### Bug Fixes
+
+* allow cloud functions to work with Persistent annidated types ([eaaa66b](https://github.com/entropic-bond/entropic-bond/commit/eaaa66be074b987aaf331517074318389ca7562d))
+
 ## [1.34.9](https://github.com/entropic-bond/entropic-bond/compare/v1.34.8...v1.34.9) (2022-10-16)
 
 
