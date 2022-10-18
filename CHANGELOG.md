@@ -1,3 +1,10 @@
+## [1.34.11](https://github.com/entropic-bond/entropic-bond/compare/v1.34.10...v1.34.11) (2022-10-17)
+
+
+### Bug Fixes
+
+* improved MakePersistentObjects ([68230fc](https://github.com/entropic-bond/entropic-bond/commit/68230fc0eb8da611c0cc2da5d80032621f12320e))
+
 ## [1.34.10](https://github.com/entropic-bond/entropic-bond/compare/v1.34.9...v1.34.10) (2022-10-17)
 
 
