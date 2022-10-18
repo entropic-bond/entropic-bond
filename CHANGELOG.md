@@ -1,3 +1,10 @@
+## [1.34.12](https://github.com/entropic-bond/entropic-bond/compare/v1.34.11...v1.34.12) (2022-10-18)
+
+
+### Bug Fixes
+
+* implement deleteUser for admin ([00f252e](https://github.com/entropic-bond/entropic-bond/commit/00f252e467960a0d096d550757acdad7aa8d9f53))
+
 ## [1.34.11](https://github.com/entropic-bond/entropic-bond/compare/v1.34.10...v1.34.11) (2022-10-17)
 
 
