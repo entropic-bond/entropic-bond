@@ -8,6 +8,7 @@ export abstract class ServerAuthService {
 	abstract setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void>
 	abstract getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>>
 	abstract updateUser<T extends CustomCredentials>( userId: string, credentials: Partial<UserCredentials<T>> ): Promise<UserCredentials<T>>
+	abstract deleteUser( userId: string ): Promise<void>
 }
 
 export class ServerAuth extends ServerAuthService {
@@ -37,6 +38,10 @@ export class ServerAuth extends ServerAuthService {
 	
 	setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void> {
 		return ServerAuth._authService.setCustomCredentials( userId, customCredentials )
+	}
+
+	deleteUser( userId: string ) {
+		return ServerAuth._authService.deleteUser( userId )
 	}
 
 	private static _instance: ServerAuth = undefined

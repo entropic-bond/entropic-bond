@@ -1,4 +1,4 @@
-export interface UserCredentials<T extends {}> {
+export interface UserCredentials<T extends {} = {}> {
 	id: string
 	email: string
 	name?: string

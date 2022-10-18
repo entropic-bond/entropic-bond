@@ -31,6 +31,11 @@ export class ServerAuthMock extends ServerAuthService {
 		return Promise.resolve( this._userCredentials[ userId ] as UserCredentials<T> )
 	}
 
+	deleteUser( userId: string ): Promise<void> {
+		delete this._userCredentials[ userId ]
+		return Promise.resolve()
+	}
+
 	get userCredentials() {
 		return this._userCredentials
 	}
