@@ -337,7 +337,7 @@ export function persistentReference( target: Persistent, property: string ) {
  * @param forcedPersistentProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
  */
- export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps?: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+ export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
@@ -354,8 +354,8 @@ export function persistentReference( target: Persistent, property: string ) {
  * contents is not stored. Only the reference information is stored.
  * @see persistentReference
  */
- export function persistentPureReference( target: Persistent, property: string ) {
-	return persistentParser({ isReference: true, isPureReference: true })( target, property )
+ export function persistentPureReference( target: Persistent, property: string, storeInCollection?: string | CollectionPathCallback ) {
+	return persistentParser({ isReference: true, isPureReference: true, storeInCollection })( target, property )
 }
 
 /**
@@ -364,9 +364,9 @@ export function persistentReference( target: Persistent, property: string ) {
  * when you are not able to wait for population of referenced properties.
  * @param forcedPersistentProps the properties whose values should be stored in the reference object
  */
- export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps?: ClassPropNames<T>[] ) {
+ export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
-		return persistentParser({ isReference: true, isPureReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[] })( target, property )
+		return persistentParser({ isReference: true, isPureReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[], storeInCollection })( target, property )
 	}
 }
 
