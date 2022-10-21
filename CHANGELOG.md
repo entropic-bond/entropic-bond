@@ -1,3 +1,10 @@
+## [1.34.13](https://github.com/entropic-bond/entropic-bond/compare/v1.34.12...v1.34.13) (2022-10-21)
+
+
+### Bug Fixes
+
+* allow pure references to specify storedInCollection ([b093fed](https://github.com/entropic-bond/entropic-bond/commit/b093fedbdb8845cf9816fe3cc622f115dd3a0791))
+
 ## [1.34.12](https://github.com/entropic-bond/entropic-bond/compare/v1.34.11...v1.34.12) (2022-10-18)
 
 
