@@ -1,3 +1,10 @@
+## [1.34.14](https://github.com/entropic-bond/entropic-bond/compare/v1.34.13...v1.34.14) (2022-10-29)
+
+
+### Bug Fixes
+
+* more utility types ([dcc5df8](https://github.com/entropic-bond/entropic-bond/commit/dcc5df8c07b244d64c4cd7d4b6a9edde32495eb6))
+
 ## [1.34.13](https://github.com/entropic-bond/entropic-bond/compare/v1.34.12...v1.34.13) (2022-10-21)
 
 
