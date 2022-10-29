@@ -12,6 +12,8 @@ export type ClassProps<T> = Pick<T, ClassPropNames<T>>
 
 export type SomeClassProps<T> = Partial< ClassProps< T > >
 
+export type SomeClassPropNames<T> = Partial< ClassPropNames< T > >
+
 export type ClassArrayPropNames<T> = {
 	[ K in keyof T]: T[K] extends unknown[] | Readonly<unknown[]>? K : never
 }[keyof T]
@@ -62,3 +64,8 @@ const obj2: ClassProps2<A> = {
 export interface Collection<T> {
 	[ key: string | symbol ]: T
 }
+
+export type ClassPropNamesOfType<T, U> = { 
+	[K in keyof T]: T[K] extends U ? K : never 
+}[keyof T]
+
