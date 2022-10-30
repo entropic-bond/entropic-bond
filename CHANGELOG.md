@@ -1,3 +1,10 @@
+## [1.34.15](https://github.com/entropic-bond/entropic-bond/compare/v1.34.14...v1.34.15) (2022-10-30)
+
+
+### Bug Fixes
+
+* better ClassPropNamesOfType type ([35714ac](https://github.com/entropic-bond/entropic-bond/commit/35714acba8e54f156737e061dc3b69c1606cc6b2))
+
 ## [1.34.14](https://github.com/entropic-bond/entropic-bond/compare/v1.34.13...v1.34.14) (2022-10-29)
 
 
