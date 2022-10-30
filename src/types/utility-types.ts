@@ -65,7 +65,6 @@ export interface Collection<T> {
 	[ key: string | symbol ]: T
 }
 
-export type ClassPropNamesOfType<T, U> = { 
-	[K in keyof T]: T[K] extends U ? K : never 
-}[keyof T]
-
+export declare type ClassPropNamesOfType<T, U> = {
+	[K in keyof T]: T[K] extends Function? never : T[K] extends U? K : never
+}[keyof T];
