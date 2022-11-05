@@ -1,3 +1,17 @@
+# [1.35.0](https://github.com/entropic-bond/entropic-bond/compare/v1.34.15...v1.35.0) (2022-11-05)
+
+
+### Bug Fixes
+
+* SubProperties Path Types ([1586f16](https://github.com/entropic-bond/entropic-bond/commit/1586f169a0eb6b24b59a4d553b21a036b64e7a63))
+* test ([ecab755](https://github.com/entropic-bond/entropic-bond/commit/ecab7558205bee644199826cb7b5c848d0ad4f10))
+* whereDeepProp validates subproperty type ([74de91a](https://github.com/entropic-bond/entropic-bond/commit/74de91ab317228f1a33efed42d9901e6acf503d0))
+
+
+### Features
+
+* getDeepProp ([ce9abda](https://github.com/entropic-bond/entropic-bond/commit/ce9abdaf8abe644b8f0e87bccafa8c34cc172617))
+
 ## [1.34.15](https://github.com/entropic-bond/entropic-bond/compare/v1.34.14...v1.34.15) (2022-10-30)
 
 
