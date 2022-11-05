@@ -548,6 +548,9 @@ describe( 'Model', ()=>{
 		
 	})
 
-	//@ts-expect-error
-	model.find().whereDeepProp( 'not-prop', '==', 'userFirstName3' )
+	it('should pass Type tests', ()=>{
+		//@ts-expect-error
+		()=>model.find().whereDeepProp( 'not-prop', '==', 'userFirstName3' )
+		expect( true ).toBeTruthy()
+	})
 })
