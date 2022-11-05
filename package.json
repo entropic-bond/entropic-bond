@@ -49,6 +49,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
+    "@type-challenges/utils": "^0.1.1",
     "@types/jest": "^27.5.1",
     "@types/uuid": "^8.3.4",
     "git-branch-is": "^4.0.0",

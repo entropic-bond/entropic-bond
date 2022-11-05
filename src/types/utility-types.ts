@@ -68,3 +68,40 @@ export interface Collection<T> {
 export declare type ClassPropNamesOfType<T, U> = {
 	[K in keyof T]: T[K] extends Function? never : T[K] extends U? K : never
 }[keyof T];
+
+
+
+
+
+
+
+
+
+
+/*******************************************************************************
+ * 
+ * SUB-PROPERTIES
+ * 
+ *******************************************************************************/
+
+type Primitive = string | number | bigint | boolean | undefined | symbol
+
+type Decr = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // add to a reasonable amount
+
+type Concat<T, U> = `${ string & T }${ string & U }`
+
+export type PropPath<T extends {}, MaxDepth extends number = 5, Prefix = ''> = MaxDepth extends number? {
+	[ P in keyof T ]: T[P] extends Primitive | ArrayLike<any>
+		? Concat<Prefix, P>
+		: Concat<Prefix, P> | PropPath <T[P], Decr[MaxDepth], `${ Concat<Prefix, P> }.`>
+}[ keyof T ] : never
+
+export type PropPathType<T, Path, MaxDepth extends number = 5> = MaxDepth extends number
+	? Path extends keyof T
+		? T[ Path ]
+		: Path extends `${ infer PropName}.${ infer SubPropName }`
+			? PropName extends keyof T 
+				? PropPathType<T[PropName], SubPropName, Decr[MaxDepth]>
+				: never
+			: never
+	: never
