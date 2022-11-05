@@ -1,3 +1,5 @@
+import { PropPath, PropPathType } from '../types/utility-types'
+
 export interface Values {
 	[ varName: string ]: string;
 }
@@ -45,4 +47,15 @@ export function snakeCase( str: string, snakeChar: string = '-' ) {
 	if ( !str ) return ''
 	const replaced = str.slice(1).replace(/( |[A-Z])/g, g => g===' '? '-' : snakeChar + g[0].toLowerCase() )
 	return str[0].toLocaleLowerCase() + replaced.replace(/--/g, '-')
+}
+
+/**
+ * Gets the value of the supproperty in the passed object
+ * 
+ * @param obj the object containing the subproperty 
+ * @param path a string containing the subproperty path in dotted notation
+ * @returns the value of the supproperty in the passed object
+ */
+export function getDeepValue<T extends {}, P extends PropPath<T>>( obj: T, path: P ): PropPathType<T, P> {
+	return path.split('.').reduce(( acc: {}, prop: string ) => acc[ prop ], obj )
 }

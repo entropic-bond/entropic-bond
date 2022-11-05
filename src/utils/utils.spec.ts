@@ -1,4 +1,5 @@
-import { camelCase, replaceValue, snakeCase } from './utils'
+import { samplePerson, TestPerson } from './test-utils/test-person'
+import { camelCase, getDeepValue, replaceValue, snakeCase } from './utils'
 
 describe( 'Utils', ()=>{
 	describe( 'replaceValues', ()=>{
@@ -71,5 +72,24 @@ describe( 'Utils', ()=>{
 			expect( snakeCase( '' ) ).toEqual( '' )
 		})
 
+	})
+
+	describe( 'Get subProp value', ()=>{
+		let person: TestPerson
+		beforeEach(()=>{
+			person = JSON.parse( JSON.stringify( samplePerson() ) )
+		})
+	
+		it( 'should get swallow value', ()=>{
+			expect( getDeepValue( person, 'age' ) ).toEqual( person.age )
+		})
+
+		it( 'should get 1 level value', ()=>{
+			expect( getDeepValue( person, 'name.firstName' ) ).toEqual( person.name.firstName )
+		})
+
+		it( 'should get 2 level value', ()=>{
+			expect( getDeepValue( person, 'address.coordinates.x' ) ).toEqual( person.address.coordinates.x )
+		})
 	})
 })

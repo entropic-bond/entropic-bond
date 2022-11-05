@@ -1,44 +1,8 @@
 import type { Equal, Expect } from '@type-challenges/utils'
+import { TestPerson, Name, Coordinates, samplePerson } from '../utils/test-utils/test-person'
 import { PropPath, PropPathType } from './utility-types'
 
-interface Name {
-	firstName: string
-	secondName: string
-}
-
-interface Coordinates {
-	x: number
-	y: number
-}
-
-interface Person {
-	id: string
-	name: Name
-	age: number
-	address: {
-		coordinates: Coordinates
-		postalAddress: string
-	},
-}
-
-const p: Person = {
-	id: 'testPersonId',
-	age: 34,
-	name: {
-		firstName: 'Joe',
-		secondName: 'Manteca'
-	},
-	address: {
-		coordinates: {
-			x: 10,
-			y: 20
-		},
-		postalAddress: 'Madison Av.'
-	},
-}
-
-
-
+const person = samplePerson()
 
 
 /*******************************************************************************
@@ -48,24 +12,24 @@ const p: Person = {
  *******************************************************************************/
 
 //@ts-expect-error
-const a: PropPath<Person> = 'nothing'
+const a: PropPath<TestPerson> = 'nothing'
 
 //@ts-expect-error
-const b: PropPath<Person> = 'name.nothing'
+const b: PropPath<TestPerson> = 'name.nothing'
 
 //@ts-expect-error
-const c: PropPath<Person> = 'address.nothing'
+const c: PropPath<TestPerson> = 'address.nothing'
 
 //@ts-expect-error
-const d: PropPath<Person> = 'address.coordinates.nothing'
+const d: PropPath<TestPerson> = 'address.coordinates.nothing'
 
 //@ts-expect-error
-const e: PropPath<Person> = 'address.nothing.x'
+const e: PropPath<TestPerson> = 'address.nothing.x'
 
 //@ts-expect-error
-const f: PropPath<Person> = 'nothing.coordinates'
+const f: PropPath<TestPerson> = 'nothing.coordinates'
 
-const g: PropPath<Person>[] = [
+const g: PropPath<TestPerson>[] = [
 	'name',
 	'name.firstName',
 	'name.secondName',
@@ -79,37 +43,31 @@ const g: PropPath<Person>[] = [
 ]
 
 type cases0 = [
-	Expect<Equal< PropPathType<Person, 'id'>, string>>,
-	Expect<Equal< PropPathType<Person, 'age'>, number>>,
-	Expect<Equal< PropPathType<Person, 'name'>, Name>>,
-	Expect<Equal< PropPathType<Person, 'name.firstName'>, string>>,
-	Expect<Equal< PropPathType<Person, 'name.secondName'>, string>>,
-	Expect<Equal< PropPathType<Person, 'address'>, typeof p.address>>,
-	Expect<Equal< PropPathType<Person, 'address.coordinates'>, Coordinates>>,
-	Expect<Equal< PropPathType<Person, 'address.coordinates.x'>, number>>,
-	Expect<Equal< PropPathType<Person, 'address.postalAddress'>, string>>,
+	Expect<Equal< PropPathType<TestPerson, 'id'>, string>>,
+	Expect<Equal< PropPathType<TestPerson, 'age'>, number>>,
+	Expect<Equal< PropPathType<TestPerson, 'name'>, Name>>,
+	Expect<Equal< PropPathType<TestPerson, 'name.firstName'>, string>>,
+	Expect<Equal< PropPathType<TestPerson, 'name.secondName'>, string>>,
+	Expect<Equal< PropPathType<TestPerson, 'address'>, typeof person.address>>,
+	Expect<Equal< PropPathType<TestPerson, 'address.coordinates'>, Coordinates>>,
+	Expect<Equal< PropPathType<TestPerson, 'address.coordinates.x'>, number>>,
+	Expect<Equal< PropPathType<TestPerson, 'address.postalAddress'>, string>>,
 ]
 
 function getDeepValue<T extends {}, P extends PropPath<T>>( obj: T, path: P ): PropPathType<T, P> {
 	return path.split('.').reduce(( acc: {}, prop: string ) => acc[ prop ], obj )
 }
 
-const id =	getDeepValue( p, 'id' )
-const age =	getDeepValue( p, 'age' )
-const name =	getDeepValue( p, 'name' )
-const nameFirstName =	getDeepValue( p, 'name.firstName' )
-const nameSecondName =	getDeepValue( p, 'name.secondName' )
-const address =	getDeepValue( p, 'address' )
-const addressCoordinates =	getDeepValue( p, 'address.coordinates' )
-const addressCoordinatesX =	getDeepValue( p, 'address.coordinates.x' )
-const addressCoordinatesY =	getDeepValue( p, 'address.coordinates.y' )
-const addressPostalAddress =	getDeepValue( p, 'address.postalAddress' )
-
-function getValue<T, P extends keyof T>( obj: T, prop: P ): T[P] {
-	return obj[ prop ]
-}
-
-const swallowVal = getValue( p, 'id' )
+const id =	getDeepValue( person, 'id' )
+const age =	getDeepValue( person, 'age' )
+const name =	getDeepValue( person, 'name' )
+const nameFirstName =	getDeepValue( person, 'name.firstName' )
+const nameSecondName =	getDeepValue( person, 'name.secondName' )
+const address =	getDeepValue( person, 'address' )
+const addressCoordinates =	getDeepValue( person, 'address.coordinates' )
+const addressCoordinatesX =	getDeepValue( person, 'address.coordinates.x' )
+const addressCoordinatesY =	getDeepValue( person, 'address.coordinates.y' )
+const addressPostalAddress =	getDeepValue( person, 'address.postalAddress' )
 
 type cases = [
 	Expect<Equal< typeof id, string >>,
@@ -117,12 +75,11 @@ type cases = [
 	Expect<Equal< typeof name, Name >>,
 	Expect<Equal< typeof nameFirstName, string >>,
 	Expect<Equal< typeof nameSecondName, string >>,
-	Expect<Equal< typeof address, typeof p.address >>,
+	Expect<Equal< typeof address, typeof person.address >>,
 	Expect<Equal< typeof addressCoordinates, Coordinates >>,
 	Expect<Equal< typeof addressCoordinatesX, number >>,
 	Expect<Equal< typeof addressCoordinatesY, number >>,
 	Expect<Equal< typeof addressPostalAddress, string >>,
-	Expect<Equal< typeof swallowVal, string >>,
 ]
 
 it('should compile everything above',()=>{
