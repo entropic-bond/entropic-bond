@@ -547,4 +547,7 @@ describe( 'Model', ()=>{
 		})
 		
 	})
+
+	//@ts-expect-error
+	model.find().whereDeepProp( 'not-prop', '==', 'userFirstName3' )
 })

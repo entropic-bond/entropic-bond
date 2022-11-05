@@ -90,7 +90,7 @@ type cases0 = [
 	Expect<Equal< PropPathType<Person, 'address.postalAddress'>, string>>,
 ]
 
-function getDeepValue<T extends {}, P extends PropPath<T> & string>( obj: T, path: P ): PropPathType<T, P> {
+function getDeepValue<T extends {}, P extends PropPath<T>>( obj: T, path: P ): PropPathType<T, P> {
 	return path.split('.').reduce(( acc: {}, prop: string ) => acc[ prop ], obj )
 }
 

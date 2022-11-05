@@ -1,5 +1,5 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
-import { ClassPropNames } from '../types/utility-types'
+import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation } from './data-source'
 
 /**
@@ -154,7 +154,8 @@ class Query<T extends Persistent> {
 		return this
 	}
 
-	whereDeepProp( propertyPath: string, operator: QueryOperator, value: unknown ) {
+	//TODO: remove as it is redundant with where
+	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
 		const props = propertyPath.split( '.' )
 		let obj = {}
 		let result = props.length > 1? obj : value  // TODO: review
