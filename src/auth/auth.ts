@@ -11,7 +11,7 @@ export abstract class AuthService {
 	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T>) => void ): void
 }
 
-export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail'
+export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail' | 'missingPassword'
 
 export interface AuthError {
 	code: AuthErrorCode

@@ -10,7 +10,6 @@ export class AuthMock extends AuthService {
 		const promise = new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 			if ( password !== 'fail' && email !== 'fail' ) {
 				this._loggedUser = this.userCredentials<T>( signData )
-				// this._loggedUser.id += '__from_auth' 
 				this._fakeRegisteredUsers[ this._loggedUser.id ] = this._loggedUser 
 				resolve( this._loggedUser as UserCredentials<T> )
 				this.notifyChange?.( this._loggedUser )
