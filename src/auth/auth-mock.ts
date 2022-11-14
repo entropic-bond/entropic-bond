@@ -5,9 +5,13 @@ import { UserCredentials, SignData, AuthProvider } from "./user-auth-types"
 export class AuthMock extends AuthService {
 
 	signUp<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
-		const { verificationLink, email, password } = signData
+		const { verificationLink, email, password, authProvider } = signData
 	
 		const promise = new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
+			if ( authProvider === 'email' ) {
+				if ( !email ) reject({ code: 'missingEmail', message: 'missingEmail' })
+				if ( !password ) reject({ code: 'missingPassword', message: 'missingPassword' })
+			}
 			if ( password !== 'fail' && email !== 'fail' ) {
 				this._loggedUser = this.userCredentials<T>( signData )
 				this._fakeRegisteredUsers[ this._loggedUser.id ] = this._loggedUser 
@@ -28,7 +32,7 @@ export class AuthMock extends AuthService {
 			user => user.email === signData.email 
 		)
 
-		if ( signData.authProvider === 'email' && !fakeUser ) {
+		if ( signData.authProvider === 'email' && !fakeUser && signData.email) {
 			signData.email = 'fail'
 		}
 

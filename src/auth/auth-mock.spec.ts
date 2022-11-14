@@ -124,5 +124,45 @@ describe( 'Auth Mock', ()=>{
 
 		expect( userCredentials.customData.role ).toEqual( 'testRole' )
 	})
+
+	it( 'should throw if login and not email in email auth provider', ()=>{
+		return expect(
+			Auth.instance.login({
+				authProvider: 'email',
+				email: '',
+				password: '****'
+			})
+		).rejects.toEqual( expect.objectContaining({ code: 'missingEmail' }))
+	})
+	
+	it( 'should throw if login and not password in email auth provider', ()=>{
+		return expect(
+			Auth.instance.login({
+				authProvider: 'email',
+				email: 'test@test.com',
+				password: ''
+			})
+		).rejects.toEqual( expect.objectContaining({ code: 'missingPassword' }))
+	})
+	
+	it( 'should throw if signup and not email in email auth provider', ()=>{
+		return expect(
+			Auth.instance.signUp({
+				authProvider: 'email',
+				email: '',
+				password: '****'
+			})
+		).rejects.toEqual( expect.objectContaining({ code: 'missingEmail' }))
+	})
+	
+	it( 'should throw if signup and not password in email auth provider', ()=>{
+		return expect(
+			Auth.instance.signUp({
+				authProvider: 'email',
+				email: 'test@test.com',
+				password: ''
+			})
+		).rejects.toEqual( expect.objectContaining({ code: 'missingPassword' }))
+	})
 	
 })
