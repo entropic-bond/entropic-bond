@@ -1,3 +1,10 @@
+## [1.35.1](https://github.com/entropic-bond/entropic-bond/compare/v1.35.0...v1.35.1) (2022-11-14)
+
+
+### Bug Fixes
+
+* add missing password error ([484f245](https://github.com/entropic-bond/entropic-bond/commit/484f245470e7c0e8845ee32546d6ad89e670a440))
+
 # [1.35.0](https://github.com/entropic-bond/entropic-bond/compare/v1.34.15...v1.35.0) (2022-11-05)
 
 
