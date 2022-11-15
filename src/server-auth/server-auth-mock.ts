@@ -14,7 +14,7 @@ export class ServerAuthMock extends ServerAuthService {
 		return Promise.resolve( this._userCredentials[ userId ] as UserCredentials<T> )
 	}
 
-	setCustomCredentials( userId: string, customCredentials: CustomCredentials ): Promise<void> {
+	setCustomCredentials<T extends CustomCredentials>( userId: string, customCredentials: T ): Promise<void> {
 		if ( !this._userCredentials[ userId ] ) throw new Error( `User ${ userId } not found in the auth system` )
 		this._userCredentials[ userId ].customData = { ...customCredentials }
 

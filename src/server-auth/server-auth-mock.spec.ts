@@ -16,7 +16,7 @@ describe( 'Server Auth Mock', ()=>{
 	
 	it( 'should set custom credentials', async ()=>{
 		await ServerAuth.instance.setCustomCredentials( 'testUser1', {
-			a: 'anotherTestCustomData'
+			a: 'anotherTestCustomData', 
 		})
 		
 		const user = await ServerAuth.instance.getUser( 'testUser1' )
