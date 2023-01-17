@@ -1,3 +1,10 @@
+## [1.35.3](https://github.com/entropic-bond/entropic-bond/compare/v1.35.2...v1.35.3) (2022-11-15)
+
+
+### Bug Fixes
+
+* type setCustomCredentials ([9a2a6b0](https://github.com/entropic-bond/entropic-bond/commit/9a2a6b0fdc3536de4ae8d738928ca55e095e8830))
+
 ## [1.35.2](https://github.com/entropic-bond/entropic-bond/compare/v1.35.1...v1.35.2) (2022-11-14)
 
 
