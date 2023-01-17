@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/entropic-bond/entropic-bond/compare/v1.35.3...v1.36.0) (2023-01-17)
+
+
+### Features
+
+* implement query result set count ([b7273c9](https://github.com/entropic-bond/entropic-bond/commit/b7273c9f4bf64aa80b0a025a652d2cc9aef412b4))
+
 ## [1.35.3](https://github.com/entropic-bond/entropic-bond/compare/v1.35.2...v1.35.3) (2022-11-15)
 
 
