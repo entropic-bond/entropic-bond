@@ -28,6 +28,7 @@ export abstract class DataSource {
 	abstract save( object: Collections ): Promise< void >
 	abstract delete( id: string, collectionName: string ): Promise<void>
 	abstract next( limit?: number ): Promise< DocumentObject[] >
+	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
 	static toPropertyPathOperations<T extends Persistent>( operations: QueryOperation<T>[] ): QueryOperation<T>[] {
 		if ( !operations ) return []

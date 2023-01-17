@@ -108,6 +108,10 @@ export class Model<T extends Persistent>{
 		)
 	}
 
+	count( queryObject: QueryObject<T> ): Promise<number> {
+		return this._stream.count( queryObject as QueryObject<DocumentObject>, this.collectionName )
+	}
+
 	/**
 	 * Get the next bunch of documents matching the last query
 	 * @param limit the max amount of documents to retrieve. If not set, uses the
@@ -220,6 +224,10 @@ class Query<T extends Persistent> {
 		}
 		
 		return this
+	}
+
+	count() {
+		return this.model.count( this.queryObject )
 	}
 
 	private queryObject: QueryObject<T> = { operations: [] } as QueryObject<T>

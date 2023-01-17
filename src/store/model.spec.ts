@@ -61,7 +61,6 @@ describe( 'Model', ()=>{
 		expect( docs.length ).toBeGreaterThan( 1 )
 	})
 	
-
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
@@ -453,7 +452,12 @@ describe( 'Model', ()=>{
 
 			expect( docs[0].id ).toEqual( 'user2' )
 			expect( docs[1].id ).toEqual( 'user1' )
-		})		
+		})
+		
+		it( 'should count the documents in the collection', async ()=>{
+			expect( await model.find().count() ).toBe( 6 )
+		})
+		
 
 		describe( 'Data Cursors', ()=>{
 			beforeEach( async ()=>{

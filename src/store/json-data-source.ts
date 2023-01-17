@@ -71,6 +71,12 @@ export class JsonDataSource implements DataSource {
 		return this.resolveWithDelay( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
 	}
 
+	count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number> {
+		return this.resolveWithDelay(
+			Object.keys( this._jsonRawData[ collectionName ] ).length
+		)
+	}
+
 	get rawData() {
 		return this._jsonRawData
 	}

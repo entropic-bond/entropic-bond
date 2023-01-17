@@ -1,4 +1,4 @@
-import { DocumentObject, JsonDataSource, Persistent, Store } from '..'
+import { DocumentObject, JsonDataSource, Store } from '..'
 import { TestUser } from './mocks/test-user'
 
 describe( 'Json DataSource', ()=>{
