@@ -6,21 +6,11 @@ import { CloudStorage } from './cloud-storage'
 import { MockCloudStorage } from './mock-cloud-storage'
 import { StoredFile, StoredFileEvent } from './stored-file'
 
-class MockFile {
-	constructor( data: any[], filename: string ) {
-		this.data = data as any[]
-		this.name = filename
-	}
-	data: any
-	name: string
-	lastModified: any
-	size: number
-	type: any
-	slice( ..._args: any[] ) { return this.data }
-	stream() { return this.data }
-	text() { return Promise.resolve( this.data )}
-	arrayBuffer() { return Promise.resolve( this.data ) }
+function MockFile( data: any[], filename: string ) {
+	this.data = data as any[]
+	this.name = filename
 }
+
 global.File = MockFile as any
 
 @registerPersistentClass( 'Test' )
