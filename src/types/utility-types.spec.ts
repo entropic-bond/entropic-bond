@@ -1,5 +1,6 @@
 import type { Equal, Expect } from '@type-challenges/utils'
 import { TestPerson, Name, Coordinates, samplePerson } from '../utils/test-utils/test-person'
+import { getDeepValue } from '../utils/utils'
 import { PropPath, PropPathType } from './utility-types'
 
 const person = samplePerson()
@@ -29,7 +30,13 @@ const e: PropPath<TestPerson> = 'address.nothing.x'
 //@ts-expect-error
 const f: PropPath<TestPerson> = 'nothing.coordinates'
 
-const g: PropPath<TestPerson>[] = [
+//@ts-expect-error
+const g0: PropPath<TestPerson> = 'testMethod'
+
+//@ts-expect-error
+const g1: PropPath<TestPerson> = 'address.senderMethod'
+
+const h: PropPath<TestPerson>[] = [
 	'name',
 	'name.firstName',
 	'name.secondName',
@@ -40,6 +47,14 @@ const g: PropPath<TestPerson>[] = [
 	'address.postalAddress',
 	'age',
 	'id'
+]
+
+//@ts-expect-error
+const i: PropPath<TestPerson, number> = 'id'
+
+
+const j: PropPath<TestPerson, number>[] = [
+	'age'
 ]
 
 type cases0 = [
@@ -53,10 +68,6 @@ type cases0 = [
 	Expect<Equal< PropPathType<TestPerson, 'address.coordinates.x'>, number>>,
 	Expect<Equal< PropPathType<TestPerson, 'address.postalAddress'>, string>>,
 ]
-
-function getDeepValue<T extends {}, P extends PropPath<T>>( obj: T, path: P ): PropPathType<T, P> {
-	return path.split('.').reduce(( acc: {}, prop: string ) => acc[ prop ], obj )
-}
 
 const id =	getDeepValue( person, 'id' )
 const age =	getDeepValue( person, 'age' )

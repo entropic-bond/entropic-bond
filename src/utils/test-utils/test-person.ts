@@ -15,7 +15,9 @@ export interface TestPerson {
 	address: {
 		coordinates: Coordinates
 		postalAddress: string
+		senderMethod: ()=>void
 	},
+	testMethod: ()=>void
 }
 
 export function samplePerson(): TestPerson {
@@ -31,8 +33,10 @@ export function samplePerson(): TestPerson {
 				x: 10,
 				y: 20
 			},
-			postalAddress: 'Madison Av.'
+			postalAddress: 'Madison Av.',
+			senderMethod(){}
 		},
+		testMethod(){}
 	})
 }
 
