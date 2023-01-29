@@ -36,7 +36,7 @@ const g0: PropPath<TestPerson> = 'testMethod'
 //@ts-expect-error
 const g1: PropPath<TestPerson> = 'address.senderMethod'
 
-const h: PropPath<TestPerson>[] = [
+const h: PropPath<TestPerson, any, 5>[] = [
 	'name',
 	'name.firstName',
 	'name.secondName',
@@ -46,12 +46,12 @@ const h: PropPath<TestPerson>[] = [
 	'address.coordinates.y',
 	'address.postalAddress',
 	'age',
-	'id'
+	'id',
+	'deepProp.l1.l2.l3.l4.l5'
 ]
 
 //@ts-expect-error
 const i: PropPath<TestPerson, number> = 'id'
-
 
 const j: PropPath<TestPerson, number>[] = [
 	'age'

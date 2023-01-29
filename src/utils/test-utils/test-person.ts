@@ -18,6 +18,7 @@ export interface TestPerson {
 		senderMethod: ()=>void
 	},
 	testMethod: ()=>void
+	deepProp: { l1: { l2: { l3: { l4: { l5: { l6: {}}}}}}}
 }
 
 export function samplePerson(): TestPerson {
@@ -36,7 +37,8 @@ export function samplePerson(): TestPerson {
 			postalAddress: 'Madison Av.',
 			senderMethod(){}
 		},
-		testMethod(){}
+		testMethod(){},
+		deepProp: { l1: { l2: { l3: { l4: { l5: { l6: {}}}}}}}
 	})
 }
 
