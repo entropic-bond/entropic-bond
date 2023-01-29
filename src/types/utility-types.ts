@@ -94,7 +94,7 @@ export type PropPath<T extends {}, AllowedTypes=any, MaxDepth extends number = 3
 	[ P in keyof T ]: T[P] extends Function? never : T[P] extends AllowedTypes? T[P] extends Primitive | ArrayLike<any>
 		? Concat<Prefix, P>
 		: Concat<Prefix, P> | PropPath <T[P], AllowedTypes, Decr[MaxDepth], `${ Concat<Prefix, P> }.`> : never
-}[ keyof T ] : never
+}[ keyof T ] & string: never
 
 export type PropPathType<T, Path, MaxDepth extends number = 2> = MaxDepth extends number
 	? Path extends keyof T

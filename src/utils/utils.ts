@@ -56,6 +56,6 @@ export function snakeCase( str: string, snakeChar: string = '-' ) {
  * @param path a string containing the subproperty path in dotted notation
  * @returns the value of the supproperty in the passed object
  */
-export function getDeepValue<T extends {}, P extends PropPath<T> & string>( obj: T, path: P ): PropPathType<T, P> {
+export function getDeepValue<T extends {}, P extends PropPath<T>>( obj: T, path: P ): PropPathType<T, P> {
 	return path.split('.').reduce(( acc: {}, prop: string ) => acc[ prop ], obj )
 }
