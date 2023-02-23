@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/entropic-bond/entropic-bond/compare/v1.37.0...v1.38.0) (2023-02-23)
+
+
+### Features
+
+* clone ([3ec86f8](https://github.com/entropic-bond/entropic-bond/commit/3ec86f812eb761a512aadb2d31d13eb4c6abbe8a))
+
 # [1.37.0](https://github.com/entropic-bond/entropic-bond/compare/v1.36.1...v1.37.0) (2023-01-29)
 
 
