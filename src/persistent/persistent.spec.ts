@@ -302,6 +302,15 @@ describe( 'Persistent', ()=>{
 		}).toThrow( 'You should register class undefined prior to use. Class name not found in object {"id":"id"}' )
 	})
 
+	it( 'should clone persistent properties of an instance into this instance', ()=>{
+		const instace = new Person( 'personId' )
+		instace.clone( person )
+
+		expect( instace.id ).toBe( 'personId' )
+		expect( instace.name ).toBe( 'Maria')
+	})
+	
+
 	describe( 'Properties instance of Persistent type', ()=>{
 		beforeEach(()=>{
 			const subObject = new PersistentClass()

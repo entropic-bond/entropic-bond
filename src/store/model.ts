@@ -158,6 +158,20 @@ class Query<T extends Persistent> {
 		return this
 	}
 
+	// where2<P extends PropPath<T>>( property: P, operator: QueryOperator, value: PropPathType<T, P> ) {
+	// 	if ( property.indexOf( '.' ) > 0 ) return this.whereDeepProp( property, operator, value )
+
+	// 	let val = value instanceof Persistent? { id: value.id } : value
+
+	// 	this.queryObject.operations.push({
+	// 		property,
+	// 		operator,
+	// 		value: val
+	// 	})
+
+	// 	return this
+	// }
+
 	//TODO: remove as it is redundant with where
 	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
 		const props = propertyPath.split( '.' )

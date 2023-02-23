@@ -90,6 +90,12 @@ export class Persistent {
 		}))
 	}
 
+	clone( instance: Persistent ) {
+		const obj = instance.toObject() as any
+		delete obj['id']
+		this.fromObject( obj )
+	}
+
 	fromObject( obj: PersistentObject<this> ) {
 		this.fromObj( obj )
 		this.onSerialized()
