@@ -1,3 +1,15 @@
+# [1.37.0](https://github.com/entropic-bond/entropic-bond/compare/v1.36.1...v1.37.0) (2023-01-29)
+
+
+### Bug Fixes
+
+* type improvements ([acda0ad](https://github.com/entropic-bond/entropic-bond/commit/acda0adbb837ca9411368a03964002afc6f12187))
+
+
+### Features
+
+* PropPath to optionally filter subprops by type ([490e616](https://github.com/entropic-bond/entropic-bond/commit/490e6169a522574c5ccd99fc4249d36f5651f7c0))
+
 ## [1.36.1](https://github.com/entropic-bond/entropic-bond/compare/v1.36.0...v1.36.1) (2023-01-18)
 
 
