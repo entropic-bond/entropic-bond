@@ -1,3 +1,10 @@
+## [1.38.1](https://github.com/entropic-bond/entropic-bond/compare/v1.38.0...v1.38.1) (2023-03-11)
+
+
+### Bug Fixes
+
+* populate to return instance type promise ([c1d68a1](https://github.com/entropic-bond/entropic-bond/commit/c1d68a1bf325fec1750723c8730b6aa287655320))
+
 # [1.38.0](https://github.com/entropic-bond/entropic-bond/compare/v1.37.0...v1.38.0) (2023-02-23)
 
 
