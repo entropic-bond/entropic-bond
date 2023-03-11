@@ -31,10 +31,16 @@ export class Store {
 		return new Model<T>( Store._dataSource, document, subCollection )		
 	}
 
-	static async populate< T extends Persistent>( instance: T | readonly T[] ): Promise<T | T[]> {
+	/**
+	 * Populates property references with actual data from the store.
+	 * It will not retrieve data if the instance is already populated
+	 * @param instance the data to be populated.
+	 * @returns the populated instance
+	 */
+	static async populate<T extends Persistent | Persistent[]>( instance: T ): Promise<T> {
 		if ( !instance ) return
 		
-		const populateItem = async ( item: T ) => {
+		const populateItem = async ( item: Persistent ) => {
 			const ref: DocumentReference = item as any
 			if ( !ref.__documentReference ) return item
 			const model = this.getModel( ref.__documentReference.storedInCollection )
@@ -47,12 +53,13 @@ export class Store {
 		}
 		
 		if ( Array.isArray( instance ) ) {
-			const promises = instance.map( item => populateItem( item ) )
-			const items = await Promise.all( promises )
-			return items.filter( item => item )
+			const items = await Promise.all(
+				instance.map( item => populateItem( item ) )
+			)
+			return items.filter( item => item ) as T
 		}
 		else {
-			return populateItem( instance as T )
+			return populateItem( instance ) as Promise<T>
 		}
 	}
 
