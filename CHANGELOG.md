@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/entropic-bond/entropic-bond/compare/v1.38.1...v1.39.0) (2023-03-12)
+
+
+### Features
+
+* implement registerLegacyClassName ([3dc80d2](https://github.com/entropic-bond/entropic-bond/commit/3dc80d20f005549cb52290cd5d9aa376a1c1f294))
+
 ## [1.38.1](https://github.com/entropic-bond/entropic-bond/compare/v1.38.0...v1.38.1) (2023-03-11)
 
 
