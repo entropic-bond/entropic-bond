@@ -1,9 +1,10 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
 }
 
+@registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
 	set persistentProp( val: number ) { this._persistentProp = val }
@@ -654,17 +655,19 @@ describe( 'Persistent', ()=>{
 
 	})
 
-	describe( 'Persisten Class collection retrieval', ()=>{
+	describe( 'Persistent Class collection retrieval', ()=>{
 
 		it( 'should retrieve all registered classes by class name', ()=>{
-			expect( Persistent.registeredClasses() ).toHaveLength( 6 )
+			expect( Persistent.registeredClasses() ).toHaveLength( 7 )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
+			expect( Persistent.registeredClasses() ).toContain( 'LegacyClassName' )
 		})
 		
 		it( 'should retrieve classes by type', ()=>{
-			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 4 )
+			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 5 )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'PersistentClass' )
+			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'LegacyClassName' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations3' )
 		})
@@ -674,5 +677,28 @@ describe( 'Persistent', ()=>{
 			expect( Persistent.classesExtending( AbstractClass ) ).toContain( 'ConcreteClass' )
 		})
 		
+	})
+
+	describe( 'Persistent instantation', ()=>{
+
+		it( 'should create an instance of a registered class', ()=>{
+			const instance = Persistent.createInstance({ __className: 'PersistentClass', id: 'testPersistent' } )
+			expect( instance ).toBeInstanceOf( PersistentClass )
+			expect( instance.id ).toEqual( 'testPersistent' )
+		})
+
+		it( 'should create an instance of a registered legacy class', ()=>{
+			const instance = Persistent.createInstance({ __className: 'LegacyClassName', id: 'testPersistent' } )
+			expect( instance ).toBeInstanceOf( PersistentClass )
+			expect( instance.id ).toEqual( 'testPersistent' )
+		})
+
+		it( 'should not create persistent objects with legacy name', ()=>{
+			const instance = new PersistentClass( 'testPersistent' )
+
+			expect( instance.toObject().__className ).toBe( 'PersistentClass' )
+		})
+		
+
 	})
 })

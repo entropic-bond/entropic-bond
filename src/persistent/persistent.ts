@@ -35,26 +35,66 @@ export interface DocumentReference {
 	}
 }
 
+/**
+ * A class that provides several methods to serialize and deserialize objects.
+ */
 export class Persistent {
+
+	/**
+	 * Registers a class to be used by the persistence engine.
+	 * @param className the name of the class to be registered
+	 * @param factory the constructor of the registered class
+	 * @param annotation an annotation associated with the class
+	 */
 	static registerFactory( className: string, factory: PersistentConstructor, annotation?: unknown ) {
 		this._factoryMap[ className ] = { factory, annotation }
 	}
 
+	/**
+	 * Returns the constructor of a registered class
+	 * @param className the name of the class to be retrieved
+	 * @returns the constructor of the class
+	 * @throws an error if the class is not registered
+	 * @see registerFactory
+	 * @see registeredClasses
+	 * @see classesExtending
+	 * @see annotations
+	 */
 	static classFactory( className: string ) {
 		if ( !this._factoryMap[ className ] ) throw new Error( `You should register class ${ className } prior to use.` )
 		return this._factoryMap[ className ].factory
 	}
 
+	/**
+	 * Returns the names of all registered classes
+	 * @returns the names of all registered classes
+	 * @see registerFactory
+	 * @see classFactory
+	 */
 	static registeredClasses() {
 		return Object.keys( this._factoryMap )
 	}
 
+	/**
+	 * Returns the names of all registered classes that extend a given class
+	 * @param derivedFrom the class to be extended
+	 * @returns the names of all registered classes that extend the given class
+	 * @see registerFactory
+	 * @see classFactory
+	 */
 	static classesExtending( derivedFrom: PersistentConstructor | Function ) {
 		return Object.entries( this._factoryMap )
 			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom )
 			.map(([ className ]) => className )
 	}
 
+	/**
+	 * Returns the annotation associated with a registered class
+	 * @param className the name of the class to be retrieved
+	 * @returns the annotation associated with the class
+	 * @throws an error if the class is not registered
+	 * @see registerFactory
+	 */
 	static annotations( className: string | Persistent | PersistentConstructor ) {
 		if ( className instanceof Persistent ) className = className.className
 		else if ( typeof className === 'string' ) className
@@ -313,10 +353,19 @@ interface PersistentProperty {
 	fromObjectSpecial?: ( obj: any ) => any
 }
 
+/**
+ * Decorator for a property that you want to persist.
+ */
 export function persistent( target: Persistent, property: string ) {
 	return persistentParser()( target, property );
 }
 
+/**
+ * Decorator for a property that is a reference to a persistent object and should be stored
+ * in a specific collection.
+ * @param collectionPath the path to the collection where the reference should be stored.
+ * @returns 
+ */
 export function persistentReferenceAt( collectionPath: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
@@ -395,10 +444,27 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 	}
 }
 
+/**
+ * Decorator to register a persistent class. Entropic Bond needs that you register
+ * all persistent classes that you want to use in any persistent stream. 
+ * @param className the name of the class
+ * @param annotation an optional annotation that can be used to store additional information
+ */
 export function registerPersistentClass( className: string, annotation?: unknown ) {
 	return ( constructor: PersistentConstructor ) => {
 		Persistent.registerFactory( className, constructor, annotation )
 		constructor.prototype.__className = className
+	}
+}
+
+/**
+ * Decorator to register a legacy name for a persistent class. This is useful when you want to
+ * be able to load old data that was stored with a different class name.
+ * @param legacyName the legacy name of the class
+ */
+export function registerLegacyClassName( legacyName: string ) {
+	return ( constructor: PersistentConstructor ) => {
+		Persistent.registerFactory( legacyName, constructor )
 	}
 }
 
