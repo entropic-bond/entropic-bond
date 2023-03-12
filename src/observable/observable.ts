@@ -1,6 +1,21 @@
 export type Callback<T> = ( event: T ) => void
 export type Unsubscriber = ()=>void
 
+/**
+ * Implements the Observer pattern.
+ * The Observable class is used to notify a list of subscribers when an event occurs.
+ * The subscribers are callback functions that are called when the event occurs.
+ * The event is passed as a parameter to the callback function.
+ * @example
+ * // Create an observable
+ * const observable = new Observable<number>()
+ * // Subscribe a listener
+ * const unsubscribe = observable.subscribe( event => console.log( event ) )
+ * // Notify the subscribers
+ * observable.notify( 1 )
+ * // Unsubscribe the listener
+ * unsubscribe()
+ */
 export class Observable<T> {
 
 	/**
