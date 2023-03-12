@@ -10,8 +10,11 @@ interface FactoryMap {
 	}
 }
 
-// TODO: review and compare with DocumentReference
+/**
+ * The corresponding type of the plain object of a persistent class.
+ */
 export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
+	// TODO: review and compare with DocumentReference
 	__className?: string
 	__rootCollections?: Collections
 	__documentReference?: {
@@ -19,6 +22,9 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 	}
 }
 
+/**
+ * The type of the plain object of a persistent class for all the nested properties.
+ */
 export type MakePersistentObjects<T> = {
   [A in keyof T]: T[A] extends Persistent? PersistentObject<T[A]> : MakePersistentObjects<T[A]>
 }
@@ -27,6 +33,9 @@ export type Collections = {
 	[ collectionPath: string ]: PersistentObject<Persistent>[]
 }
 
+/**
+ * Stores information about a reference in another collection.
+ */
 export interface DocumentReference {
 	id: string
 	__className: string
@@ -104,25 +113,53 @@ export class Persistent {
 		return this._factoryMap[ className ].annotation
 	}
 
+	/**
+	 * Returns a new instance of Persistent class.
+	 * @param className the initial id of this instance. If not provided, a new id will be generated
+	 */
 	constructor( id: string = uuid() ) {
 		this._id = id
 	}
 
+	/**
+	 * Gets the class name of this instance.
+	 */
 	get className(): string {
 		return this[ '__className' ];
 	}
 
+	/**
+	 * Sets the id of this instance.
+	 * @param value the id of this instance
+	 */
 	protected setId( value: string ) {
 		this._id = value
 	}
 
+	/**
+	 * Returns the id of this instance.
+	 * @returns the id of this instance
+	 */
 	get id() {
 		return this._id;
 	}
 
+	/**
+	 * This method is called by the persistence engine when the instance has been
+	 * just serialized. It is called after the properties are initialized.
+	 */
 	protected onSerialized() {}
+
+	/**
+	 * This method is called by the persistence engine before the instance is
+	 * serialized. 
+	 */
 	protected beforeSerialize() {}
 
+	/**
+	 * Returns an array of the persistent properties of this instance.
+	 * @returns an array of the persistent properties of this instance
+	 */
 	getPersistentProperties(): readonly PersistentProperty[] {
 		return this._persistentProperties.map( prop => ({
 			...prop,
@@ -130,12 +167,29 @@ export class Persistent {
 		}))
 	}
 
+	/**
+	 * Copy the persistent properties of the given instance to this instance. 
+	 * The property `id` will be ignored.
+	 * Only the properties that are not null or undefined will be copied.
+	 * @param instance the instance to be copied
+	 * @returns this instance
+	 * @see fromObject
+	 * @see toObject
+	 */
 	clone( instance: Persistent ) {
 		const obj = instance.toObject() as any
 		delete obj['id']
 		this.fromObject( obj )
 	}
 
+	/**
+	 * Initializes the persistent properties of this instance from the properties 
+	 * of given object.
+	 * @param obj the object to be copied
+	 * @returns this instance
+	 * @see clone
+	 * @see toObject
+	 */
 	fromObject( obj: PersistentObject<this> ) {
 		this.fromObj( obj )
 		this.onSerialized()
@@ -157,6 +211,13 @@ export class Persistent {
 		return this
 	}
 
+	/**
+	 * Returns a plain object representation of this instance.
+	 * Only the properties that are not null or undefined will be copied.
+	 * @returns a plain object representation of this instance
+	 * @see fromObject
+	 * @see clone
+	 */
 	toObject(): PersistentObject<this> {
 		this.beforeSerialize()
 		const rootCollections: Collections = {}
