@@ -1,3 +1,5 @@
+entropic-bond / [Exports](modules.md)
+
 # Entropic Bond
 
 > Tidy up your messy components
@@ -14,12 +16,7 @@
 
 ## How to use
 
-
 Typically, you will derive all your business logic entities from the `EntropicComponent` class. This class provides two main functionalities; persistence and observability.
-
-### API
-
-You can find the API documentation [here](docs/modules.md).
 
 ### Persistence
 
@@ -91,7 +88,3 @@ Store.useDataSource( new JsonDataSource() )
 ### Observability
 
 ### Auth
-
-
-
-
