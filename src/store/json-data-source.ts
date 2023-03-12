@@ -11,16 +11,36 @@ type QueryProcessors = {
 	[ P in keyof Required<QueryObject<unknown>> ]: Function
 }
 
+/**
+ * A concrete implementation of the DataSource interface uses an in-memory data store
+ * initialized by a JSON object.
+ * It is useful for testing purposes.
+ * The data in the JSON object is not persisted.
+ */
 export class JsonDataSource implements DataSource {
+
+	/**
+	 * @param jsonRawData the JSON object to be used as data store
+	 */
 	constructor( jsonRawData?: JsonRawData ) {
 		this._jsonRawData = jsonRawData;
 	}
 
+	/**
+	 * Set the JSON object to initialize the data store. Use to set the it after 
+	 * the constructor has been called.
+	 * @param jsonRawData the JSON object to be used as data store
+	 */
 	setDataStore( rawDataStore: JsonRawData ) {
 		this._jsonRawData = rawDataStore;
 		return this
 	}
 
+	/**
+	 * Introduce a delay in the execution of operations to simulate a real data source
+	 * @param miliSeconds the number of milliseconds to delay the execution of operations
+	 * @returns a chainable reference to this object
+	 */
 	simulateDelay( miliSeconds: number ) {
 		this._simulateDelay = miliSeconds
 		return this
@@ -77,10 +97,17 @@ export class JsonDataSource implements DataSource {
 		)
 	}
 
+	/**
+	 * @returns the raw data store data as a JSON object
+	 */
 	get rawData() {
 		return this._jsonRawData
 	}
 
+	/**
+	 * Wait for all pending promises to be resolved
+	 * @returns a promise that resolves when all pending promises are resolved
+	 */
 	wait() {
 		return Promise.all([ ...this._pendingPromises ])
 	}
