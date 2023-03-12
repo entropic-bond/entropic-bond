@@ -29,6 +29,10 @@ export type MakePersistentObjects<T> = {
   [A in keyof T]: T[A] extends Persistent? PersistentObject<T[A]> : MakePersistentObjects<T[A]>
 }
 
+/**
+ * A collection of document objects typically returned by Persistent.toObject()
+ * @see Persistent.toObject
+ */
 export type Collections = {
 	[ collectionPath: string ]: PersistentObject<Persistent>[]
 }

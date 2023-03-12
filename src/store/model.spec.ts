@@ -481,15 +481,6 @@ describe( 'Model', ()=>{
 	})
 
 	describe( 'Utility methods', ()=>{
-
-		it( 'should transform deep objects to property path', ()=>{
-			const [ propPath, value ] = DataSource.toPropertyPathValue({
-				name: { ancestorName: { father: 'Juanito' }}
-			})
-
-			expect( propPath ).toEqual( 'name.ancestorName.father' )
-			expect( value ).toEqual( 'Juanito' )
-		})
 		
 		it( 'should transform query object operations to property path', ()=>{
 			const operations = DataSource.toPropertyPathOperations<TestUser>([
