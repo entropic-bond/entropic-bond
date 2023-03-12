@@ -16,8 +16,6 @@
 
 ### Properties
 
-- [\_authService](ServerAuth.md#_authservice)
-- [\_instance](ServerAuth.md#_instance)
 - [error](ServerAuth.md#error)
 
 ### Accessors
@@ -44,29 +42,9 @@
 
 #### Defined in
 
-[server-auth/server-auth.ts:17](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L17)
+[server-auth/server-auth.ts:17](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L17)
 
 ## Properties
-
-### \_authService
-
-▪ `Static` `Private` **\_authService**: [`ServerAuthService`](ServerAuthService.md)
-
-#### Defined in
-
-[server-auth/server-auth.ts:48](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L48)
-
-___
-
-### \_instance
-
-▪ `Static` `Private` **\_instance**: [`ServerAuth`](ServerAuth.md) = `undefined`
-
-#### Defined in
-
-[server-auth/server-auth.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L47)
-
-___
 
 ### error
 
@@ -80,7 +58,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L15)
+[server-auth/server-auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L15)
 
 ## Accessors
 
@@ -94,7 +72,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:26](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L26)
+[server-auth/server-auth.ts:26](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L26)
 
 ## Methods
 
@@ -118,7 +96,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:43](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L43)
+[server-auth/server-auth.ts:43](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L43)
 
 ___
 
@@ -148,7 +126,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:31](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L31)
+[server-auth/server-auth.ts:31](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L31)
 
 ___
 
@@ -179,7 +157,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L39)
+[server-auth/server-auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L39)
 
 ___
 
@@ -210,7 +188,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:35](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L35)
+[server-auth/server-auth.ts:35](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L35)
 
 ___
 
@@ -230,4 +208,4 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth.ts:19](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/server-auth/server-auth.ts#L19)
+[server-auth/server-auth.ts:19](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth.ts#L19)

@@ -16,16 +16,6 @@ A class that provides several methods to serialize and deserialize objects.
 
 - [constructor](StoredFile.md#constructor)
 
-### Properties
-
-- [\_cloudStorageProviderName](StoredFile.md#_cloudstorageprovidername)
-- [\_onChange](StoredFile.md#_onchange)
-- [\_originalFileName](StoredFile.md#_originalfilename)
-- [\_pendingData](StoredFile.md#_pendingdata)
-- [\_provider](StoredFile.md#_provider)
-- [\_reference](StoredFile.md#_reference)
-- [\_url](StoredFile.md#_url)
-
 ### Accessors
 
 - [className](StoredFile.md#classname)
@@ -75,77 +65,7 @@ Returns a new instance of Persistent class.
 
 #### Defined in
 
-[persistent/persistent.ts:124](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L124)
-
-## Properties
-
-### \_cloudStorageProviderName
-
-• `Private` **\_cloudStorageProviderName**: `string`
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:91](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L91)
-
-___
-
-### \_onChange
-
-• `Private` **\_onChange**: [`Observable`](Observable.md)<[`StoredFileChange`](../interfaces/StoredFileChange.md)\>
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:95](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L95)
-
-___
-
-### \_originalFileName
-
-• `Private` **\_originalFileName**: `string`
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:92](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L92)
-
-___
-
-### \_pendingData
-
-• `Private` **\_pendingData**: [`StorableData`](../modules.md#storabledata)
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:94](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L94)
-
-___
-
-### \_provider
-
-• `Private` **\_provider**: [`CloudStorage`](CloudStorage.md)
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:93](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L93)
-
-___
-
-### \_reference
-
-• `Private` **\_reference**: `string`
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:89](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L89)
-
-___
-
-### \_url
-
-• `Private` **\_url**: `string`
-
-#### Defined in
-
-[cloud-storage/stored-file.ts:90](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L90)
+[persistent/persistent.ts:124](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L124)
 
 ## Accessors
 
@@ -165,7 +85,7 @@ Persistent.className
 
 #### Defined in
 
-[persistent/persistent.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L131)
+[persistent/persistent.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L131)
 
 ___
 
@@ -187,7 +107,7 @@ Persistent.id
 
 #### Defined in
 
-[persistent/persistent.ts:147](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L147)
+[persistent/persistent.ts:147](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L147)
 
 ___
 
@@ -201,7 +121,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:81](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L81)
+[cloud-storage/stored-file.ts:81](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L81)
 
 ___
 
@@ -215,7 +135,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:54](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L54)
+[cloud-storage/stored-file.ts:54](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L54)
 
 • `set` **provider**(`value`): `void`
 
@@ -231,7 +151,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:49](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L49)
+[cloud-storage/stored-file.ts:49](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L49)
 
 ___
 
@@ -245,7 +165,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:66](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L66)
+[cloud-storage/stored-file.ts:66](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L66)
 
 ## Methods
 
@@ -266,7 +186,7 @@ serialized.
 
 #### Defined in
 
-[persistent/persistent.ts:161](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L161)
+[persistent/persistent.ts:161](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L161)
 
 ___
 
@@ -301,7 +221,7 @@ this instance
 
 #### Defined in
 
-[persistent/persistent.ts:183](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L183)
+[persistent/persistent.ts:183](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L183)
 
 ___
 
@@ -315,7 +235,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:41](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L41)
+[cloud-storage/stored-file.ts:41](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L41)
 
 ___
 
@@ -349,7 +269,7 @@ this instance
 
 #### Defined in
 
-[persistent/persistent.ts:197](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L197)
+[persistent/persistent.ts:197](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L197)
 
 ___
 
@@ -371,7 +291,7 @@ an array of the persistent properties of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:167](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L167)
+[persistent/persistent.ts:167](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L167)
 
 ___
 
@@ -391,7 +311,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:85](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L85)
+[cloud-storage/stored-file.ts:85](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L85)
 
 ___
 
@@ -412,7 +332,7 @@ just serialized. It is called after the properties are initialized.
 
 #### Defined in
 
-[persistent/persistent.ts:155](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L155)
+[persistent/persistent.ts:155](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L155)
 
 ___
 
@@ -432,7 +352,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:22](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L22)
+[cloud-storage/stored-file.ts:22](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L22)
 
 ___
 
@@ -452,7 +372,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:70](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L70)
+[cloud-storage/stored-file.ts:70](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L70)
 
 ___
 
@@ -478,7 +398,7 @@ Sets the id of this instance.
 
 #### Defined in
 
-[persistent/persistent.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L139)
+[persistent/persistent.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L139)
 
 ___
 
@@ -506,7 +426,7 @@ a plain object representation of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:225](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L225)
+[persistent/persistent.ts:225](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L225)
 
 ___
 
@@ -520,7 +440,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:37](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L37)
+[cloud-storage/stored-file.ts:37](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L37)
 
 ___
 
@@ -556,7 +476,7 @@ the annotation associated with the class
 
 #### Defined in
 
-[persistent/persistent.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L111)
+[persistent/persistent.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L111)
 
 ___
 
@@ -595,7 +515,7 @@ the constructor of the class
 
 #### Defined in
 
-[persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L76)
+[persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L76)
 
 ___
 
@@ -628,7 +548,7 @@ the names of all registered classes that extend the given class
 
 #### Defined in
 
-[persistent/persistent.ts:98](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L98)
+[persistent/persistent.ts:98](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L98)
 
 ___
 
@@ -658,7 +578,7 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:384](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L384)
+[persistent/persistent.ts:384](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L384)
 
 ___
 
@@ -686,7 +606,7 @@ Registers a class to be used by the persistence engine.
 
 #### Defined in
 
-[persistent/persistent.ts:62](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L62)
+[persistent/persistent.ts:62](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L62)
 
 ___
 
@@ -713,4 +633,4 @@ the names of all registered classes
 
 #### Defined in
 
-[persistent/persistent.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L87)
+[persistent/persistent.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L87)

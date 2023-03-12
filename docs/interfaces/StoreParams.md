@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L16)
+[cloud-storage/stored-file.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L16)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:13](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L13)
+[cloud-storage/stored-file.ts:13](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L13)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:14](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L14)
+[cloud-storage/stored-file.ts:14](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L14)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[cloud-storage/stored-file.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-storage/stored-file.ts#L15)
+[cloud-storage/stored-file.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/stored-file.ts#L15)

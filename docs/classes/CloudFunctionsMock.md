@@ -12,10 +12,6 @@
 
 - [constructor](CloudFunctionsMock.md#constructor)
 
-### Properties
-
-- [\_registeredFunctions](CloudFunctionsMock.md#_registeredfunctions)
-
 ### Methods
 
 - [callFunction](CloudFunctionsMock.md#callfunction)
@@ -35,17 +31,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-functions/cloud-functions-mock.ts#L8)
-
-## Properties
-
-### \_registeredFunctions
-
-• `Private` **\_registeredFunctions**: `FunctionCollection`
-
-#### Defined in
-
-[cloud-functions/cloud-functions-mock.ts:20](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-functions/cloud-functions-mock.ts#L20)
+[cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions-mock.ts#L8)
 
 ## Methods
 
@@ -77,7 +63,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions-mock.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-functions/cloud-functions-mock.ts#L16)
+[cloud-functions/cloud-functions-mock.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions-mock.ts#L16)
 
 ___
 
@@ -108,4 +94,4 @@ ___
 
 #### Defined in
 
-[cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/cloud-functions/cloud-functions-mock.ts#L12)
+[cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions-mock.ts#L12)

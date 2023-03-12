@@ -20,9 +20,6 @@ method before using the Auth class.
 
 ### Properties
 
-- [\_onAuthStateChange](Auth.md#_onauthstatechange)
-- [\_authService](Auth.md#_authservice)
-- [\_instance](Auth.md#_instance)
 - [error](Auth.md#error)
 
 ### Accessors
@@ -31,7 +28,6 @@ method before using the Auth class.
 
 ### Methods
 
-- [authStateChanged](Auth.md#authstatechanged)
 - [linkAdditionalProvider](Auth.md#linkadditionalprovider)
 - [login](Auth.md#login)
 - [logout](Auth.md#logout)
@@ -54,39 +50,9 @@ method before using the Auth class.
 
 #### Defined in
 
-[auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L39)
+[auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L39)
 
 ## Properties
-
-### \_onAuthStateChange
-
-• `Private` **\_onAuthStateChange**: [`Observable`](Observable.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\>
-
-#### Defined in
-
-[auth/auth.ts:170](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L170)
-
-___
-
-### \_authService
-
-▪ `Static` `Private` **\_authService**: [`AuthService`](AuthService.md)
-
-#### Defined in
-
-[auth/auth.ts:169](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L169)
-
-___
-
-### \_instance
-
-▪ `Static` `Private` **\_instance**: [`Auth`](Auth.md) = `null`
-
-#### Defined in
-
-[auth/auth.ts:168](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L168)
-
-___
 
 ### error
 
@@ -100,7 +66,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:37](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L37)
+[auth/auth.ts:37](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L37)
 
 ## Accessors
 
@@ -118,29 +84,9 @@ the authentication service
 
 #### Defined in
 
-[auth/auth.ts:63](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L63)
+[auth/auth.ts:63](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L63)
 
 ## Methods
-
-### authStateChanged
-
-▸ `Private` **authStateChanged**(`userCredentials`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `userCredentials` | [`UserCredentials`](../interfaces/UserCredentials.md)<{}\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[auth/auth.ts:164](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L164)
-
-___
 
 ### linkAdditionalProvider
 
@@ -173,7 +119,7 @@ a promise that resolves when the process is done
 
 #### Defined in
 
-[auth/auth.ts:148](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L148)
+[auth/auth.ts:148](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L148)
 
 ___
 
@@ -216,7 +162,7 @@ a promise that resolves to the user credentials
 
 #### Defined in
 
-[auth/auth.ts:91](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L91)
+[auth/auth.ts:91](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L91)
 
 ___
 
@@ -238,7 +184,7 @@ a promise that resolves when the user is logged out
 
 #### Defined in
 
-[auth/auth.ts:99](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L99)
+[auth/auth.ts:99](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L99)
 
 ___
 
@@ -285,7 +231,7 @@ a function to remove the listener
 
 #### Defined in
 
-[auth/auth.ts:128](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L128)
+[auth/auth.ts:128](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L128)
 
 ___
 
@@ -313,7 +259,7 @@ Removes a listener that was added by `onAuthStateChange` method.
 
 #### Defined in
 
-[auth/auth.ts:136](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L136)
+[auth/auth.ts:136](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L136)
 
 ___
 
@@ -341,7 +287,7 @@ a promise that resolves when the process is done
 
 #### Defined in
 
-[auth/auth.ts:108](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L108)
+[auth/auth.ts:108](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L108)
 
 ___
 
@@ -384,7 +330,7 @@ a promise that resolves to the user credentials
 
 #### Defined in
 
-[auth/auth.ts:77](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L77)
+[auth/auth.ts:77](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L77)
 
 ___
 
@@ -419,7 +365,7 @@ a promise that resolves when the process is done
 
 #### Defined in
 
-[auth/auth.ts:160](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L160)
+[auth/auth.ts:160](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L160)
 
 ___
 
@@ -442,4 +388,4 @@ You need to register an authentication service before using the Auth class.
 
 #### Defined in
 
-[auth/auth.ts:52](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L52)
+[auth/auth.ts:52](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L52)

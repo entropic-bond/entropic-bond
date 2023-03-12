@@ -18,6 +18,10 @@ entropic-bond / [Exports](modules.md)
 
 Typically, you will derive all your business logic entities from the `EntropicComponent` class. This class provides two main functionalities; persistence and observability.
 
+### API
+
+You can find the API documentation [here](docs/modules.md).
+
 ### Persistence
 
 The persistence mechanism allows defining which entities and which properties of those entities should be stored in the database. To make an entity persistent, it should derive from the `EntropicComponent` class or the `Persistent` class. 

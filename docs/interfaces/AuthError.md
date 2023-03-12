@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[auth/auth.ts:21](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L21)
+[auth/auth.ts:21](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L21)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth.ts#L22)
+[auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L22)

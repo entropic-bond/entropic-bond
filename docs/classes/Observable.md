@@ -32,10 +32,6 @@ unsubscribe()
 
 - [constructor](Observable.md#constructor)
 
-### Properties
-
-- [subscribers](Observable.md#subscribers)
-
 ### Methods
 
 - [notify](Observable.md#notify)
@@ -53,16 +49,6 @@ unsubscribe()
 | Name |
 | :------ |
 | `T` |
-
-## Properties
-
-### subscribers
-
-• `Private` **subscribers**: [`Callback`](../modules.md#callback)<`T`\>[] = `[]`
-
-#### Defined in
-
-[observable/observable.ts:51](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/observable/observable.ts#L51)
 
 ## Methods
 
@@ -84,7 +70,7 @@ Notifies all the subscribers with the event passed as parameter.
 
 #### Defined in
 
-[observable/observable.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/observable/observable.ts#L47)
+[observable/observable.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L47)
 
 ___
 
@@ -109,7 +95,7 @@ a function to unsubscribe the listener from further notifications
 
 #### Defined in
 
-[observable/observable.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/observable/observable.ts#L28)
+[observable/observable.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L28)
 
 ___
 
@@ -131,4 +117,4 @@ Removes the callback from the notification list.
 
 #### Defined in
 
-[observable/observable.ts:38](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/observable/observable.ts#L38)
+[observable/observable.ts:38](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L38)

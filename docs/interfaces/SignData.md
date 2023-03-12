@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[auth/user-auth-types.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/user-auth-types.ts#L16)
+[auth/user-auth-types.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/user-auth-types.ts#L16)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[auth/user-auth-types.ts:17](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/user-auth-types.ts#L17)
+[auth/user-auth-types.ts:17](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/user-auth-types.ts#L17)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[auth/user-auth-types.ts:19](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/user-auth-types.ts#L19)
+[auth/user-auth-types.ts:19](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/user-auth-types.ts#L19)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[auth/user-auth-types.ts:18](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/user-auth-types.ts#L18)
+[auth/user-auth-types.ts:18](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/user-auth-types.ts#L18)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[auth/user-auth-types.ts:20](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/user-auth-types.ts#L20)
+[auth/user-auth-types.ts:20](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/user-auth-types.ts#L20)

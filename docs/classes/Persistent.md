@@ -18,12 +18,6 @@ A class that provides several methods to serialize and deserialize objects.
 
 - [constructor](Persistent.md#constructor)
 
-### Properties
-
-- [\_id](Persistent.md#_id)
-- [\_persistentProperties](Persistent.md#_persistentproperties)
-- [\_factoryMap](Persistent.md#_factorymap)
-
 ### Accessors
 
 - [className](Persistent.md#classname)
@@ -32,20 +26,12 @@ A class that provides several methods to serialize and deserialize objects.
 ### Methods
 
 - [beforeSerialize](Persistent.md#beforeserialize)
-- [buildRefObject](Persistent.md#buildrefobject)
 - [clone](Persistent.md#clone)
-- [fromDeepObject](Persistent.md#fromdeepobject)
-- [fromObj](Persistent.md#fromobj)
 - [fromObject](Persistent.md#fromobject)
 - [getPersistentProperties](Persistent.md#getpersistentproperties)
 - [onSerialized](Persistent.md#onserialized)
-- [pushDocument](Persistent.md#pushdocument)
-- [removeUnderscore](Persistent.md#removeunderscore)
 - [setId](Persistent.md#setid)
-- [toDeepObj](Persistent.md#todeepobj)
-- [toObj](Persistent.md#toobj)
 - [toObject](Persistent.md#toobject)
-- [toReferenceObj](Persistent.md#toreferenceobj)
 - [annotations](Persistent.md#annotations)
 - [classFactory](Persistent.md#classfactory)
 - [classesExtending](Persistent.md#classesextending)
@@ -69,37 +55,7 @@ Returns a new instance of Persistent class.
 
 #### Defined in
 
-[persistent/persistent.ts:124](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L124)
-
-## Properties
-
-### \_id
-
-• `Private` **\_id**: `string`
-
-#### Defined in
-
-[persistent/persistent.ts:399](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L399)
-
-___
-
-### \_persistentProperties
-
-• `Private` **\_persistentProperties**: `PersistentProperty`[]
-
-#### Defined in
-
-[persistent/persistent.ts:400](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L400)
-
-___
-
-### \_factoryMap
-
-▪ `Static` `Private` **\_factoryMap**: `FactoryMap` = `{}`
-
-#### Defined in
-
-[persistent/persistent.ts:401](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L401)
+[persistent/persistent.ts:124](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L124)
 
 ## Accessors
 
@@ -115,7 +71,7 @@ Gets the class name of this instance.
 
 #### Defined in
 
-[persistent/persistent.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L131)
+[persistent/persistent.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L131)
 
 ___
 
@@ -133,7 +89,7 @@ the id of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:147](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L147)
+[persistent/persistent.ts:147](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L147)
 
 ## Methods
 
@@ -150,29 +106,7 @@ serialized.
 
 #### Defined in
 
-[persistent/persistent.ts:161](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L161)
-
-___
-
-### buildRefObject
-
-▸ `Private` **buildRefObject**(`value`, `storeInCollection`, `forcedPersistentProps`): [`DocumentReference`](../interfaces/DocumentReference.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | [`Persistent`](Persistent.md) |
-| `storeInCollection` | `string` |
-| `forcedPersistentProps` | [`ClassPropNames`](../modules.md#classpropnames)<[`Persistent`](Persistent.md)\>[] |
-
-#### Returns
-
-[`DocumentReference`](../interfaces/DocumentReference.md)
-
-#### Defined in
-
-[persistent/persistent.ts:356](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L356)
+[persistent/persistent.ts:161](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L161)
 
 ___
 
@@ -203,47 +137,7 @@ this instance
 
 #### Defined in
 
-[persistent/persistent.ts:183](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L183)
-
-___
-
-### fromDeepObject
-
-▸ `Private` **fromDeepObject**(`value`): `any`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `unknown` |
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[persistent/persistent.ts:262](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L262)
-
-___
-
-### fromObj
-
-▸ `Private` **fromObj**(`obj`): [`Persistent`](Persistent.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `obj` | [`PersistentObject`](../modules.md#persistentobject)<[`Persistent`](Persistent.md)\> |
-
-#### Returns
-
-[`Persistent`](Persistent.md)
-
-#### Defined in
-
-[persistent/persistent.ts:204](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L204)
+[persistent/persistent.ts:183](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L183)
 
 ___
 
@@ -273,7 +167,7 @@ this instance
 
 #### Defined in
 
-[persistent/persistent.ts:197](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L197)
+[persistent/persistent.ts:197](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L197)
 
 ___
 
@@ -291,7 +185,7 @@ an array of the persistent properties of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:167](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L167)
+[persistent/persistent.ts:167](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L167)
 
 ___
 
@@ -308,49 +202,7 @@ just serialized. It is called after the properties are initialized.
 
 #### Defined in
 
-[persistent/persistent.ts:155](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L155)
-
-___
-
-### pushDocument
-
-▸ `Private` **pushDocument**(`collections`, `collectionName`, `value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `collections` | [`Collections`](../modules.md#collections) |
-| `collectionName` | `string` |
-| `value` | [`PersistentObject`](../modules.md#persistentobject)<[`Persistent`](Persistent.md)\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[persistent/persistent.ts:372](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L372)
-
-___
-
-### removeUnderscore
-
-▸ `Private` **removeUnderscore**(`prop`): `string`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prop` | `PersistentProperty` |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[persistent/persistent.ts:380](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L380)
+[persistent/persistent.ts:155](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L155)
 
 ___
 
@@ -372,48 +224,7 @@ Sets the id of this instance.
 
 #### Defined in
 
-[persistent/persistent.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L139)
-
-___
-
-### toDeepObj
-
-▸ `Private` **toDeepObj**(`value`, `rootCollections`): `any`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-| `rootCollections` | [`Collections`](../modules.md#collections) |
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[persistent/persistent.ts:294](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L294)
-
-___
-
-### toObj
-
-▸ `Private` **toObj**(`rootCollections`): [`PersistentObject`](../modules.md#persistentobject)<[`Persistent`](Persistent.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `rootCollections` | [`Collections`](../modules.md#collections) |
-
-#### Returns
-
-[`PersistentObject`](../modules.md#persistentobject)<[`Persistent`](Persistent.md)\>
-
-#### Defined in
-
-[persistent/persistent.ts:237](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L237)
+[persistent/persistent.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L139)
 
 ___
 
@@ -437,28 +248,7 @@ a plain object representation of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:225](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L225)
-
-___
-
-### toReferenceObj
-
-▸ `Private` **toReferenceObj**(`prop`, `rootCollections`): [`DocumentReference`](../interfaces/DocumentReference.md) \| [`DocumentReference`](../interfaces/DocumentReference.md)[]
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prop` | `PersistentProperty` |
-| `rootCollections` | [`Collections`](../modules.md#collections) |
-
-#### Returns
-
-[`DocumentReference`](../interfaces/DocumentReference.md) \| [`DocumentReference`](../interfaces/DocumentReference.md)[]
-
-#### Defined in
-
-[persistent/persistent.ts:322](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L322)
+[persistent/persistent.ts:225](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L225)
 
 ___
 
@@ -490,7 +280,7 @@ the annotation associated with the class
 
 #### Defined in
 
-[persistent/persistent.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L111)
+[persistent/persistent.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L111)
 
 ___
 
@@ -525,7 +315,7 @@ the constructor of the class
 
 #### Defined in
 
-[persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L76)
+[persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L76)
 
 ___
 
@@ -554,7 +344,7 @@ the names of all registered classes that extend the given class
 
 #### Defined in
 
-[persistent/persistent.ts:98](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L98)
+[persistent/persistent.ts:98](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L98)
 
 ___
 
@@ -580,7 +370,7 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:384](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L384)
+[persistent/persistent.ts:384](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L384)
 
 ___
 
@@ -604,7 +394,7 @@ Registers a class to be used by the persistence engine.
 
 #### Defined in
 
-[persistent/persistent.ts:62](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L62)
+[persistent/persistent.ts:62](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L62)
 
 ___
 
@@ -627,4 +417,4 @@ the names of all registered classes
 
 #### Defined in
 
-[persistent/persistent.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L87)
+[persistent/persistent.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L87)

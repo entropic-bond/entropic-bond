@@ -22,13 +22,8 @@ const user = await Store.populate( user )
 
 ## Table of contents
 
-### Constructors
-
-- [constructor](Store.md#constructor)
-
 ### Properties
 
-- [\_dataSource](Store.md#_datasource)
 - [error](Store.md#error)
 
 ### Accessors
@@ -43,27 +38,7 @@ const user = await Store.populate( user )
 - [populate](Store.md#populate)
 - [useDataSource](Store.md#usedatasource)
 
-## Constructors
-
-### constructor
-
-• `Private` **new Store**()
-
-#### Defined in
-
-[store/store.ts:21](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L21)
-
 ## Properties
-
-### \_dataSource
-
-▪ `Static` `Private` **\_dataSource**: [`DataSource`](DataSource.md)
-
-#### Defined in
-
-[store/store.ts:113](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L113)
-
-___
 
 ### error
 
@@ -77,7 +52,7 @@ ___
 
 #### Defined in
 
-[store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L23)
+[store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L23)
 
 ## Accessors
 
@@ -95,7 +70,7 @@ the data source
 
 #### Defined in
 
-[store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L38)
+[store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L38)
 
 ## Methods
 
@@ -125,7 +100,7 @@ the model for the collection
 
 #### Defined in
 
-[store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L47)
+[store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L47)
 
 ___
 
@@ -156,7 +131,7 @@ the model for the subcollection
 
 #### Defined in
 
-[store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L58)
+[store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L58)
 
 ___
 
@@ -186,7 +161,7 @@ true if the instance is populated
 
 #### Defined in
 
-[store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L100)
+[store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L100)
 
 ___
 
@@ -217,7 +192,7 @@ the populated instance
 
 #### Defined in
 
-[store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L69)
+[store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L69)
 
 ___
 
@@ -240,4 +215,4 @@ You need to register a data source before using the store.
 
 #### Defined in
 
-[store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/store.ts#L30)
+[store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L30)

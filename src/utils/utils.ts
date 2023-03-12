@@ -1,5 +1,10 @@
 import { PropPath, PropPathType } from '../types/utility-types'
 
+/**
+ * A map of key-value pairs
+ * @param varName the name of the variable
+ * @param value the value of the variable
+ */
 export interface Values {
 	[ varName: string ]: string;
 }
@@ -10,6 +15,11 @@ export interface Values {
  * @param text the string template
  * @param values an object with key-value pairs
  * @returns the string filled with corresponding values
+ * @example
+ * const text = 'Hello ${name}, how are you ${ action }?'
+ * const values = { name: 'John', action: 'today' }
+ * const result = replaceValue( text, values )
+ * // result = 'Hello John, how are you today?'
  */
 export function replaceValue( text: string, values: Values ): string {
 	if ( !text ) return ''
@@ -24,6 +34,10 @@ export function replaceValue( text: string, values: Values ): string {
  * @param str the string to transform. It can be a string with spaces or a 
  * snake case format
  * @returns the camel case transformed string
+ * @example
+ * const str = 'snake-case-format'
+ * const result = camelCase( str )
+ * // result = 'snakeCaseFormat'
  */
 export function camelCase( str: string ) {
 	if ( !str ) return ''
@@ -42,6 +56,10 @@ export function camelCase( str: string ) {
  * in camel case and the snakeChar is a space, this will transform the came case
  * string in to a regular spaced string
  * @returns the snake case transformed string
+ * @example
+ * const str = 'camelCaseFormat'
+ * const result = snakeCase( str )
+ * // result = 'camel-case-format'
  */
 export function snakeCase( str: string, snakeChar: string = '-' ) {
 	if ( !str ) return ''
@@ -55,6 +73,11 @@ export function snakeCase( str: string, snakeChar: string = '-' ) {
  * @param obj the object containing the subproperty 
  * @param path a string containing the subproperty path in dotted notation
  * @returns the value of the supproperty in the passed object
+ * @example
+ * const obj = { a: { b: { c: 1 } } }
+ * const path = 'a.b.c'
+ * const result = getDeepValue( obj, path )
+ * // result = 1
  */
 export function getDeepValue<T extends {}, P extends PropPath<T>>( obj: T, path: P ): PropPathType<T, P> {
 	return path.split('.').reduce(( acc: {}, prop: string ) => acc[ prop ], obj )

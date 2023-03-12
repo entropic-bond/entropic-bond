@@ -19,7 +19,6 @@ object through the Store.getModel method instead of its constructor.
 
 ### Properties
 
-- [\_stream](Model.md#_stream)
 - [collectionName](Model.md#collectionname)
 - [error](Model.md#error)
 
@@ -29,7 +28,6 @@ object through the Store.getModel method instead of its constructor.
 - [delete](Model.md#delete)
 - [find](Model.md#find)
 - [findById](Model.md#findbyid)
-- [mapToInstance](Model.md#maptoinstance)
 - [next](Model.md#next)
 - [query](Model.md#query)
 - [save](Model.md#save)
@@ -56,19 +54,9 @@ object through the Store.getModel method instead of its constructor.
 
 #### Defined in
 
-[store/model.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L12)
+[store/model.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L12)
 
 ## Properties
-
-### \_stream
-
-• `Private` **\_stream**: [`DataSource`](DataSource.md)
-
-#### Defined in
-
-[store/model.ts:151](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L151)
-
-___
 
 ### collectionName
 
@@ -76,7 +64,7 @@ ___
 
 #### Defined in
 
-[store/model.ts:150](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L150)
+[store/model.ts:150](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L150)
 
 ___
 
@@ -92,7 +80,7 @@ ___
 
 #### Defined in
 
-[store/model.ts:10](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L10)
+[store/model.ts:10](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L10)
 
 ## Methods
 
@@ -116,7 +104,7 @@ a promise resolving to the amount of matched documents
 
 #### Defined in
 
-[store/model.ts:116](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L116)
+[store/model.ts:116](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L116)
 
 ___
 
@@ -140,7 +128,7 @@ a promise
 
 #### Defined in
 
-[store/model.ts:79](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L79)
+[store/model.ts:79](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L79)
 
 ___
 
@@ -164,7 +152,7 @@ a Query object
 
 #### Defined in
 
-[store/model.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L87)
+[store/model.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L87)
 
 ___
 
@@ -197,33 +185,7 @@ a promise resolving to an instance with the found data
 
 #### Defined in
 
-[store/model.ts:36](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L36)
-
-___
-
-### mapToInstance
-
-▸ `Private` **mapToInstance**<`U`\>(`from`): `Promise`<`U`[]\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `U` | extends [`Persistent`](Persistent.md)<`U`\> |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `from` | () => `Promise`<[`DocumentObject`](../modules.md#documentobject)[]\> |
-
-#### Returns
-
-`Promise`<`U`[]\>
-
-#### Defined in
-
-[store/model.ts:140](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L140)
+[store/model.ts:36](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L36)
 
 ___
 
@@ -253,7 +215,7 @@ a promise resolving to a collection of matched documents
 
 #### Defined in
 
-[store/model.ts:126](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L126)
+[store/model.ts:126](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L126)
 
 ___
 
@@ -285,7 +247,7 @@ a promise resolving to a collection of matched documents
 
 #### Defined in
 
-[store/model.ts:97](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L97)
+[store/model.ts:97](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L97)
 
 ___
 
@@ -309,4 +271,4 @@ a promise
 
 #### Defined in
 
-[store/model.ts:59](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/model.ts#L59)
+[store/model.ts:59](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L59)

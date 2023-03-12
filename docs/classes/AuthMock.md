@@ -17,13 +17,6 @@ You should derive from this class to implement your own authentication service.
 
 - [constructor](AuthMock.md#constructor)
 
-### Properties
-
-- [\_fakeRegisteredUsers](AuthMock.md#_fakeregisteredusers)
-- [\_loggedUser](AuthMock.md#_loggeduser)
-- [notifyChange](AuthMock.md#notifychange)
-- [pendingPromises](AuthMock.md#pendingpromises)
-
 ### Accessors
 
 - [fakeRegisteredUsers](AuthMock.md#fakeregisteredusers)
@@ -39,7 +32,6 @@ You should derive from this class to implement your own authentication service.
 - [resetEmailPassword](AuthMock.md#resetemailpassword)
 - [signUp](AuthMock.md#signup)
 - [unlinkProvider](AuthMock.md#unlinkprovider)
-- [userCredentials](AuthMock.md#usercredentials)
 
 ## Constructors
 
@@ -50,60 +42,6 @@ You should derive from this class to implement your own authentication service.
 #### Inherited from
 
 [AuthService](AuthService.md).[constructor](AuthService.md#constructor)
-
-## Properties
-
-### \_fakeRegisteredUsers
-
-• `Private` **\_fakeRegisteredUsers**: [`Collection`](../interfaces/Collection.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\> = `{}`
-
-#### Defined in
-
-[auth/auth-mock.ts:115](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L115)
-
-___
-
-### \_loggedUser
-
-• `Private` **\_loggedUser**: [`UserCredentials`](../interfaces/UserCredentials.md)<{}\>
-
-#### Defined in
-
-[auth/auth-mock.ts:113](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L113)
-
-___
-
-### notifyChange
-
-• `Private` **notifyChange**: (`userCredentials`: [`UserCredentials`](../interfaces/UserCredentials.md)<{}\>) => `void`
-
-#### Type declaration
-
-▸ (`userCredentials`): `void`
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `userCredentials` | [`UserCredentials`](../interfaces/UserCredentials.md)<{}\> |
-
-##### Returns
-
-`void`
-
-#### Defined in
-
-[auth/auth-mock.ts:114](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L114)
-
-___
-
-### pendingPromises
-
-• `Private` **pendingPromises**: `Promise`<`any`\>[] = `[]`
-
-#### Defined in
-
-[auth/auth-mock.ts:112](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L112)
 
 ## Accessors
 
@@ -117,7 +55,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:85](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L85)
+[auth/auth-mock.ts:85](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L85)
 
 ## Methods
 
@@ -143,7 +81,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L79)
+[auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L79)
 
 ___
 
@@ -157,7 +95,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:74](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L74)
+[auth/auth-mock.ts:74](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L74)
 
 ___
 
@@ -181,7 +119,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L66)
+[auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L66)
 
 ___
 
@@ -211,7 +149,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L30)
+[auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L30)
 
 ___
 
@@ -229,7 +167,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L47)
+[auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L47)
 
 ___
 
@@ -259,7 +197,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L42)
+[auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L42)
 
 ___
 
@@ -283,7 +221,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L57)
+[auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L57)
 
 ___
 
@@ -313,7 +251,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L7)
+[auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L7)
 
 ___
 
@@ -337,30 +275,4 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:70](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L70)
-
-___
-
-### userCredentials
-
-▸ `Private` **userCredentials**<`T`\>(`signData`): [`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `signData` | [`SignData`](../interfaces/SignData.md) |
-
-#### Returns
-
-[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>
-
-#### Defined in
-
-[auth/auth-mock.ts:89](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/auth/auth-mock.ts#L89)
+[auth/auth-mock.ts:70](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L70)

@@ -19,10 +19,6 @@ persistance through the Entropic Bond persistence mechanism
 
 - [constructor](EntropicComponent.md#constructor)
 
-### Properties
-
-- [\_onChange](EntropicComponent.md#_onchange)
-
 ### Accessors
 
 - [className](EntropicComponent.md#classname)
@@ -70,17 +66,7 @@ Returns a new instance of Persistent class.
 
 #### Defined in
 
-[persistent/persistent.ts:124](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L124)
-
-## Properties
-
-### \_onChange
-
-• `Private` **\_onChange**: [`Observable`](Observable.md)<`Partial`<[`ClassProps`](../modules.md#classprops)<[`EntropicComponent`](EntropicComponent.md)\>\>\>
-
-#### Defined in
-
-[persistent/entropic-component.ts:134](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L134)
+[persistent/persistent.ts:124](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L124)
 
 ## Accessors
 
@@ -100,7 +86,7 @@ Persistent.className
 
 #### Defined in
 
-[persistent/persistent.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L131)
+[persistent/persistent.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L131)
 
 ___
 
@@ -122,7 +108,7 @@ Persistent.id
 
 #### Defined in
 
-[persistent/persistent.ts:147](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L147)
+[persistent/persistent.ts:147](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L147)
 
 ## Methods
 
@@ -143,7 +129,7 @@ serialized.
 
 #### Defined in
 
-[persistent/persistent.ts:161](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L161)
+[persistent/persistent.ts:161](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L161)
 
 ___
 
@@ -175,7 +161,7 @@ true in case the property has been effectively changed, false otherwise
 
 #### Defined in
 
-[persistent/entropic-component.ts:46](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L46)
+[persistent/entropic-component.ts:46](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L46)
 
 ___
 
@@ -210,7 +196,7 @@ this instance
 
 #### Defined in
 
-[persistent/persistent.ts:183](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L183)
+[persistent/persistent.ts:183](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L183)
 
 ___
 
@@ -244,7 +230,7 @@ this instance
 
 #### Defined in
 
-[persistent/persistent.ts:197](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L197)
+[persistent/persistent.ts:197](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L197)
 
 ___
 
@@ -266,7 +252,7 @@ an array of the persistent properties of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:167](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L167)
+[persistent/persistent.ts:167](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L167)
 
 ___
 
@@ -295,7 +281,7 @@ This is a helper function to be used when you want to notify property changes.
 
 #### Defined in
 
-[persistent/entropic-component.ts:64](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L64)
+[persistent/entropic-component.ts:64](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L64)
 
 ___
 
@@ -320,7 +306,7 @@ a function to unsubscribe the listener from further notifications
 
 #### Defined in
 
-[persistent/entropic-component.ts:25](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L25)
+[persistent/entropic-component.ts:25](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L25)
 
 ___
 
@@ -341,7 +327,7 @@ just serialized. It is called after the properties are initialized.
 
 #### Defined in
 
-[persistent/persistent.ts:155](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L155)
+[persistent/persistent.ts:155](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L155)
 
 ___
 
@@ -375,7 +361,7 @@ the inserted element or undefined if the element was not inserted.
 
 #### Defined in
 
-[persistent/entropic-component.ts:83](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L83)
+[persistent/entropic-component.ts:83](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L83)
 
 ___
 
@@ -408,7 +394,7 @@ the removed element or undefined if the element was not removed.
 
 #### Defined in
 
-[persistent/entropic-component.ts:112](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L112)
+[persistent/entropic-component.ts:112](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L112)
 
 ___
 
@@ -430,7 +416,7 @@ Removes the listener callback subscrition from the notifications.
 
 #### Defined in
 
-[persistent/entropic-component.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/entropic-component.ts#L34)
+[persistent/entropic-component.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L34)
 
 ___
 
@@ -456,7 +442,7 @@ Sets the id of this instance.
 
 #### Defined in
 
-[persistent/persistent.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L139)
+[persistent/persistent.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L139)
 
 ___
 
@@ -484,7 +470,7 @@ a plain object representation of this instance
 
 #### Defined in
 
-[persistent/persistent.ts:225](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L225)
+[persistent/persistent.ts:225](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L225)
 
 ___
 
@@ -520,7 +506,7 @@ the annotation associated with the class
 
 #### Defined in
 
-[persistent/persistent.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L111)
+[persistent/persistent.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L111)
 
 ___
 
@@ -559,7 +545,7 @@ the constructor of the class
 
 #### Defined in
 
-[persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L76)
+[persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L76)
 
 ___
 
@@ -592,7 +578,7 @@ the names of all registered classes that extend the given class
 
 #### Defined in
 
-[persistent/persistent.ts:98](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L98)
+[persistent/persistent.ts:98](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L98)
 
 ___
 
@@ -622,7 +608,7 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:384](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L384)
+[persistent/persistent.ts:384](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L384)
 
 ___
 
@@ -650,7 +636,7 @@ Registers a class to be used by the persistence engine.
 
 #### Defined in
 
-[persistent/persistent.ts:62](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L62)
+[persistent/persistent.ts:62](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L62)
 
 ___
 
@@ -677,4 +663,4 @@ the names of all registered classes
 
 #### Defined in
 
-[persistent/persistent.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/persistent/persistent.ts#L87)
+[persistent/persistent.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L87)

@@ -17,15 +17,6 @@ The data in the JSON object is not persisted.
 
 - [constructor](JsonDataSource.md#constructor)
 
-### Properties
-
-- [\_cursor](JsonDataSource.md#_cursor)
-- [\_jsonRawData](JsonDataSource.md#_jsonrawdata)
-- [\_lastLimit](JsonDataSource.md#_lastlimit)
-- [\_lastMatchingDocs](JsonDataSource.md#_lastmatchingdocs)
-- [\_pendingPromises](JsonDataSource.md#_pendingpromises)
-- [\_simulateDelay](JsonDataSource.md#_simulatedelay)
-
 ### Accessors
 
 - [rawData](JsonDataSource.md#rawdata)
@@ -33,17 +24,10 @@ The data in the JSON object is not persisted.
 ### Methods
 
 - [count](JsonDataSource.md#count)
-- [decCursor](JsonDataSource.md#deccursor)
-- [deepValue](JsonDataSource.md#deepvalue)
 - [delete](JsonDataSource.md#delete)
 - [find](JsonDataSource.md#find)
 - [findById](JsonDataSource.md#findbyid)
-- [incCursor](JsonDataSource.md#inccursor)
-- [isQueryMatched](JsonDataSource.md#isquerymatched)
 - [next](JsonDataSource.md#next)
-- [queryProcessor](JsonDataSource.md#queryprocessor)
-- [resolveWithDelay](JsonDataSource.md#resolvewithdelay)
-- [retrieveValuesToCompare](JsonDataSource.md#retrievevaluestocompare)
 - [save](JsonDataSource.md#save)
 - [setDataStore](JsonDataSource.md#setdatastore)
 - [simulateDelay](JsonDataSource.md#simulatedelay)
@@ -63,67 +47,7 @@ The data in the JSON object is not persisted.
 
 #### Defined in
 
-[store/json-data-source.ts:25](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L25)
-
-## Properties
-
-### \_cursor
-
-• `Private` **\_cursor**: `number`
-
-#### Defined in
-
-[store/json-data-source.ts:212](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L212)
-
-___
-
-### \_jsonRawData
-
-• `Private` **\_jsonRawData**: [`JsonRawData`](../interfaces/JsonRawData.md)
-
-#### Defined in
-
-[store/json-data-source.ts:209](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L209)
-
-___
-
-### \_lastLimit
-
-• `Private` **\_lastLimit**: `number`
-
-#### Defined in
-
-[store/json-data-source.ts:211](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L211)
-
-___
-
-### \_lastMatchingDocs
-
-• `Private` **\_lastMatchingDocs**: [`DocumentObject`](../modules.md#documentobject)[]
-
-#### Defined in
-
-[store/json-data-source.ts:210](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L210)
-
-___
-
-### \_pendingPromises
-
-• `Private` **\_pendingPromises**: `Promise`<`any`\>[] = `[]`
-
-#### Defined in
-
-[store/json-data-source.ts:214](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L214)
-
-___
-
-### \_simulateDelay
-
-• `Private` **\_simulateDelay**: `number` = `0`
-
-#### Defined in
-
-[store/json-data-source.ts:213](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L213)
+[store/json-data-source.ts:25](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L25)
 
 ## Accessors
 
@@ -139,7 +63,7 @@ the raw data store data as a JSON object
 
 #### Defined in
 
-[store/json-data-source.ts:103](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L103)
+[store/json-data-source.ts:103](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L103)
 
 ## Methods
 
@@ -174,48 +98,7 @@ a promise resolving to the number of documents matching the query
 
 #### Defined in
 
-[store/json-data-source.ts:94](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L94)
-
-___
-
-### decCursor
-
-▸ `Private` **decCursor**(`amount`): `boolean`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `amount` | `number` |
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[store/json-data-source.ts:122](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L122)
-
-___
-
-### deepValue
-
-▸ `Private` **deepValue**(`obj`, `propertyPath`): `any`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `obj` | `Object` |
-| `propertyPath` | `string` |
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[store/json-data-source.ts:158](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L158)
+[store/json-data-source.ts:94](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L94)
 
 ___
 
@@ -246,7 +129,7 @@ a promise
 
 #### Defined in
 
-[store/json-data-source.ts:82](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L82)
+[store/json-data-source.ts:82](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L82)
 
 ___
 
@@ -286,7 +169,7 @@ a plain object with the properties of the document class.
 
 #### Defined in
 
-[store/json-data-source.ts:64](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L64)
+[store/json-data-source.ts:64](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L64)
 
 ___
 
@@ -318,54 +201,7 @@ a plain object with the properties of the document class.
 
 #### Defined in
 
-[store/json-data-source.ts:49](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L49)
-
-___
-
-### incCursor
-
-▸ `Private` **incCursor**(`amount`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `amount` | `number` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[store/json-data-source.ts:115](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L115)
-
-___
-
-### isQueryMatched
-
-▸ `Private` **isQueryMatched**<`T`\>(`doc`, `queryOperations`): `boolean`
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `doc` | [`DocumentObject`](../modules.md#documentobject) |
-| `queryOperations` | [`QueryOperation`](../modules.md#queryoperation)<`T`\>[] |
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[store/json-data-source.ts:163](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L163)
+[store/json-data-source.ts:49](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L49)
 
 ___
 
@@ -395,83 +231,7 @@ a promise resolving to an array representing the next bunch of document objects
 
 #### Defined in
 
-[store/json-data-source.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L87)
-
-___
-
-### queryProcessor
-
-▸ `Private` **queryProcessor**<`T`, `P`\>(`docs`, `processMethod`, `value`): `any`
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | `T` |
-| `P` | extends keyof [`QueryObject`](../modules.md#queryobject)<`unknown`\> |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `docs` | [`DocumentObject`](../modules.md#documentobject)[] |
-| `processMethod` | `P` |
-| `value` | [`QueryObject`](../modules.md#queryobject)<`T`\>[`P`] |
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[store/json-data-source.ts:131](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L131)
-
-___
-
-### resolveWithDelay
-
-▸ `Private` **resolveWithDelay**<`T`\>(`data?`): `Promise`<`T`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data?` | `T` |
-
-#### Returns
-
-`Promise`<`T`\>
-
-#### Defined in
-
-[store/json-data-source.ts:193](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L193)
-
-___
-
-### retrieveValuesToCompare
-
-▸ `Private` **retrieveValuesToCompare**(`document`, `value`): [`unknown`, `unknown`]
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `document` | [`DocumentObject`](../modules.md#documentobject) |
-| `value` | `unknown` |
-
-#### Returns
-
-[`unknown`, `unknown`]
-
-#### Defined in
-
-[store/json-data-source.ts:184](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L184)
+[store/json-data-source.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L87)
 
 ___
 
@@ -500,7 +260,7 @@ a promise
 
 #### Defined in
 
-[store/json-data-source.ts:53](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L53)
+[store/json-data-source.ts:53](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L53)
 
 ___
 
@@ -523,7 +283,7 @@ the constructor has been called.
 
 #### Defined in
 
-[store/json-data-source.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L34)
+[store/json-data-source.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L34)
 
 ___
 
@@ -547,7 +307,7 @@ a chainable reference to this object
 
 #### Defined in
 
-[store/json-data-source.ts:44](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L44)
+[store/json-data-source.ts:44](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L44)
 
 ___
 
@@ -565,4 +325,4 @@ a promise that resolves when all pending promises are resolved
 
 #### Defined in
 
-[store/json-data-source.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2a330da/src/store/json-data-source.ts#L111)
+[store/json-data-source.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L111)
