@@ -108,6 +108,11 @@ export class Model<T extends Persistent>{
 		)
 	}
 
+	/**
+	 * Get the amount of documents matching the query
+	 * @param queryObject the QueryObject with the search constrains
+	 * @returns a promise resolving to the amount of matched documents
+	 */
 	count( queryObject: QueryObject<T> ): Promise<number> {
 		return this._stream.count( queryObject as QueryObject<DocumentObject>, this.collectionName )
 	}
@@ -122,7 +127,12 @@ export class Model<T extends Persistent>{
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
-	// NOTE: You should implement prev functionality by using next in reverse order
+	// /**
+	//  * Get the previous bunch of documents matching the last query
+	//  * @param limit the max amount of documents to retrieve. If not set, uses the
+	//  * last limit set
+	//  * @returns a promise resolving to a collection of matched documents
+	//  */
 	// prev<U extends T>( limit?: number ): Promise<U[]> {
 	// 	return this.mapToInstance( () => this._stream.prev( limit ) )
 	// }
@@ -141,11 +151,29 @@ export class Model<T extends Persistent>{
 	private _stream: DataSource
 }
 
+/**
+ * The Query class is used to define the search conditions. You can chain
+ * where operations to define the search conditions. The where operations
+ * are stored in a QueryObject that is passed to the query method of the
+ * Model class.
+ */
 class Query<T extends Persistent> {
 	constructor( model: Model<T> ) {
 		this.model = model	
 	}
 
+	/**
+	 * Defines a where condition
+	 * @param property the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @param value the value to be compared
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.where( 'name', '==', 'John' )
+	 * query.where( 'age', '>', 18 )
+	 * query.where( 'age', '==', 18 ).where( 'name', '==', 'John' )
+	 */
 	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
 		let val = value instanceof Persistent? { id: value.id } : value
 
@@ -172,7 +200,16 @@ class Query<T extends Persistent> {
 	// 	return this
 	// }
 
-	//TODO: remove as it is redundant with where
+	/**
+	 * Defines a where condition for a deep property
+	 * @param propertyPath the path to the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @param value the value to be compared
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.whereDeepProp( 'address.street', '==', 'Main Street' )
+	 */
 	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
 		const props = propertyPath.split( '.' )
 		let obj = {}
@@ -192,6 +229,16 @@ class Query<T extends Persistent> {
 		return this
 	}
 
+	/**
+	 * Defines a where condition to match documents that are instances of the
+	 * given class
+	 * @param classId the class name or an instance to match
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.instanceOf( 'Person' )
+	 * query.instanceOf( Person )
+	 * query.instanceOf( Person ).where( 'age', '>', 18 )
+	 */
 	instanceOf<U extends T>( classId: U | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
 		this.queryObject.operations.push({
@@ -202,6 +249,14 @@ class Query<T extends Persistent> {
 		return this
 	}
 
+	/**
+	 * Executes the query and returns the result
+	 * @param limit the max amount of documents to retrieve. If not set, uses the
+	 * last limit set or all the matching documents
+	 * @returns a promise resolving to a collection of matched documents
+	 * @example
+	 * const namedJohn = await query.where( 'name', '==', 'John' ).get()
+	 */
 	get<U extends T>( limit?: number ): Promise<U[]> {
 		if ( limit ) {
 			this.queryObject.limit = limit
@@ -209,11 +264,27 @@ class Query<T extends Persistent> {
 		return this.model.query( this.queryObject as unknown as QueryObject<U> )
 	}
 
+	/**
+	 * Limits the number of documents to retrieve
+	 * @param maxDocs the max amount of documents to retrieve
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.where( 'name', '==', 'John' ).limit( 10 )
+	 */
 	limit( maxDocs: number ) {
 		this.queryObject.limit = maxDocs
 		return this
 	}
 
+	/**
+	 * Orders the result set by a property.
+	 * @param propertyName The name of the property to order by
+	 * @param order The sort direction. Possible values are 'asc' and 'desc'
+	 * @returns a chainable query object
+	 * @example
+	 * query.orderBy( 'name', 'asc' )
+	 * query.orderBy( 'age', 'desc' )
+	 */
 	orderBy<P extends ClassPropNames<T>>( propertyName: P, order: QueryOrder = 'asc' ) {
 		this.queryObject.sort = { 
 			propertyName, 
@@ -228,7 +299,7 @@ class Query<T extends Persistent> {
 	 * 
 	 * @param propertyPath The full path of the deep property. It should be 
 	 * 											separated by dots like person.name.firstName.
-	 * @param order The sort direction
+	 * @param order The sort direction. Possible values are 'asc' and 'desc'
 	 * @returns a chainable query object
 	 */
 	orderByDeepProp( propertyPath: string, order: QueryOrder = 'asc' ) {
@@ -240,6 +311,12 @@ class Query<T extends Persistent> {
 		return this
 	}
 
+	/**
+	 * Returns the number of documents that match the query
+	 * @returns a promise resolving to the number of documents that match the query
+	 * @example
+	 * const count = await query.where( 'name', '==', 'John' ).count()
+	 */
 	count() {
 		return this.model.count( this.queryObject )
 	}
