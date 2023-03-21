@@ -55,7 +55,7 @@ You should derive from this class to implement your own authentication service.
 
 #### Defined in
 
-[auth/auth-mock.ts:85](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L85)
+[auth/auth-mock.ts:85](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L85)
 
 ## Methods
 
@@ -81,7 +81,7 @@ You should derive from this class to implement your own authentication service.
 
 #### Defined in
 
-[auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L79)
+[auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L79)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:74](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L74)
+[auth/auth-mock.ts:74](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L74)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L66)
+[auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L66)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L30)
+[auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L30)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L47)
+[auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L47)
 
 ___
 
@@ -197,7 +197,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L42)
+[auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L42)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L57)
+[auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L57)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L7)
+[auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L7)
 
 ___
 
@@ -275,4 +275,4 @@ ___
 
 #### Defined in
 
-[auth/auth-mock.ts:70](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth-mock.ts#L70)
+[auth/auth-mock.ts:70](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L70)

@@ -53,7 +53,7 @@ You should derive from this class to implement your own authentication service.
 
 #### Defined in
 
-[auth/auth.ts:13](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L13)
+[auth/auth.ts:13](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L13)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:10](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L10)
+[auth/auth.ts:10](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L10)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:11](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L11)
+[auth/auth.ts:11](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L11)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L15)
+[auth/auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L15)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L12)
+[auth/auth.ts:12](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L12)
 
 ___
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:9](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L9)
+[auth/auth.ts:9](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L9)
 
 ___
 
@@ -185,4 +185,4 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:14](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L14)
+[auth/auth.ts:14](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L14)

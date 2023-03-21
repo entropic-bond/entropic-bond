@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth-mock.ts#L6)
+[server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L6)
 
 ## Accessors
 
@@ -57,7 +57,7 @@
 
 #### Defined in
 
-[server-auth/server-auth-mock.ts:39](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth-mock.ts#L39)
+[server-auth/server-auth-mock.ts:39](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L39)
 
 ## Methods
 
@@ -81,7 +81,7 @@
 
 #### Defined in
 
-[server-auth/server-auth-mock.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth-mock.ts#L34)
+[server-auth/server-auth-mock.ts:34](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L34)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth-mock.ts:11](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth-mock.ts#L11)
+[server-auth/server-auth-mock.ts:11](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L11)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth-mock.ts:17](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth-mock.ts#L17)
+[server-auth/server-auth-mock.ts:17](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L17)
 
 ___
 
@@ -173,4 +173,4 @@ ___
 
 #### Defined in
 
-[server-auth/server-auth-mock.ts:24](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/server-auth/server-auth-mock.ts#L24)
+[server-auth/server-auth-mock.ts:24](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L24)

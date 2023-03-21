@@ -32,7 +32,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:14](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L14)
+[cloud-functions/cloud-functions.ts:14](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L14)
 
 ## Accessors
 
@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:22](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L22)
+[cloud-functions/cloud-functions.ts:22](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L22)
 
 ## Methods
 
@@ -73,7 +73,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:31](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L31)
+[cloud-functions/cloud-functions.ts:31](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L31)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:27](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L27)
+[cloud-functions/cloud-functions.ts:27](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L27)
 
 ___
 
@@ -120,4 +120,4 @@ ___
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L16)
+[cloud-functions/cloud-functions.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L16)

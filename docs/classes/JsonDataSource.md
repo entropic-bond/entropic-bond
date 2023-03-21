@@ -47,7 +47,7 @@ The data in the JSON object is not persisted.
 
 #### Defined in
 
-[store/json-data-source.ts:25](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L25)
+[store/json-data-source.ts:25](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L25)
 
 ## Accessors
 
@@ -63,7 +63,7 @@ the raw data store data as a JSON object
 
 #### Defined in
 
-[store/json-data-source.ts:103](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L103)
+[store/json-data-source.ts:103](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L103)
 
 ## Methods
 
@@ -98,7 +98,7 @@ a promise resolving to the number of documents matching the query
 
 #### Defined in
 
-[store/json-data-source.ts:94](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L94)
+[store/json-data-source.ts:94](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L94)
 
 ___
 
@@ -129,7 +129,7 @@ a promise
 
 #### Defined in
 
-[store/json-data-source.ts:82](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L82)
+[store/json-data-source.ts:82](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L82)
 
 ___
 
@@ -169,7 +169,7 @@ a plain object with the properties of the document class.
 
 #### Defined in
 
-[store/json-data-source.ts:64](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L64)
+[store/json-data-source.ts:64](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L64)
 
 ___
 
@@ -201,7 +201,7 @@ a plain object with the properties of the document class.
 
 #### Defined in
 
-[store/json-data-source.ts:49](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L49)
+[store/json-data-source.ts:49](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L49)
 
 ___
 
@@ -231,7 +231,7 @@ a promise resolving to an array representing the next bunch of document objects
 
 #### Defined in
 
-[store/json-data-source.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L87)
+[store/json-data-source.ts:87](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L87)
 
 ___
 
@@ -260,7 +260,7 @@ a promise
 
 #### Defined in
 
-[store/json-data-source.ts:53](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L53)
+[store/json-data-source.ts:53](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L53)
 
 ___
 
@@ -283,7 +283,7 @@ the constructor has been called.
 
 #### Defined in
 
-[store/json-data-source.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L34)
+[store/json-data-source.ts:34](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L34)
 
 ___
 
@@ -307,7 +307,7 @@ a chainable reference to this object
 
 #### Defined in
 
-[store/json-data-source.ts:44](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L44)
+[store/json-data-source.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L44)
 
 ___
 
@@ -325,4 +325,4 @@ a promise that resolves when all pending promises are resolved
 
 #### Defined in
 
-[store/json-data-source.ts:111](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/json-data-source.ts#L111)
+[store/json-data-source.ts:111](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/json-data-source.ts#L111)

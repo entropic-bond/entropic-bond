@@ -63,7 +63,7 @@ a promise resolving to the number of documents matching the query
 
 #### Defined in
 
-[store/data-source.ts:125](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L125)
+[store/data-source.ts:125](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L125)
 
 ___
 
@@ -90,7 +90,7 @@ a promise
 
 #### Defined in
 
-[store/data-source.ts:105](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L105)
+[store/data-source.ts:105](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L105)
 
 ___
 
@@ -126,7 +126,7 @@ a plain object with the properties of the document class.
 
 #### Defined in
 
-[store/data-source.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L87)
+[store/data-source.ts:87](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L87)
 
 ___
 
@@ -154,7 +154,7 @@ a plain object with the properties of the document class.
 
 #### Defined in
 
-[store/data-source.ts:71](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L71)
+[store/data-source.ts:71](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L71)
 
 ___
 
@@ -180,7 +180,7 @@ a promise resolving to an array representing the next bunch of document objects
 
 #### Defined in
 
-[store/data-source.ts:114](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L114)
+[store/data-source.ts:114](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L114)
 
 ___
 
@@ -205,7 +205,7 @@ a promise
 
 #### Defined in
 
-[store/data-source.ts:95](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L95)
+[store/data-source.ts:95](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L95)
 
 ___
 
@@ -245,4 +245,4 @@ a property path query object
 
 #### Defined in
 
-[store/data-source.ts:139](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L139)
+[store/data-source.ts:139](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L139)

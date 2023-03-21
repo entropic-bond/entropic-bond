@@ -54,7 +54,7 @@ object through the Store.getModel method instead of its constructor.
 
 #### Defined in
 
-[store/model.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L12)
+[store/model.ts:12](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L12)
 
 ## Properties
 
@@ -64,7 +64,7 @@ object through the Store.getModel method instead of its constructor.
 
 #### Defined in
 
-[store/model.ts:150](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L150)
+[store/model.ts:150](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L150)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[store/model.ts:10](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L10)
+[store/model.ts:10](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L10)
 
 ## Methods
 
@@ -104,7 +104,7 @@ a promise resolving to the amount of matched documents
 
 #### Defined in
 
-[store/model.ts:116](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L116)
+[store/model.ts:116](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L116)
 
 ___
 
@@ -128,7 +128,7 @@ a promise
 
 #### Defined in
 
-[store/model.ts:79](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L79)
+[store/model.ts:79](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L79)
 
 ___
 
@@ -152,7 +152,7 @@ a Query object
 
 #### Defined in
 
-[store/model.ts:87](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L87)
+[store/model.ts:87](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L87)
 
 ___
 
@@ -185,7 +185,7 @@ a promise resolving to an instance with the found data
 
 #### Defined in
 
-[store/model.ts:36](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L36)
+[store/model.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L36)
 
 ___
 
@@ -215,7 +215,7 @@ a promise resolving to a collection of matched documents
 
 #### Defined in
 
-[store/model.ts:126](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L126)
+[store/model.ts:126](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L126)
 
 ___
 
@@ -247,7 +247,7 @@ a promise resolving to a collection of matched documents
 
 #### Defined in
 
-[store/model.ts:97](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L97)
+[store/model.ts:97](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L97)
 
 ___
 
@@ -271,4 +271,4 @@ a promise
 
 #### Defined in
 
-[store/model.ts:59](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/model.ts#L59)
+[store/model.ts:59](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/model.ts#L59)

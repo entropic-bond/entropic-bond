@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:8](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L8)
+[cloud-functions/cloud-functions.ts:8](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L8)
 
 ___
 
@@ -66,4 +66,4 @@ ___
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:7](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L7)
+[cloud-functions/cloud-functions.ts:7](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L7)

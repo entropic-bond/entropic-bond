@@ -20,7 +20,7 @@ Stores information about a reference in another collection.
 
 #### Defined in
 
-[persistent/persistent.ts:45](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L45)
+[persistent/persistent.ts:45](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L45)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:46](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L46)
+[persistent/persistent.ts:46](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L46)
 
 ___
 
@@ -46,4 +46,4 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:44](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L44)
+[persistent/persistent.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L44)

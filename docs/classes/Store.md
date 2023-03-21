@@ -52,7 +52,7 @@ const user = await Store.populate( user )
 
 #### Defined in
 
-[store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L23)
+[store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L23)
 
 ## Accessors
 
@@ -70,7 +70,7 @@ the data source
 
 #### Defined in
 
-[store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L38)
+[store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L38)
 
 ## Methods
 
@@ -100,7 +100,7 @@ the model for the collection
 
 #### Defined in
 
-[store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L47)
+[store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L47)
 
 ___
 
@@ -131,7 +131,7 @@ the model for the subcollection
 
 #### Defined in
 
-[store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L58)
+[store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L58)
 
 ___
 
@@ -161,7 +161,7 @@ true if the instance is populated
 
 #### Defined in
 
-[store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L100)
+[store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L100)
 
 ___
 
@@ -192,7 +192,7 @@ the populated instance
 
 #### Defined in
 
-[store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L69)
+[store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L69)
 
 ___
 
@@ -215,4 +215,4 @@ You need to register a data source before using the store.
 
 #### Defined in
 
-[store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/store.ts#L30)
+[store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L30)

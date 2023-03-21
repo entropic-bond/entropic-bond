@@ -105,7 +105,7 @@
 
 #### Defined in
 
-[auth/auth.ts:18](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L18)
+[auth/auth.ts:18](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L18)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[auth/user-auth-types.ts:13](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/user-auth-types.ts#L13)
+[auth/user-auth-types.ts:13](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/user-auth-types.ts#L13)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[observable/observable.ts:1](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L1)
+[observable/observable.ts:1](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/observable/observable.ts#L1)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:17](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L17)
+[types/utility-types.ts:17](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L17)
 
 ___
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:21](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L21)
+[types/utility-types.ts:21](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L21)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:1](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L1)
+[types/utility-types.ts:1](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L1)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:5](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L5)
+[types/utility-types.ts:5](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L5)
 
 ___
 
@@ -225,7 +225,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:7](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L7)
+[types/utility-types.ts:7](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L7)
 
 ___
 
@@ -242,7 +242,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:68](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L68)
+[types/utility-types.ts:68](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L68)
 
 ___
 
@@ -258,7 +258,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:11](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L11)
+[types/utility-types.ts:11](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L11)
 
 ___
 
@@ -289,7 +289,7 @@ ___
 
 #### Defined in
 
-[cloud-functions/cloud-functions.ts:4](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions.ts#L4)
+[cloud-functions/cloud-functions.ts:4](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L4)
 
 ___
 
@@ -309,7 +309,7 @@ Persistent.toObject
 
 #### Defined in
 
-[persistent/persistent.ts:36](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L36)
+[persistent/persistent.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L36)
 
 ___
 
@@ -340,7 +340,7 @@ ___
 
 #### Defined in
 
-[persistent/entropic-component.ts:8](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L8)
+[persistent/entropic-component.ts:8](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/entropic-component.ts#L8)
 
 ___
 
@@ -350,7 +350,7 @@ ___
 
 #### Defined in
 
-[store/data-source.ts:4](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L4)
+[store/data-source.ts:4](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L4)
 
 ___
 
@@ -366,7 +366,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:23](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L23)
+[types/utility-types.ts:23](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L23)
 
 ___
 
@@ -384,7 +384,7 @@ The type of the plain object of a persistent class for all the nested properties
 
 #### Defined in
 
-[persistent/persistent.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L28)
+[persistent/persistent.ts:28](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L28)
 
 ___
 
@@ -398,7 +398,7 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:4](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L4)
+[persistent/persistent.ts:4](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L4)
 
 ___
 
@@ -416,7 +416,7 @@ The corresponding type of the plain object of a persistent class.
 
 #### Defined in
 
-[persistent/persistent.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L16)
+[persistent/persistent.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L16)
 
 ___
 
@@ -432,7 +432,7 @@ ___
 
 #### Defined in
 
-[persistent/entropic-component.ts:6](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L6)
+[persistent/entropic-component.ts:6](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/entropic-component.ts#L6)
 
 ___
 
@@ -448,7 +448,7 @@ ___
 
 #### Defined in
 
-[persistent/entropic-component.ts:5](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/entropic-component.ts#L5)
+[persistent/entropic-component.ts:5](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/entropic-component.ts#L5)
 
 ___
 
@@ -467,7 +467,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:93](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L93)
+[types/utility-types.ts:93](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L93)
 
 ___
 
@@ -485,7 +485,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:99](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L99)
+[types/utility-types.ts:99](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L99)
 
 ___
 
@@ -533,7 +533,7 @@ the name of the property to be used for sorting
 
 #### Defined in
 
-[store/data-source.ts:44](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L44)
+[store/data-source.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L44)
 
 ___
 
@@ -571,7 +571,7 @@ the value to be used in the query
 
 #### Defined in
 
-[store/data-source.ts:23](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L23)
+[store/data-source.ts:23](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L23)
 
 ___
 
@@ -607,7 +607,7 @@ greater than or equal
 
 #### Defined in
 
-[store/data-source.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L15)
+[store/data-source.ts:15](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L15)
 
 ___
 
@@ -627,7 +627,7 @@ descending order
 
 #### Defined in
 
-[store/data-source.ts:34](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/store/data-source.ts#L34)
+[store/data-source.ts:34](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/data-source.ts#L34)
 
 ___
 
@@ -651,7 +651,7 @@ ___
 
 #### Defined in
 
-[auth/auth.ts:29](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L29)
+[auth/auth.ts:29](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L29)
 
 ___
 
@@ -683,7 +683,7 @@ Types the callback to accept a user credentials object
 
 #### Defined in
 
-[auth/auth.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/auth/auth.ts#L28)
+[auth/auth.ts:28](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L28)
 
 ___
 
@@ -699,7 +699,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:15](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L15)
+[types/utility-types.ts:15](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L15)
 
 ___
 
@@ -715,7 +715,7 @@ ___
 
 #### Defined in
 
-[types/utility-types.ts:13](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/types/utility-types.ts#L13)
+[types/utility-types.ts:13](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/types/utility-types.ts#L13)
 
 ___
 
@@ -725,7 +725,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L16)
+[cloud-storage/cloud-storage.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L16)
 
 ___
 
@@ -743,7 +743,7 @@ ___
 
 #### Defined in
 
-[observable/observable.ts:2](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L2)
+[observable/observable.ts:2](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/observable/observable.ts#L2)
 
 ___
 
@@ -768,7 +768,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:1](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L1)
+[cloud-storage/cloud-storage.ts:1](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L1)
 
 ## Functions
 
@@ -777,6 +777,14 @@ ___
 ▸ **camelCase**(`str`): `string`
 
 Transforms a string to a camel case format (camelCaseFormat)
+
+**`Example`**
+
+```ts
+const str = 'snake-case-format'
+const result = camelCase( str )
+// result = 'snakeCaseFormat'
+```
 
 #### Parameters
 
@@ -792,7 +800,7 @@ the camel case transformed string
 
 #### Defined in
 
-[utils/utils.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/utils/utils.ts#L28)
+[utils/utils.ts:42](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/utils/utils.ts#L42)
 
 ___
 
@@ -801,6 +809,15 @@ ___
 ▸ **getDeepValue**<`T`, `P`\>(`obj`, `path`): [`PropPathType`](modules.md#proppathtype)<`T`, `P`\>
 
 Gets the value of the supproperty in the passed object
+
+**`Example`**
+
+```ts
+const obj = { a: { b: { c: 1 } } }
+const path = 'a.b.c'
+const result = getDeepValue( obj, path )
+// result = 1
+```
 
 #### Type parameters
 
@@ -824,7 +841,7 @@ the value of the supproperty in the passed object
 
 #### Defined in
 
-[utils/utils.ts:59](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/utils/utils.ts#L59)
+[utils/utils.ts:82](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/utils/utils.ts#L82)
 
 ___
 
@@ -847,7 +864,7 @@ Decorator for a property that you want to persist.
 
 #### Defined in
 
-[persistent/persistent.ts:424](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L424)
+[persistent/persistent.ts:424](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L424)
 
 ___
 
@@ -880,7 +897,7 @@ ___
 
 #### Defined in
 
-[persistent/persistent.ts:493](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L493)
+[persistent/persistent.ts:503](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L503)
 
 ___
 
@@ -894,7 +911,8 @@ In this case, and contrary to the
 **`Persistent Reference`**
 
 decorator, the reference 
-contents is not stored. Only the reference information is stored.
+contents is not stored even it has been changed. Only the reference information 
+is stored.
 
 **`See`**
 
@@ -914,7 +932,7 @@ persistentReference
 
 #### Defined in
 
-[persistent/persistent.ts:477](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L477)
+[persistent/persistent.ts:478](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L478)
 
 ___
 
@@ -922,9 +940,22 @@ ___
 
 ▸ **persistentPureReferenceWithPersistentProps**<`T`\>(`forcedPersistentProps`, `storeInCollection?`): (`target`: [`Persistent`](classes/Persistent.md), `property`: `string`) => `void`
 
-Decorator to declare a persistent reference (see @persistentReference) that stores
-the values in forcedPersistentProps as values in the reference object. This is useful
-when you are not able to wait for population of referenced properties.
+Decorator to declare a persistent property as a pure reference (see @persistentPureReference) that stores
+the values of the properties listed in forcedPersistentProps as values in the reference object. This is useful
+when you only need a few properties to be available without needing to populate the referenced property.
+
+**`See`**
+
+ - persistentReferenceWithPersistentProps
+ - persistentPureReference
+
+**`Sample`**
+
+class User extends Persistent {
+	@persistentPureReferenceWithPersistentProps( ['name', 'email'] ) private _friend: User
+}
+// the reference object will contain the properties name and email of the referenced user
+// without having to populate the _friend property
 
 #### Type parameters
 
@@ -958,7 +989,7 @@ when you are not able to wait for population of referenced properties.
 
 #### Defined in
 
-[persistent/persistent.ts:487](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L487)
+[persistent/persistent.ts:497](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L497)
 
 ___
 
@@ -987,7 +1018,7 @@ persistentPureReference
 
 #### Defined in
 
-[persistent/persistent.ts:449](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L449)
+[persistent/persistent.ts:449](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L449)
 
 ___
 
@@ -1023,7 +1054,7 @@ in a specific collection.
 
 #### Defined in
 
-[persistent/persistent.ts:434](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L434)
+[persistent/persistent.ts:434](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L434)
 
 ___
 
@@ -1067,7 +1098,7 @@ when you are not able to wait for population of referenced properties.
 
 #### Defined in
 
-[persistent/persistent.ts:460](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L460)
+[persistent/persistent.ts:460](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L460)
 
 ___
 
@@ -1100,7 +1131,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:54](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L54)
+[cloud-storage/cloud-storage.ts:54](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L54)
 
 ___
 
@@ -1135,7 +1166,7 @@ be able to load old data that was stored with a different class name.
 
 #### Defined in
 
-[persistent/persistent.ts:530](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L530)
+[persistent/persistent.ts:540](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L540)
 
 ___
 
@@ -1171,7 +1202,7 @@ all persistent classes that you want to use in any persistent stream.
 
 #### Defined in
 
-[persistent/persistent.ts:518](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/persistent/persistent.ts#L518)
+[persistent/persistent.ts:528](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L528)
 
 ___
 
@@ -1181,6 +1212,15 @@ ___
 
 Replaces keys found in a string for its values. The keys should be inserted 
 inside brackets ${ key } as is done in the string template literals substitutions
+
+**`Example`**
+
+```ts
+const text = 'Hello ${name}, how are you ${ action }?'
+const values = { name: 'John', action: 'today' }
+const result = replaceValue( text, values )
+// result = 'Hello John, how are you today?'
+```
 
 #### Parameters
 
@@ -1197,7 +1237,7 @@ the string filled with corresponding values
 
 #### Defined in
 
-[utils/utils.ts:14](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/utils/utils.ts#L14)
+[utils/utils.ts:24](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/utils/utils.ts#L24)
 
 ___
 
@@ -1206,6 +1246,14 @@ ___
 ▸ **snakeCase**(`str`, `snakeChar?`): `string`
 
 Transforms a string in to a snake case format (snake-case-format)
+
+**`Example`**
+
+```ts
+const str = 'camelCaseFormat'
+const result = snakeCase( str )
+// result = 'camel-case-format'
+```
 
 #### Parameters
 
@@ -1222,4 +1270,4 @@ the snake case transformed string
 
 #### Defined in
 
-[utils/utils.ts:46](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/utils/utils.ts#L46)
+[utils/utils.ts:64](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/utils/utils.ts#L64)

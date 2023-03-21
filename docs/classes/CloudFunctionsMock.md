@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions-mock.ts#L8)
+[cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions-mock.ts#L8)
 
 ## Methods
 
@@ -63,7 +63,7 @@
 
 #### Defined in
 
-[cloud-functions/cloud-functions-mock.ts:16](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions-mock.ts#L16)
+[cloud-functions/cloud-functions-mock.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions-mock.ts#L16)
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 #### Defined in
 
-[cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-functions/cloud-functions-mock.ts#L12)
+[cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions-mock.ts#L12)

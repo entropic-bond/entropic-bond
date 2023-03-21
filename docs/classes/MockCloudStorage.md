@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[cloud-storage/mock-cloud-storage.ts:5](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/mock-cloud-storage.ts#L5)
+[cloud-storage/mock-cloud-storage.ts:5](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L5)
 
 ## Properties
 
@@ -62,7 +62,7 @@
 
 #### Defined in
 
-[cloud-storage/mock-cloud-storage.ts:43](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/mock-cloud-storage.ts#L43)
+[cloud-storage/mock-cloud-storage.ts:43](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L43)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:50](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L50)
+[cloud-storage/cloud-storage.ts:50](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L50)
 
 ## Accessors
 
@@ -94,7 +94,7 @@ CloudStorage.className
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L36)
+[cloud-storage/cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L36)
 
 ___
 
@@ -112,7 +112,7 @@ CloudStorage.defaultCloudStorage
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:44](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L44)
+[cloud-storage/cloud-storage.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L44)
 
 ## Methods
 
@@ -136,7 +136,7 @@ CloudStorage.defaultCloudStorage
 
 #### Defined in
 
-[cloud-storage/mock-cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/mock-cloud-storage.ts#L36)
+[cloud-storage/mock-cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L36)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/mock-cloud-storage.ts:32](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/mock-cloud-storage.ts#L32)
+[cloud-storage/mock-cloud-storage.ts:32](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L32)
 
 ___
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/mock-cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/mock-cloud-storage.ts#L10)
+[cloud-storage/mock-cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L10)
 
 ___
 
@@ -203,7 +203,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/mock-cloud-storage.ts:23](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/mock-cloud-storage.ts#L23)
+[cloud-storage/mock-cloud-storage.ts:23](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L23)
 
 ___
 
@@ -227,7 +227,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L28)
+[cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L28)
 
 ___
 
@@ -252,7 +252,7 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L24)
+[cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L24)
 
 ___
 
@@ -276,4 +276,4 @@ ___
 
 #### Defined in
 
-[cloud-storage/cloud-storage.ts:40](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/cloud-storage/cloud-storage.ts#L40)
+[cloud-storage/cloud-storage.ts:40](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L40)

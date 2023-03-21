@@ -70,7 +70,7 @@ Notifies all the subscribers with the event passed as parameter.
 
 #### Defined in
 
-[observable/observable.ts:47](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L47)
+[observable/observable.ts:47](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/observable/observable.ts#L47)
 
 ___
 
@@ -95,7 +95,7 @@ a function to unsubscribe the listener from further notifications
 
 #### Defined in
 
-[observable/observable.ts:28](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L28)
+[observable/observable.ts:28](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/observable/observable.ts#L28)
 
 ___
 
@@ -117,4 +117,4 @@ Removes the callback from the notification list.
 
 #### Defined in
 
-[observable/observable.ts:38](https://github.com/entropic-bond/entropic-bond/blob/2d7d466/src/observable/observable.ts#L38)
+[observable/observable.ts:38](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/observable/observable.ts#L38)
