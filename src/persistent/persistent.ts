@@ -471,7 +471,8 @@ export function persistentReference( target: Persistent, property: string ) {
 /**
  * Decorator for a property that is a reference to a persistent object. 
  * In this case, and contrary to the @persistentReference decorator, the reference 
- * contents is not stored. Only the reference information is stored.
+ * contents is not stored even it has been changed. Only the reference information 
+ * is stored.
  * @see persistentReference
  */
  export function persistentPureReference( target: Persistent, property: string, storeInCollection?: string | CollectionPathCallback ) {
@@ -479,10 +480,19 @@ export function persistentReference( target: Persistent, property: string ) {
 }
 
 /**
- * Decorator to declare a persistent reference (see @persistentReference) that stores
- * the values in forcedPersistentProps as values in the reference object. This is useful
- * when you are not able to wait for population of referenced properties.
+ * Decorator to declare a persistent property as a pure reference (see @persistentPureReference) that stores
+ * the values of the properties listed in forcedPersistentProps as values in the reference object. This is useful
+ * when you only need a few properties to be available without needing to populate the referenced property.
  * @param forcedPersistentProps the properties whose values should be stored in the reference object
+ * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @see persistentReferenceWithPersistentProps
+ * @see persistentPureReference
+ * @sample
+ * class User extends Persistent {
+ * 	@persistentPureReferenceWithPersistentProps( ['name', 'email'] ) private _friend: User
+ * }
+ * // the reference object will contain the properties name and email of the referenced user
+ * // without having to populate the _friend property
  */
  export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
