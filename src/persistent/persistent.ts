@@ -151,9 +151,10 @@ export class Persistent {
 
 	/**
 	 * This method is called by the persistence engine when the instance has been
-	 * just serialized. It is called after the properties are initialized.
+	 * just serialized. It is called after the properties are initialized with 
+	 * serialized data.
 	 */
-	protected onSerialized() {}
+	protected afterDeserialize() {}
 
 	/**
 	 * This method is called by the persistence engine before the instance is
@@ -197,7 +198,7 @@ export class Persistent {
 	 */
 	fromObject( obj: PersistentObject<this> ) {
 		this.fromObj( obj )
-		this.onSerialized()
+		this.afterDeserialize()
 
 		return this
 	}
