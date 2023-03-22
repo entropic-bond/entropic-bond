@@ -3,7 +3,7 @@ import { persistent, Persistent, persistentReference, persistentReferenceAt, reg
 interface Name { 
 	firstName: string, 
 	lastName: string 
-	ancestorName?: {
+	ancestorName: {
 		father?: string
 		mother?: string
 	}

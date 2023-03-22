@@ -73,7 +73,8 @@ export class Persistent {
 	 * @see classesExtending
 	 * @see annotations
 	 */
-	static classFactory( className: string ) {
+	static classFactory( className: string | undefined ) {
+		if ( !className ) throw new Error( `You should provide a class name.` )
 		if ( !this._factoryMap[ className ] ) throw new Error( `You should register class ${ className } prior to use.` )
 		return this._factoryMap[ className ].factory
 	}
@@ -353,7 +354,7 @@ export class Persistent {
 		}
 	}
 
-	private buildRefObject( value: Persistent, storeInCollection: string, forcedPersistentProps: ClassPropNames<Persistent>[] ): DocumentReference {
+	private buildRefObject( value: Persistent, storeInCollection: string, forcedPersistentProps?: ClassPropNames<Persistent>[] ): DocumentReference {
 		const forcedObject = forcedPersistentProps?.reduce( ( obj, propName ) => {
 			if ( value[ propName ] !== undefined ) obj[ propName ] = value[ propName ]
 			return obj

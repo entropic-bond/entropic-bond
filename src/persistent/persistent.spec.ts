@@ -21,7 +21,7 @@ class NotRegistered extends Persistent {}
 
 @registerPersistentClass( 'Person' )
 class Person extends Persistent {
-	set name( value: string ) {
+	set name( value: string | undefined ) {
 		this._name = value
 	}
 
@@ -29,7 +29,7 @@ class Person extends Persistent {
 		return this._name
 	}
 
-	set salary( value: number ) {
+	set salary( value: number | undefined ) {
 		this._salary = value
 	}
 
@@ -93,8 +93,8 @@ class Person extends Persistent {
 		return this._persistentObject
 	}
 
-	@persistent private _name: string
-	@persistent private _salary: number
+	@persistent private _name?: string
+	@persistent private _salary?: number
 	@persistent private _skills: string[]
 	@persistent private _anObjectProperty: PersistentClass = new PersistentClass()
 	@persistent private _arrayOfPersistent: PersistentClass[]
@@ -234,7 +234,7 @@ describe( 'Persistent', ()=>{
 
 		expect( person.toObject().name ).toBeUndefined()
 
-		delete obj.name
+		delete (obj as any).name
 		person.fromObject( obj )
 		expect( person.name ).toBeUndefined()
 	})
@@ -272,11 +272,12 @@ describe( 'Persistent', ()=>{
 	})
 
 	it( 'should deal with undefined values', ()=>{
-		obj.plainObject.prop1 = undefined
-		obj.plainObject.prop2 = null
+		obj.plainObject.prop1 = undefined as any
+		obj.plainObject.prop2 = null as any
 		let aPerson: Person
 
 		expect( ()=>{ aPerson = new Person( 'person4' ).fromObject( obj ) } ).not.toThrow()
+		aPerson = new Person( 'person4' ).fromObject( obj )
 		expect( aPerson._plainObject.prop1 ).toBeUndefined()
 		expect( aPerson._plainObject.prop2 ).toBeNull()
 	})
@@ -297,10 +298,10 @@ describe( 'Persistent', ()=>{
 		}).not.toThrow()
 	})
 
-	it( 'should throw with object info if available on creating a persistent instance', ()=>{
+	it( 'should throw with object info if not available on creating a persistent instance', ()=>{
 		expect(()=>{
 			Persistent.createInstance({ id: 'id' })
-		}).toThrow( 'You should register class undefined prior to use. Class name not found in object {"id":"id"}' )
+		}).toThrow( 'You should provide a class name.' )
 	})
 
 	it( 'should clone persistent properties of an instance into this instance', ()=>{
@@ -411,7 +412,7 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should create an object at root level', ()=>{
-			const persistentClassDocs = person.toObject().__rootCollections[ 'PersistentClass' ]
+			const persistentClassDocs = person.toObject().__rootCollections?.[ 'PersistentClass' ]
 
 			expect( persistentClassDocs ).toEqual( expect.arrayContaining([
 				expect.objectContaining({ persistentProp: 345 })
@@ -421,7 +422,7 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should create root reference collection with arbitrary name', ()=>{
-			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName' ]
+			const collectionDocs = person.toObject().__rootCollections?.[ 'ArbitraryCollectionName' ]
 
 			expect( collectionDocs ).toEqual( expect.arrayContaining([
 				expect.objectContaining({ persistentProp: 3989 })
@@ -431,7 +432,7 @@ describe( 'Persistent', ()=>{
 		})
 		
 		it( 'should create root reference collection with arbitrary name based on function call', ()=>{
-			const collectionDocs = person.toObject().__rootCollections[ 'ArbitraryCollectionName/PersistentClass/_docAtArbitraryCollectionRefFunc' ]
+			const collectionDocs = person.toObject().__rootCollections?.[ 'ArbitraryCollectionName/PersistentClass/_docAtArbitraryCollectionRefFunc' ]
 			expect( collectionDocs	).toBeDefined()
 
 			expect( collectionDocs ).toEqual( expect.arrayContaining([
@@ -444,7 +445,7 @@ describe( 'Persistent', ()=>{
 
 		it( 'should not create root reference for existing references', ()=>{
 			expect( Object.values(
-				newPerson.toObject().__rootCollections 
+				newPerson.toObject().__rootCollections as any
 			)).toHaveLength( 1 )
 		})
 		
@@ -472,8 +473,8 @@ describe( 'Persistent', ()=>{
 			person.anObjectProperty.personPureRef = new Person( 'person7' )
 			const obj = person.toObject()
 
-			expect( obj.__rootCollections['Person'] ).toHaveLength( 1 )
-			expect( obj.__rootCollections['Person'][0].id ).not.toEqual( 'person7' )
+			expect( obj.__rootCollections?.['Person'] ).toHaveLength( 1 )
+			expect( obj.__rootCollections?.['Person'][0].id ).not.toEqual( 'person7' )
 		})
 			
 		it( 'should fill reference object when store pure reference', ()=>{
@@ -483,7 +484,7 @@ describe( 'Persistent', ()=>{
 			person.anObjectProperty.personPureRef = personPureRef
 			const obj = person.toObject()
 
-			expect( obj.anObjectProperty.personPureRef ).toEqual({
+			expect( obj.anObjectProperty?.personPureRef ).toEqual({
 				__className: 'Person',
 				id: personPureRef.id,
 				__documentReference: { storedInCollection: 'Person' },
@@ -491,7 +492,7 @@ describe( 'Persistent', ()=>{
 				salary: 5643
 			})
 			
-			expect( obj.__rootCollections.Person[ 0 ]['anObjectProperty'].personPureRef ).toEqual({
+			expect( obj.__rootCollections?.Person[ 0 ]['anObjectProperty'].personPureRef ).toEqual({
 				__className: 'Person',
 				id: personPureRef.id,
 				__documentReference: { storedInCollection: 'Person' },
@@ -507,13 +508,13 @@ describe( 'Persistent', ()=>{
 			person.anObjectProperty.personPureRef = personPureRef
 			const obj = person.toObject()
 
-			expect( obj.anObjectProperty.personPureRef ).toEqual({
+			expect( obj.anObjectProperty?.personPureRef ).toEqual({
 				__className: 'Person',
 				id: personPureRef.id,
 				__documentReference: { storedInCollection: 'Person' },
 				salary: 5643
 			})
-			expect( obj.anObjectProperty.personPureRef ).not.toHaveProperty( 'name' )
+			expect( obj.anObjectProperty?.personPureRef ).not.toHaveProperty( 'name' )
 		})
 
 		it( 'should create an instance from pure reference with the referenced persistent props', ()=>{
@@ -533,7 +534,7 @@ describe( 'Persistent', ()=>{
 		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
 			const obj = person.toObject()
 
-			expect( obj.__rootCollections.Person[0].id ).toEqual( person.id )
+			expect( obj.__rootCollections?.Person[0].id ).toEqual( person.id )
 			expect( obj['referenceWithStoredValues'] ).toEqual({
 				__className: 'PersistentClass',
 				id: person._referenceWithStoredValues.id,
@@ -541,7 +542,7 @@ describe( 'Persistent', ()=>{
 				persistentProp: 2093
 			})
 			
-			const referenceWithValuesInRootCollections = obj.__rootCollections['ArbitraryCollectionName/PersistentClass'].find( 
+			const referenceWithValuesInRootCollections = obj.__rootCollections?.['ArbitraryCollectionName/PersistentClass'].find( 
 				persistent => persistent.id === person._referenceWithStoredValues.id 
 			)
 
@@ -553,7 +554,7 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should not store values of persistentReferenceWithPersistentProps if value is undefined', ()=>{
-			person._referenceWithStoredValues.persistentProp = undefined
+			person._referenceWithStoredValues.persistentProp = undefined as any
 			const obj = person.toObject()
 
 			expect( obj['referenceWithStoredValues'] ).toEqual({
@@ -578,7 +579,7 @@ describe( 'Persistent', ()=>{
 				const obj = person.toObject()
 
 				expect( obj.arrayOfRefs ).toHaveLength( 2 )
-				expect( obj.arrayOfRefs[0] ).toEqual({
+				expect( obj.arrayOfRefs?.[0] ).toEqual({
 					id: ref1.id,
 					__className: 'PersistentClass',
 					__documentReference: {
@@ -588,7 +589,7 @@ describe( 'Persistent', ()=>{
 			})
 
 			it( 'should create root reference collection with references in array of references', ()=>{
-				const persistentClassDocs = person.toObject().__rootCollections[ 'PersistentClass' ]
+				const persistentClassDocs = person.toObject().__rootCollections?.[ 'PersistentClass' ]
 
 				expect( persistentClassDocs ).toEqual( expect.arrayContaining([
 					expect.objectContaining({	id: ref1.id }),
@@ -633,11 +634,11 @@ describe( 'Persistent', ()=>{
 				const newPerson = Persistent.createInstance<Person>( personObj )
 
 				const obj = newPerson.toObject()
-				expect( obj.persistentObject.nonPersistedReferences ).toHaveLength( 1 )
-				expect( obj.persistentObject.nonPersistedReferences[0].id ).toBeDefined()
-				expect( obj.persistentObject.nonPersistedReferences[0]['__className'] ).toBeDefined()
-				expect( obj.persistentObject.nonPersistedReferences[0]['__documentReference'] ).toBeDefined()
-				expect( obj.persistentObject.nonPersistedReferences[0].persistentProp ).not.toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences ).toHaveLength( 1 )
+				expect( obj.persistentObject?.nonPersistedReferences[0].id ).toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0]['__className'] ).toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0]['__documentReference'] ).toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0].persistentProp ).not.toBeDefined()
 			})
 		})
 		

@@ -16,7 +16,8 @@ describe( 'Model', ()=>{
 		testUser = new TestUser()
 		testUser.name = {
 			firstName: 'testUserFirstName',
-			lastName: 'testUserLastName'
+			lastName: 'testUserLastName',
+			ancestorName: {}
 		}
 		testUser.age = 35
 		testUser.skills = [ 'lazy', 'dirty' ]
@@ -67,7 +68,8 @@ describe( 'Model', ()=>{
 		expect( rawData()[ 'TestUser' ][ testUser.id ] ).toEqual(	expect.objectContaining({ 
 			name: { 
 				firstName: 'testUserFirstName',
-				lastName: 'testUserLastName'
+				lastName: 'testUserLastName',
+				ancestorName: {}
 			}
 		}))
 	})	
@@ -181,7 +183,7 @@ describe( 'Model', ()=>{
 
 		it( 'should save derived object in parent collection', async ()=>{
 			const derived = new DerivedUser()
-			derived.name = { firstName: 'Fulanito', lastName: 'Derived' }
+			derived.name = { firstName: 'Fulanito', lastName: 'Derived', ancestorName: {} }
 			derived.salary = 3900
 
 			await model.save( derived )
@@ -351,24 +353,27 @@ describe( 'Model', ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			await Store.populate( loadedUser.derived )
 			expect( loadedUser.derived['_documentRef'] ).not.toBeDefined()
+			let thrown = false
 
 			try {
 				await Store.populate( loadedUser.derived )
 			} 
 			catch ( err ) {
-				var thrown = true
+				thrown = true
 			}
 			expect( thrown ).toBeFalsy()
 		})
 
 		it( 'should not throw on populating undefined instances', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			loadedUser.derived = undefined
+			loadedUser.derived = undefined as any
+			let thrown = false
+	
 			try {
 				await Store.populate( loadedUser.derived )
 			} 
 			catch ( err ) {
-				var thrown = true
+				thrown = true
 			}
 			expect( thrown ).toBeFalsy()
 		})
@@ -377,12 +382,13 @@ describe( 'Model', ()=>{
 			const loadedUser = await model.findById( 'user6' )
 
 			loadedUser.derived[ '_id' ] = 'non-existing'
+			let thrown = false
 
 			try {
 				await Store.populate( loadedUser.derived )
 			} 
 			catch ( err ) {
-				var thrown = true
+				thrown = true
 			}
 			expect( thrown ).toBeFalsy()
 		})

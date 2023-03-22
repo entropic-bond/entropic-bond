@@ -14,7 +14,8 @@
     ],
     "declaration": true,
     "experimentalDecorators": true,
-    "allowJs": true
+    "allowJs": true,
+    // "strictNullChecks": true
 	},
   "include": ["./src"]
 }

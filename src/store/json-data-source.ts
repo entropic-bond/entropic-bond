@@ -23,7 +23,7 @@ export class JsonDataSource implements DataSource {
 	 * @param jsonRawData the JSON object to be used as data store
 	 */
 	constructor( jsonRawData?: JsonRawData ) {
-		this._jsonRawData = jsonRawData;
+		if ( jsonRawData ) this._jsonRawData = jsonRawData;
 	}
 
 	/**
@@ -54,7 +54,7 @@ export class JsonDataSource implements DataSource {
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			if ( !this._jsonRawData[ collectionName ] ) this._jsonRawData[ collectionName ] = {}
 			collection.forEach( document => {
-				this._jsonRawData[ collectionName ][ document.id ] = document
+				this._jsonRawData[ collectionName ][ document.id! ] = document
 			})
 		})
 
@@ -65,7 +65,7 @@ export class JsonDataSource implements DataSource {
 		const rawDataArray = Object.values( this._jsonRawData[ collectionName ] || {} )
 		if ( !queryObject ) return this.resolveWithDelay( rawDataArray )
 		
-		this._lastLimit = queryObject.limit
+		this._lastLimit = queryObject.limit || 0
 		this._cursor = 0
 
 		this._lastMatchingDocs = Object.entries( queryObject ).reduce(
@@ -183,19 +183,19 @@ export class JsonDataSource implements DataSource {
 
 	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {
 		if ( typeof value === 'object' ) {
-			const propName = Object.keys( value )[0]
-			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value[ propName ] )
+			const propName = Object.keys( value! )[0]
+			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value?.[ propName ] )
 		}
 
 		return [ doc || document, val || value ]
 	}
 
 	private resolveWithDelay<T>( data?: T ): Promise<T> {
-		if ( this._simulateDelay <=0 ) return Promise.resolve( data )
+		if ( this._simulateDelay <=0 ) return Promise.resolve( data! )
 
 		const promise = new Promise<T>( resolve => {
 			setTimeout(
-				()=> resolve( data ),
+				()=> resolve( data! ),
 				this._simulateDelay
 			)
 		})
@@ -206,9 +206,9 @@ export class JsonDataSource implements DataSource {
 		return promise
 	}
 
-	private _jsonRawData: JsonRawData
+	private _jsonRawData: JsonRawData = {}
 	private _lastMatchingDocs: DocumentObject[]
-	private _lastLimit: number
+	private _lastLimit: number = 0
 	private _cursor: number
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []

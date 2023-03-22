@@ -66,11 +66,11 @@ describe( 'Cloud functions', ()=>{
 
 		const user = new TestUser()
 		user.age = 35
-		user.name = { firstName: 'Test User', lastName: 'as a user' }
+		user.name = { firstName: 'Test User', lastName: 'as a user', ancestorName: {} }
 
 		const result = await testPersistentParamAndReturn( user )
 		expect( result.age ).toBe( 35 )
-		expect( result.name ).toEqual({ firstName: 'Test User', lastName: 'as a user' })
+		expect( result.name ).toEqual({ firstName: 'Test User', lastName: 'as a user', ancestorName: {} })
 	})
 
 	it( 'should execute cloud function with params as Persistent and return as plain', async ()=>{
