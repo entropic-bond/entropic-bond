@@ -182,10 +182,10 @@ export class Persistent {
 	 * @see fromObject
 	 * @see toObject
 	 */
-	clone( instance: Persistent ) {
+	clone( instance: Persistent ): this {
 		const obj = instance.toObject() as any
 		delete obj['id']
-		this.fromObject( obj )
+		return this.fromObject( obj )
 	}
 
 	/**
@@ -196,7 +196,7 @@ export class Persistent {
 	 * @see clone
 	 * @see toObject
 	 */
-	fromObject( obj: PersistentObject<this> ) {
+	fromObject( obj: PersistentObject<this> ): this {
 		this.fromObj( obj )
 		this.afterDeserialize()
 
