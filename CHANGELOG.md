@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/entropic-bond/entropic-bond/compare/v1.39.1...v1.40.0) (2023-03-22)
+
+
+### Features
+
+* afterDeserialize ([5741675](https://github.com/entropic-bond/entropic-bond/commit/5741675b176192c958942180949a2ccec7c624b4))
+
 ## [1.39.1](https://github.com/entropic-bond/entropic-bond/compare/v1.39.0...v1.39.1) (2023-03-20)
 
 
