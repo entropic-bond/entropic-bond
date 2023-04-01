@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/entropic-bond/entropic-bond/compare/v1.40.0...v1.40.1) (2023-03-25)
+
+
+### Bug Fixes
+
+* clone to return this ([c9efedb](https://github.com/entropic-bond/entropic-bond/commit/c9efedb5aa4f0c8aee49cbb2b89c6aabeb3b1a2e))
+
 # [1.40.0](https://github.com/entropic-bond/entropic-bond/compare/v1.39.1...v1.40.0) (2023-03-22)
 
 
