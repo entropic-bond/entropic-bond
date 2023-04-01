@@ -1,3 +1,10 @@
+## [1.40.2](https://github.com/entropic-bond/entropic-bond/compare/v1.40.1...v1.40.2) (2023-04-01)
+
+
+### Bug Fixes
+
+* remove JSON dependency ([849fe38](https://github.com/entropic-bond/entropic-bond/commit/849fe38c46a3513480e03621f74c59c2be9d7c84))
+
 ## [1.40.1](https://github.com/entropic-bond/entropic-bond/compare/v1.40.0...v1.40.1) (2023-03-25)
 
 
