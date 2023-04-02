@@ -1,3 +1,10 @@
+## [1.40.3](https://github.com/entropic-bond/entropic-bond/compare/v1.40.2...v1.40.3) (2023-04-02)
+
+
+### Bug Fixes
+
+* give more info on createInstance error ([d48b260](https://github.com/entropic-bond/entropic-bond/commit/d48b26091ad7cd5c59357988f7a85497ce8e3464))
+
 ## [1.40.2](https://github.com/entropic-bond/entropic-bond/compare/v1.40.1...v1.40.2) (2023-04-01)
 
 
