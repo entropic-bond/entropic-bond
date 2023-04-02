@@ -393,7 +393,8 @@ export class Persistent {
 				return instance.fromObject( obj ) as T
 			}
 			catch ( e ) {
-				throw new Error( `${ e } Class name not found in object with keys ${ Object.keys( obj ).join( ', ' ) } ) }.` )
+				const stringifiedObj = Object.entries( obj ).map(([ key, value ])=>`${ key }: ${ value }` ).join( '\n' )
+				throw new Error( `${ e } Class name not found in object ${ stringifiedObj }` )
 			}
 		}
 	}
