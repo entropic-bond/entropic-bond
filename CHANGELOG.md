@@ -1,3 +1,10 @@
+## [1.40.5](https://github.com/entropic-bond/entropic-bond/compare/v1.40.4...v1.40.5) (2023-04-02)
+
+
+### Bug Fixes
+
+* remove empty props from error message ([fc33524](https://github.com/entropic-bond/entropic-bond/commit/fc33524c812a6cc658e2d5f35533e5c6378a1838))
+
 ## [1.40.4](https://github.com/entropic-bond/entropic-bond/compare/v1.40.3...v1.40.4) (2023-04-02)
 
 
