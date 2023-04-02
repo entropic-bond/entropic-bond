@@ -1,3 +1,10 @@
+## [1.40.4](https://github.com/entropic-bond/entropic-bond/compare/v1.40.3...v1.40.4) (2023-04-02)
+
+
+### Bug Fixes
+
+* format error message ([75c8043](https://github.com/entropic-bond/entropic-bond/commit/75c8043f3397dffba54392e6db6f3c52568ea44f))
+
 ## [1.40.3](https://github.com/entropic-bond/entropic-bond/compare/v1.40.2...v1.40.3) (2023-04-02)
 
 
