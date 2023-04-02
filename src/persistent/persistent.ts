@@ -397,7 +397,7 @@ export class Persistent {
 					.filter(([ _key, value ])=> value !== undefined && value !== null && typeof value !== 'function' )
 					.map(([ key, value ])=>`${ key }: ${ value }` )
 					.join( ',\n\t' )
-				throw new Error( `${ e }.\n-----> Class name not found in object:\n{\n ${ stringifiedObj } \n}\n` )
+				throw new Error( `${ e }\n-----> Class name not found in object:\n{\n\t ${ stringifiedObj } \n}\n` )
 			}
 		}
 	}
