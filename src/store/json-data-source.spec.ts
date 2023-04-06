@@ -94,7 +94,7 @@ describe( 'Json DataSource', ()=>{
 		})
 		
 		it( 'should simulate error on delete', ()=>{
-			expect(	model.delete( 'a' ) ).rejects.toThrow( 'Simulated error' )
+			expect(	model.delete( 'b' ) ).rejects.toThrow( 'Simulated error' )
 		})
 	})
 })
