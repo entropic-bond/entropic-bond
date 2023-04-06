@@ -711,7 +711,6 @@ describe( 'Persistent', ()=>{
 
 			expect( instance.toObject().__className ).toBe( 'PersistentClass' )
 		})
-		
 
 	})
 
