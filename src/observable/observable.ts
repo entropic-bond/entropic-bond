@@ -26,7 +26,7 @@ export class Observable<T> {
 	 * @returns a function to unsubscribe the listener from further notifications
 	 */
 	 subscribe( callback: Callback<T> ): Unsubscriber {
-		this.subscribers.push(callback)
+		this.subscribers.add(callback)
 		return ()=>this.unsubscribe( callback )
 	}
 
@@ -36,7 +36,7 @@ export class Observable<T> {
 	 * @param listenerCallback the listener callback to remove
 	 */
 	unsubscribe( callback: Callback<T> ) {
-		this.subscribers = this.subscribers.filter( cb => cb !== callback )
+		this.subscribers.delete( callback )
 	}
 
 	/**
@@ -48,5 +48,20 @@ export class Observable<T> {
 		this.subscribers.forEach(subs => subs(event))
 	}
 
-	private subscribers: Callback<T>[] = []
+	/**
+	 * Returns the number of subscribers.
+	 * 
+	 * @returns the number of subscribers
+	 * @example
+	 * const observable = new Observable<number>()
+	 * observable.subscribe( event => console.log( event ) )
+	 * observable.subscribe( event => console.log( event ) )
+	 * observable.subscribe( event => console.log( event ) )
+	 * console.log( observable.subscribersCount ) // 3
+	 */
+	get subscribersCount() {
+		return this.subscribers.size
+	}
+
+	private subscribers: Set<Callback<T>> = new Set()
 }

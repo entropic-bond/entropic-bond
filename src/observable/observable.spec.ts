@@ -94,4 +94,12 @@ describe('observer', () => {
 		expect( cb ).not.toHaveBeenCalled()
 	})
 	
+	it( 'should return the number of subscribers', ()=>{
+		const cb = jest.fn()
+		observable.subscribe( cb )
+		observable.subscribe( cb )
+		observable.subscribe( jest.fn() )
+
+		expect( observable.subscribersCount ).toBe( 2 )
+	})
 })
