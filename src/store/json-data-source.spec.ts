@@ -1,4 +1,4 @@
-import { DocumentObject, JsonDataSource, Store } from '..'
+import { DocumentObject, JsonDataSource, Model, Store } from '..'
 import { TestUser } from './mocks/test-user'
 
 describe( 'Json DataSource', ()=>{
@@ -68,5 +68,33 @@ describe( 'Json DataSource', ()=>{
 			}))
 		})
 		
+	})
+
+	describe( 'Error simulation', ()=>{
+		let model: Model<TestUser>
+
+		beforeAll(()=>{
+			datasource = new JsonDataSource({
+				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } }
+			}).simulateError( 'Simulated error' )
+			Store.useDataSource( datasource )
+			model = Store.getModel<TestUser>( 'TestUser' )
+		})
+
+		it( 'should simulate error on findById', ()=>{
+			expect(	model.findById( 'a' )	).rejects.toThrow( 'Simulated error' )
+		})
+
+		it( 'should simulate error on find', ()=>{
+			expect(	model.find().get() ).rejects.toThrow( 'Simulated error' )
+		})
+
+		it( 'should simulate error on save', ()=>{
+			expect(	model.save( new TestUser('id') ) ).rejects.toThrow( 'Simulated error' )
+		})
+		
+		it( 'should simulate error on delete', ()=>{
+			expect(	model.delete( 'a' ) ).rejects.toThrow( 'Simulated error' )
+		})
 	})
 })

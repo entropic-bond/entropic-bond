@@ -7,6 +7,13 @@ export interface JsonRawData {
 	}
 }
 
+export interface ErrorOnOperation {
+	store: string
+	find: string
+	findById: string
+	delete: string
+}
+
 type QueryProcessors = {
 	[ P in keyof Required<QueryObject<unknown>> ]: Function
 }
@@ -47,10 +54,14 @@ export class JsonDataSource implements DataSource {
 	}
 
 	findById( id: string, collectionName: string ): Promise< DocumentObject > {
+		if ( this._simulateError?.findById ) throw new Error( this._simulateError.findById )
+
 		return this.resolveWithDelay( this._jsonRawData[ collectionName ][ id ] )
 	}
 
 	save( collections: Collections ): Promise< void > {
+		if ( this._simulateError?.store ) throw new Error( this._simulateError.store )
+
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			if ( !this._jsonRawData[ collectionName ] ) this._jsonRawData[ collectionName ] = {}
 			collection.forEach( document => {
@@ -62,6 +73,8 @@ export class JsonDataSource implements DataSource {
 	}
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
+		if ( this._simulateError?.find ) throw new Error( this._simulateError.find )
+
 		const rawDataArray = Object.values( this._jsonRawData[ collectionName ] || {} )
 		if ( !queryObject ) return this.resolveWithDelay( rawDataArray )
 		
@@ -79,7 +92,9 @@ export class JsonDataSource implements DataSource {
 		return this.resolveWithDelay( this._lastMatchingDocs.slice( 0, queryObject.limit ) )
 	}
 
-	delete( id: string, collectionName: string ): Promise< void > {
+	delete( id: string, collectionName: string ): Promise<void> {
+		if ( this._simulateError?.delete ) throw new Error( this._simulateError.delete )
+
 		delete this._jsonRawData[ collectionName ][ id ]
 		return this.resolveWithDelay()
 	}
@@ -117,6 +132,25 @@ export class JsonDataSource implements DataSource {
 		if ( this._cursor > this._lastMatchingDocs.length ) {
 			this._cursor = this._lastMatchingDocs.length
 		}
+	}
+
+	simulateError( error: string | ErrorOnOperation | undefined ): this {
+		if ( error === undefined ) {
+			this._simulateError = undefined
+			return this
+		}
+
+		if ( typeof error === 'string' ) {
+			this._simulateError = {
+				store: error,
+				find: error,
+				findById: error,
+				delete: error
+			}
+		}
+		else this._simulateError = error
+
+		return this
 	}
 
 	private decCursor( amount: number ) {
@@ -212,4 +246,5 @@ export class JsonDataSource implements DataSource {
 	private _cursor: number
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
+	private _simulateError: ErrorOnOperation | undefined
 }

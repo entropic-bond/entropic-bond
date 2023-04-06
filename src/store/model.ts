@@ -77,7 +77,11 @@ export class Model<T extends Persistent>{
 	 * @returns a promise
 	 */
 	delete( id: string ): Promise<void> {
-		return this._stream.delete( id, this.collectionName )
+		return new Promise<void>( ( resolve, reject ) => {
+			this._stream.delete( id, this.collectionName ) 
+			.then( () => resolve() )
+			.catch( error => reject( error ) )
+		})
 	}
 
 	/**
