@@ -1,3 +1,10 @@
+## [1.40.7](https://github.com/entropic-bond/entropic-bond/compare/v1.40.6...v1.40.7) (2023-04-06)
+
+
+### Bug Fixes
+
+* simulate error ([c3693c4](https://github.com/entropic-bond/entropic-bond/commit/c3693c44bb7054eb5321da31882266a789ca4bb5))
+
 ## [1.40.6](https://github.com/entropic-bond/entropic-bond/compare/v1.40.5...v1.40.6) (2023-04-06)
 
 
