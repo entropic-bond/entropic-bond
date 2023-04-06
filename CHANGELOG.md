@@ -1,3 +1,10 @@
+## [1.40.8](https://github.com/entropic-bond/entropic-bond/compare/v1.40.7...v1.40.8) (2023-04-06)
+
+
+### Bug Fixes
+
+* before and after serializer hooks for inner persistent objects ([08392a0](https://github.com/entropic-bond/entropic-bond/commit/08392a08563b221c680b3eb05bf20d8f8dc43ffd))
+
 ## [1.40.7](https://github.com/entropic-bond/entropic-bond/compare/v1.40.6...v1.40.7) (2023-04-06)
 
 
