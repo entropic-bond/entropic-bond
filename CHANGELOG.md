@@ -1,3 +1,10 @@
+## [1.40.6](https://github.com/entropic-bond/entropic-bond/compare/v1.40.5...v1.40.6) (2023-04-06)
+
+
+### Bug Fixes
+
+* Observable to return the number of subscribers ([22b354d](https://github.com/entropic-bond/entropic-bond/commit/22b354d4985462c3218ed04b81a6d1c2573ba91f))
+
 ## [1.40.5](https://github.com/entropic-bond/entropic-bond/compare/v1.40.4...v1.40.5) (2023-04-02)
 
 
