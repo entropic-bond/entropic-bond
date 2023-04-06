@@ -3,10 +3,14 @@ import { Persistent, persistent, persistentReference, persistentReferenceAt, reg
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
 }
+const beforeSerialize = jest.fn()
+const afterDeserialize = jest.fn()
 
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
+	protected beforeSerialize(): void { beforeSerialize() }
+	protected afterDeserialize(): void { afterDeserialize() }
 	set persistentProp( val: number ) { this._persistentProp = val }
 	get persistentProp() { return this._persistentProp }
 	set personPureRef( value: Person ) { this._personPureRef = value }
@@ -21,6 +25,14 @@ class NotRegistered extends Persistent {}
 
 @registerPersistentClass( 'Person' )
 class Person extends Persistent {
+	protected beforeSerialize(): void {
+		beforeSerialize()
+	}
+
+	protected afterDeserialize(): void {
+		afterDeserialize()
+	}
+
 	set name( value: string | undefined ) {
 		this._name = value
 	}
@@ -701,5 +713,23 @@ describe( 'Persistent', ()=>{
 		})
 		
 
+	})
+
+	describe( 'Before and after serialize hooks', ()=>{
+		beforeEach(()=>{
+			beforeSerialize.mockReset()
+			afterDeserialize.mockReset()
+		})
+
+		it( 'should call beforeSerialize hook', ()=>{
+			person.toObject()
+			expect( beforeSerialize ).toHaveBeenCalledTimes( 2 )
+		})
+
+		it( 'should call afterDeserialize hook', ()=>{
+			const obj = person.toObject()
+			Persistent.createInstance<Person>( obj )
+			expect( afterDeserialize ).toHaveBeenCalledTimes( 2 )
+		})
 	})
 })

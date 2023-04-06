@@ -225,7 +225,6 @@ export class Persistent {
 	 * @see clone
 	 */
 	toObject(): PersistentObject<this> {
-		this.beforeSerialize()
 		const rootCollections: Collections = {}
 		const obj = this.toObj( rootCollections )
 		this.pushDocument( rootCollections, this.className, obj )
@@ -237,6 +236,8 @@ export class Persistent {
 	}
 
 	private toObj( rootCollections: Collections ): PersistentObject<this> {
+		this.beforeSerialize()
+
 		const obj: PersistentObject<this> = {} as any
 		if ( !this.className ) throw new Error( 'You should register this class prior to streaming it.' )
 
