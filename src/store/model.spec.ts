@@ -37,8 +37,8 @@ describe( 'Model', ()=>{
 		const user = await model.findById( 'user1' )
 
 		expect( user ).toBeInstanceOf( TestUser )
-		expect( user.id ).toEqual( 'user1' )
-		expect( user.name.firstName ).toEqual( 'userFirstName1' )
+		expect( user?.id ).toEqual( 'user1' )
+		expect( user?.name?.firstName ).toEqual( 'userFirstName1' )
 	})
 
 	it( 'should not throw if a document id doesn\'t exists', ( done )=>{
@@ -65,7 +65,7 @@ describe( 'Model', ()=>{
 	it( 'should write a document', async ()=>{
 		await model.save( testUser )
 
-		expect( rawData()[ 'TestUser' ][ testUser.id ] ).toEqual(	expect.objectContaining({ 
+		expect( rawData()[ 'TestUser' ]?.[ testUser.id ] ).toEqual(	expect.objectContaining({ 
 			name: { 
 				firstName: 'testUserFirstName',
 				lastName: 'testUserLastName',
@@ -75,10 +75,10 @@ describe( 'Model', ()=>{
 	})	
 	
 	it( 'should delete a document by id', async ()=>{
-		expect( rawData()[ 'TestUser' ][ 'user1'] ).toBeDefined()
+		expect( rawData()[ 'TestUser' ]?.[ 'user1'] ).toBeDefined()
 		await model.delete( 'user1' )
 
-		expect( rawData()[ 'TestUser' ][ 'user1' ] ).toBeUndefined()
+		expect( rawData()[ 'TestUser' ]?.[ 'user1' ] ).toBeUndefined()
 	})
 
 	describe( 'Generic find', ()=>{
@@ -115,7 +115,7 @@ describe( 'Model', ()=>{
 				.get()
 
 			expect( admins ).toHaveLength( 1 )
-			expect( admins[0].age ).toBeLessThan( 50 )
+			expect( admins[0]?.age ).toBeLessThan( 50 )
 		})
 
 		it( 'should query by subproperties', async ()=>{
@@ -130,7 +130,7 @@ describe( 'Model', ()=>{
 				]
 			})
 
-			expect( users[0].id ).toBe( 'user3' )
+			expect( users[0]?.id ).toBe( 'user3' )
 		})
 
 		it( 'should find by subproperties', async ()=>{
@@ -138,7 +138,7 @@ describe( 'Model', ()=>{
 				.where( 'name', '==', { firstName: 'userFirstName3' })
 				.get()
 
-			expect( users[0].id ).toBe( 'user3' )
+			expect( users[0]?.id ).toBe( 'user3' )
 		})
 		
 		it( 'should find by property path', async ()=>{
@@ -146,7 +146,7 @@ describe( 'Model', ()=>{
 				.whereDeepProp( 'name.firstName', '==', 'userFirstName3' )
 				.get()
 
-				expect( users[0].id ).toBe( 'user3' )
+				expect( users[0]?.id ).toBe( 'user3' )
 		})
 		
 		it( 'should find by superdeep property path', async ()=>{
@@ -154,7 +154,7 @@ describe( 'Model', ()=>{
 				.whereDeepProp( 'name.ancestorName.father', '==', 'user3Father')
 				.get()
 
-			expect( users[0].id ).toEqual( 'user3' )
+			expect( users[0]?.id ).toEqual( 'user3' )
 		})
 
 		it( 'should find by swallow property path', async ()=>{
@@ -162,7 +162,7 @@ describe( 'Model', ()=>{
 				.whereDeepProp( 'age', '==', 21 )
 				.get()
 
-			expect( users[0].id ).toEqual( 'user2' )
+			expect( users[0]?.id ).toEqual( 'user2' )
 		})
 
 		it( 'should return the whole collection on undefined query object', async ()=>{
@@ -188,8 +188,8 @@ describe( 'Model', ()=>{
 
 			await model.save( derived )
 
-			expect( rawData()[ 'TestUser' ][ derived.id ][ 'salary' ] ).toBe( 3900 )
-			expect( rawData()[ 'TestUser' ][ derived.id ][ '__className' ] ).toEqual( 'DerivedUser' )
+			expect( rawData()[ 'TestUser' ]?.[ derived.id ]?.[ 'salary' ] ).toBe( 3900 )
+			expect( rawData()[ 'TestUser' ]?.[ derived.id ]?.[ '__className' ] ).toEqual( 'DerivedUser' )
 		})
 
 		it( 'should retrieve derived object by id ', async ()=>{
@@ -221,14 +221,14 @@ describe( 'Model', ()=>{
 			testUser.derived = new DerivedUser()
 			testUser.derived.salary = 1350
 			testUser.manyDerived = [ new DerivedUser(), new DerivedUser() ]
-			testUser.manyDerived[0].salary = 990
-			testUser.manyDerived[1].salary = 1990
+			testUser.manyDerived[0]!.salary = 990
+			testUser.manyDerived[1]!.salary = 1990
 			await model.save( testUser )
 		})
 
 		it( 'should save a document as a reference', async ()=>{
 			expect( rawData()[ 'SubClass' ] ).toBeDefined()
-			expect( rawData()[ 'SubClass' ][ testUser.documentRef.id ] ).toEqual(
+			expect( rawData()[ 'SubClass' ]?.[ testUser.documentRef!.id ] ).toEqual(
 				expect.objectContaining({
 					__className: 'SubClass',
 					year: 2045
@@ -239,124 +239,124 @@ describe( 'Model', ()=>{
 		it( 'should read a swallow document reference', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.documentRef ).toBeInstanceOf( SubClass )
-			expect( loadedUser.documentRef.id ).toBeDefined()
-			expect( loadedUser.documentRef.year ).toBeUndefined()
+			expect( loadedUser?.documentRef ).toBeInstanceOf( SubClass )
+			expect( loadedUser?.documentRef?.id ).toBeDefined()
+			expect( loadedUser?.documentRef?.year ).toBeUndefined()
 		})
 
 		it( 'should fill data of swallow document reference', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			await Store.populate( loadedUser.documentRef )
-			expect( loadedUser.documentRef.id ).toBeDefined()
-			expect( loadedUser.documentRef.year ).toBe( 2045 )
+			await Store.populate( loadedUser?.documentRef! )
+			expect( loadedUser?.documentRef?.id ).toBeDefined()
+			expect( loadedUser?.documentRef?.year ).toBe( 2045 )
 		})
 
 		it( 'should save and array of references', ()=>{
-			expect( rawData()[ 'SubClass' ][ ref1.id ] ).toBeDefined()
-			expect( rawData()[ 'SubClass' ][ ref1.id ][ 'year'] ).toBe( 2081 )			
-			expect( rawData()[ 'SubClass' ][ ref2.id ] ).toBeDefined()
-			expect( rawData()[ 'SubClass' ][ ref2.id ][ 'year'] ).toBe( 2082 )			
+			expect( rawData()[ 'SubClass' ]?.[ ref1.id ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ]?.[ ref1.id ]?.[ 'year'] ).toBe( 2081 )			
+			expect( rawData()[ 'SubClass' ]?.[ ref2.id ] ).toBeDefined()
+			expect( rawData()[ 'SubClass' ]?.[ ref2.id ]?.[ 'year'] ).toBe( 2082 )			
 		})
 
 		it( 'should read an array of references', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 			
-			expect( loadedUser.manyRefs ).toHaveLength( 2 )
-			expect( loadedUser.manyRefs[0] ).toBeInstanceOf( SubClass )
-			expect( loadedUser.manyRefs[0].id ).toEqual( testUser.manyRefs[0].id )
-			expect( loadedUser.manyRefs[0].year ).toBeUndefined()
-			expect( loadedUser.manyRefs[1] ).toBeInstanceOf( SubClass )
-			expect( loadedUser.manyRefs[1].id ).toEqual( testUser.manyRefs[1].id )
-			expect( loadedUser.manyRefs[1].year ).toBeUndefined()
+			expect( loadedUser?.manyRefs ).toHaveLength( 2 )
+			expect( loadedUser?.manyRefs[0] ).toBeInstanceOf( SubClass )
+			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]?.id )
+			expect( loadedUser?.manyRefs[0]?.year ).toBeUndefined()
+			expect( loadedUser?.manyRefs[1] ).toBeInstanceOf( SubClass )
+			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]?.id )
+			expect( loadedUser?.manyRefs[1]?.year ).toBeUndefined()
 		})
 
 		it( 'should fill array of refs', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
-			await Store.populate( loadedUser.manyRefs )
+			await Store.populate( loadedUser?.manyRefs! )
 
-			expect( loadedUser.manyRefs[0].year ).toBe( 2081 )
-			expect( loadedUser.manyRefs[1].year ).toBe( 2082 )
+			expect( loadedUser?.manyRefs[0]?.year ).toBe( 2081 )
+			expect( loadedUser?.manyRefs[1]?.year ).toBe( 2082 )
 		})
 
 		it( 'should save a reference when declared @persistentAt', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.derived.id ).toEqual( testUser.derived.id )
-			expect( loadedUser.derived.salary ).toBeUndefined()
+			expect( loadedUser?.derived?.id ).toEqual( testUser.derived?.id )
+			expect( loadedUser?.derived?.salary ).toBeUndefined()
 
-			await Store.populate( loadedUser.derived )
+			await Store.populate( loadedUser?.derived! )
 
-			expect( loadedUser.derived.salary ).toBe( 1350 )
-			expect( loadedUser.derived.id ).toBe( testUser.derived.id )
+			expect( loadedUser?.derived?.salary ).toBe( 1350 )
+			expect( loadedUser?.derived?.id ).toBe( testUser.derived?.id )
 		})
 
 		it( 'should populate from special collection when declared with @persistentRefAt', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			await Store.populate( loadedUser.derived )
+			await Store.populate( loadedUser?.derived! )
 
-			expect( loadedUser.derived.salary ).toBe( 2800 )
-			expect( loadedUser.derived.id ).toBe( 'user4' )
+			expect( loadedUser?.derived?.salary ).toBe( 2800 )
+			expect( loadedUser?.derived?.id ).toBe( 'user4' )
 		})
 		
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.manyDerived[0].id ).toEqual( testUser.manyDerived[0].id )
-			expect( loadedUser.manyDerived[0].salary ).toBeUndefined()
-			expect( loadedUser.manyDerived[1].salary ).toBeUndefined()
+			expect( loadedUser?.manyDerived[0]?.id ).toEqual( testUser.manyDerived[0]?.id )
+			expect( loadedUser?.manyDerived[0]?.salary ).toBeUndefined()
+			expect( loadedUser?.manyDerived[1]?.salary ).toBeUndefined()
 
-			await Store.populate( loadedUser.manyDerived )
+			await Store.populate( loadedUser?.manyDerived! )
 
-			expect( loadedUser.manyDerived[0].salary ).toBe( 990 )
-			expect( loadedUser.manyDerived[0].id ).toBe( testUser.manyDerived[0].id )
-			expect( loadedUser.manyDerived[1].salary ).toBe( 1990 )
-			expect( loadedUser.manyDerived[1].id ).toBe( testUser.manyDerived[1].id )
+			expect( loadedUser?.manyDerived[0]?.salary ).toBe( 990 )
+			expect( loadedUser?.manyDerived[0]?.id ).toBe( testUser.manyDerived[0]?.id )
+			expect( loadedUser?.manyDerived[1]?.salary ).toBe( 1990 )
+			expect( loadedUser?.manyDerived[1]?.id ).toBe( testUser.manyDerived[1]?.id )
 		})
 
 		it( 'should not overwrite not filled ref in collection', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			await model.save( loadedUser )
+			await model.save( loadedUser! )
 			const refInCollection = await model.findById<DerivedUser>( 'user4' )
 
-			expect( refInCollection.salary ).toBe( 2800 )
+			expect( refInCollection?.salary ).toBe( 2800 )
 		})
 
 		it( 'should save loaded ref with assigned new instance', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			loadedUser.derived = new DerivedUser()
-			loadedUser.derived.salary = 345
-			await model.save( loadedUser )
+			loadedUser!.derived = new DerivedUser()
+			loadedUser!.derived.salary = 345
+			await model.save( loadedUser! )
 
-			const refInCollection = await model.findById<DerivedUser>( loadedUser.derived.id )
-			expect( refInCollection.salary ).toBe( 345 )
+			const refInCollection = await model.findById<DerivedUser>( loadedUser!.derived.id )
+			expect( refInCollection?.salary ).toBe( 345 )
 		})
 
 		it( 'should save loaded ref with modified ref data', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			await Store.populate( loadedUser.derived )
-			loadedUser.derived.salary = 1623
-			await model.save( loadedUser )
+			await Store.populate( loadedUser?.derived! )
+			loadedUser!.derived!.salary = 1623
+			await model.save( loadedUser!! )
 
 			const refInCollection = await model.findById<DerivedUser>( 'user4' )
-			expect( refInCollection.salary ).toBe( 1623 )
+			expect( refInCollection?.salary ).toBe( 1623 )
 		})
 
 		it( 'should find by object ref', async ()=>{
 			const loadedDerived = await model.findById( 'user4' )
-			const loadedUser = await model.find().where( 'derived', '==', loadedDerived ).get()
+			const loadedUser = await model.find().where( 'derived', '==', loadedDerived! ).get()
 
-			expect( loadedUser[0].id ).toEqual( 'user6' )
+			expect( loadedUser[0]?.id ).toEqual( 'user6' )
 		})
 
 		it( 'should not throw on calling populate several times on same object', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			await Store.populate( loadedUser.derived )
-			expect( loadedUser.derived['_documentRef'] ).not.toBeDefined()
+			await Store.populate( loadedUser?.derived! )
+			expect( loadedUser?.derived?.['_documentRef'] ).not.toBeDefined()
 			let thrown = false
 
 			try {
-				await Store.populate( loadedUser.derived )
+				await Store.populate( loadedUser?.derived! )
 			} 
 			catch ( err ) {
 				thrown = true
@@ -366,11 +366,11 @@ describe( 'Model', ()=>{
 
 		it( 'should not throw on populating undefined instances', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			loadedUser.derived = undefined as any
+			loadedUser!.derived = undefined as any
 			let thrown = false
 	
 			try {
-				await Store.populate( loadedUser.derived )
+				await Store.populate( loadedUser?.derived! )
 			} 
 			catch ( err ) {
 				thrown = true
@@ -381,11 +381,11 @@ describe( 'Model', ()=>{
 		it( 'should not throw on populating non existing reference', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
 
-			loadedUser.derived[ '_id' ] = 'non-existing'
+			loadedUser!.derived![ '_id' ] = 'non-existing'
 			let thrown = false
 
 			try {
-				await Store.populate( loadedUser.derived )
+				await Store.populate( loadedUser?.derived! )
 			} 
 			catch ( err ) {
 				thrown = true
@@ -395,30 +395,30 @@ describe( 'Model', ()=>{
 
 		it( 'should remove deleted references when populating from the returned array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
-			const deletedId = loadedUser.manyDerived[0].id
-			await model.delete( deletedId )
+			const deletedId = loadedUser?.manyDerived[0]?.id
+			await model.delete( deletedId! )
 
-			const manyDerived = await Store.populate( loadedUser.manyDerived )
+			const manyDerived = await Store.populate( loadedUser?.manyDerived! )
 
-			expect( manyDerived[0].id ).not.toBe( deletedId )
+			expect( manyDerived[0]?.id ).not.toBe( deletedId )
 			expect( manyDerived ).toHaveLength( 1 )
 		})
 
 		it( 'should report if populated for single reference', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
-			expect( Store.isPopulated( loadedUser.derived ) ).toBeFalsy()
+			expect( Store.isPopulated( loadedUser?.derived! ) ).toBeFalsy()
 
-			await Store.populate( loadedUser.derived )
-			expect( Store.isPopulated( loadedUser.derived ) ).toBeTruthy()
+			await Store.populate( loadedUser?.derived! )
+			expect( Store.isPopulated( loadedUser?.derived! ) ).toBeTruthy()
 		})
 		
 		it( 'should report if populated for multiple references', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( Store.isPopulated( loadedUser.manyDerived ) ).toBeFalsy()
+			expect( Store.isPopulated( loadedUser?.manyDerived! ) ).toBeFalsy()
 
-			await Store.populate( loadedUser.manyDerived )
-			expect( Store.isPopulated( loadedUser.manyDerived ) ).toBeTruthy()
+			await Store.populate( loadedUser?.manyDerived! )
+			expect( Store.isPopulated( loadedUser?.manyDerived! ) ).toBeTruthy()
 		})
 		
 	})
@@ -435,29 +435,29 @@ describe( 'Model', ()=>{
 		it( 'should sort ascending the result set', async ()=>{
 			const docs = await model.find().orderBy( 'age' ).get()
 
-			expect( docs[0].id ).toEqual( 'user2' )
-			expect( docs[1].id ).toEqual( 'user1' )
+			expect( docs[0]?.id ).toEqual( 'user2' )
+			expect( docs[1]?.id ).toEqual( 'user1' )
 		})
 		
 		it( 'should sort descending the result set', async ()=>{
 			const docs = await model.find().orderBy( 'age', 'desc' ).get()
 
-			expect( docs[0].id ).toEqual( 'user3' )
-			expect( docs[1].id ).toEqual( 'user5' )
+			expect( docs[0]?.id ).toEqual( 'user3' )
+			expect( docs[1]?.id ).toEqual( 'user5' )
 		})
 
 		it( 'should sort by deep property path', async ()=>{
 			const docs = await model.find().orderByDeepProp( 'name.firstName', 'desc' ).get()
 
-			expect( docs[0].id ).toEqual( 'user6' )
-			expect( docs[1].id ).toEqual( 'user5' )
+			expect( docs[0]?.id ).toEqual( 'user6' )
+			expect( docs[1]?.id ).toEqual( 'user5' )
 		})
 		
 		it( 'should sort by swallow property path', async ()=>{
 			const docs = await model.find().orderByDeepProp( 'age' ).get()
 
-			expect( docs[0].id ).toEqual( 'user2' )
-			expect( docs[1].id ).toEqual( 'user1' )
+			expect( docs[0]?.id ).toEqual( 'user2' )
+			expect( docs[1]?.id ).toEqual( 'user1' )
 		})
 		
 		it( 'should count the documents in the collection', async ()=>{
@@ -473,7 +473,7 @@ describe( 'Model', ()=>{
 			it( 'should get next result set', async ()=>{
 				const docs = await model.next()
 				expect( docs ).toHaveLength( 2 )
-				expect( docs[0].id ).toEqual( 'user3' )
+				expect( docs[0]?.id ).toEqual( 'user3' )
 			})
 			
 			it( 'should not go beyond the end of result set', async ()=>{
@@ -522,7 +522,7 @@ describe( 'Model', ()=>{
 
 		beforeEach(async ()=>{
 			const user = await model.findById( 'user1' )
-			subCollectionModel = Store.getModelForSubCollection<SubClass>( user, 'SubClass' )
+			subCollectionModel = Store.getModelForSubCollection<SubClass>( user!, 'SubClass' )
 		})
 		
 		it( 'should get model for subCollection', ()=>{
@@ -534,7 +534,7 @@ describe( 'Model', ()=>{
 			const subClass = await subCollectionModel.findById( 'subClass1' )
 
 			expect( subClass ).toBeInstanceOf( SubClass )
-			expect( subClass.year ).toBe( 1326 )
+			expect( subClass?.year ).toBe( 1326 )
 		})
 
 		it( 'should save data to subCollection', async ()=>{
@@ -544,7 +544,7 @@ describe( 'Model', ()=>{
 			await subCollectionModel.save( subClass )
 			const loaded = await subCollectionModel.findById( subClass.id )
 
-			expect( loaded.year ).toBe( 3452 )
+			expect( loaded?.year ).toBe( 3452 )
 		})
 		
 	})

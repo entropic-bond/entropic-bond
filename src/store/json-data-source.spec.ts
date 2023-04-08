@@ -15,7 +15,7 @@ describe( 'Json DataSource', ()=>{
 		})
 	
 		it( 'should fail if no wait to resolve', async ()=>{
-			let result: DocumentObject
+			let result: DocumentObject | undefined = undefined
 			datasource.findById( 'a', 'collection' ).then( data => result = data )
 			expect( result ).not.toBeDefined()
 			await datasource.wait()
@@ -23,7 +23,7 @@ describe( 'Json DataSource', ()=>{
 		})
 		
 		it( 'should wait promises to resolve', async ()=>{
-			let result: DocumentObject
+			let result: DocumentObject | undefined = undefined
 			datasource.findById( 'a', 'collection' ).then( data => result = data )
 			await datasource.wait()
 			expect( result ).toBeDefined()
