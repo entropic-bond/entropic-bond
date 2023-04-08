@@ -76,7 +76,7 @@ export class Persistent {
 	static classFactory( className: string | undefined ) {
 		if ( !className ) throw new Error( `You should provide a class name.` )
 		if ( !this._factoryMap[ className ] ) throw new Error( `You should register class ${ className } prior to use.` )
-		return this._factoryMap[ className ].factory
+		return this._factoryMap[ className ]!.factory
 	}
 
 	/**
@@ -115,7 +115,7 @@ export class Persistent {
 		else className = new className().className
 
 		if ( !this._factoryMap[ className ] ) throw new Error( `You should register class ${ className } prior to use.` )
-		return this._factoryMap[ className ].annotation
+		return this._factoryMap[ className ]!.annotation
 	}
 
 	/**
@@ -167,6 +167,7 @@ export class Persistent {
 	 * @returns an array of the persistent properties of this instance
 	 */
 	getPersistentProperties(): readonly PersistentProperty[] {
+		if ( !this._persistentProperties ) return []
 		return this._persistentProperties.map( prop => ({
 			...prop,
 			name: prop.name.slice( 1 ) 
@@ -204,6 +205,7 @@ export class Persistent {
 	}
 
 	private fromObj( obj: PersistentObject<this> ) {
+		if ( !this._persistentProperties ) return this
 
 		this._persistentProperties.forEach( prop => {
 			const propName = this.removeUnderscore( prop )
@@ -236,6 +238,7 @@ export class Persistent {
 	}
 
 	private toObj( rootCollections: Collections ): PersistentObject<this> {
+		if ( !this._persistentProperties ) return {} as PersistentObject<this>
 		this.beforeSerialize()
 
 		const obj: PersistentObject<this> = {} as any
@@ -377,7 +380,7 @@ export class Persistent {
 		
 		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
 		const document = this.toDeepObj( value, collections )
-		collections[ collectionName ].push( document )
+		collections[ collectionName ]!.push( document )
 	}
 
 	private removeUnderscore( prop: PersistentProperty ) {
@@ -404,7 +407,7 @@ export class Persistent {
 	}
 
 	@persistent private _id: string
-	private _persistentProperties: PersistentProperty[]
+	private _persistentProperties: PersistentProperty[] | undefined
 	private static _factoryMap: FactoryMap = {}
 }
 
@@ -519,7 +522,7 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 			else target[ '_persistentProperties' ] = []
 		}
 
-		target[ '_persistentProperties' ].push( {
+		target[ '_persistentProperties' ]?.push( {
 			name: property,
 			...options
 		} )
