@@ -21,7 +21,7 @@ export interface Values {
  * const result = replaceValue( text, values )
  * // result = 'Hello John, how are you today?'
  */
-export function replaceValue( text: string, values: Values ): string {
+export function replaceValue( text: string | undefined | null, values: Values ): string {
 	if ( !text ) return ''
 	
 	return text.replace(/\${\s*(\w*)\s*}/g, function( _match , group){
@@ -39,7 +39,7 @@ export function replaceValue( text: string, values: Values ): string {
  * const result = camelCase( str )
  * // result = 'snakeCaseFormat'
  */
-export function camelCase( str: string ) {
+export function camelCase( str: string | undefined | null ) {
 	if ( !str ) return ''
 
 	return str.replace(
@@ -61,10 +61,10 @@ export function camelCase( str: string ) {
  * const result = snakeCase( str )
  * // result = 'camel-case-format'
  */
-export function snakeCase( str: string, snakeChar: string = '-' ) {
+export function snakeCase( str: string | undefined | null, snakeChar: string = '-' ) {
 	if ( !str ) return ''
-	const replaced = str.slice(1).replace(/( |[A-Z])/g, g => g===' '? '-' : snakeChar + g[0].toLowerCase() )
-	return str[0].toLocaleLowerCase() + replaced.replace(/--/g, '-')
+	const replaced = str.slice(1).replace(/( |[A-Z])/g, g => g===' '? '-' : snakeChar + g[0]!.toLowerCase() )
+	return str[0]!.toLocaleLowerCase() + replaced.replace(/--/g, '-')
 }
 
 /**
