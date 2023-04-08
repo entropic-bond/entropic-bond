@@ -67,7 +67,7 @@ export class Store {
 	 * @returns the populated instance
 	 */
 	static async populate<T extends Persistent | Persistent[]>( instance: T ): Promise<T> {
-		if ( !instance ) return
+		if ( !instance ) return undefined as any
 		
 		const populateItem = async ( item: Persistent ) => {
 			const ref: DocumentReference = item as any
@@ -98,7 +98,6 @@ export class Store {
 	 * @returns true if the instance is populated
 	 */
 	static isPopulated< T extends Persistent>( instance: T | readonly T[] ): boolean {
-
 		if ( Array.isArray( instance ) ) {
 			return instance.reduce(
 				( prevVal, item ) => prevVal && item['__documentReference'] === undefined,
