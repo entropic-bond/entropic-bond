@@ -18,7 +18,7 @@ describe( 'Cloud functions', ()=>{
 			testPlainParamAndPersistentReturn: ( data: number ): Promise<PersistentObject<TestUser>> => {
 				const user = new TestUser()
 				user.age = data
-				return Promise.resolve( user )
+				return Promise.resolve( user.toObject() )
 			},
 			testWithoutParam: (): Promise<string> => Promise.resolve( 'Hello from the other side' ),
 			testWithoutReturn: ( _data: string ): Promise<void> => Promise.resolve(),

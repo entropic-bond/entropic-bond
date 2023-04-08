@@ -18,6 +18,10 @@ export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'cl
 	__rootCollections?: Collections
 }
 
+export type PersistentObjectWithId<T extends Persistent> = PersistentObject<T> & {
+	id: string
+}
+
 /**
  * The type of the plain object of a persistent class for all the nested properties.
  */
@@ -30,7 +34,7 @@ export type MakePersistentObjects<T> = {
  * @see Persistent.toObject
  */
 export type Collections = {
-	[ collectionPath: string ]: PersistentObject<Persistent>[] | undefined
+	[ collectionPath: string ]: PersistentObjectWithId<Persistent>[] | undefined
 }
 
 /**

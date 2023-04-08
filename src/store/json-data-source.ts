@@ -56,7 +56,7 @@ export class JsonDataSource implements DataSource {
 	findById( id: string, collectionName: string ): Promise< DocumentObject > {
 		if ( this._simulateError?.findById ) throw new Error( this._simulateError.findById )
 
-		return this.resolveWithDelay( this._jsonRawData[ collectionName ][ id ] )
+		return this.resolveWithDelay( this._jsonRawData[ collectionName ]?.[ id ] )
 	}
 
 	save( collections: Collections ): Promise< void > {
@@ -64,8 +64,8 @@ export class JsonDataSource implements DataSource {
 
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			if ( !this._jsonRawData[ collectionName ] ) this._jsonRawData[ collectionName ] = {}
-			collection.forEach( document => {
-				this._jsonRawData[ collectionName ][ document.id! ] = document
+			collection?.forEach( document => {
+				this._jsonRawData[ collectionName ]![ document.id ] = document
 			})
 		})
 
@@ -95,7 +95,7 @@ export class JsonDataSource implements DataSource {
 	delete( id: string, collectionName: string ): Promise<void> {
 		if ( this._simulateError?.delete ) throw new Error( this._simulateError.delete )
 
-		delete this._jsonRawData[ collectionName ][ id ]
+		delete this._jsonRawData[ collectionName ]![ id ]
 		return this.resolveWithDelay()
 	}
 
@@ -108,7 +108,7 @@ export class JsonDataSource implements DataSource {
 
 	count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number> {
 		return this.resolveWithDelay(
-			Object.keys( this._jsonRawData[ collectionName ] ).length
+			Object.keys( this._jsonRawData[ collectionName ] ?? {} ).length
 		)
 	}
 
@@ -217,7 +217,7 @@ export class JsonDataSource implements DataSource {
 
 	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {
 		if ( typeof value === 'object' ) {
-			const propName = Object.keys( value! )[0]
+			const propName = Object.keys( value! )[0]!
 			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value?.[ propName ] )
 		}
 
@@ -241,9 +241,9 @@ export class JsonDataSource implements DataSource {
 	}
 
 	private _jsonRawData: JsonRawData = {}
-	private _lastMatchingDocs: DocumentObject[]
+	private _lastMatchingDocs: DocumentObject[] = []
 	private _lastLimit: number = 0
-	private _cursor: number
+	private _cursor: number = 0
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
