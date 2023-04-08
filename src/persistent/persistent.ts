@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { ClassPropNames, SomeClassProps } from '../types/utility-types';
+import { ClassPropNames, SomeClassProps } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
 
@@ -13,13 +13,9 @@ interface FactoryMap {
 /**
  * The corresponding type of the plain object of a persistent class.
  */
-export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & {
-	// TODO: review and compare with DocumentReference
-	__className?: string
+export type PersistentObject<T extends Persistent> = Omit<SomeClassProps<T>, 'className'> & Partial<DocumentReference> & {
+	__className: string
 	__rootCollections?: Collections
-	__documentReference?: {
-		storedInCollection: string
-	}
 }
 
 /**
@@ -34,7 +30,7 @@ export type MakePersistentObjects<T> = {
  * @see Persistent.toObject
  */
 export type Collections = {
-	[ collectionPath: string ]: PersistentObject<Persistent>[]
+	[ collectionPath: string ]: PersistentObject<Persistent>[] | undefined
 }
 
 /**
@@ -375,8 +371,8 @@ export class Persistent {
 		}
 	}
 
-	private pushDocument( collections: Collections, collectionName: string, value: PersistentObject<Persistent> ) {
-		if ( value.__documentReference ) return
+	private pushDocument( collections: Collections, collectionName: string, value: DocumentReference | Persistent | PersistentObject<this> ) {
+		if ( '__documentReference' in value && value.__documentReference ) return
 		
 		if ( !collections[ collectionName ] ) collections[ collectionName ] = []
 		const document = this.toDeepObj( value, collections )

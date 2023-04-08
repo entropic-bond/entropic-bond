@@ -1,7 +1,7 @@
 import type { Equal, Expect } from '@type-challenges/utils'
 import { TestPerson, Name, Coordinates, samplePerson } from '../utils/test-utils/test-person'
 import { getDeepValue } from '../utils/utils'
-import { PropPath, PropPathType } from './utility-types'
+import { PropPath, PropPathType, Require } from './utility-types'
 
 const person = samplePerson()
 
@@ -92,6 +92,25 @@ type cases = [
 	Expect<Equal< typeof addressCoordinatesY, number >>,
 	Expect<Equal< typeof addressPostalAddress, string >>,
 ]
+
+/*******************************************************************************
+ * Require
+ *******************************************************************************/
+type Tr = { a?: number, b?: string, c?: boolean, d: number }
+type Ra = { a: number, b?: string, c?: boolean, d: number }
+type Sr = Require<Tr, 'a'>
+
+const require1: Tr = { d: 3 }
+const require2: Require<Tr, 'a'> = { a: 2, d: 3 }
+const require3: Require<Tr, 'a' | 'b'> = { a: 2, b: 'b', d: 3 }
+// @ts-expect-error
+const require4: Require<Tr, 'a'> = { d: 3 }
+// @ts-expect-error
+const require5: Require<Tr, 'a' | 'b'> = { a: 2, d: 3 }
+
+
+
+
 
 it('should compile everything above',()=>{
 	expect( true ).toBeTruthy()

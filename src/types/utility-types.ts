@@ -69,7 +69,14 @@ export declare type ClassPropNamesOfType<T, U> = {
 	[K in keyof T]: T[K] extends Function? never : T[K] extends U? K : never
 }[keyof T];
 
-
+/**
+ * Makes K properties of T required and keeps the rest untouched
+ * @example
+ * type T = { a?: number, b?: string, c?: boolean, d: number }
+ * type R = Require<T, 'a' | 'b'>
+ * // R = { a: number, b: string, c?: boolean, d: number }
+ */
+export type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 
 

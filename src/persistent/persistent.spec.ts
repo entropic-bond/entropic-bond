@@ -312,7 +312,7 @@ describe( 'Persistent', ()=>{
 
 	it( 'should throw with object info if not available on creating a persistent instance', ()=>{
 		expect(()=>{
-			Persistent.createInstance({ id: 'id' })
+			Persistent.createInstance({ id: 'id' } as any )
 		}).toThrow( 'You should provide a class name.' )
 	})
 

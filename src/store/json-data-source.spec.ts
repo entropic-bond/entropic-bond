@@ -9,7 +9,7 @@ describe( 'Json DataSource', ()=>{
 	
 		beforeEach(()=>{
 			datasource = new JsonDataSource({
-				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } }
+				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } } as any
 			}).simulateDelay( resolveDelay )
 			Store.useDataSource( datasource )
 		})
@@ -52,7 +52,7 @@ describe( 'Json DataSource', ()=>{
 		})
 
 		it( 'should work with save', async ()=>{
-			datasource.save({ testCollection: [{ id: "id" }]})
+			datasource.save({ testCollection: [{ id: "id" } as any ]})
 			await datasource.wait()
 			expect( datasource.rawData ).toEqual( expect.objectContaining({
 				testCollection: { id: { id: "id" } }
@@ -75,7 +75,7 @@ describe( 'Json DataSource', ()=>{
 
 		beforeAll(()=>{
 			datasource = new JsonDataSource({
-				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } }
+				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } } as any
 			}).simulateError( 'Simulated error' )
 			Store.useDataSource( datasource )
 			model = Store.getModel<TestUser>( 'TestUser' )
