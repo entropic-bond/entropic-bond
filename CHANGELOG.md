@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/entropic-bond/entropic-bond/compare/v1.40.8...v1.41.0) (2023-04-09)
+
+
+### Features
+
+* strictNullCheck compliant ([7797aa1](https://github.com/entropic-bond/entropic-bond/commit/7797aa167190405fc551a71e200a34e5ec08fde0))
+
 ## [1.40.8](https://github.com/entropic-bond/entropic-bond/compare/v1.40.7...v1.40.8) (2023-04-06)
 
 
