@@ -1,4 +1,4 @@
-export type Callback<T> = ( event: T | undefined ) => void
+export type Callback<T> = ( event: T ) => void
 export type Unsubscriber = ()=>void
 
 /**
@@ -45,7 +45,7 @@ export class Observable<T> {
 	 * @param event the event passed to all subscribers.
 	 */
 	notify( event?: T ) {
-		this.subscribers.forEach(subs => subs(event))
+		this.subscribers.forEach(subs => subs(event!))
 	}
 
 	/**

@@ -264,10 +264,10 @@ describe( 'Model', ()=>{
 			
 			expect( loadedUser?.manyRefs ).toHaveLength( 2 )
 			expect( loadedUser?.manyRefs[0] ).toBeInstanceOf( SubClass )
-			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]?.id )
+			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]!.id )
 			expect( loadedUser?.manyRefs[0]?.year ).toBeUndefined()
 			expect( loadedUser?.manyRefs[1] ).toBeInstanceOf( SubClass )
-			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]?.id )
+			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]!.id )
 			expect( loadedUser?.manyRefs[1]?.year ).toBeUndefined()
 		})
 
@@ -282,13 +282,13 @@ describe( 'Model', ()=>{
 		it( 'should save a reference when declared @persistentAt', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser?.derived?.id ).toEqual( testUser.derived?.id )
+			expect( loadedUser?.derived?.id ).toEqual( testUser.derived!.id )
 			expect( loadedUser?.derived?.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser?.derived! )
 
 			expect( loadedUser?.derived?.salary ).toBe( 1350 )
-			expect( loadedUser?.derived?.id ).toBe( testUser.derived?.id )
+			expect( loadedUser?.derived?.id ).toBe( testUser.derived!.id )
 		})
 
 		it( 'should populate from special collection when declared with @persistentRefAt', async ()=>{
@@ -302,16 +302,16 @@ describe( 'Model', ()=>{
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser?.manyDerived[0]?.id ).toEqual( testUser.manyDerived[0]?.id )
+			expect( loadedUser?.manyDerived[0]?.id ).toEqual( testUser.manyDerived[0]!.id )
 			expect( loadedUser?.manyDerived[0]?.salary ).toBeUndefined()
 			expect( loadedUser?.manyDerived[1]?.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser?.manyDerived! )
 
 			expect( loadedUser?.manyDerived[0]?.salary ).toBe( 990 )
-			expect( loadedUser?.manyDerived[0]?.id ).toBe( testUser.manyDerived[0]?.id )
+			expect( loadedUser?.manyDerived[0]?.id ).toBe( testUser.manyDerived[0]!.id )
 			expect( loadedUser?.manyDerived[1]?.salary ).toBe( 1990 )
-			expect( loadedUser?.manyDerived[1]?.id ).toBe( testUser.manyDerived[1]?.id )
+			expect( loadedUser?.manyDerived[1]?.id ).toBe( testUser.manyDerived[1]!.id )
 		})
 
 		it( 'should not overwrite not filled ref in collection', async ()=>{
