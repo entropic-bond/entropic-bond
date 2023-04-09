@@ -197,14 +197,14 @@ export class Persistent {
 	 * @see clone
 	 * @see toObject
 	 */
-	fromObject( obj: PersistentObject<this> ): this {
+	fromObject( obj: Partial<PersistentObject<this>> |{}): this {
 		this.fromObj( obj )
 		this.afterDeserialize()
 
 		return this
 	}
 
-	private fromObj( obj: PersistentObject<this> ) {
+	private fromObj( obj: Partial<PersistentObject<this>> | {}) {
 		if ( !this._persistentProperties ) return this
 
 		this._persistentProperties.forEach( prop => {

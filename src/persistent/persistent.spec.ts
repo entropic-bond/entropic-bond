@@ -229,6 +229,20 @@ describe( 'Persistent', ()=>{
 		expect( person.salary ).toBe( 2500 )
 	})
 
+	it( 'should fill properties from arbitrary object', ()=>{
+		person.name = 'meganito'
+		person.salary = 32
+		person.fromObject({
+			name: 'fulanito changed',
+			salary: 4839,
+			foo: 'bar'
+		})
+
+		expect( person.name ).toBe( 'fulanito changed' )
+		expect( person.salary ).toBe( 4839 )
+		expect( (person as any).foo ).not.toBeDefined()
+	})
+
 	it( 'should persist number with value of 0', ()=>{
 		person.salary = 0
 		const object = person.toObject()
