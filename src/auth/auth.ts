@@ -12,7 +12,7 @@ export abstract class AuthService {
 	abstract resetEmailPassword( email: string ): Promise<void>
 	abstract linkAdditionalProvider( provider: AuthProvider ): Promise<unknown>
 	abstract unlinkProvider( provider: AuthProvider ): Promise<unknown>
-	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T>) => void ): void
+	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T> | undefined) => void ): void
 }
 
 export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail' | 'missingPassword' | 'missingEmail'
@@ -161,7 +161,7 @@ export class Auth extends AuthService {
 		return Auth._authService.unlinkProvider( provider )
 	}
 
-	private authStateChanged( userCredentials: UserCredentials<{}> ) {
+	private authStateChanged( userCredentials: UserCredentials<{}> | undefined ) {
 		this._onAuthStateChange.notify( userCredentials )
 	}
 
