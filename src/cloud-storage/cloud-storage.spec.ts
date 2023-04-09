@@ -6,7 +6,7 @@ import { CloudStorage } from './cloud-storage'
 import { MockCloudStorage } from './mock-cloud-storage'
 import { StoredFile, StoredFileEvent } from './stored-file'
 
-function MockFile( data: any[], filename: string ) {
+function MockFile(this: any,  data: any[], filename: string ) {
 	this.data = data as any[]
 	this.name = filename
 }

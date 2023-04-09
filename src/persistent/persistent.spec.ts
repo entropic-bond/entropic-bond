@@ -9,8 +9,8 @@ const afterDeserialize = jest.fn()
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
-	protected beforeSerialize(): void { beforeSerialize() }
-	protected afterDeserialize(): void { afterDeserialize() }
+	protected override beforeSerialize(): void { beforeSerialize() }
+	protected override afterDeserialize(): void { afterDeserialize() }
 	set persistentProp( val: number | undefined ) { this._persistentProp = val }
 	get persistentProp() { return this._persistentProp }
 	set personPureRef( value: Person | undefined ) { this._personPureRef = value }
@@ -25,11 +25,11 @@ class NotRegistered extends Persistent {}
 
 @registerPersistentClass( 'Person' )
 class Person extends Persistent {
-	protected beforeSerialize(): void {
+	protected override beforeSerialize(): void {
 		beforeSerialize()
 	}
 
-	protected afterDeserialize(): void {
+	protected override afterDeserialize(): void {
 		afterDeserialize()
 	}
 
