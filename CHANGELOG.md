@@ -1,3 +1,10 @@
+## [1.41.1](https://github.com/entropic-bond/entropic-bond/compare/v1.41.0...v1.41.1) (2023-04-09)
+
+
+### Bug Fixes
+
+* onAuthStateChange to accept undefined ([1d537c2](https://github.com/entropic-bond/entropic-bond/commit/1d537c200f6ece25ceaffdf76c29611f1a324cdd))
+
 # [1.41.0](https://github.com/entropic-bond/entropic-bond/compare/v1.40.8...v1.41.0) (2023-04-09)
 
 
