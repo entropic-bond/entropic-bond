@@ -13,7 +13,7 @@ describe( 'Cloud functions', ()=>{
 				return Promise.resolve( JSON.parse( JSON.stringify( data ) ) )
 			},
 			testPersistentParamAndPlainReturn: ( data: PersistentObject<TestUser> ): Promise<number> => {
-				return Promise.resolve( data.age )
+				return Promise.resolve( data.age! )
 			},
 			testPlainParamAndPersistentReturn: ( data: number ): Promise<PersistentObject<TestUser>> => {
 				const user = new TestUser()
@@ -107,8 +107,8 @@ describe( 'Cloud functions', ()=>{
 		const result = await testArrayResult()
 
 		expect( result[0] ).toBeInstanceOf( TestUser )
-		expect( result[0].id ).toEqual( 'userA' )
-		expect( result[1].id ).toEqual( 'userB' )
+		expect( result[0]?.id ).toEqual( 'userA' )
+		expect( result[1]?.id ).toEqual( 'userB' )
 	})
 	
 	it( 'should execute cloud function with params as an object containing Persistents', async ()=>{
@@ -128,8 +128,8 @@ describe( 'Cloud functions', ()=>{
 		const result = await testObjectResult()
 
 		expect( result.user1 ).toBeInstanceOf( TestUser )
-		expect( result.user1.id ).toEqual( 'userA' )
-		expect( result.user2.id ).toEqual( 'userB' )
+		expect( result.user1?.id ).toEqual( 'userA' )
+		expect( result.user2?.id ).toEqual( 'userB' )
 	})
 	
 	
