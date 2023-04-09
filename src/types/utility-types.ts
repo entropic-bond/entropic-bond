@@ -21,7 +21,7 @@ export type ClassArrayPropNames<T> = {
 export type ClassArrayProps<T> = Pick<T, ClassArrayPropNames<T>>
 
 export type Elements<
-  T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any>
+  T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any> | any
 > = T extends ReadonlyArray<any>
   ? T[number]
   : T extends ArrayLike<any>

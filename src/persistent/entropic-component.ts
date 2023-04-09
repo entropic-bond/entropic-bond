@@ -84,7 +84,7 @@ export class EntropicComponent extends Persistent {
 		arrayPropName: ClassArrayPropNames<T>, 
 		element: ArrayPropsElem<T>, 
 		isUnique?: CompareFunction<T> 
-	): ArrayPropsElem<T> {
+	): ArrayPropsElem<T> | undefined {
 
 		const pName = '_' + String( arrayPropName );
 		const alreadyIn = isUnique && this[ pName ].find( 
@@ -113,7 +113,7 @@ export class EntropicComponent extends Persistent {
 		arrayPropName: ClassArrayPropNames<T>, 
 		element: ArrayPropsElem<T>,
 		isEqual: CompareFunction<T>
-	): ArrayPropsElem<T> {
+	): ArrayPropsElem<T> | undefined {
 
 		const pName = '_' + String( arrayPropName );
 
