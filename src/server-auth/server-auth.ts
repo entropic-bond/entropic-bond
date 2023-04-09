@@ -6,7 +6,7 @@ export interface CustomCredentials {
 
 export abstract class ServerAuthService {
 	abstract setCustomCredentials<T extends CustomCredentials>( userId: string, customCredentials: T ): Promise<void>
-	abstract getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>>
+	abstract getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T> | undefined>
 	abstract updateUser<T extends CustomCredentials>( userId: string, credentials: Partial<UserCredentials<T>> ): Promise<UserCredentials<T>>
 	abstract deleteUser( userId: string ): Promise<void>
 }
@@ -28,7 +28,7 @@ export class ServerAuth extends ServerAuthService {
 		return this._instance || (this._instance = new ServerAuth() )
 	}
 	
-	getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>> {
+	getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T> | undefined> {
 		return ServerAuth._authService.getUser( userId )
 	}
 
@@ -44,6 +44,6 @@ export class ServerAuth extends ServerAuthService {
 		return ServerAuth._authService.deleteUser( userId )
 	}
 
-	private static _instance: ServerAuth = undefined
+	private static _instance: ServerAuth | undefined = undefined
 	private static _authService: ServerAuthService
 }

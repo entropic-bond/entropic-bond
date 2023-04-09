@@ -9,27 +9,27 @@ const afterDeserialize = jest.fn()
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
-	protected beforeSerialize(): void { beforeSerialize() }
-	protected afterDeserialize(): void { afterDeserialize() }
-	set persistentProp( val: number ) { this._persistentProp = val }
+	protected override beforeSerialize(): void { beforeSerialize() }
+	protected override afterDeserialize(): void { afterDeserialize() }
+	set persistentProp( val: number | undefined ) { this._persistentProp = val }
 	get persistentProp() { return this._persistentProp }
-	set personPureRef( value: Person ) { this._personPureRef = value }
+	set personPureRef( value: Person | undefined ) { this._personPureRef = value }
 	get personPureRef() { return this._personPureRef }
-	@persistent _persistentProp: number
-	@persistent _persistentArray: PersistentClass[]
-	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _personPureRef: Person
-	_nonPersistentProp: number
+	@persistent _persistentProp: number | undefined
+	@persistent _persistentArray: PersistentClass[] | undefined
+	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
+	_nonPersistentProp: number | undefined
 }
 
 class NotRegistered extends Persistent {}
 
 @registerPersistentClass( 'Person' )
 class Person extends Persistent {
-	protected beforeSerialize(): void {
+	protected override beforeSerialize(): void {
 		beforeSerialize()
 	}
 
-	protected afterDeserialize(): void {
+	protected override afterDeserialize(): void {
 		afterDeserialize()
 	}
 
@@ -49,7 +49,7 @@ class Person extends Persistent {
 		return this._salary
 	}
 
-	set doNotPersist( value: number ) {
+	set doNotPersist( value: number | undefined ) {
 		this._doNotPersist = value
 	}
 
@@ -65,7 +65,7 @@ class Person extends Persistent {
 		return this._anObjectProperty
 	}
 
-	set skills( value: string[] ) {
+	set skills( value: string[] | undefined ) {
 		this._skills = value
 	}
 
@@ -73,7 +73,7 @@ class Person extends Persistent {
 		return this._skills
 	}
 
-	set arrayOfPersistent( value: PersistentClass[] ) {
+	set arrayOfPersistent( value: PersistentClass[] | undefined ) {
 		this._arrayOfPersistent = value
 	}
 
@@ -81,7 +81,7 @@ class Person extends Persistent {
 		return this._arrayOfPersistent
 	}
 
-	set document( value: PersistentClass ) {
+	set document( value: PersistentClass | undefined ) {
 		this._document = value
 	}
 
@@ -97,7 +97,7 @@ class Person extends Persistent {
 		return this._arrayOfRefs
 	}
 	
-	set persistentObject( value: InnerObject ) {
+	set persistentObject( value: InnerObject | undefined ) {
 		this._persistentObject = value
 	}
 
@@ -107,20 +107,20 @@ class Person extends Persistent {
 
 	@persistent private _name?: string
 	@persistent private _salary?: number
-	@persistent private _skills: string[]
+	@persistent private _skills: string[] | undefined
 	@persistent private _anObjectProperty: PersistentClass = new PersistentClass()
-	@persistent private _arrayOfPersistent: PersistentClass[]
-	@persistent _notRegistered: NotRegistered
-	@persistent _arrayOfArray: number[][]
-	@persistent _arrayOfPersistentArray: PersistentClass[][]
-	@persistent _plainObject: { [ key: string ]: unknown }
-	@persistentReference _document: PersistentClass
-	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass
-	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass
+	@persistent private _arrayOfPersistent: PersistentClass[] | undefined
+	@persistent _notRegistered: NotRegistered | undefined
+	@persistent _arrayOfArray: number[][] | undefined
+	@persistent _arrayOfPersistentArray: PersistentClass[][] | undefined
+	@persistent _plainObject: { [ key: string ]: unknown } | undefined
+	@persistentReference _document: PersistentClass | undefined
+	@persistentReferenceAt('ArbitraryCollectionName') _docAtArbitraryCollection: PersistentClass | undefined
+	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass | undefined
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
-	@persistent private _persistentObject: InnerObject
-	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass
-	private _doNotPersist: number
+	@persistent private _persistentObject: InnerObject | undefined
+	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
+	private _doNotPersist: number | undefined
 }
 
 
@@ -290,12 +290,12 @@ describe( 'Persistent', ()=>{
 
 		expect( ()=>{ aPerson = new Person( 'person4' ).fromObject( obj ) } ).not.toThrow()
 		aPerson = new Person( 'person4' ).fromObject( obj )
-		expect( aPerson._plainObject.prop1 ).toBeUndefined()
-		expect( aPerson._plainObject.prop2 ).toBeNull()
+		expect( aPerson._plainObject!.prop1 ).toBeUndefined()
+		expect( aPerson._plainObject!.prop2 ).toBeNull()
 	})
 
 	it( 'should not throw on null property when toObject', ()=>{
-		newPerson._plainObject.prop1 = null
+		newPerson._plainObject!.prop1 = null
 
 		expect( ()=>{
 			newPerson.toObject()
@@ -303,7 +303,7 @@ describe( 'Persistent', ()=>{
 	})
 
 	it( 'should not throw on null property when toObject', ()=>{
-		newPerson._plainObject.prop1 = undefined
+		newPerson._plainObject!.prop1 = undefined
 
 		expect( ()=>{
 			newPerson.toObject()
@@ -312,7 +312,7 @@ describe( 'Persistent', ()=>{
 
 	it( 'should throw with object info if not available on creating a persistent instance', ()=>{
 		expect(()=>{
-			Persistent.createInstance({ id: 'id' })
+			Persistent.createInstance({ id: 'id' } as any )
 		}).toThrow( 'You should provide a class name.' )
 	})
 
@@ -373,19 +373,19 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should persist array of Persistent type properties', ()=>{
-			expect( newPerson.arrayOfPersistent[ 0 ] ).toBeInstanceOf( PersistentClass )
+			expect( newPerson.arrayOfPersistent?.[ 0 ] ).toBeInstanceOf( PersistentClass )
 		})
 
 		it( 'should persist persistent array of array of Persistent type properties', ()=>{
-			expect( newPerson.arrayOfPersistent[ 0 ]._persistentArray[ 0 ] ).toBeInstanceOf( PersistentClass )
+			expect( newPerson.arrayOfPersistent?.[ 0 ]?._persistentArray?.[ 0 ] ).toBeInstanceOf( PersistentClass )
 		})
 
 		it( 'should persist array of array of Persistent type properties', ()=>{
-			expect( newPerson._arrayOfPersistentArray[ 0 ][ 0 ] ).toBeInstanceOf( PersistentClass )
+			expect( newPerson._arrayOfPersistentArray?.[ 0 ]?.[ 0 ] ).toBeInstanceOf( PersistentClass )
 		})
 
 		it( 'should persist properties of type Persistent in plain object', ()=>{
-			expect( newPerson._plainObject.prop1 ).toBeInstanceOf( PersistentClass )
+			expect( newPerson._plainObject?.prop1 ).toBeInstanceOf( PersistentClass )
 		})
 
 		it( 'should return registered properties', ()=>{
@@ -430,7 +430,7 @@ describe( 'Persistent', ()=>{
 				expect.objectContaining({ persistentProp: 345 })
 			]))
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
-			expect( newPerson.document.persistentProp ).toBeUndefined()
+			expect( newPerson.document?.persistentProp ).toBeUndefined()
 		})
 
 		it( 'should create root reference collection with arbitrary name', ()=>{
@@ -440,7 +440,7 @@ describe( 'Persistent', ()=>{
 				expect.objectContaining({ persistentProp: 3989 })
 			]))
 			expect( newPerson._docAtArbitraryCollection ).toBeInstanceOf( PersistentClass )
-			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
+			expect( newPerson._docAtArbitraryCollection?.persistentProp ).toBeUndefined()
 		})
 		
 		it( 'should create root reference collection with arbitrary name based on function call', ()=>{
@@ -451,7 +451,7 @@ describe( 'Persistent', ()=>{
 				expect.objectContaining({ persistentProp: 3989 })
 			]))
 			expect( newPerson._docAtArbitraryCollection ).toBeInstanceOf( PersistentClass )
-			expect( newPerson._docAtArbitraryCollection.persistentProp ).toBeUndefined()
+			expect( newPerson._docAtArbitraryCollection?.persistentProp ).toBeUndefined()
 		})
 		
 
@@ -463,11 +463,11 @@ describe( 'Persistent', ()=>{
 		
 		it( 'should read swallow object document as reference', ()=>{
 			expect( newPerson.document ).toBeInstanceOf( PersistentClass )
-			expect( newPerson.document.id ).toEqual( person.document.id )
-			expect( newPerson.document['__documentReference'] ).toEqual({
+			expect( newPerson.document?.id ).toEqual( person.document?.id )
+			expect( newPerson.document?.['__documentReference'] ).toEqual({
 				storedInCollection: 'PersistentClass'
 			})
-			expect( newPerson.document.persistentProp ).toBeUndefined()
+			expect( newPerson.document?.persistentProp ).toBeUndefined()
 		})
 
 		it( 'should save existing refs properly', ()=>{
@@ -476,7 +476,7 @@ describe( 'Persistent', ()=>{
 			expect( res.document ).not.toBeInstanceOf( PersistentClass )
 			expect( res.document ).toEqual({
 				__className: 'PersistentClass',
-				id: newPerson.document.id,
+				id: newPerson.document?.id,
 				__documentReference: { storedInCollection: 'PersistentClass' },
 			})
 		})
@@ -486,7 +486,7 @@ describe( 'Persistent', ()=>{
 			const obj = person.toObject()
 
 			expect( obj.__rootCollections?.['Person'] ).toHaveLength( 1 )
-			expect( obj.__rootCollections?.['Person'][0].id ).not.toEqual( 'person7' )
+			expect( obj.__rootCollections?.['Person']?.[0]?.id ).not.toEqual( 'person7' )
 		})
 			
 		it( 'should fill reference object when store pure reference', ()=>{
@@ -504,7 +504,7 @@ describe( 'Persistent', ()=>{
 				salary: 5643
 			})
 			
-			expect( obj.__rootCollections?.Person[ 0 ]['anObjectProperty'].personPureRef ).toEqual({
+			expect( obj.__rootCollections?.Person?.[ 0 ]?.['anObjectProperty'].personPureRef ).toEqual({
 				__className: 'Person',
 				id: personPureRef.id,
 				__documentReference: { storedInCollection: 'Person' },
@@ -538,40 +538,40 @@ describe( 'Persistent', ()=>{
 			const instance = Persistent.createInstance( obj )
 
 			expect( instance.anObjectProperty.personPureRef ).toBeInstanceOf( Person )
-			expect( instance.anObjectProperty.personPureRef.name ).toEqual( 'James' )
-			expect( instance.anObjectProperty.personPureRef.salary ).toBe( 5643 )
+			expect( instance.anObjectProperty.personPureRef?.name ).toEqual( 'James' )
+			expect( instance.anObjectProperty.personPureRef?.salary ).toBe( 5643 )
 		})
 		
 
 		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
 			const obj = person.toObject()
 
-			expect( obj.__rootCollections?.Person[0].id ).toEqual( person.id )
+			expect( obj.__rootCollections?.Person?.[0]?.id ).toEqual( person.id )
 			expect( obj['referenceWithStoredValues'] ).toEqual({
 				__className: 'PersistentClass',
-				id: person._referenceWithStoredValues.id,
+				id: person._referenceWithStoredValues?.id,
 				__documentReference: { storedInCollection: 'ArbitraryCollectionName/PersistentClass' },
 				persistentProp: 2093
 			})
 			
-			const referenceWithValuesInRootCollections = obj.__rootCollections?.['ArbitraryCollectionName/PersistentClass'].find( 
-				persistent => persistent.id === person._referenceWithStoredValues.id 
+			const referenceWithValuesInRootCollections = obj.__rootCollections?.['ArbitraryCollectionName/PersistentClass']?.find( 
+				persistent => persistent.id === person._referenceWithStoredValues?.id 
 			)
 
 			expect( referenceWithValuesInRootCollections ).toEqual({
 				__className: 'PersistentClass',
-				id: person._referenceWithStoredValues.id,
+				id: person._referenceWithStoredValues?.id,
 				persistentProp: 2093
 			})
 		})
 
 		it( 'should not store values of persistentReferenceWithPersistentProps if value is undefined', ()=>{
-			person._referenceWithStoredValues.persistentProp = undefined as any
+			person._referenceWithStoredValues!.persistentProp = undefined as any
 			const obj = person.toObject()
 
 			expect( obj['referenceWithStoredValues'] ).toEqual({
 				__className: 'PersistentClass',
-				id: person._referenceWithStoredValues.id,
+				id: person._referenceWithStoredValues?.id,
 				__documentReference: { storedInCollection: 'ArbitraryCollectionName/PersistentClass' },
 			})
 			expect( obj['referenceWithStoredValues'] ).not.toHaveProperty( 'persistentProp' )
@@ -582,7 +582,7 @@ describe( 'Persistent', ()=>{
 			const instance = Persistent.createInstance( obj )
 
 			expect( instance._referenceWithStoredValues ).toBeInstanceOf( PersistentClass )
-			expect( instance._referenceWithStoredValues.persistentProp ).toBe( 2093 )
+			expect( instance._referenceWithStoredValues?.persistentProp ).toBe( 2093 )
 		})
 
 		describe( 'Array of references', ()=>{
@@ -611,7 +611,7 @@ describe( 'Persistent', ()=>{
 
 			it( 'should deal with arrays of refs', ()=>{
 				expect( newPerson.arrayOfRefs ).toHaveLength( 2 )
-				expect( newPerson.arrayOfRefs[0].persistentProp ).toBeUndefined()
+				expect( newPerson.arrayOfRefs[0]?.persistentProp ).toBeUndefined()
 				expect( newPerson.arrayOfRefs ).toEqual( expect.arrayContaining([ 
 					expect.objectContaining({ 
 						id: ref1.id,
@@ -647,10 +647,10 @@ describe( 'Persistent', ()=>{
 
 				const obj = newPerson.toObject()
 				expect( obj.persistentObject?.nonPersistedReferences ).toHaveLength( 1 )
-				expect( obj.persistentObject?.nonPersistedReferences[0].id ).toBeDefined()
-				expect( obj.persistentObject?.nonPersistedReferences[0]['__className'] ).toBeDefined()
-				expect( obj.persistentObject?.nonPersistedReferences[0]['__documentReference'] ).toBeDefined()
-				expect( obj.persistentObject?.nonPersistedReferences[0].persistentProp ).not.toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0]?.id ).toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0]?.['__className'] ).toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0]?.['__documentReference'] ).toBeDefined()
+				expect( obj.persistentObject?.nonPersistedReferences[0]?.persistentProp ).not.toBeDefined()
 			})
 		})
 		

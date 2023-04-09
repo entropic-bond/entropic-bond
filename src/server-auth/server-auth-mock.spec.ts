@@ -11,7 +11,7 @@ describe( 'Server Auth Mock', ()=>{
 
 	it( 'should get user credentials', async ()=>{
 		const user = await ServerAuth.instance.getUser( 'testUser1' )
-		expect( user.email ).toEqual( 'testUser1@acme.com' )
+		expect( user?.email ).toEqual( 'testUser1@acme.com' )
 	})
 	
 	it( 'should set custom credentials', async ()=>{
@@ -20,8 +20,8 @@ describe( 'Server Auth Mock', ()=>{
 		})
 		
 		const user = await ServerAuth.instance.getUser( 'testUser1' )
-		expect( user.email ).toEqual( 'testUser1@acme.com' )
-		expect( user.customData.a ).toEqual( 'anotherTestCustomData' )
+		expect( user?.email ).toEqual( 'testUser1@acme.com' )
+		expect( user?.customData?.a ).toEqual( 'anotherTestCustomData' )
 
 	})
 
@@ -42,8 +42,8 @@ describe( 'Server Auth Mock', ()=>{
 		})
 
 		const user = await ServerAuth.instance.getUser( 'nonExistingUser' )
-		expect( user.email ).toEqual( 'nonExistingUser@acme.com' )
-		expect( user.customData.a ).toEqual( 'aTestCustomData' )
+		expect( user?.email ).toEqual( 'nonExistingUser@acme.com' )
+		expect( user?.customData?.a ).toEqual( 'aTestCustomData' )
 	})
 
 	it( 'should return undefined if user does not exists', async ()=>{

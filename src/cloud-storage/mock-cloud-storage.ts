@@ -38,7 +38,7 @@ export class MockCloudStorage extends CloudStorage {
 		return Promise.resolve()
 	}
 
-	private _onProgress: UploadProgress
+	private _onProgress: UploadProgress | undefined
 	private _pathToMockFiles: string
 	public mockFileSystem = {}
 }

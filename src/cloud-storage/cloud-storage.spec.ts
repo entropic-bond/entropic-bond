@@ -6,7 +6,7 @@ import { CloudStorage } from './cloud-storage'
 import { MockCloudStorage } from './mock-cloud-storage'
 import { StoredFile, StoredFileEvent } from './stored-file'
 
-function MockFile( data: any[], filename: string ) {
+function MockFile(this: any,  data: any[], filename: string ) {
 	this.data = data as any[]
 	this.name = filename
 }
@@ -177,8 +177,8 @@ describe( 'Cloud Storage', ()=>{
 
 			const newTestObj = await model.findById( testObj.id )
 
-			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
-			expect( newTestObj.file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
+			expect( newTestObj?.file ).toBeInstanceOf( StoredFile )
+			expect( newTestObj?.file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
 		})
 
 		it( 'should replace file on save after load', async ()=>{
@@ -189,8 +189,8 @@ describe( 'Cloud Storage', ()=>{
 
 			const newTestObj = await model.findById( testObj.id )
 
-			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
-			expect( newTestObj.file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
+			expect( newTestObj?.file ).toBeInstanceOf( StoredFile )
+			expect( newTestObj?.file.url ).toEqual( 'mock-data-folder/' + testObj.file.id )
 			expect( deleteSpy ).not.toHaveBeenCalled()
 
 			testObj.file.setDataToStore( blobData2 )

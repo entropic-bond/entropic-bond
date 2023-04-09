@@ -15,7 +15,16 @@
     "declaration": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    // "strictNullChecks": true
+		"isolatedModules": true,
+		"strictNullChecks": true, // should be enabled progressively to end having all code base compliant with this rule
+		"strictPropertyInitialization": true, // should be enabled progressively to end having all code base compliant with this rule
+		"noUncheckedIndexedAccess": true, // this causes errors when accessing arrays elements without checking if they exist
+		"noImplicitOverride": true, // this causes errors when overriding methods of base classes. Annoying for React components
+		// "noImplicitAny": true, // this causes errors when accessing properties of objects with index signatures
+		// "noPropertyAccessFromIndexSignature": true, // annoying when accessing properties of objects with index signatures
+		// "strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitThis": true,
 	},
   "include": ["./src"]
 }

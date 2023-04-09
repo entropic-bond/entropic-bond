@@ -11,7 +11,7 @@ interface Name {
 
 @registerPersistentClass( 'SubClass' )
 export class SubClass extends Persistent {
-	set year( value: number ) {
+	set year( value: number | undefined ) {
 		this._year = value
 	}
 
@@ -19,12 +19,12 @@ export class SubClass extends Persistent {
 		return this._year
 	}
 
-	@persistent private _year: number
+	@persistent private _year: number | undefined
 }
 
 @registerPersistentClass( 'TestUser' )
 export class TestUser extends Persistent {
-	set name( value: Name ) {
+	set name( value: Name | undefined ) {
 		this._name = value
 	}
 
@@ -32,7 +32,7 @@ export class TestUser extends Persistent {
 		return this._name
 	}
 
-	set age( value: number ) {
+	set age( value: number | undefined ) {
 		this._age = value
 	}
 
@@ -40,7 +40,7 @@ export class TestUser extends Persistent {
 		return this._age
 	}
 
-	set admin( value: boolean ) {
+	set admin( value: boolean | undefined ) {
 		this._admin = value
 	}
 
@@ -48,7 +48,7 @@ export class TestUser extends Persistent {
 		return this._admin
 	}
 
-	set skills( value: string[] ) {
+	set skills( value: string[] | undefined ) {
 		this._skills = value
 	}
 
@@ -56,7 +56,7 @@ export class TestUser extends Persistent {
 		return this._skills
 	}
 
-	set documentRef( value: SubClass ) {
+	set documentRef( value: SubClass | undefined ) {
 		this._documentRef = value
 	}
 
@@ -72,11 +72,11 @@ export class TestUser extends Persistent {
 		return this._manyRefs
 	}
 
-	set derived( value: DerivedUser ) {
+	set derived( value: DerivedUser | undefined ) {
 		this._derived = value
 	}
 	
-	get derived(): DerivedUser {
+	get derived(): DerivedUser | undefined {
 		return this._derived
 	}
 	
@@ -88,25 +88,25 @@ export class TestUser extends Persistent {
 		return this._manyDerived
 	}
 	
-	@persistent private _name: Name
-	@persistent private _age: number
-	@persistent private _admin: boolean
-	@persistent private _skills: string[]
-	@persistentReference private _documentRef: SubClass
+	@persistent private _name: Name | undefined
+	@persistent private _age: number | undefined
+	@persistent private _admin: boolean | undefined
+	@persistent private _skills: string[] | undefined
+	@persistentReference private _documentRef: SubClass | undefined
 	@persistentReference private _manyRefs: SubClass[] = []
-	@persistentReferenceAt('TestUser') private _derived: DerivedUser
-	@persistentReferenceAt('TestUser') private _manyDerived: DerivedUser[]
+	@persistentReferenceAt('TestUser') private _derived: DerivedUser | undefined
+	@persistentReferenceAt('TestUser') private _manyDerived: DerivedUser[] = []
 }
 
 @registerPersistentClass( 'DerivedUser' )
 export class DerivedUser extends TestUser {
-	set salary(value: number) {
+	set salary(value: number | undefined ) {
 		this._salary = value
 	}
 	
-	get salary(): number {
+	get salary(): number | undefined {
 		return this._salary
 	}
 	
-	@persistent private _salary: number
+	@persistent private _salary: number | undefined
 }

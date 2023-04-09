@@ -10,7 +10,9 @@ export class CloudFunctionsMock implements CloudFunctionsService {
 	}
 
 	retrieveFunction<P, R>( cloudFunction: string ): CloudFunction<P,R> {
-		return this._registeredFunctions[ cloudFunction ]
+		const func = this._registeredFunctions[ cloudFunction ]
+		if ( !func ) throw new Error( `Cloud function ${ cloudFunction } is not registered.` )
+		return func
 	}
 
 	callFunction<P, R>( func: CloudFunction<P, R>, params: P ): Promise<R> {

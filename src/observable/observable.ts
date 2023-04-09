@@ -1,4 +1,4 @@
-export type Callback<T> = ( event: T ) => void
+export type Callback<T> = ( event: T | undefined ) => void
 export type Unsubscriber = ()=>void
 
 /**

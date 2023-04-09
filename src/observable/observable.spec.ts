@@ -1,7 +1,7 @@
 import {Observable} from './observable'
 
 class ObserverTest {
-		public changed: boolean
+	public changed: boolean = true
 	userChanged() {
 		this.changed = true
 	}

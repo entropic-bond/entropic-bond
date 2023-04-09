@@ -19,7 +19,7 @@ describe( 'Utils', ()=>{
 
 		it( 'should replace vars with empty value', ()=>{
 			vars.country = ''
-			vars.people = undefined
+			vars.people = undefined as any
 
 			expect( 
 				replaceValue( 

@@ -1,7 +1,7 @@
 import { Persistent, PersistentObject } from '../persistent/persistent'
 
 
-export type CloudFunction<P,R> = ( param?: P ) => Promise<R>
+export type CloudFunction<P,R> = ( param?: P) => Promise<R>
 
 export interface CloudFunctionsService {
 	retrieveFunction<P, R>( cloudFunction: string ): CloudFunction<P, R>
@@ -32,14 +32,14 @@ export class CloudFunctions {
 		const callFunction = CloudFunctions._cloudFunctionsService.callFunction
 		const func = this.getRawFunction<P, R>( cloudFunction )
 
-		return async ( param?: P ) => {
+		return async ( param: P ) => {
 			const result = await callFunction( func, this.processParam( param ) )
 			return this.processResult( result )
 		}
 	}
 
 	private processParam<P>( param: P ): P | PersistentObject<P & Persistent> {
-		if ( !param ) return undefined
+		if ( param === undefined || param === null ) return undefined!
 
 		if ( param instanceof Persistent ) return param.toObject()
 
@@ -58,7 +58,7 @@ export class CloudFunctions {
 	}
 
 	private processResult<R>( value: R | PersistentObject<R & Persistent> ): R {
-		if ( !value ) return undefined
+		if ( value === undefined || value === null ) return undefined!
 
 		if ( ( value as PersistentObject<R & Persistent> ).__className ) {
 			return Persistent.createInstance( value as PersistentObject<R & Persistent> ) as R

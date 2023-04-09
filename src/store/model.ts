@@ -33,8 +33,8 @@ export class Model<T extends Persistent>{
 	 * @param instance you can pass an instace that will be filled with the found data
 	 * @returns a promise resolving to an instance with the found data
 	 */
-	findById<D extends T>( id: string, instance?: D ): Promise<D> {
-		return new Promise<D>( ( resolve, reject ) => {
+	findById<D extends T>( id: string, instance?: D ): Promise<D | undefined> {
+		return new Promise<D | undefined>( ( resolve, reject ) => {
 			this._stream.findById( id, this.collectionName )
 				.then(( data: PersistentObject<D> ) => {
 					if ( data ) {
@@ -57,7 +57,7 @@ export class Model<T extends Persistent>{
 	 * @returns a promise 
 	 */
 	save( instance: T ): Promise<void> {
-		const obj = instance.toObject()
+		const obj = instance.toObject() as PersistentObject<T> & { __rootCollections: DocumentObject }
 		
 		if ( this.collectionName !== obj.__className ) {
 			obj.__rootCollections[ this.collectionName ] = obj.__rootCollections[ obj.__className ]
@@ -108,7 +108,7 @@ export class Model<T extends Persistent>{
 		}
 
 		return this.mapToInstance( 
-			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
+			() => this._stream.find( queryObject as unknown as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 
@@ -118,7 +118,7 @@ export class Model<T extends Persistent>{
 	 * @returns a promise resolving to the amount of matched documents
 	 */
 	count( queryObject: QueryObject<T> ): Promise<number> {
-		return this._stream.count( queryObject as QueryObject<DocumentObject>, this.collectionName )
+		return this._stream.count( queryObject as unknown as QueryObject<DocumentObject>, this.collectionName )
 	}
 
 	/**
@@ -181,7 +181,7 @@ class Query<T extends Persistent> {
 	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
 		let val = value instanceof Persistent? { id: value.id } : value
 
-		this.queryObject.operations.push({
+		this.queryObject.operations?.push({
 			property,
 			operator,
 			value: val
@@ -224,7 +224,7 @@ class Query<T extends Persistent> {
 			obj = obj[ prop ]
 		})
 
-		this.queryObject.operations.push({
+		this.queryObject.operations?.push({
 			property: props[0],
 			operator,
 			value: result
@@ -245,7 +245,7 @@ class Query<T extends Persistent> {
 	 */
 	instanceOf<U extends T>( classId: U | string ) {
 		const className = classId instanceof Persistent? classId.className : classId
-		this.queryObject.operations.push({
+		this.queryObject.operations?.push({
 			property: '__className' as any,
 			operator: '==',
 			value: className as any

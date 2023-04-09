@@ -8,15 +8,16 @@ export class ServerAuthMock extends ServerAuthService {
 		this._userCredentials = userCredentials
 	}
 
-	getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T>> {
-		if ( !this._userCredentials[ userId ] ) return undefined
+	getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T> | undefined> {
+		if ( !this._userCredentials[ userId ] ) Promise.resolve( undefined )
 
 		return Promise.resolve( this._userCredentials[ userId ] as UserCredentials<T> )
 	}
 
 	setCustomCredentials<T extends CustomCredentials>( userId: string, customCredentials: T ): Promise<void> {
-		if ( !this._userCredentials[ userId ] ) throw new Error( `User ${ userId } not found in the auth system` )
-		this._userCredentials[ userId ].customData = { ...customCredentials }
+		const userCredentials = this._userCredentials[ userId ]
+		if ( !userCredentials ) throw new Error( `User ${ userId } not found in the auth system` )
+		userCredentials.customData = { ...customCredentials }
 
 		return Promise.resolve()
 	}

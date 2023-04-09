@@ -21,7 +21,7 @@ export type ClassArrayPropNames<T> = {
 export type ClassArrayProps<T> = Pick<T, ClassArrayPropNames<T>>
 
 export type Elements<
-  T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any>
+  T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any> | any
 > = T extends ReadonlyArray<any>
   ? T[number]
   : T extends ArrayLike<any>
@@ -69,7 +69,14 @@ export declare type ClassPropNamesOfType<T, U> = {
 	[K in keyof T]: T[K] extends Function? never : T[K] extends U? K : never
 }[keyof T];
 
-
+/**
+ * Makes K properties of T required and keeps the rest untouched
+ * @example
+ * type T = { a?: number, b?: string, c?: boolean, d: number }
+ * type R = Require<T, 'a' | 'b'>
+ * // R = { a: number, b: string, c?: boolean, d: number }
+ */
+export type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 
 
@@ -93,7 +100,7 @@ type Concat<T, U> = `${ string & T }${ string & U }`
 export type PropPath<T extends {}, AllowedTypes=any, MaxDepth extends number = 3, Prefix = ''> = MaxDepth extends number? {
 	[ P in keyof T ]: T[P] extends Function? never : T[P] extends AllowedTypes? T[P] extends Primitive | ArrayLike<any>
 		? Concat<Prefix, P>
-		: Concat<Prefix, P> | PropPath <T[P], AllowedTypes, Decr[MaxDepth], `${ Concat<Prefix, P> }.`> : never
+		: Concat<Prefix, P> | PropPath <T[P] & {}, AllowedTypes, Decr[MaxDepth], `${ Concat<Prefix, P> }.`> : never
 }[ keyof T ] & string: never
 
 export type PropPathType<T, Path, MaxDepth extends number = 2> = MaxDepth extends number

@@ -23,7 +23,7 @@ class Character extends EntropicComponent {
 	}
 
 	private _friends: string[] = []
-	private _name: string
+	private _name: string = ''
 }
 
 describe('Observable Persistent', ()=>{
