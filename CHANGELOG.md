@@ -1,3 +1,10 @@
+## [1.41.2](https://github.com/entropic-bond/entropic-bond/compare/v1.41.1...v1.41.2) (2023-04-09)
+
+
+### Bug Fixes
+
+* callback parameter to be only of type T ([f17fc4a](https://github.com/entropic-bond/entropic-bond/commit/f17fc4a066714526ada3cbf74262c1909ecb7ce7))
+
 ## [1.41.1](https://github.com/entropic-bond/entropic-bond/compare/v1.41.0...v1.41.1) (2023-04-09)
 
 
