@@ -165,7 +165,7 @@ export class Auth extends AuthService {
 		this._onAuthStateChange.notify( userCredentials )
 	}
 
-	private static _instance: Auth = null
+	private static _instance: Auth | undefined = undefined
 	private static _authService: AuthService
 	private _onAuthStateChange: Observable<UserCredentials<{}>> = new Observable<UserCredentials<{}>>()
 }

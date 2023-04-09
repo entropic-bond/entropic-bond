@@ -48,7 +48,7 @@ export class AuthMock extends AuthService {
 		const promise = new Promise<void>( resolve => {
 			this._loggedUser = undefined
 			resolve() 
-			this.notifyChange( undefined )
+			this.notifyChange?.( undefined )
 		})
 		this.pendingPromises.push( promise )
 		return promise
@@ -110,7 +110,7 @@ export class AuthMock extends AuthService {
 	}
 
 	private pendingPromises: Promise<any>[] = []
-	private _loggedUser: UserCredentials<{}>
-	private notifyChange: ( userCredentials: UserCredentials<{}> ) => void
+	private _loggedUser: UserCredentials<{}> | undefined
+	private notifyChange: (( userCredentials: UserCredentials<{}> | undefined ) => void ) | undefined
 	private _fakeRegisteredUsers: Collection<UserCredentials<{}>> = {}
 }

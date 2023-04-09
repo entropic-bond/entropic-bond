@@ -31,7 +31,7 @@ describe( 'Auth Mock', ()=>{
 	})
 
 	it( 'should throw if AuthService not set', ()=>{
-		Auth.useAuthService( undefined )
+		Auth.useAuthService( undefined! )
 		expect(
 			()=>Auth.instance
 		).toThrow( Auth.error.shouldBeRegistered )
@@ -59,7 +59,7 @@ describe( 'Auth Mock', ()=>{
 		}
 		catch {}
 
-		expect( userCredentials ).toBeUndefined()
+		expect( userCredentials! ).toBeUndefined()
 		expect( authChangeSpy ).toHaveBeenCalledWith( undefined )
 	})
 
@@ -88,7 +88,7 @@ describe( 'Auth Mock', ()=>{
 			})
 		} catch {}
 
-		expect( userCredentials ).toEqual( undefined )
+		expect( userCredentials! ).toEqual( undefined )
 		expect( authChangeSpy ).toHaveBeenCalledWith( undefined )
 	})
 	
@@ -122,7 +122,7 @@ describe( 'Auth Mock', ()=>{
 			authProvider: 'google'
 		})
 
-		expect( userCredentials.customData.role ).toEqual( 'testRole' )
+		expect( userCredentials.customData?.role ).toEqual( 'testRole' )
 	})
 
 	it( 'should throw if login and not email in email auth provider', ()=>{
