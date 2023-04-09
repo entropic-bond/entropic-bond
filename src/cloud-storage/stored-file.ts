@@ -30,7 +30,7 @@ export class StoredFile extends Persistent{
 		this._reference = await this.provider.save( this.id, dataToStore, progress )
 		this._url = await this.provider.getUrl( this._reference )
 
-		this._pendingData = null
+		this._pendingData = undefined
 		this._onChange.notify({ event: StoredFileEvent.stored, storedFile: this })
 	}
 
@@ -54,7 +54,7 @@ export class StoredFile extends Persistent{
 	get provider() {
 		if ( !this._provider ) {
 			try {
-				this._provider = CloudStorage.createInstance( this._cloudStorageProviderName )
+				this._provider = CloudStorage.createInstance( this._cloudStorageProviderName! )
 			} 
 			catch {
 				this._provider = CloudStorage.defaultCloudStorage
@@ -69,7 +69,7 @@ export class StoredFile extends Persistent{
 
 	setDataToStore( data: StorableData ) {
 		this._pendingData = data
-		this._originalFileName = data instanceof File && data.name
+		this._originalFileName = data instanceof File? data.name : undefined
 		this._onChange.notify({ 
 			event: StoredFileEvent.pendingDataSet, 
 			pendingData: data,
@@ -86,11 +86,11 @@ export class StoredFile extends Persistent{
 		return this._onChange.subscribe( listenerCallback )
 	}
 
-	@persistent private _reference: string
-	@persistent private _url: string
-	@persistent private _cloudStorageProviderName: string
-	@persistent private _originalFileName: string
-	private _provider: CloudStorage
-	private _pendingData: StorableData
+	@persistent private _reference: string | undefined
+	@persistent private _url: string | undefined
+	@persistent private _cloudStorageProviderName: string | undefined
+	@persistent private _originalFileName: string | undefined
+	private _provider: CloudStorage | undefined
+	private _pendingData: StorableData | undefined
 	private _onChange: Observable<StoredFileChange> = new Observable<StoredFileChange>()
 }

@@ -16,7 +16,7 @@ export interface UploadControl {
 export type StorableData = File | Blob | Uint8Array | ArrayBuffer
 
 export abstract class CloudStorage {
-	abstract save( id: string, data: StorableData, progress: UploadProgress ): Promise<string>
+	abstract save( id: string, data: StorableData, progress?: UploadProgress ): Promise<string>
 	abstract getUrl( reference: string ): Promise<string>
 	abstract uploadControl(): UploadControl
 	abstract delete( reference: string ): Promise<void>
@@ -26,11 +26,12 @@ export abstract class CloudStorage {
 	}
 
 	static createInstance( providerName: string ) {
-		if ( !CloudStorage._cloudStorageFactoryMap[ providerName ] ) {
+		const provider = CloudStorage._cloudStorageFactoryMap[ providerName ]
+		if ( !provider ) {
 			throw new Error( `You should register the ${ providerName } cloud storage provider prior to use it`)
 		}
 
-		return CloudStorage._cloudStorageFactoryMap[ providerName ]()
+		return provider()
 	}
 
 	get className(): string {
