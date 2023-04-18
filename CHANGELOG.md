@@ -1,3 +1,10 @@
+## [1.41.3](https://github.com/entropic-bond/entropic-bond/compare/v1.41.2...v1.41.3) (2023-04-10)
+
+
+### Bug Fixes
+
+* fromObject to accept arbitrary objects ([17ef567](https://github.com/entropic-bond/entropic-bond/commit/17ef5678c31d719f029ee5d130199148ccec03c1))
+
 ## [1.41.2](https://github.com/entropic-bond/entropic-bond/compare/v1.41.1...v1.41.2) (2023-04-09)
 
 
