@@ -387,6 +387,12 @@ export class Persistent {
 		return prop.name.slice(1)
 	}
 
+	static createReference<T extends Persistent>( obj: PersistentObject<T> | string ): T {
+		const instance = Persistent.createInstance( obj )
+		instance['__documentReference'] = obj['__documentReference'] || { storedInCollection: instance.className }
+		return instance
+	}
+
 	static createInstance<T extends Persistent>( obj: PersistentObject<T> | string ): T {
 		if ( typeof obj === 'string' ) {
 			return new ( Persistent.classFactory( obj ) ) as T

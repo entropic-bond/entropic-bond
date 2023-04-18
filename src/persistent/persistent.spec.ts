@@ -726,6 +726,20 @@ describe( 'Persistent', ()=>{
 			expect( instance.toObject().__className ).toBe( 'PersistentClass' )
 		})
 
+		it( 'should create a reference from a plain object', ()=>{
+			const instance = Persistent.createReference({ __className: 'PersistentClass', id: 'testPersistent', __documentReference:{ storedInCollection: 'PersistentClass' } } )
+			expect( instance ).toBeInstanceOf( PersistentClass )
+			expect( instance.id ).toEqual( 'testPersistent' )
+			expect( instance['__documentReference'] ).toEqual({ storedInCollection: 'PersistentClass' })
+		})
+
+		it( 'should create a reference from a plain object without explicit __documentReference object', ()=>{
+			const instance = Persistent.createReference({ __className: 'PersistentClass', id: 'testPersistent' } )
+			expect( instance ).toBeInstanceOf( PersistentClass )
+			expect( instance.id ).toEqual( 'testPersistent' )
+			expect( instance['__documentReference'] ).toEqual({ storedInCollection: 'PersistentClass' })
+		})
+
 	})
 
 	describe( 'Before and after serialize hooks', ()=>{
