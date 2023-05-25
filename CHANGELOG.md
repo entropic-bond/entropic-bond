@@ -1,3 +1,10 @@
+## [1.41.4](https://github.com/entropic-bond/entropic-bond/compare/v1.41.3...v1.41.4) (2023-04-18)
+
+
+### Bug Fixes
+
+* create reference ([2d104f6](https://github.com/entropic-bond/entropic-bond/commit/2d104f68165a7af998f6bfb116d4e224420d02b4))
+
 ## [1.41.3](https://github.com/entropic-bond/entropic-bond/compare/v1.41.2...v1.41.3) (2023-04-10)
 
 
