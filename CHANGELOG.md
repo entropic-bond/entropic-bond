@@ -1,3 +1,10 @@
+## [1.42.2](https://github.com/entropic-bond/entropic-bond/compare/v1.42.1...v1.42.2) (2023-05-25)
+
+
+### Bug Fixes
+
+* missed verification link param ([a17afa3](https://github.com/entropic-bond/entropic-bond/commit/a17afa319021febf408b77d141551ac26ae4fea0))
+
 ## [1.42.1](https://github.com/entropic-bond/entropic-bond/compare/v1.42.0...v1.42.1) (2023-05-25)
 
 
