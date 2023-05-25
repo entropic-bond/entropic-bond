@@ -13,6 +13,7 @@ export abstract class AuthService {
 	abstract linkAdditionalProvider( provider: AuthProvider ): Promise<unknown>
 	abstract unlinkProvider( provider: AuthProvider ): Promise<unknown>
 	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T> | undefined) => void ): void
+	abstract resendEmailVerification(): Promise<void>
 }
 
 export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail' | 'missingPassword' | 'missingEmail'
@@ -107,6 +108,14 @@ export class Auth extends AuthService {
 	 */
 	resetEmailPassword( email: string ) {
 		return Auth._authService.resetEmailPassword( email )
+	}
+
+	/**
+	 * Resends the email verification to the user.
+	 * @returns a promise that resolves when the process is done
+	 */
+	override resendEmailVerification(): Promise<void> {
+		return Auth._authService.resendEmailVerification()
 	}
 
 	/**
