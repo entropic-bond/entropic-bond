@@ -1,3 +1,11 @@
+## [1.42.3](https://github.com/entropic-bond/entropic-bond/compare/v1.42.2...v1.42.3) (2023-05-25)
+
+
+### Bug Fixes
+
+* typo ([671f529](https://github.com/entropic-bond/entropic-bond/commit/671f529f7cc9f06f88a7149898809b9c83540e63))
+* typo in auth mock ([1536dd3](https://github.com/entropic-bond/entropic-bond/commit/1536dd3930ed3b010ce542837d0f2c68f7340927))
+
 ## [1.42.2](https://github.com/entropic-bond/entropic-bond/compare/v1.42.1...v1.42.2) (2023-05-25)
 
 
