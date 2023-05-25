@@ -1,3 +1,15 @@
+# [1.42.0](https://github.com/entropic-bond/entropic-bond/compare/v1.41.4...v1.42.0) (2023-05-25)
+
+
+### Bug Fixes
+
+* implement AuthMock resendEmailVerification ([e5440c5](https://github.com/entropic-bond/entropic-bond/commit/e5440c596d63cc6cdcdf834c000fa7f6214f10b5))
+
+
+### Features
+
+* resend verification email ([1281357](https://github.com/entropic-bond/entropic-bond/commit/1281357cefd545cd97117424068ebb7f8dbadae4))
+
 ## [1.41.4](https://github.com/entropic-bond/entropic-bond/compare/v1.41.3...v1.41.4) (2023-04-18)
 
 
