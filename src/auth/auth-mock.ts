@@ -63,6 +63,15 @@ export class AuthMock extends AuthService {
 		else return Promise.reject({ code: 'userNotFound', message: 'Test auth error' })
 	}
 
+	resendEmailVerification( email: string ) {
+		const fakeUserExists = Object.values( this._fakeRegisteredUsers ).find( 
+			user => user.email === email 
+		)
+
+		if ( fakeUserExists ) return Promise.resolve()
+		else return Promise.reject({ code: 'userNotFound', message: 'Test auth error' })
+	}
+
 	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
 		throw new Error('Not implemented.')
 	}
