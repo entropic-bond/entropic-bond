@@ -1,3 +1,10 @@
+# [1.43.0](https://github.com/entropic-bond/entropic-bond/compare/v1.42.4...v1.43.0) (2023-06-20)
+
+
+### Features
+
+* or query ([887cef2](https://github.com/entropic-bond/entropic-bond/commit/887cef23369fe8f71f7764876eb2754b4c09cc1f))
+
 ## [1.42.4](https://github.com/entropic-bond/entropic-bond/compare/v1.42.3...v1.42.4) (2023-05-28)
 
 
