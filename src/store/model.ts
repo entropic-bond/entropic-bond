@@ -7,7 +7,10 @@ import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, Que
  * object through the Store.getModel method instead of its constructor.
  */
 export class Model<T extends Persistent>{
-	static error = { persistentNeedForSubCollection: 'The document parameter for a sub-collection should be a Persistent instace'	}
+	static error = { 
+		persistentNeedForSubCollection: 'The document parameter for a sub-collection should be a Persistent instace',
+		invalidQueryOrder: 'Cannot add where calls after or calls'
+	}
 
 	constructor( stream: DataSource, persistentClass: Persistent | string, subCollection?: string ) {
 		if ( subCollection ) {
@@ -186,6 +189,7 @@ class Query<T extends Persistent> {
 	 * @see orDeepProp
 	 */
 	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent, aggregate?: boolean ) {
+		if ( this.queryObject.operations?.at(-1)?.aggregate && !aggregate ) throw new Error( Model.error.invalidQueryOrder )
 		let val = value instanceof Persistent? { id: value.id } : value
 
 		this.queryObject.operations?.push({
@@ -227,6 +231,8 @@ class Query<T extends Persistent> {
 	 * @see orDeepProp
 	 */
 	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath>, aggregate?: boolean ) {
+		if ( this.queryObject.operations?.at(-1)?.aggregate && !aggregate ) throw new Error( Model.error.invalidQueryOrder )
+
 		const props = propertyPath.split( '.' )
 		let obj = {}
 		let result = props.length > 1? obj : value  // TODO: review
