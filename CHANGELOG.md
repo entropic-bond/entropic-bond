@@ -1,3 +1,10 @@
+## [1.42.4](https://github.com/entropic-bond/entropic-bond/compare/v1.42.3...v1.42.4) (2023-05-28)
+
+
+### Bug Fixes
+
+* add password to sendVerificationEmail ([f403c38](https://github.com/entropic-bond/entropic-bond/commit/f403c3844ba13662913e37fb8b8a8fe30432d17d))
+
 ## [1.42.3](https://github.com/entropic-bond/entropic-bond/compare/v1.42.2...v1.42.3) (2023-05-25)
 
 
