@@ -96,6 +96,7 @@ export class Model<T extends Persistent>{
 	 * Define the search conditions. You pass query operations and how the query
 	 * results are returned to the QueryObject
 	 * @param queryObject the QueryObject with the search constrains
+	 * @param objectType Deprecated! - restricts the search to a specific instances of the class type
 	 * @returns a promise resolving to a collection of matched documents
 	 */
 	query<U extends T>( queryObject: QueryObject<U> = {}, objectType?: U | string ): Promise<U[]> {
@@ -108,7 +109,7 @@ export class Model<T extends Persistent>{
 		}
 
 		return this.mapToInstance( 
-			() => this._stream.find( queryObject as unknown as QueryObject<DocumentObject>, this.collectionName ) 
+			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
 		)
 	}
 
@@ -167,24 +168,31 @@ class Query<T extends Persistent> {
 	}
 
 	/**
-	 * Defines a where condition
+	 * Matches all documents that the value of the property satisfies the condition
+	 * in the operator parameter. Subsequent `where` calls will be operated to the
+	 * previous ones using the AND operator
 	 * @param property the property to be compared
 	 * @param operator the operator to be used in the comparison. The available
 	 * operators are: ==, !=, >, >=, < and <=
 	 * @param value the value to be compared
+	 * @param aggregate if true, the query will aggregate the results to the previous query
 	 * @returns this Query object to make chained calls possible
 	 * @example
 	 * query.where( 'name', '==', 'John' )
 	 * query.where( 'age', '>', 18 )
 	 * query.where( 'age', '==', 18 ).where( 'name', '==', 'John' )
+	 * @see whereDeepProp
+	 * @see or
+	 * @see orDeepProp
 	 */
-	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent, aggregate?: boolean ) {
 		let val = value instanceof Persistent? { id: value.id } : value
 
 		this.queryObject.operations?.push({
 			property,
 			operator,
-			value: val
+			value: val,
+			aggregate
 		})
 
 		return this
@@ -205,7 +213,8 @@ class Query<T extends Persistent> {
 	// }
 
 	/**
-	 * Defines a where condition for a deep property
+	 * Matches all documents that the value of the deep property satisfies the condition
+	 * in the operator parameter
 	 * @param propertyPath the path to the property to be compared
 	 * @param operator the operator to be used in the comparison. The available
 	 * operators are: ==, !=, >, >=, < and <=
@@ -213,8 +222,11 @@ class Query<T extends Persistent> {
 	 * @returns this Query object to make chained calls possible
 	 * @example
 	 * query.whereDeepProp( 'address.street', '==', 'Main Street' )
+	 * @see where
+	 * @see or
+	 * @see orDeepProp
 	 */
-	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
+	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath>, aggregate?: boolean ) {
 		const props = propertyPath.split( '.' )
 		let obj = {}
 		let result = props.length > 1? obj : value  // TODO: review
@@ -227,10 +239,47 @@ class Query<T extends Persistent> {
 		this.queryObject.operations?.push({
 			property: props[0],
 			operator,
-			value: result
+			value: result,
+			aggregate
 		} as QueryOperation<T>)
 
 		return this
+	}
+
+	/**
+	 * Matches all documents that the value of the property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param property the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.or( 'name', '==', 'John' )
+	 * query.or( 'age', '>', 18 )
+	 * @see orDeepProp
+	 * @see where
+	 * @see whereDeepProp
+	 */ 
+	or<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+		return this.where( property, operator, value, true )
+	}
+
+	/**
+	 * Matches all documents that the value of the deep property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param propertyPath the path to the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @param value the value to be compared
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.orDeepProp( 'address.street', '==', 'Main Street' )
+	 * @see or
+	 * @see where
+	 * @see whereDeepProp
+	 */
+	orDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
+		return this.whereDeepProp( propertyPath, operator, value, true )
 	}
 
 	/**

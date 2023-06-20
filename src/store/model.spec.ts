@@ -108,16 +108,6 @@ describe( 'Model', ()=>{
 			expect( admins ).toHaveLength( 2 )
 		})
 
-		it( 'should find admins with age less than 56', async ()=>{
-			const admins = await model.find()
-				.where( 'admin', '==', true )
-				.where( 'age', '<', 50 )
-				.get()
-
-			expect( admins ).toHaveLength( 1 )
-			expect( admins[0]?.age ).toBeLessThan( 50 )
-		})
-
 		it( 'should query by subproperties', async ()=>{
 			const users = await model.query({
 				operations: [
@@ -463,26 +453,46 @@ describe( 'Model', ()=>{
 		it( 'should count the documents in the collection', async ()=>{
 			expect( await model.find().count() ).toBe( 6 )
 		})
+	})
+
+	describe( 'Compound queries', ()=>{
+		it( 'should find documents using `AND` compound query', async ()=>{
+			const admins = await model.find()
+				.where( 'admin', '==', true )
+				.where( 'age', '<', 50 )
+				.get()
+
+			expect( admins ).toHaveLength( 1 )
+			expect( admins[0]?.age ).toBeLessThan( 50 )
+		})
+
+		it( 'should find by combining `OR` query', async ()=>{
+			const docs = await model.find().or( 'age', '==', 23 ).or( 'age', '==', 41 ).get()
+
+			expect( docs ).toHaveLength( 2 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user5', age: 41 })
+			]))
+		})
+	})
+
+	describe( 'Data Cursors', ()=>{
+		beforeEach( async ()=>{
+			await model.find().get( 2 )
+		})
+
+		it( 'should get next result set', async ()=>{
+			const docs = await model.next()
+			expect( docs ).toHaveLength( 2 )
+			expect( docs[0]?.id ).toEqual( 'user3' )
+		})
 		
-
-		describe( 'Data Cursors', ()=>{
-			beforeEach( async ()=>{
-				await model.find().get( 2 )
-			})
-
-			it( 'should get next result set', async ()=>{
-				const docs = await model.next()
-				expect( docs ).toHaveLength( 2 )
-				expect( docs[0]?.id ).toEqual( 'user3' )
-			})
-			
-			it( 'should not go beyond the end of result set', async ()=>{
-				await model.next()
-				await model.next()
-				const docs = await model.next()
-				expect( docs ).toHaveLength( 0 )
-			})
-			
+		it( 'should not go beyond the end of result set', async ()=>{
+			await model.next()
+			await model.next()
+			const docs = await model.next()
+			expect( docs ).toHaveLength( 0 )
 		})
 	})
 

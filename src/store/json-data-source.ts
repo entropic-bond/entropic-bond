@@ -162,19 +162,13 @@ export class JsonDataSource implements DataSource {
 		return false
 	}
 
-	private queryProcessor<T, P extends keyof QueryProcessors>(
-		docs: DocumentObject[], 
-		processMethod: P, 
-		value: QueryObject<T>[P] 
-	) {
+	private queryProcessor<T, P extends keyof QueryProcessors>( docs: DocumentObject[], processMethod: P, value: QueryObject<T>[P] ) {
 
 		const processors: QueryProcessors = {
 
 			limit: ( limit: number ) => docs,//.slice( 0, limit ),
 
-			operations: ( operations: QueryOperation<T>[] ) => docs.filter(
-				doc => this.isQueryMatched( doc, operations )
-			),
+			operations: ( operations: QueryOperation<T>[] ) => this.retrieveQueryDocs( docs, operations ),
 
 			sort: ({ order, propertyName }) => docs.sort( ( a, b ) => {
 				if ( order === 'asc' ) {
@@ -189,12 +183,25 @@ export class JsonDataSource implements DataSource {
 		return processors[ processMethod ]( value )
 	}
 
+	private retrieveQueryDocs<T>( docs: DocumentObject[], queryOperations: QueryOperation<T>[] ): DocumentObject[] {
+		return queryOperations.reduce(( prevDocs, queryOperation, i ) => {
+			if ( queryOperation.aggregate ) {
+				const aggregate = docs.filter( doc => this.isQueryMatched( doc, queryOperation ) )
+				if ( i === 0 ) return aggregate
+				else return prevDocs.concat( aggregate )
+			}
+			else {
+				return prevDocs.filter( doc => this.isQueryMatched( doc, queryOperation ) )
+			}
+		}, docs )
+	}
+
 	private deepValue( obj: {}, propertyPath: string /*like person.name.firstName*/) {
 		const propChain = propertyPath.split( '.' )
 		return propChain.reduce(( value, prop ) => value[ prop ], obj )
 	}
 
-	private isQueryMatched<T>( doc: DocumentObject, queryOperations: QueryOperation<T>[] ) {
+	private isQueryMatched<T>( doc: DocumentObject, queryOperation: QueryOperation<T> ) {
 		const queryOperator = {
 			'==': <U>(a: U, b: U) => a === b,
 			'!=': <U>(a: U, b: U) => a !== b,
@@ -204,15 +211,10 @@ export class JsonDataSource implements DataSource {
 			'>=': <U>(a: U, b: U) => a >= b,
 		}
 
-		const isMatch = queryOperations.reduce( ( prevVal, val ) => {
-			const { property, value, operator } = val as QueryOperation<unknown>
-	
-			const [ document, v ] = this.retrieveValuesToCompare( doc[property], value )
+		const { property, value, operator } = queryOperation
+		const [ document, v ] = this.retrieveValuesToCompare( doc[ property as any ], value )
 
-			return prevVal && queryOperator[ operator ]( document, v )
-		}, true)
-
-		return isMatch
+		return queryOperator[ operator ]( document, v )
 	}
 
 	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {

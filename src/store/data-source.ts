@@ -19,11 +19,13 @@ export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>='
  * @param property the name of the property to be used in the query
  * @param operator the operator to be used in the query
  * @param value the value to be used in the query
+ * @param aggregate if true, the query results will be aggregated using an `or` operator
  */
 export type QueryOperation<T> = {
 	property: ClassPropNames<T>
 	operator: QueryOperator
 	value: Partial<T[ClassPropNames<T>]> | {[key:string]: unknown}
+	aggregate?: boolean
 }
 
 /**
