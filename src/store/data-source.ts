@@ -146,7 +146,8 @@ export abstract class DataSource {
 			return { 
 				property: propPath, 
 				operator:	operation.operator,
-				value
+				value,
+				aggregate: operation.aggregate
 			} as QueryOperation<T>
 		})
 	}
