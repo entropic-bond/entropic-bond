@@ -1,3 +1,10 @@
+## [1.43.1](https://github.com/entropic-bond/entropic-bond/compare/v1.43.0...v1.43.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* missing operation.aggregate chain ([c073705](https://github.com/entropic-bond/entropic-bond/commit/c073705c510f33b02afae9b94dfd3769e051fd4f))
+
 # [1.43.0](https://github.com/entropic-bond/entropic-bond/compare/v1.42.4...v1.43.0) (2023-06-20)
 
 
