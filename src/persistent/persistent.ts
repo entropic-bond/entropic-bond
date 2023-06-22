@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { ClassPropNames, SomeClassProps } from '../types/utility-types'
+import { ClassArrayPropNames, ClassPropNames, SomeClassProps } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
 
@@ -432,6 +432,7 @@ interface PersistentProperty {
 	forcedPersistentProps?: ClassPropNames<Persistent>[]
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
+	arraySearchableBy?: ClassPropNames<Persistent>[]
 }
 
 /**
@@ -528,10 +529,16 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 			else target[ '_persistentProperties' ] = []
 		}
 
-		target[ '_persistentProperties' ]?.push( {
-			name: property,
-			...options
-		} )
+		const propInfo = target[ '_persistentProperties' ]!.find( prop => prop.name === property )
+		if ( propInfo ) {
+			Object.assign( propInfo, options )
+		}
+		else {
+			target[ '_persistentProperties' ]?.push({
+				name: property,
+				...options
+			})
+		}
 	}
 }
 
@@ -559,3 +566,8 @@ export function registerLegacyClassName( legacyName: string ) {
 	}
 }
 
+export function searchableArray<T>( properties: ClassPropNames<T>[] ) {
+	return function( target: Persistent, property: string ) {
+		persistentParser({ arraySearchableBy: properties as ClassPropNames<Persistent>[] })( target, property )
+	}
+}

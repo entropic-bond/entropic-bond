@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName, searchableArray } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -15,8 +15,10 @@ class PersistentClass extends Persistent {
 	get persistentProp() { return this._persistentProp }
 	set personPureRef( value: Person | undefined ) { this._personPureRef = value }
 	get personPureRef() { return this._personPureRef }
+	set persistentArray( value: PersistentClass[] | undefined ) { this._persistentArray = value }
+	get persistentArray() { return this._persistentArray }
 	@persistent _persistentProp: number | undefined
-	@persistent _persistentArray: PersistentClass[] | undefined
+	@searchableArray<PersistentClass>(['id', 'persistentProp']) @persistent _persistentArray: PersistentClass[] | undefined
 	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
 	_nonPersistentProp: number | undefined
 }
@@ -406,7 +408,7 @@ describe( 'Persistent', ()=>{
 			expect( new PersistentClass().getPersistentProperties() ).toEqual([
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
-				{ name: 'persistentArray' },
+				{ name: 'persistentArray', arraySearchableBy: ['id', 'persistentProp'] },
 				{ name: 'personPureRef', isReference: true, isPureReference: true, forcedPersistentProps: [ 'name', 'salary' ] }
 			])
 
@@ -757,6 +759,30 @@ describe( 'Persistent', ()=>{
 			const obj = person.toObject()
 			Persistent.createInstance<Person>( obj )
 			expect( afterDeserialize ).toHaveBeenCalledTimes( 2 )
+		})
+	})
+
+	xdescribe( 'Make array field searchable by property', ()=>{
+		it( 'should create a searchable array field', ()=>{
+			const instance = new PersistentClass( 'testPersistent' )
+			instance.persistentArray = [
+				new PersistentClass( 'testPersistent0' ),
+				new PersistentClass( 'testPersistent1' ),
+				new PersistentClass( 'testPersistent2' ),
+			]
+			instance.persistentArray[0]!.persistentProp = 1
+			instance.persistentArray[1]!.persistentProp = 2
+			instance.persistentArray[2]!.persistentProp = 3
+
+			const obj = instance.toObject()
+
+			expect( obj['__persistentArray_id'] ).toEqual([
+				'testPersistent0',
+				'testPersistent1',
+				'testPersistent2',
+			])
+			
+			expect( obj['__persistentArray_persistentProp'] ).toEqual([	1, 2, 3	])
 		})
 	})
 })
