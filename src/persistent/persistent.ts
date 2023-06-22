@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { ClassArrayPropNames, ClassPropNames, SomeClassProps } from '../types/utility-types'
+import { ClassArrayPropNames, ClassPropNames, Collection, SomeClassProps } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
 
@@ -257,6 +257,11 @@ export class Persistent {
 					obj[ propName ] = this.toDeepObj( propValue, rootCollections )
 				}
 
+				if ( prop.arraySearchableBy ) {
+					prop.arraySearchableBy.forEach( searchableBy => {
+						obj[ `_${ prop.name }_${ searchableBy }` ] = propValue.map(( value: Collection<unknown> ) => value[ searchableBy ] )
+					})
+				}
 			}
 		})
 
@@ -534,11 +539,20 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 			Object.assign( propInfo, options )
 		}
 		else {
-			target[ '_persistentProperties' ]?.push({
+			target[ '_persistentProperties' ]!.push({
 				name: property,
 				...options
 			})
 		}
+
+		// if ( options?.arraySearchableBy ) {
+		// 	for ( const propName of options.arraySearchableBy ) {
+		// 		const propInfo = target[ '_persistentProperties' ]!.find( prop => prop.name === propName )
+		// 		if ( !propInfo ) {
+		// 			target[ '_persistentProperties' ]!.push({	name: propName })
+		// 		}
+		// 	}
+		// }
 	}
 }
 

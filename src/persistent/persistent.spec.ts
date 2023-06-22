@@ -762,7 +762,7 @@ describe( 'Persistent', ()=>{
 		})
 	})
 
-	xdescribe( 'Make array field searchable by property', ()=>{
+	describe( 'Make array field searchable by property', ()=>{
 		it( 'should create a searchable array field', ()=>{
 			const instance = new PersistentClass( 'testPersistent' )
 			instance.persistentArray = [
