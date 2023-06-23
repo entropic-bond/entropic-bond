@@ -149,9 +149,9 @@ export abstract class DataSource {
 
 			if ( DataSource.isArrayOperator( operation.operator ) ) {
 				return {
-					property: operation.property,
+					property: Persistent.searchableArrayNameFor( operation.property as string ),
 					operator: operation.operator,
-					value: operation.value,
+					value: ( operation.value as unknown as Persistent[] ).map( v => v.id ) as any,
 					aggregate: operation.aggregate
 				} as QueryOperation<T>
 			}
