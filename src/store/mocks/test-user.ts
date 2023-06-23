@@ -1,4 +1,4 @@
-import { persistent, Persistent, persistentReference, persistentReferenceAt, registerPersistentClass } from '../../persistent/persistent'
+import { persistent, Persistent, persistentReference, persistentReferenceAt, registerPersistentClass, searchableArray } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
@@ -88,10 +88,20 @@ export class TestUser extends Persistent {
 		return this._manyDerived
 	}
 	
+	set colleagues( value: TestUser[] ) {
+		this._colleagues = value
+	}
+	
+	get colleagues(): TestUser[] {
+		return this._colleagues
+	}
+	
+	@persistent @searchableArray private _colleagues: TestUser[] = []
 	@persistent private _name: Name | undefined
 	@persistent private _age: number | undefined
 	@persistent private _admin: boolean | undefined
 	@persistent private _skills: string[] | undefined
+
 	@persistentReference private _documentRef: SubClass | undefined
 	@persistentReference private _manyRefs: SubClass[] = []
 	@persistentReferenceAt('TestUser') private _derived: DerivedUser | undefined

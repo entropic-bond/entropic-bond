@@ -91,7 +91,7 @@ export type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] }
  * 
  *******************************************************************************/
 
-type Primitive = string | number | bigint | boolean | undefined | symbol
+export type Primitive = string | number | bigint | boolean | undefined | symbol
 
 type Decr = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // add to a reasonable amount
 

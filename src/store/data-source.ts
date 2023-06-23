@@ -11,8 +11,12 @@ export type DocumentObject = PersistentObject<Persistent>
  * @param <= less than or equal
  * @param > greater than
  * @param >= greater than or equal
+ * @param arrayContains array contains
+ * @param arrayContainsAny array contains any
+ * @param in in
+ * @param !in not in
  */
-export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>='
+export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'arrayContains' | 'arrayContainsAny' | 'in' | '!in'
 
 /**
  * A representation of a query operation

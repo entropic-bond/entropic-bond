@@ -4,6 +4,7 @@ import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
 import { DataSource } from './data-source'
+import { Persistent } from '../persistent/persistent'
 
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
@@ -11,7 +12,7 @@ describe( 'Model', ()=>{
 	const rawData = ()=> ( Store.dataSource as JsonDataSource ).rawData 
 
 	beforeEach( async ()=> {
-		Store.useDataSource( new JsonDataSource( JSON.parse( JSON.stringify( testData ) ) ) )
+		Store.useDataSource( new JsonDataSource( structuredClone( testData ) ) )
 		
 		testUser = new TestUser()
 		testUser.name = {
@@ -501,6 +502,32 @@ describe( 'Model', ()=>{
 			expect( 
 				()=> model.find().or( 'age', '==', 23 ).where( 'age', '>', 50 )
 			).toThrow( Model.error.invalidQueryOrder )
+		})
+	})
+
+	describe( 'Searchable array property', ()=>{
+		it( 'should save searchable array property', async ()=>{
+			const user = new TestUser( 'user7' )
+			user.colleagues = [ new TestUser( 'cUser1' ), new TestUser( 'cUser2' ) ]
+			await model.save( user )
+
+			const loadedUser = await model.findById( 'user7' )
+			expect( loadedUser?.colleagues ).toHaveLength( 2 )
+			expect( loadedUser![ Persistent.searchableArrayNameFor( 'colleagues' )] ).toBeUndefined()
+			const rawUserSearchableContent = rawData()[ 'TestUser' ]!['user7']![Persistent.searchableArrayNameFor( 'colleagues' )]
+			expect( rawUserSearchableContent ).toEqual([ 'cUser1', 'cUser2' ])
+		})
+
+		it( 'should find documents using `arrayContainsAny` operator', async ()=>{
+			const colleague1 = new TestUser( 'colleague1' )
+			const colleague2 = new TestUser( 'colleague2' )
+			const docs = await model.find().where( 'colleagues', 'arrayContainsAny', [ colleague1, colleague2 ]).get()
+
+			expect( docs ).toHaveLength( 2 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user2' }),
+				expect.objectContaining({ id: 'user4' })
+			]))
 		})
 	})
 

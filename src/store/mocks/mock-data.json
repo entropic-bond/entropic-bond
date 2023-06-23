@@ -23,7 +23,18 @@
 			},
 			"age": 21,
 			"admin": false,
-			"skills": ["skill1", "skill2", "skill3"]
+			"skills": ["skill1", "skill2", "skill3"],
+			"colleagues": [
+				{ 
+					"id": "colleague1",
+					"__className": "TestUser"
+				},
+				{ 
+					"id": "user3",
+					"__className": "TestUser"
+				}
+			],
+			"__colleagues_searchable": [ "colleague1", "user3" ]
 		},
 		"user3": {
 			"__className": "TestUser",
@@ -37,7 +48,18 @@
 			},
 			"age": 56,
 			"admin": true,
-			"skills": ["skill21", "skill22", "skill23"]
+			"skills": ["skill21", "skill22", "skill23"],
+			"colleagues": [
+				{ 
+					"id": "user1",
+					"__className": "TestUser"
+				},
+				{ 
+					"id": "user3",
+					"__className": "TestUser"
+				}
+			],
+			"__colleagues_searchable": [ "user1", "user3" ]
 		},
 		"user4": {
 			"__className": "DerivedUser",
@@ -49,7 +71,18 @@
 			"age": 35,
 			"admin": false,
 			"skills": ["skill41", "skill42", "skill43"],
-			"salary": 2800
+			"salary": 2800,
+			"colleagues": [
+				{ 
+					"id": "colleague1",
+					"__className": "TestUser"
+				},
+				{ 
+					"id": "colleague2",
+					"__className": "TestUser"
+				}
+			],
+			"__colleagues_searchable": [ "colleague1", "colleague2" ]
 		},
 		"user5": {
 			"__className": "TestUser",

@@ -209,21 +209,30 @@ export class JsonDataSource implements DataSource {
 			'<=': <U>(a: U, b: U) => a <= b,
 			'>': <U>(a: U, b: U) => a > b,
 			'>=': <U>(a: U, b: U) => a >= b,
+			'arrayContainsAny': <U>(a: U[], b: U[]) => a?.some( v => b?.includes( v ) ),
 		}
 
 		const { property, value, operator } = queryOperation
-		const [ document, v ] = this.retrieveValuesToCompare( doc[ property as any ], value )
+		const [ propValue, v ] = this.retrieveValuesToCompare( doc, property as string, value )
 
-		return queryOperator[ operator ]( document, v )
+		return queryOperator[ operator ]( propValue, v )
 	}
 
-	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {
-		if ( typeof value === 'object' ) {
-			const propName = Object.keys( value! )[0]!
-			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value?.[ propName ] )
+	private retrieveValuesToCompare( doc: DocumentObject, propertyName: string, value: unknown ): [ unknown, unknown ] {
+		const propertyValue = doc[ propertyName ]
+		const searchableArrayName = Persistent.searchableArrayNameFor( propertyName )
+		const searchableArray = doc[ searchableArrayName ]
+		
+		if ( searchableArray ) {
+			return [ searchableArray, ( value as DocumentObject[] ).map( elem => elem.id ) ]
 		}
 
-		return [ doc || document, val || value ]
+		if ( propertyValue && typeof value === 'object' ) {
+			const propName = Object.keys( value! )[0]!
+			var [ propVal, val ] = this.retrieveValuesToCompare( propertyValue, propName, value?.[ propName ] )
+		}
+
+		return [ propVal || propertyValue, val || value ]
 	}
 
 	private resolveWithDelay<T>( data?: T ): Promise<T> {

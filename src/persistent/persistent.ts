@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { ClassArrayPropNames, ClassPropNames, Collection, SomeClassProps } from '../types/utility-types'
+import { ClassPropNames, ClassPropNamesOfType, Collection, Primitive, SomeClassProps } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
 
@@ -257,10 +257,8 @@ export class Persistent {
 					obj[ propName ] = this.toDeepObj( propValue, rootCollections )
 				}
 
-				if ( prop.arraySearchableBy ) {
-					prop.arraySearchableBy.forEach( searchableBy => {
-						obj[ `_${ prop.name }_${ searchableBy }` ] = propValue.map(( value: Collection<unknown> ) => value[ searchableBy ] )
-					})
+				if ( prop.searchableArray ) {
+					obj[ Persistent.searchableArrayNameFor( propName ) ] = propValue.map(( value: PersistentObject<Persistent> ) => value.id )
 				}
 			}
 		})
@@ -270,6 +268,9 @@ export class Persistent {
 		return obj
 	}
 
+	static searchableArrayNameFor( propName: string ) {
+		return `__${ propName }_searchable`
+	}
 	private fromDeepObject( value: unknown ) {
 		if ( value === undefined || value === null ) return value
 		
@@ -437,7 +438,7 @@ interface PersistentProperty {
 	forcedPersistentProps?: ClassPropNames<Persistent>[]
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
-	arraySearchableBy?: ClassPropNames<Persistent>[]
+	searchableArray?: boolean
 }
 
 /**
@@ -544,15 +545,6 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 				...options
 			})
 		}
-
-		// if ( options?.arraySearchableBy ) {
-		// 	for ( const propName of options.arraySearchableBy ) {
-		// 		const propInfo = target[ '_persistentProperties' ]!.find( prop => prop.name === propName )
-		// 		if ( !propInfo ) {
-		// 			target[ '_persistentProperties' ]!.push({	name: propName })
-		// 		}
-		// 	}
-		// }
 	}
 }
 
@@ -580,8 +572,14 @@ export function registerLegacyClassName( legacyName: string ) {
 	}
 }
 
-export function searchableArray<T>( properties: ClassPropNames<T>[] ) {
-	return function( target: Persistent, property: string ) {
-		persistentParser({ arraySearchableBy: properties as ClassPropNames<Persistent>[] })( target, property )
-	}
+/**
+ * Decorator to make a `Persistent` array property searchable by the 
+ * persistance engine.
+ * When a property is marked as searchable, the persistance engine will
+ * generate internally a new property with the same name but with the suffix `_searchable`
+ * and prefixed with the `_` character. This new property will contain an array
+ * with the `id` of the persistent elements in the original array.
+ */ 
+export function searchableArray( target: Persistent, property: string ) {
+	return persistentParser({ searchableArray: true })( target, property )
 }
