@@ -1,3 +1,10 @@
+## [1.44.3](https://github.com/entropic-bond/entropic-bond/compare/v1.44.2...v1.44.3) (2023-06-23)
+
+
+### Bug Fixes
+
+* convert values from searchable array to strings ([83c1d94](https://github.com/entropic-bond/entropic-bond/commit/83c1d94b51a5c0a884331c59bed8052d59aa03e6))
+
 ## [1.44.2](https://github.com/entropic-bond/entropic-bond/compare/v1.44.1...v1.44.2) (2023-06-23)
 
 
