@@ -11,12 +11,12 @@ export type DocumentObject = PersistentObject<Persistent>
  * @param <= less than or equal
  * @param > greater than
  * @param >= greater than or equal
- * @param arrayContains array contains
- * @param arrayContainsAny array contains any
+ * @param contains array contains
+ * @param containsAny array contains any
  * @param in in
  * @param !in not in
  */
-export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'arrayContains' | 'arrayContainsAny' | 'in' | '!in'
+export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'contains' | 'containsAny' | 'in' | '!in'
 
 /**
  * A representation of a query operation
@@ -144,9 +144,21 @@ export abstract class DataSource {
 	 */
 	static toPropertyPathOperations<T extends Persistent>( operations: QueryOperation<T>[] ): QueryOperation<T>[] {
 		if ( !operations ) return []
+
 		return operations.map( operation => {
+
+			if ( DataSource.isArrayOperator( operation.operator ) ) {
+				return {
+					property: operation.property,
+					operator: operation.operator,
+					value: operation.value,
+					aggregate: operation.aggregate
+				} as QueryOperation<T>
+			}
+
 			const [ path, value ] = this.toPropertyPathValue( operation.value )
 			const propPath = `${ String( operation.property ) }${ path? '.'+path : '' }` 
+
 			return { 
 				property: propPath, 
 				operator:	operation.operator,
@@ -154,6 +166,10 @@ export abstract class DataSource {
 				aggregate: operation.aggregate
 			} as QueryOperation<T>
 		})
+	}
+
+	static isArrayOperator( operator: QueryOperator ): boolean {
+		return operator === 'in' || operator === '!in' || operator === 'containsAny' || operator === 'contains'
 	}
 
 	private static toPropertyPathValue( obj: {} ): [ string | undefined, unknown ] {

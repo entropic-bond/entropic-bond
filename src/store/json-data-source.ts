@@ -209,7 +209,7 @@ export class JsonDataSource implements DataSource {
 			'<=': <U>(a: U, b: U) => a <= b,
 			'>': <U>(a: U, b: U) => a > b,
 			'>=': <U>(a: U, b: U) => a >= b,
-			'arrayContainsAny': <U>(a: U[], b: U[]) => a?.some( v => b?.includes( v ) ),
+			'containsAny': <U>(a: U[], b: U[]) => a?.some( v => b?.includes( v ) ),
 		}
 
 		const { property, value, operator } = queryOperation

@@ -180,8 +180,7 @@ export class Persistent {
 	 * @returns the property information
 	 */
 	getPropInfo<T extends this>( propName: ClassPropNames<T> ): PersistentProperty {
-		const props = this.getPersistentProperties()
-		const propInfo = props.find( prop => prop.name === propName as string )
+		const propInfo = this.getPersistentProperties().find( prop => prop.name === propName as string )
 		if ( !propInfo ) throw new Error( `Property "${ propName as string }" has not been registered.` )
 		return propInfo
 	}

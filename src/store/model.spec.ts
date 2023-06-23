@@ -518,10 +518,10 @@ describe( 'Model', ()=>{
 			expect( rawUserSearchableContent ).toEqual([ 'cUser1', 'cUser2' ])
 		})
 
-		it( 'should find documents using `arrayContainsAny` operator', async ()=>{
+		it( 'should find documents using `containsAny` operator', async ()=>{
 			const colleague1 = new TestUser( 'colleague1' )
 			const colleague2 = new TestUser( 'colleague2' )
-			const docs = await model.find().where( 'colleagues', 'arrayContainsAny', [ colleague1, colleague2 ]).get()
+			const docs = await model.find().where( 'colleagues', 'containsAny', [ colleague1, colleague2 ]).get()
 
 			expect( docs ).toHaveLength( 2 )
 			expect( docs ).toEqual( expect.arrayContaining([
