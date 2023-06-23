@@ -1,3 +1,10 @@
+## [1.44.1](https://github.com/entropic-bond/entropic-bond/compare/v1.44.0...v1.44.1) (2023-06-23)
+
+
+### Bug Fixes
+
+* propInfo ([faa4a98](https://github.com/entropic-bond/entropic-bond/commit/faa4a98f5c47bdbb0904d3dd92a0df0b60fc511c))
+
 # [1.44.0](https://github.com/entropic-bond/entropic-bond/compare/v1.43.1...v1.44.0) (2023-06-23)
 
 
