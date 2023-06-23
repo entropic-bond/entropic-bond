@@ -706,6 +706,11 @@ describe( 'Persistent', ()=>{
 			expect( Persistent.classesExtending( AbstractClass ) ).toContain( 'ConcreteClass' )
 		})
 		
+		it( 'should retrieve property info', ()=>{
+			expect( Persistent.propInfo<Person>( 'Person', 'name' ) ).toEqual({
+				name: 'name'
+			})
+		})
 	})
 
 	describe( 'Persistent instantation', ()=>{

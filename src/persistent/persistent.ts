@@ -175,6 +175,18 @@ export class Persistent {
 	}
 
 	/**
+	 * Get the property information of this instance
+	 * @param propName the persistent property name
+	 * @returns the property information
+	 */
+	getPropInfo<T extends this>( propName: ClassPropNames<T> ): PersistentProperty {
+		const props = this.getPersistentProperties()
+		const propInfo = props.find( prop => prop.name === propName as string )
+		if ( !propInfo ) throw new Error( `Property "${ propName as string }" has not been registered.` )
+		return propInfo
+	}
+
+	/**
 	 * Copy the persistent properties of the given instance to this instance. 
 	 * The property `id` will be ignored.
 	 * Only the properties that are not null or undefined will be copied.
@@ -416,6 +428,11 @@ export class Persistent {
 				throw new Error( `${ e }\n-----> Class name not found in object:\n{\n\t ${ stringifiedObj } \n}\n` )
 			}
 		}
+	}
+
+	static propInfo<T extends Persistent>( registeredClassName: string, propName: ClassPropNames<T> ): PersistentProperty {
+		const inst = Persistent.createInstance( registeredClassName )
+		return inst.getPropInfo( propName )
 	}
 
 	@persistent private _id: string
