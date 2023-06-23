@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/entropic-bond/entropic-bond/compare/v1.43.1...v1.44.0) (2023-06-23)
+
+
+### Features
+
+* searchableArray decorator ([db6f45a](https://github.com/entropic-bond/entropic-bond/commit/db6f45a7a7185561128a452907d013fad8abb109))
+
 ## [1.43.1](https://github.com/entropic-bond/entropic-bond/compare/v1.43.0...v1.43.1) (2023-06-21)
 
 
