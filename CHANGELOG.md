@@ -1,3 +1,10 @@
+## [1.44.2](https://github.com/entropic-bond/entropic-bond/compare/v1.44.1...v1.44.2) (2023-06-23)
+
+
+### Bug Fixes
+
+* rename array operators ([e1f2365](https://github.com/entropic-bond/entropic-bond/commit/e1f2365755d8f5e27f856cbf1dc5889d6ed9d8e6))
+
 ## [1.44.1](https://github.com/entropic-bond/entropic-bond/compare/v1.44.0...v1.44.1) (2023-06-23)
 
 
