@@ -1,3 +1,10 @@
+## [1.44.5](https://github.com/entropic-bond/entropic-bond/compare/v1.44.4...v1.44.5) (2023-06-25)
+
+
+### Bug Fixes
+
+* don't process arrays in property path determination ([c32c6fd](https://github.com/entropic-bond/entropic-bond/commit/c32c6fd2f77e822d33477d7066e191b9ee783412))
+
 ## [1.44.4](https://github.com/entropic-bond/entropic-bond/compare/v1.44.3...v1.44.4) (2023-06-25)
 
 
