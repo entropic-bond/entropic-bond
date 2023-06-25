@@ -173,7 +173,7 @@ export abstract class DataSource {
 	}
 
 	private static toPropertyPathValue( obj: {} ): [ string | undefined, unknown ] {
-		if ( typeof obj === 'object' ) {
+		if ( typeof obj === 'object' && !Array.isArray( obj ) ) {
 			const propName = Object.keys( obj )[0]!
 			const [ propPath, value ] = this.toPropertyPathValue( obj[ propName ] )
 			return [ `${ propName }${ propPath? '.'+propPath : '' }`, value ]
