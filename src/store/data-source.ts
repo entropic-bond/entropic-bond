@@ -147,7 +147,7 @@ export abstract class DataSource {
 
 		return operations.map( operation => {
 
-			if ( DataSource.isArrayOperator( operation.operator ) ) {
+			if ( DataSource.isArrayOperator( operation.operator ) && operation.value[0] instanceof Persistent ) {
 				return {
 					property: Persistent.searchableArrayNameFor( operation.property as string ),
 					operator: operation.operator,

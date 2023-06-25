@@ -112,7 +112,7 @@ export class Model<T extends Persistent>{
 		}
 
 		return this.mapToInstance( 
-			() => this._stream.find( queryObject as QueryObject<DocumentObject>, this.collectionName ) 
+			() => this._stream.find( this.preprocessQueryObject( queryObject ), this.collectionName ) 
 		)
 	}
 
@@ -153,6 +153,43 @@ export class Model<T extends Persistent>{
 				))
 				.catch( error => reject( error ) )
 		})
+	}
+
+	/**
+	 * Normalizes the query object to match the data source requirements.
+	 * Call this method before you do any query operation on the concrete data source
+	 * @param queryObject the query object containing the query operations
+	 * @param operatorConversor a function that converts the query operators to the
+	 * operators supported by the concrete data source
+	 * @returns the normalized query object
+	 */
+	private preprocessQueryObject<U>( queryObject: QueryObject<U> ): QueryObject<DocumentObject> {
+		if ( Object.values( queryObject ).length === 0 ) return queryObject as QueryObject<DocumentObject>
+
+		const operations = queryObject.operations?.map( operation => {
+
+			if ( DataSource.isArrayOperator( operation.operator ) && operation.value[0] instanceof Persistent ) {
+				return {
+					property: Persistent.searchableArrayNameFor( operation.property as string ),
+					operator: operation.operator,
+					value: ( operation.value as unknown as Persistent[] ).map( v => v.id ) as any,
+					aggregate: operation.aggregate
+				}
+			}
+			else {
+				return {
+					property: operation.property,
+					operator: operation.operator,
+					value: operation.value,
+					aggregate: operation.aggregate
+				}
+			}
+		}) ?? []
+
+		return {
+			...queryObject,
+			operations
+		} as QueryObject<DocumentObject>
 	}
 
 	readonly collectionName: string

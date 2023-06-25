@@ -220,14 +220,8 @@ export class JsonDataSource implements DataSource {
 
 	private retrieveValuesToCompare( doc: DocumentObject, propertyName: string, value: unknown ): [ unknown, unknown ] {
 		const propertyValue = doc[ propertyName ]
-		const searchableArrayName = Persistent.searchableArrayNameFor( propertyName )
-		const searchableArray = doc[ searchableArrayName ]
-		
-		if ( searchableArray ) {
-			return [ searchableArray, ( value as DocumentObject[] ).map( elem => elem.id ) ]
-		}
 
-		if ( propertyValue && typeof value === 'object' ) {
+		if ( propertyValue && typeof value === 'object' && !Array.isArray( value )) {
 			const propName = Object.keys( value! )[0]!
 			var [ propVal, val ] = this.retrieveValuesToCompare( propertyValue, propName, value?.[ propName ] )
 		}
