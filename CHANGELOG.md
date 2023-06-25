@@ -1,3 +1,10 @@
+## [1.44.6](https://github.com/entropic-bond/entropic-bond/compare/v1.44.5...v1.44.6) (2023-06-25)
+
+
+### Bug Fixes
+
+* contains operator ([7011f7a](https://github.com/entropic-bond/entropic-bond/commit/7011f7a741ac9a18570ba1e325589e0883842d35))
+
 ## [1.44.5](https://github.com/entropic-bond/entropic-bond/compare/v1.44.4...v1.44.5) (2023-06-25)
 
 
