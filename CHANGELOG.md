@@ -1,3 +1,10 @@
+## [1.44.4](https://github.com/entropic-bond/entropic-bond/compare/v1.44.3...v1.44.4) (2023-06-25)
+
+
+### Bug Fixes
+
+* preprocessQueryObject ([6a7b5be](https://github.com/entropic-bond/entropic-bond/commit/6a7b5bea6685019d22d786b7bcce7c9f3bdb9c2f))
+
 ## [1.44.3](https://github.com/entropic-bond/entropic-bond/compare/v1.44.2...v1.44.3) (2023-06-23)
 
 
