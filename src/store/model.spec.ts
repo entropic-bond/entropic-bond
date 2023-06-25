@@ -529,6 +529,17 @@ describe( 'Model', ()=>{
 				expect.objectContaining({ id: 'user4' })
 			]))
 		})
+
+		it( 'should find documents using `contains` operator', async ()=>{
+			const colleague2 = new TestUser( 'colleague2' )
+			const docs = await model.find().where( 'colleagues', 'contains', colleague2 ).get()
+
+			expect( docs ).toHaveLength( 2 )
+			expect( docs ).toEqual([
+				expect.objectContaining({ id: 'user4' }),
+				expect.objectContaining({ id: 'user6' })
+			])
+		})
 	})
 
 	describe( 'Data Cursors', ()=>{

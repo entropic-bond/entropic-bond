@@ -167,12 +167,13 @@ export class Model<T extends Persistent>{
 		if ( Object.values( queryObject ).length === 0 ) return queryObject as QueryObject<DocumentObject>
 
 		const operations = queryObject.operations?.map( operation => {
+			const value = operation.value[0] ?? operation.value
 
-			if ( DataSource.isArrayOperator( operation.operator ) && operation.value[0] instanceof Persistent ) {
+			if ( DataSource.isArrayOperator( operation.operator ) && value instanceof Persistent ) {
 				return {
 					property: Persistent.searchableArrayNameFor( operation.property as string ),
 					operator: operation.operator,
-					value: ( operation.value as unknown as Persistent[] ).map( v => v.id ) as any,
+					value: Array.isArray( value )? value.map( v => v.id ) : value.id,
 					aggregate: operation.aggregate
 				}
 			}
@@ -180,7 +181,7 @@ export class Model<T extends Persistent>{
 				return {
 					property: operation.property,
 					operator: operation.operator,
-					value: operation.value,
+					value: operation.value instanceof Persistent ? { id: operation.value.id } : operation.value,
 					aggregate: operation.aggregate
 				}
 			}
@@ -227,12 +228,11 @@ class Query<T extends Persistent> {
 	 */
 	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent, aggregate?: boolean ) {
 		if ( this.queryObject.operations?.at(-1)?.aggregate && !aggregate ) throw new Error( Model.error.invalidQueryOrder )
-		let val = value instanceof Persistent? { id: value.id } : value
 
 		this.queryObject.operations?.push({
 			property,
 			operator,
-			value: val,
+			value: value as any,
 			aggregate
 		})
 

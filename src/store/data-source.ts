@@ -16,7 +16,7 @@ export type DocumentObject = PersistentObject<Persistent>
  * @param in in
  * @param !in not in
  */
-export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'contains' | 'containsAny' | 'in' | '!in'
+export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'contains' | 'containsAny'// | 'in' | '!in'
 
 /**
  * A representation of a query operation
@@ -169,7 +169,7 @@ export abstract class DataSource {
 	}
 
 	static isArrayOperator( operator: QueryOperator ): boolean {
-		return operator === 'in' || operator === '!in' || operator === 'containsAny' || operator === 'contains'
+		return operator === 'containsAny' || operator === 'contains' //|| operator === 'in' || operator === '!in'  
 	}
 
 	private static toPropertyPathValue( obj: {} ): [ string | undefined, unknown ] {

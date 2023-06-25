@@ -122,7 +122,14 @@
 				"__documentReference": {
 					"storedInCollection": "TestUser"
 				}
-			}
+			},
+			"colleagues": [
+				{ 
+					"id": "colleague2",
+					"__className": "TestUser"
+				}
+			],
+			"__colleagues_searchable": [ "colleague2" ]
 		}
 	},
 	"DerivedUser": {

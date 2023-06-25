@@ -210,6 +210,7 @@ export class JsonDataSource implements DataSource {
 			'>': <U>(a: U, b: U) => a > b,
 			'>=': <U>(a: U, b: U) => a >= b,
 			'containsAny': <U>(a: U[], b: U[]) => a?.some( v => b?.includes( v ) ),
+			'contains': <U>(a: U[], b: U) => a?.includes( b ),
 		}
 
 		const { property, value, operator } = queryOperation
@@ -218,7 +219,7 @@ export class JsonDataSource implements DataSource {
 		return queryOperator[ operator ]( propValue, v )
 	}
 
-	private retrieveValuesToCompare( doc: DocumentObject, propertyName: string, value: unknown ): [ unknown, unknown ] {
+	private retrieveValuesToCompare( doc: DocumentObject, propertyName: string, value: unknown ): [ any, any ] {
 		const propertyValue = doc[ propertyName ]
 
 		if ( propertyValue && typeof value === 'object' && !Array.isArray( value )) {
