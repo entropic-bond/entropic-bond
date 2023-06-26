@@ -173,7 +173,7 @@ export class Model<T extends Persistent>{
 				return {
 					property: Persistent.searchableArrayNameFor( operation.property as string ),
 					operator: operation.operator,
-					value: Array.isArray( value )? value.map( v => v.id ) : value.id,
+					value: Array.isArray( operation.value )? operation.value.map( v => v.id ) : value.id,
 					aggregate: operation.aggregate
 				}
 			}

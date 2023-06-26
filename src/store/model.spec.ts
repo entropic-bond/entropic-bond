@@ -523,11 +523,12 @@ describe( 'Model', ()=>{
 			const colleague2 = new TestUser( 'colleague2' )
 			const docs = await model.find().where( 'colleagues', 'containsAny', [ colleague1, colleague2 ]).get()
 
-			expect( docs ).toHaveLength( 2 )
-			expect( docs ).toEqual( expect.arrayContaining([
+			expect( docs ).toHaveLength( 3 )
+			expect( docs ).toEqual([
 				expect.objectContaining({ id: 'user2' }),
-				expect.objectContaining({ id: 'user4' })
-			]))
+				expect.objectContaining({ id: 'user4' }),
+				expect.objectContaining({ id: 'user6' })
+			])
 		})
 
 		it( 'should find documents using `contains` operator', async ()=>{
