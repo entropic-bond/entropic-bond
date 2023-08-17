@@ -1,3 +1,10 @@
+# [1.45.0](https://github.com/entropic-bond/entropic-bond/compare/v1.44.7...v1.45.0) (2023-08-17)
+
+
+### Features
+
+* mimeType ([c1a2a0f](https://github.com/entropic-bond/entropic-bond/commit/c1a2a0f7cd0414e483829d3465bba4fcaf080cc8))
+
 ## [1.44.7](https://github.com/entropic-bond/entropic-bond/compare/v1.44.6...v1.44.7) (2023-06-26)
 
 
