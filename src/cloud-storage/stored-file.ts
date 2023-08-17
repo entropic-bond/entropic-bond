@@ -67,9 +67,14 @@ export class StoredFile extends Persistent{
 		return this._url
 	}
 
+	get mimeType() {
+		return this._mimeType
+	}
+
 	setDataToStore( data: StorableData ) {
 		this._pendingData = data
 		this._originalFileName = data instanceof File? data.name : undefined
+		this._mimeType = data instanceof Blob? data.type : undefined
 		this._onChange.notify({ 
 			event: StoredFileEvent.pendingDataSet, 
 			pendingData: data,
@@ -90,6 +95,7 @@ export class StoredFile extends Persistent{
 	@persistent private _url: string | undefined
 	@persistent private _cloudStorageProviderName: string | undefined
 	@persistent private _originalFileName: string | undefined
+	@persistent private _mimeType: string | undefined
 	private _provider: CloudStorage | undefined
 	private _pendingData: StorableData | undefined
 	private _onChange: Observable<StoredFileChange> = new Observable<StoredFileChange>()
