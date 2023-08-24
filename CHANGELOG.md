@@ -1,3 +1,10 @@
+## [1.45.1](https://github.com/entropic-bond/entropic-bond/compare/v1.45.0...v1.45.1) (2023-08-24)
+
+
+### Bug Fixes
+
+* simulateDelay in MockCloudStorage ([61f5422](https://github.com/entropic-bond/entropic-bond/commit/61f5422ab268a1e6fc1361c4baf96d6392bc91c8))
+
 # [1.45.0](https://github.com/entropic-bond/entropic-bond/compare/v1.44.7...v1.45.0) (2023-08-17)
 
 
