@@ -1,3 +1,10 @@
+## [1.46.1](https://github.com/entropic-bond/entropic-bond/compare/v1.46.0...v1.46.1) (2023-09-25)
+
+
+### Bug Fixes
+
+* npm upgrade ([0206584](https://github.com/entropic-bond/entropic-bond/commit/02065849ad8487e27dbb50bc9a8e0d32f70f63d6))
+
 # [1.46.0](https://github.com/entropic-bond/entropic-bond/compare/v1.45.1...v1.46.0) (2023-09-25)
 
 
