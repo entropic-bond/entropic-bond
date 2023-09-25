@@ -186,6 +186,17 @@ export class Persistent {
 	}
 
 	/**
+	 * Query if the property is required
+	 * To mark a property as required, use the @required decorator
+	 * @param propName the persistent property name
+	 * @returns true if the property is required
+	 * @see required
+	 */
+	isRequired<T extends this>( propName: ClassPropNames<T> ): boolean {
+		return this.getPropInfo( propName ).required || false
+	}
+
+	/**
 	 * Copy the persistent properties of the given instance to this instance. 
 	 * The property `id` will be ignored.
 	 * Only the properties that are not null or undefined will be copied.
@@ -282,6 +293,7 @@ export class Persistent {
 	static searchableArrayNameFor( propName: string ) {
 		return `__${ propName }_searchable`
 	}
+
 	private fromDeepObject( value: unknown ) {
 		if ( value === undefined || value === null ) return value
 		
@@ -455,6 +467,7 @@ interface PersistentProperty {
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
+	required?: boolean
 }
 
 /**
@@ -598,4 +611,11 @@ export function registerLegacyClassName( legacyName: string ) {
  */ 
 export function searchableArray( target: Persistent, property: string ) {
 	return persistentParser({ searchableArray: true })( target, property )
+}
+
+/**
+ * Decorator to mark the property as required.
+ */
+export function required( target: Persistent, property: string ) {
+	return persistentParser({ required: true })( target, property )
 }
