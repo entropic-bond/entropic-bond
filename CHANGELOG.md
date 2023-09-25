@@ -1,3 +1,10 @@
+# [1.46.0](https://github.com/entropic-bond/entropic-bond/compare/v1.45.1...v1.46.0) (2023-09-25)
+
+
+### Features
+
+* required prop ([5570518](https://github.com/entropic-bond/entropic-bond/commit/55705186318544e032e2fdfea30ff15b0a9534b8))
+
 ## [1.45.1](https://github.com/entropic-bond/entropic-bond/compare/v1.45.0...v1.45.1) (2023-08-24)
 
 
