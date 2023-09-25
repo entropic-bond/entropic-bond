@@ -164,7 +164,7 @@ export class Model<T extends Persistent>{
 	 * @returns the normalized query object
 	 */
 	private preprocessQueryObject<U>( queryObject: QueryObject<U> ): QueryObject<DocumentObject> {
-		if ( Object.values( queryObject ).length === 0 ) return queryObject as QueryObject<DocumentObject>
+		if ( Object.values( queryObject ).length === 0 ) return queryObject as unknown as QueryObject<DocumentObject>
 
 		const operations = queryObject.operations?.map( operation => {
 			const value = operation.value[0] ?? operation.value
