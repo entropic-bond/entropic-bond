@@ -203,7 +203,7 @@ export class Model<T extends Persistent>{
  * are stored in a QueryObject that is passed to the query method of the
  * Model class.
  */
-class Query<T extends Persistent> {
+export class Query<T extends Persistent> {
 	constructor( model: Model<T> ) {
 		this.model = model	
 	}
