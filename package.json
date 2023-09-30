@@ -1,6 +1,6 @@
 {
   "name": "entropic-bond",
-  "version": "1.46.1",
+  "version": "1.46.2",
   "publishConfig": {
     "access": "public",
     "branches": [
