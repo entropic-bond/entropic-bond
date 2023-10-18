@@ -1,3 +1,10 @@
+## [1.46.2](https://github.com/entropic-bond/entropic-bond/compare/v1.46.1...v1.46.2) (2023-09-30)
+
+
+### Bug Fixes
+
+* export Query class ([139cca0](https://github.com/entropic-bond/entropic-bond/commit/139cca0c316508c19f8766027824d33eacc455c7))
+
 ## [1.46.1](https://github.com/entropic-bond/entropic-bond/compare/v1.46.0...v1.46.1) (2023-09-25)
 
 
