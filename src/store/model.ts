@@ -216,7 +216,8 @@ export class Query<T extends Persistent> {
 	 * @param operator the operator to be used in the comparison. The available
 	 * operators are: ==, !=, >, >=, < and <=
 	 * @param value the value to be compared
-	 * @param aggregate if true, the query will aggregate the results to the previous query
+	 * @param aggregate if true, the query will use the logical or operator and 
+	 * aggregate the results to the previous query
 	 * @returns this Query object to make chained calls possible
 	 * @example
 	 * query.where( 'name', '==', 'John' )
