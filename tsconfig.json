@@ -25,6 +25,10 @@
 		// "noImplicitAny": true, // this causes errors when accessing properties of objects with index signatures
 		// "noPropertyAccessFromIndexSignature": true, // annoying when accessing properties of objects with index signatures
 		// "strict": true,
+    "types": [
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ]
 	},
   "include": ["./src"]
 }

@@ -40,7 +40,7 @@ describe('Observable Persistent', ()=>{
 	})
 
 	it( 'should notify on change', ()=>{
-		const changed = jest.fn()
+		const changed = vi.fn()
 		hero.onChange( changed )
 
 		hero.setName( 'Rogue I' )
@@ -49,7 +49,7 @@ describe('Observable Persistent', ()=>{
 	})
 
 	it( 'should return a unsubscribe function on subscription', ()=>{
-		const changed = jest.fn()
+		const changed = vi.fn()
 
 		const unsubscribe = hero.onChange( changed )
 		unsubscribe()
@@ -59,7 +59,7 @@ describe('Observable Persistent', ()=>{
 	})
 
 	describe( 'Array Props', ()=>{
-		let spy = jest.fn()
+		let spy = vi.fn()
 	
 		beforeEach(()=>{
 			hero.onChange( spy )

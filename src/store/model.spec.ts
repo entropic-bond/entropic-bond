@@ -42,11 +42,9 @@ describe( 'Model', ()=>{
 		expect( user?.name?.firstName ).toEqual( 'userFirstName1' )
 	})
 
-	it( 'should not throw if a document id doesn\'t exists', ( done )=>{
-		expect( ()=>{
-			model.findById( 'nonExistingId' )
-				.then( done )
-				.catch( done )
+	it( 'should not throw if a document id doesn\'t exists', ()=>{
+		expect( async ()=>{
+			await model.findById( 'nonExistingId' )
 		}).not.toThrow()
 	})
 	
@@ -502,6 +500,15 @@ describe( 'Model', ()=>{
 			expect( 
 				()=> model.find().or( 'age', '==', 23 ).where( 'age', '>', 50 )
 			).toThrow( Model.error.invalidQueryOrder )
+		})
+
+		it.skip( 'should evaluate applying precedence rules', async ()=>{
+			const docs = await model.find().where( 'age', '>', 40 ).where( 'age', '<', 60 ).or( 'age', '==', 23 ).get()
+
+			expect( docs ).toHaveLength( 1 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user5', age: 41 })
+			]))
 		})
 	})
 

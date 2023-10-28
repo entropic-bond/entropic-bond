@@ -91,7 +91,7 @@ describe( 'Cloud Storage', ()=>{
 	
 
 	it( 'should overwrite file on subsequent writes', async ()=>{
-		const deleteSpy = jest.spyOn( file, 'delete' )
+		const deleteSpy = vi.spyOn( file, 'delete' )
 
 		await file.save({ data: 'first write' as any })
 		expect( deleteSpy ).not.toHaveBeenCalled()
@@ -111,10 +111,10 @@ describe( 'Cloud Storage', ()=>{
 	})
 
 	describe( 'Notify on change', ()=>{
-		let spy: jest.Mock
+		let spy: vi.Mock
 
 		beforeEach(()=>{
-			spy = jest.fn()
+			spy = vi.fn()
 			file.onChange( spy )
 		})
 
@@ -182,7 +182,7 @@ describe( 'Cloud Storage', ()=>{
 		})
 
 		it( 'should replace file on save after load', async ()=>{
-			const deleteSpy = jest.spyOn( testObj.file, 'delete' )
+			const deleteSpy = vi.spyOn( testObj.file, 'delete' )
 
 			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )

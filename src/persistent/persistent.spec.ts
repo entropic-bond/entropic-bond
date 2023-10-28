@@ -3,8 +3,8 @@ import { Persistent, persistent, persistentReference, persistentReferenceAt, reg
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
 }
-const beforeSerialize = jest.fn()
-const afterDeserialize = jest.fn()
+const beforeSerialize = vi.fn()
+const afterDeserialize = vi.fn()
 
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )

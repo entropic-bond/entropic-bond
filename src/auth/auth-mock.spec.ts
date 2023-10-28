@@ -8,7 +8,7 @@ interface CustomCredentials {
 }
 
 describe( 'Auth Mock', ()=>{
-	let authChangeSpy = jest.fn()
+	let authChangeSpy = vi.fn()
 	let mockAuthService: AuthMock
 	const fakeUseCredentials = {
 		email: 'fakeUser@test.com',

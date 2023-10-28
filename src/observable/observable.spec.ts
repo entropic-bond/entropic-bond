@@ -20,7 +20,7 @@ describe('observer', () => {
 
 	it('should subscribe ', () => {
 		const mockObserver = new ObserverTest();
-		const changedSpy = jest.spyOn( mockObserver, 'userChanged' )
+		const changedSpy = vi.spyOn( mockObserver, 'userChanged' )
 		
 		observable.subscribe( ()=>mockObserver.userChanged() )
 		observable.notify()
@@ -29,7 +29,7 @@ describe('observer', () => {
 	})
 	
 	it('should notify', ()=>{
-		const myCallback = jest.fn()
+		const myCallback = vi.fn()
 
 		observable.subscribe( myCallback )
 		observable.notify()
@@ -38,9 +38,9 @@ describe('observer', () => {
 	})
 
 	it('should notify all subscribers', () => {
-		const callbackOne = jest.fn()
-		const callbackTwo = jest.fn()
-		const callbackThree = jest.fn()
+		const callbackOne = vi.fn()
+		const callbackTwo = vi.fn()
+		const callbackThree = vi.fn()
 		observable.subscribe(callbackOne)
 		observable.subscribe(callbackTwo)
 		observable.subscribe(callbackThree)
@@ -53,7 +53,7 @@ describe('observer', () => {
 	})
 
 	it( 'should notify with event', ()=>{
-		const myCallback = jest.fn()
+		const myCallback = vi.fn()
 		const obj: MockEvent = {name: 'Juan'};
 
 		observable.subscribe( myCallback )
@@ -63,9 +63,9 @@ describe('observer', () => {
 	})
 
 	it('should not notify removed listeners', ()=>{
-		const callbackOne = jest.fn()
-		const callbackTwo = jest.fn()
-		const callbackThree = jest.fn()
+		const callbackOne = vi.fn()
+		const callbackTwo = vi.fn()
+		const callbackThree = vi.fn()
 		observable.subscribe(callbackOne)
 		observable.subscribe(callbackTwo)
 		observable.subscribe(callbackThree)
@@ -86,7 +86,7 @@ describe('observer', () => {
 	})
 
 	it( 'should return an unsubscribe function on subscribe', ()=>{
-		const cb = jest.fn()
+		const cb = vi.fn()
 		const unsubscriber = observable.subscribe( cb )	
 		unsubscriber()
 
@@ -95,10 +95,10 @@ describe('observer', () => {
 	})
 	
 	it( 'should return the number of subscribers', ()=>{
-		const cb = jest.fn()
+		const cb = vi.fn()
 		observable.subscribe( cb )
 		observable.subscribe( cb )
-		observable.subscribe( jest.fn() )
+		observable.subscribe( vi.fn() )
 
 		expect( observable.subscribersCount ).toBe( 2 )
 	})

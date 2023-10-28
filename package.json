@@ -23,7 +23,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "vitest",
     "build": "npm run build-cjs",
     "prepare": "npm run build",
     "build-ts": "cp -r ./src/ ./lib",
@@ -50,16 +50,14 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@type-challenges/utils": "^0.1.1",
-    "@types/jest": "^29.5.5",
-    "@types/uuid": "^9.0.4",
+    "@types/uuid": "^9.0.6",
     "git-branch-is": "^4.0.0",
     "husky": "^8.0.3",
-    "jest": "^29.7.0",
     "semantic-release": "^22.0.5",
-    "ts-jest": "^29.1.1",
-    "typedoc": "^0.25.1",
+    "typedoc": "^0.25.2",
     "typedoc-plugin-markdown": "^3.16.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
   },
   "dependencies": {
     "uuid": "^9.0.1"
