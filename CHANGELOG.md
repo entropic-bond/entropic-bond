@@ -1,3 +1,10 @@
+# [1.47.0](https://github.com/entropic-bond/entropic-bond/compare/v1.46.2...v1.47.0) (2023-10-28)
+
+
+### Features
+
+* and and andDeepProp ([60dfe42](https://github.com/entropic-bond/entropic-bond/commit/60dfe4295288b9bd12116d0bb02a55e4627d8c1b))
+
 ## [1.46.2](https://github.com/entropic-bond/entropic-bond/compare/v1.46.1...v1.46.2) (2023-09-30)
 
 
