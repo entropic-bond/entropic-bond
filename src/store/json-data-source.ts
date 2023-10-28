@@ -166,7 +166,7 @@ export class JsonDataSource implements DataSource {
 
 		const processors: QueryProcessors = {
 
-			limit: ( limit: number ) => docs,//.slice( 0, limit ),
+			limit: ( limit: number ) => docs, //.slice( 0, limit ),
 
 			operations: ( operations: QueryOperation<T>[] ) => this.retrieveQueryDocs( docs, operations ),
 

@@ -102,7 +102,7 @@ export class Model<T extends Persistent>{
 	 * @param objectType Deprecated! - restricts the search to a specific instances of the class type
 	 * @returns a promise resolving to a collection of matched documents
 	 */
-	query<U extends T>( queryObject: QueryObject<U> = {}, objectType?: U | string ): Promise<U[]> {
+	query<U extends T>( queryObject: QueryObject<U> = {}, /** @deprecated */ objectType?: U | string ): Promise<U[]> {
 		if ( objectType ) {
 			const className = objectType instanceof Persistent ? objectType.className : objectType
 			if ( !queryObject.operations ) queryObject.operations = []
@@ -288,6 +288,45 @@ export class Query<T extends Persistent> {
 		} as QueryOperation<T>)
 
 		return this
+	}
+
+	/**
+	 * Matches all documents that the value of the property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param property the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.where( 'name', '==', 'John' ).and( 'age', '>', 18 )
+	 * @see andDeepProp
+	 * @see where
+	 * @see whereDeepProp
+	 * @see or
+	 * @see orDeepProp
+	 */
+	and<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+		return this.where( property, operator, value )
+	}
+
+	/**
+	 * Matches all documents that the value of the deep property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param propertyPath the path to the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @param value the value to be compared
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.whereDeepProp( 'address.street', '==', 'Main Street' ).andDeepProp( 'address.city', '==', 'New York' )
+	 * @see and
+	 * @see where
+	 * @see whereDeepProp
+	 * @see or
+	 * @see orDeepProp
+	 */
+	andDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
+		return this.whereDeepProp( propertyPath, operator, value )
 	}
 
 	/**

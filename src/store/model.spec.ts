@@ -502,11 +502,30 @@ describe( 'Model', ()=>{
 			).toThrow( Model.error.invalidQueryOrder )
 		})
 
-		it.skip( 'should evaluate applying precedence rules', async ()=>{
-			const docs = await model.find().where( 'age', '>', 40 ).where( 'age', '<', 60 ).or( 'age', '==', 23 ).get()
-
-			expect( docs ).toHaveLength( 1 )
+		it( 'should evaluate mixing operands', async ()=>{
+			const docs = await model.find().where( 'age', '>', 39 ).and( 'age', '<', 57 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs ).toHaveLength( 5 )
 			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 }),
+				expect.objectContaining({ id: 'user5', age: 41 }),
+				expect.objectContaining({ id: 'user6', age: 40 })
+			]))
+
+			const docs1 = await model.find().where( 'age', '==', 41 ).and( 'age', '==', 56 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs1 ).toHaveLength( 2 )
+			expect( docs1 ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 })
+			]))
+
+			const docs2 = await model.find().where( 'age', '==', 41 ).or( 'age', '==', 56 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs2 ).toHaveLength( 4 )
+			expect( docs2 ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 }),
 				expect.objectContaining({ id: 'user5', age: 41 })
 			]))
 		})
