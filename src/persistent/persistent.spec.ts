@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName, searchableArray, required } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName, searchableArray, required, requiredWithValidator } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -109,7 +109,7 @@ class Person extends Persistent {
 
 	@required @persistent private _name?: string
 	@persistent private _salary?: number
-	@persistent private _skills: string[] | undefined
+	@requiredWithValidator( val => val?.length > 0 ) @persistent private _skills: string[] | undefined
 	@persistent private _anObjectProperty: PersistentClass = new PersistentClass()
 	@persistent private _arrayOfPersistent: PersistentClass[] | undefined
 	@persistent _notRegistered: NotRegistered | undefined
@@ -197,15 +197,16 @@ describe( 'Persistent', ()=>{
 		// we are testing a decorator that manipulates the class definition. 
 		// Therefore we need to access the decorator created private properties
 		// in order to test the behaviour of the decorator
-		expect( a[ '_persistentProperties' ] ).toEqual( expect.arrayContaining( [ {
-			name: '_name', required: true
-		} ] ) )
-		expect( b[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ {
-			name: '_name', required: true
-		} ] ) )
-		expect( a[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ {
+		expect( a[ '_persistentProperties' ] ).toEqual( expect.arrayContaining([
+			{ name: '_name', validator: expect.any( Function ) },
+			{ name: '_skills', validator: expect.any( Function ) }
+		]))
+		expect( b[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ expect.objectContaining({
+			name: '_name'
+		})]))
+		expect( a[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining([ expect.objectContaining({
 			name: '_persistentProp'
-		} ] ) )
+		})]))
 		expect( b[ '_persistentProperties' ] ).toEqual( expect.arrayContaining( [ {
 			name: '_persistentProp'
 		} ] ) )
@@ -413,7 +414,7 @@ describe( 'Persistent', ()=>{
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
-				{ name: 'name', required: true },
+				{ name: 'name', validator: expect.any( Function ) },
 				{ name: 'document', isReference: true },
 				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName' }
 			]))
@@ -687,6 +688,39 @@ describe( 'Persistent', ()=>{
 			expect( person.isRequired( 'name' ) ).toBe( true )
 			expect( person.isRequired( 'salary' ) ).toBe( false )
 		})
+
+		it( 'should validate non required properties', ()=>{
+			const person = new Person( 'person9' )
+			expect( person.isPropValueValid('salary') ).toBeTruthy()
+		})
+
+		it( 'should validate a required properties', ()=>{
+			const person = new Person( 'person9' )
+			person.name = 'A test name'
+			expect( person.isPropValueValid('name') ).toBeTruthy()
+		})
+
+		it( 'should fail validation of an empty required properties', ()=>{
+			const person = new Person( 'person9' )
+			expect( person.isPropValueValid('name') ).toBeFalsy()
+		})
+
+		it( 'should fail validation of an empty required with validator properties', ()=>{
+			const person = new Person( 'person9' )
+			expect( person.isPropValueValid('skills') ).toBeFalsy()
+		})
+
+		it( 'should fail validation of an non passing validator properties', ()=>{
+			const person = new Person( 'person9' )
+			person.skills = []
+			expect( person.isPropValueValid('skills') ).toBeFalsy()
+		})
+
+		it( 'should pass validation of a filled required with validator properties', ()=>{
+			const person = new Person( 'person9' )
+			person.skills = [ 'a skill' ]
+			expect( person.isPropValueValid('skills') ).toBeTruthy()
+		})
 	})
 
 	describe( 'Persistent Class collection retrieval', ()=>{
@@ -713,7 +747,7 @@ describe( 'Persistent', ()=>{
 		
 		it( 'should retrieve property info', ()=>{
 			expect( Persistent.propInfo<Person>( 'Person', 'name' ) ).toEqual({
-				name: 'name', required: true
+				name: 'name', validator: expect.any( Function )
 			})
 		})
 	})

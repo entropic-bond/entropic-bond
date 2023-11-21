@@ -193,7 +193,22 @@ export class Persistent {
 	 * @see required
 	 */
 	isRequired<T extends this>( propName: ClassPropNames<T> ): boolean {
-		return this.getPropInfo( propName ).required || false
+		const validator = this.getPropInfo( propName ).validator
+		return validator !== undefined && validator !== null
+	}
+
+	/**
+	 * Query if the property value is valid
+	 * Define the validator function using the @required decorator
+	 * @param propName the persistent property name
+	 * @returns true if the property value is valid using the validator function
+	 * passed to the @required decorator
+	 * @see required
+	 */
+	isPropValueValid<T extends this>( propName: ClassPropNames<T> ): boolean {
+		const propInfo = this.getPropInfo( propName )
+		if ( !propInfo.validator ) return true
+		return propInfo.validator( this[ propInfo.name ] )
 	}
 
 	/**
@@ -467,7 +482,7 @@ interface PersistentProperty {
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
-	required?: boolean
+	validator?: ( propValue: unknown ) => boolean
 }
 
 /**
@@ -615,7 +630,20 @@ export function searchableArray( target: Persistent, property: string ) {
 
 /**
  * Decorator to mark the property as required.
+ * @see requiredWithValidator
  */
 export function required( target: Persistent, property: string ) {
-	return persistentParser({ required: true })( target, property )
+	return persistentParser({ validator: ( value: any ) => value !== undefined && value !== null })( target, property )
+}
+
+/**
+ * Decorator to mark the property as required.
+ * @param validator a function that returns true if the property value is valid. 
+ * By default, the property is valid if it is not undefined and not null.
+ * @see required
+ */
+export function requiredWithValidator( validator: ( value: any ) => boolean = ( value: any ) => value !== undefined && value !== null ) {
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ validator: validator })( target, property )
+	}
 }
