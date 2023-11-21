@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { ClassPropNames, ClassPropNamesOfType, Collection, Primitive, SomeClassProps } from '../types/utility-types'
+import { ClassPropNames, SomeClassProps, UnderscoredProp } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
 
@@ -208,7 +208,7 @@ export class Persistent {
 	isPropValueValid<T extends this>( propName: ClassPropNames<T> ): boolean {
 		const propInfo = this.getPropInfo( propName )
 		if ( !propInfo.validator ) return true
-		return propInfo.validator( this[ propInfo.name ] )
+		return propInfo.validator( this[ propInfo.name ], propInfo, this )
 	}
 
 	/**
@@ -471,6 +471,7 @@ export class Persistent {
 ///////////////////////////////////
 
 type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
+type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
 
 interface PersistentProperty {
 	name: string
@@ -482,7 +483,7 @@ interface PersistentProperty {
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
-	validator?: ( propValue: unknown ) => boolean
+	validator?: ValidatorFunction<any, any>
 }
 
 /**
@@ -642,8 +643,8 @@ export function required( target: Persistent, property: string ) {
  * By default, the property is valid if it is not undefined and not null.
  * @see required
  */
-export function requiredWithValidator( validator: ( value: any ) => boolean = ( value: any ) => value !== undefined && value !== null ) {
-	return function( target: Persistent, property: string ) {
+export function requiredWithValidator<T extends Persistent, P extends ClassPropNames<T>>( validator: ValidatorFunction<T, P> = ( value: T[P] ) => value !== undefined && value !== null ) {
+	return function( target: T, property: UnderscoredProp<P> ) {
 		return persistentParser({ validator: validator })( target, property )
 	}
 }

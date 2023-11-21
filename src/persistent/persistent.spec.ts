@@ -109,7 +109,9 @@ class Person extends Persistent {
 
 	@required @persistent private _name?: string
 	@persistent private _salary?: number
-	@requiredWithValidator( val => val?.length > 0 ) @persistent private _skills: string[] | undefined
+	@requiredWithValidator(
+		( val, propInfo, instace ) => !!val && val.length > 0 && propInfo.name === 'skills' && instace.id === 'person9'
+	) @persistent private _skills: string[] | undefined
 	@persistent private _anObjectProperty: PersistentClass = new PersistentClass()
 	@persistent private _arrayOfPersistent: PersistentClass[] | undefined
 	@persistent _notRegistered: NotRegistered | undefined

@@ -30,6 +30,8 @@ export type Elements<
   ? T[keyof T]
   : never;
 
+export type UnderscoredProp<T> = `_${ T & string }`
+
 /*
 // How to use 
 
