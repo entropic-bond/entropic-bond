@@ -1,3 +1,10 @@
+## [1.48.1](https://github.com/entropic-bond/entropic-bond/compare/v1.48.0...v1.48.1) (2023-11-21)
+
+
+### Bug Fixes
+
+* typed validator function ([91a6c0a](https://github.com/entropic-bond/entropic-bond/commit/91a6c0a7dc38540861df2966fe069b49a47c4f64))
+
 # [1.48.0](https://github.com/entropic-bond/entropic-bond/compare/v1.47.0...v1.48.0) (2023-11-21)
 
 
