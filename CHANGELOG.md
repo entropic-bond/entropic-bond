@@ -1,3 +1,10 @@
+# [1.48.0](https://github.com/entropic-bond/entropic-bond/compare/v1.47.0...v1.48.0) (2023-11-21)
+
+
+### Features
+
+* Add requiredWithValidator decorator to persistent ([bef5054](https://github.com/entropic-bond/entropic-bond/commit/bef5054dbdab307568f51e1c8030e3cc5ff38400))
+
 # [1.47.0](https://github.com/entropic-bond/entropic-bond/compare/v1.46.2...v1.47.0) (2023-10-28)
 
 
