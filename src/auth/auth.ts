@@ -10,6 +10,7 @@ export abstract class AuthService {
 	abstract login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>>
 	abstract logout(): Promise<void>
 	abstract resetEmailPassword( email: string ): Promise<void>
+	abstract refreshToken(): Promise<void>
 	abstract linkAdditionalProvider( provider: AuthProvider ): Promise<unknown>
 	abstract unlinkProvider( provider: AuthProvider ): Promise<unknown>
 	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T> | undefined) => void ): void
@@ -116,6 +117,10 @@ export class Auth extends AuthService {
 	 */
 	override resendVerificationEmail( email: string, password: string, verificationLink: string ): Promise<void> {
 		return Auth._authService.resendVerificationEmail( email, password, verificationLink )
+	}
+
+	override refreshToken(): Promise<void> {
+		return Auth._authService.refreshToken()
 	}
 
 	/**

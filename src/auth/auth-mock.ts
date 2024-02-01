@@ -72,6 +72,10 @@ export class AuthMock extends AuthService {
 		else return Promise.reject({ code: 'userNotFound', message: 'Test auth error' })
 	}
 
+	override refreshToken(): Promise<void> {
+		return Promise.resolve()
+	}
+
 	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
 		throw new Error('Not implemented.')
 	}
