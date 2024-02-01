@@ -1,3 +1,10 @@
+# [1.49.0](https://github.com/entropic-bond/entropic-bond/compare/v1.48.1...v1.49.0) (2024-02-01)
+
+
+### Features
+
+* refresh token ([d3cabc7](https://github.com/entropic-bond/entropic-bond/commit/d3cabc75d904a886b986f2f4bfe2879294a77ace))
+
 ## [1.48.1](https://github.com/entropic-bond/entropic-bond/compare/v1.48.0...v1.48.1) (2023-11-21)
 
 
