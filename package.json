@@ -1,6 +1,7 @@
 {
   "name": "entropic-bond",
   "version": "1.48.1",
+  "type": "module",
   "publishConfig": {
     "access": "public",
     "branches": [
@@ -50,14 +51,14 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@type-challenges/utils": "^0.1.1",
-    "@types/uuid": "^9.0.6",
+    "@types/uuid": "^9.0.8",
     "git-branch-is": "^4.0.0",
-    "husky": "^8.0.3",
-    "semantic-release": "^22.0.5",
-    "typedoc": "^0.25.2",
-    "typedoc-plugin-markdown": "^3.16.0",
-    "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "husky": "^9.0.10",
+    "semantic-release": "^23.0.0",
+    "typedoc": "^0.25.7",
+    "typedoc-plugin-markdown": "^3.17.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
   },
   "dependencies": {
     "uuid": "^9.0.1"
