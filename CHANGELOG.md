@@ -1,3 +1,15 @@
+# [1.50.0](https://github.com/entropic-bond/entropic-bond/compare/v1.49.0...v1.50.0) (2024-02-07)
+
+
+### Bug Fixes
+
+* outdir ([fa27208](https://github.com/entropic-bond/entropic-bond/commit/fa2720865002d25ca284ad079343a786e393c8af))
+
+
+### Features
+
+* esm and cjs ([9b79d7d](https://github.com/entropic-bond/entropic-bond/commit/9b79d7dbdf6747ed616d729151d4dc9f56127e00))
+
 # [1.49.0](https://github.com/entropic-bond/entropic-bond/compare/v1.48.1...v1.49.0) (2024-02-01)
 
 
