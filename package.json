@@ -2,6 +2,16 @@
   "name": "entropic-bond",
   "type": "module",
   "version": "1.49.0",
+  "description": "Tidy up your messy components",
+  "main": "./lib/entropic-bond.umd.cjs",
+  "module": "./lib/entropic-bond.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/entropic-bond.umd.cjs"
+    }
+  },
   "publishConfig": {
     "access": "public",
     "branches": [
@@ -17,20 +27,11 @@
       "@semantic-release/github"
     ]
   },
-  "description": "Tidy up your messy components",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "files": [
-    "lib"
-  ],
   "scripts": {
     "test": "vitest",
-    "build": "npm run build-cjs",
-    "prepare": "npm run build",
-    "build-ts": "cp -r ./src/ ./lib",
-    "build-cjs": "tsc -p tsconfig-cjs.json",
-    "build-next": "tsc -p tsconfig.json"
-  },
+    "build": "tsc -p tsconfig-build.json && vite build",
+    "prepare": "npm run build"
+   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/entropic-bond/entropic-bond.git"
@@ -51,6 +52,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@type-challenges/utils": "^0.1.1",
+    "@types/node": "^20.11.16",
     "@types/uuid": "^9.0.8",
     "git-branch-is": "^4.0.0",
     "husky": "^9.0.10",
@@ -58,6 +60,7 @@
     "typedoc": "^0.25.7",
     "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.3.3",
+    "vite-plugin-dts": "^3.7.2",
     "vitest": "^1.2.2"
   },
   "dependencies": {
