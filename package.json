@@ -12,6 +12,9 @@
       "require": "./lib/entropic-bond.umd.cjs"
     }
   },
+  "files": [
+    "lib"
+  ],
   "publishConfig": {
     "access": "public",
     "branches": [

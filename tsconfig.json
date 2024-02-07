@@ -22,9 +22,6 @@
 		"noImplicitOverride": true, // this causes errors when overriding methods of base classes. Annoying for React components
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitThis": true,
-		// "noImplicitAny": true, // this causes errors when accessing properties of objects with index signatures
-		// "noPropertyAccessFromIndexSignature": true, // annoying when accessing properties of objects with index signatures
-		// "strict": true,
     "types": [
       "vitest/globals",
     ]
