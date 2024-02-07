@@ -1,3 +1,10 @@
+## [1.50.1](https://github.com/entropic-bond/entropic-bond/compare/v1.50.0...v1.50.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* out files ([455fd0a](https://github.com/entropic-bond/entropic-bond/commit/455fd0aa305d1d814c726012ade890f6064c1bbf))
+
 # [1.50.0](https://github.com/entropic-bond/entropic-bond/compare/v1.49.0...v1.50.0) (2024-02-07)
 
 
