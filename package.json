@@ -5,11 +5,11 @@
   "description": "Tidy up your messy components",
   "main": "./lib/entropic-bond.umd.cjs",
   "module": "./lib/entropic-bond.js",
-  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/entropic-bond.umd.cjs"
+      "import": "./lib/entropic-bond.js",
+      "require": "./lib/entropic-bond.umd.cjs",
+      "types": "./lib/index.d.ts"
     }
   },
   "files": [
