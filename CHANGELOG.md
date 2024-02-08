@@ -1,3 +1,10 @@
+## [1.50.3](https://github.com/entropic-bond/entropic-bond/compare/v1.50.2...v1.50.3) (2024-02-08)
+
+
+### Bug Fixes
+
+* Add "types" field to package.json ([cabfdce](https://github.com/entropic-bond/entropic-bond/commit/cabfdce9cc3822b2dbf0ccb0b459a4ffab256b45))
+
 ## [1.50.2](https://github.com/entropic-bond/entropic-bond/compare/v1.50.1...v1.50.2) (2024-02-08)
 
 
