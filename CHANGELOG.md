@@ -1,3 +1,10 @@
+## [1.50.2](https://github.com/entropic-bond/entropic-bond/compare/v1.50.1...v1.50.2) (2024-02-08)
+
+
+### Bug Fixes
+
+* move types entry to exports ([ba8d89b](https://github.com/entropic-bond/entropic-bond/commit/ba8d89b564f5ac78ea3c0291949126895b285086))
+
 ## [1.50.1](https://github.com/entropic-bond/entropic-bond/compare/v1.50.0...v1.50.1) (2024-02-07)
 
 
