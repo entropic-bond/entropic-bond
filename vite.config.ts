@@ -13,7 +13,8 @@ export default defineConfig({
 			name: 'entropic-bond',
 			fileName: 'entropic-bond'
 		},
-		"outDir": "lib",
+		sourcemap: true,
+		outDir: "lib",
 	},
 	plugins: [
 		dts()
