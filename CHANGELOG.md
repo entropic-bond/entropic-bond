@@ -1,3 +1,10 @@
+## [1.50.4](https://github.com/entropic-bond/entropic-bond/compare/v1.50.3...v1.50.4) (2024-02-10)
+
+
+### Bug Fixes
+
+* source map ([f67c956](https://github.com/entropic-bond/entropic-bond/commit/f67c956d4c1af083726706ceabadc20bfc201e15))
+
 ## [1.50.3](https://github.com/entropic-bond/entropic-bond/compare/v1.50.2...v1.50.3) (2024-02-08)
 
 
