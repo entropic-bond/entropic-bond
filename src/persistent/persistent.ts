@@ -473,7 +473,7 @@ export class Persistent {
 type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
 type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
 
-interface PersistentProperty {
+export interface PersistentProperty {
 	name: string
 	isReference?: boolean
 	isPureReference?: boolean
