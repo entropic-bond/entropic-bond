@@ -1,3 +1,11 @@
+## [1.50.5](https://github.com/entropic-bond/entropic-bond/compare/v1.50.4...v1.50.5) (2024-04-08)
+
+
+### Bug Fixes
+
+* export PersistentProperty ([1ecf341](https://github.com/entropic-bond/entropic-bond/commit/1ecf341daf6a25ba696c1b65738e28004dc78efd))
+* npm-upgrade ([c48e451](https://github.com/entropic-bond/entropic-bond/commit/c48e4515a060778702e1bb48ecc2ab64654e17b6))
+
 ## [1.50.4](https://github.com/entropic-bond/entropic-bond/compare/v1.50.3...v1.50.4) (2024-02-10)
 
 
