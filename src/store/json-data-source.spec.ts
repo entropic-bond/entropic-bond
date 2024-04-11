@@ -37,18 +37,22 @@ describe( 'Json DataSource', ()=>{
 			expect( promises ).toHaveLength( 3 )
 		})
 
-		it( 'should remove resolved promises', ( done )=>{
+		it( 'should remove resolved promises', async ()=>{
+			let promises: any
+
 			datasource.findById( 'b', 'collection' )
 			datasource.findById( 'a', 'collection' )
-			setTimeout(
-				async ()=>{
-					datasource.findById( 'c', 'collection' )
-					const promises = await datasource.wait()
-					expect( promises ).toHaveLength( 1 )
-					done()
-				},
-				resolveDelay * 3
-			)
+			await new Promise<void>( resolve => {
+				setTimeout(
+					async ()=>{
+						datasource.findById( 'c', 'collection' )
+						promises = await datasource.wait()
+						resolve()
+					},
+					resolveDelay * 3
+				)
+			})
+			expect( promises ).toHaveLength( 1 )
 		})
 
 		it( 'should work with save', async ()=>{
