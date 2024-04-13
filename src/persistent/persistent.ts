@@ -369,36 +369,36 @@ export class Persistent {
 		return value
 	}
 
+	static collectionPath( value: Persistent, prop: PersistentProperty ) {
+		let storeInCollection: string
+
+		if ( typeof prop.storeInCollection === 'function' ) {
+			storeInCollection = prop.storeInCollection( value, prop )
+		}
+		else {
+			storeInCollection = prop.storeInCollection || value.className
+		}
+		return storeInCollection
+	}
+
 	private toReferenceObj( prop: PersistentProperty, rootCollections: Collections ) {
 		const propValue: Persistent | Persistent[] = this[ prop.name ]
-		
-		const collectionPath = ( value: Persistent ) => {
-			let storeInCollection: string
-
-			if ( typeof prop.storeInCollection === 'function' ) {
-				storeInCollection = prop.storeInCollection( value, prop )
-			}
-			else {
-				storeInCollection = prop.storeInCollection || value.className
-			}
-			return storeInCollection
-		}
 		
 		if ( Array.isArray( propValue ) ) {
 
 			return propValue.map( item => {
 				if ( !prop.isPureReference ) {
-					this.pushDocument( rootCollections, collectionPath( item ), item )
+					this.pushDocument( rootCollections, Persistent.collectionPath( item, prop ), item )
 				}
-				return this.buildRefObject( item, collectionPath( item ), prop.forcedPersistentProps )
+				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.forcedPersistentProps )
 			})
 
 		}
 		else {
 			if ( !prop.isPureReference ) {
-				this.pushDocument( rootCollections, collectionPath( propValue ), propValue )
+				this.pushDocument( rootCollections, Persistent.collectionPath( propValue, prop ), propValue )
 			}
-			return this.buildRefObject( propValue, collectionPath( propValue ), prop.forcedPersistentProps )
+			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.forcedPersistentProps )
 
 		}
 	}
