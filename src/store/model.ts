@@ -271,7 +271,7 @@ export class Query<T extends Persistent> {
 	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath>, aggregate?: boolean ) {
 		if ( this.queryObject.operations?.at(-1)?.aggregate && !aggregate ) throw new Error( Model.error.invalidQueryOrder )
 
-		const props = propertyPath.split( '.' )
+		const props = ( propertyPath as string ).split( '.' )
 		let obj = {}
 		let result = props.length > 1? obj : value  // TODO: review
 
