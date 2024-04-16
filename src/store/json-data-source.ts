@@ -1,5 +1,6 @@
-import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
-import { DataSource, DocumentObject, QueryObject, QueryOperation } from "./data-source";
+import { Collections, Persistent, PersistentObject, PersistentProperty } from '../persistent/persistent';
+import { Collection } from '../types/utility-types'
+import { DataSource, DocumentChangeListerner, DocumentListenerUninstaller, DocumentObject, QueryObject, QueryOperation } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -24,12 +25,13 @@ type QueryProcessors = {
  * It is useful for testing purposes.
  * The data in the JSON object is not persisted.
  */
-export class JsonDataSource implements DataSource {
+export class JsonDataSource extends DataSource {
 
 	/**
 	 * @param jsonRawData the JSON object to be used as data store
 	 */
 	constructor( jsonRawData?: JsonRawData ) {
+		super()
 		if ( jsonRawData ) this._jsonRawData = jsonRawData;
 	}
 
@@ -65,7 +67,9 @@ export class JsonDataSource implements DataSource {
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			if ( !this._jsonRawData[ collectionName ] ) this._jsonRawData[ collectionName ] = {}
 			collection?.forEach( document => {
+				const oldValue = this._jsonRawData[ collectionName ]![ document.id ]
 				this._jsonRawData[ collectionName ]![ document.id ] = document
+				this.notifyChange( collectionName, document, oldValue )
 			})
 		})
 
@@ -151,6 +155,26 @@ export class JsonDataSource implements DataSource {
 		else this._simulateError = error
 
 		return this
+	}
+
+	protected override documentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentListenerUninstaller | undefined {
+		const collection = Persistent.collectionPath( undefined!, prop )
+		if ( !collection ) return ()=>{}
+
+		delete this._listener[ collection ]
+		this._listener[ collection ] = listener
+		return ()=> delete this._listener[ collection ]
+	}
+
+	private notifyChange( collectionName: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {
+		const listener = this._listener[ collectionName ]
+		if ( listener ) {
+			const event = {
+				before: oldValue,
+				after: document
+			}
+			listener( event )
+		}
 	}
 
 	private decCursor( amount: number ) {
@@ -253,4 +277,5 @@ export class JsonDataSource implements DataSource {
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
+	private _listener: Collection<DocumentChangeListerner> = {}
 }

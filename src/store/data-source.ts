@@ -1,4 +1,5 @@
-import { Persistent, PersistentObject, Collections } from '../persistent/persistent'
+import { Store } from './store'
+import { Persistent, PersistentObject, Collections, PersistentProperty } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
 
 export type DocumentObject = PersistentObject<Persistent>
@@ -56,6 +57,19 @@ export type QueryObject<T> = {
 	}
 }
 
+type PersistentPropertyCollection = {
+	[className: string]: PersistentProperty[]
+}
+
+export type DocumentListenerUninstaller = () => void
+
+interface DocumentChange {
+	before: DocumentObject | undefined
+	after: DocumentObject,
+}
+
+export type DocumentChangeListerner = ( change: DocumentChange ) => void
+
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -64,6 +78,37 @@ export type QueryObject<T> = {
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
+	installReferencePersistentPropsUpdaters( onUpdate?: ( doc: Persistent )=>void, throwOnNonImplementedListener = true ): DocumentListenerUninstaller[] {
+		this.onUpdate = onUpdate
+		const uninstallers: DocumentListenerUninstaller[] = []
+		const referencesWithStoredProps = DataSource.getSystemRegisteredReferencesWithStoredProps()
+
+		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
+			props.forEach( propInfo => {
+				// const documentPath = Persistent.collectionPath( Persistent.createInstance( className ), propInfo )
+					
+				const listenerUninstaller = this.documentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+				if ( !listenerUninstaller ) {
+					if ( throwOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
+				}
+				else uninstallers.push( listenerUninstaller )
+			})
+		})
+
+		return uninstallers
+	}
+
+	/**
+	 * Installs a document change listener
+	 * Implement the required logic to install a listener that will be called
+	 * when a document is changed in your concrete the data source
+	 * @param documentPath the path of the document to be listened
+	 * @param listener the callback to be called when the document is changed
+	 * @returns a function that uninstalls the listener
+	 */
+	protected documentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentListenerUninstaller | undefined {
+		return undefined
+	}
 
 	/**
 	 * Retrieves a document by id
@@ -181,6 +226,50 @@ export abstract class DataSource {
 		else {
 			return [ undefined, obj ]
 		}
-
 	}
+
+	private async onDocumentChange( event: DocumentChange, prop: PersistentProperty, collectionPath: string ) {
+		if ( !event.before || !prop.forcedPersistentProps ) return
+		const model = Store.getModel<any>( collectionPath )
+		let query = model.find()
+
+		prop.forcedPersistentProps.forEach( persistentPropName => {
+			const oldValue = event.before![ persistentPropName ]
+			const newValue = event.after[ persistentPropName ]
+			if ( oldValue !== newValue ) {
+				query = query.orDeepProp( `${ prop.name }.${ persistentPropName }`, '==', oldValue )
+			}
+		})
+
+		const result = await query.get()
+		return Promise.all([
+			result.map( async document =>{
+				prop.forcedPersistentProps?.forEach( async persistentPropName => {
+					const oldValue = event.before![ persistentPropName ]
+					const newValue = event.after[ persistentPropName ]
+					if ( oldValue !== newValue ) {
+						document[ `_${ prop.name }` ][ `_${ persistentPropName }` ] = newValue
+						await model.save( document )
+						this.onUpdate?.( document )
+					}
+				})
+			})
+		])
+	}
+
+	private static getSystemRegisteredReferencesWithStoredProps(): PersistentPropertyCollection {
+		const systemRegisteredClasses = Persistent.registeredClasses()
+		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
+			const inst = Persistent.createInstance( className )
+			const propsWithStoredValue = inst.getPersistentProperties().filter( 
+				propInfo => propInfo.forcedPersistentProps
+			)
+			if ( propsWithStoredValue.length > 0 ) referencesWithStoredProps[className] = propsWithStoredValue
+			return referencesWithStoredProps
+		}, {} as PersistentPropertyCollection )
+		
+		return referencesWithStoredProps
+	}
+
+	private onUpdate: (( doc: Persistent )=>void ) | undefined
 }

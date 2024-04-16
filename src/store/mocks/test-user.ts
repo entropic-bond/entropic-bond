@@ -1,4 +1,4 @@
-import { persistent, Persistent, persistentReference, persistentReferenceAt, registerPersistentClass, searchableArray } from '../../persistent/persistent'
+import { persistent, Persistent, persistentReference, persistentReferenceAt, persistentReferenceWithPersistentProps, registerPersistentClass, searchableArray } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
@@ -119,4 +119,17 @@ export class DerivedUser extends TestUser {
 	}
 	
 	@persistent private _salary: number | undefined
+}
+
+@registerPersistentClass( 'UsesUserAsPersistentProp')
+export class UsesUserAsPersistentProp extends Persistent {
+	set user( value: TestUser | undefined ) {
+		this._user = value
+	}
+
+	get user() {
+		return this._user
+	}
+
+	@persistentReferenceWithPersistentProps<TestUser>([ 'age', 'admin' ], 'TestUser' ) private _user: TestUser | undefined
 }

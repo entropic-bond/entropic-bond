@@ -1,9 +1,9 @@
 import { JsonDataSource } from './json-data-source'
-import { DerivedUser, SubClass, TestUser } from './mocks/test-user'
+import { DerivedUser, SubClass, TestUser, UsesUserAsPersistentProp } from './mocks/test-user'
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
-import { DataSource } from './data-source'
+import { DataSource, DocumentListenerUninstaller } from './data-source'
 import { Persistent } from '../persistent/persistent'
 
 describe( 'Model', ()=>{
@@ -649,6 +649,37 @@ describe( 'Model', ()=>{
 			expect( loaded?.year ).toBe( 3452 )
 		})
 		
+	})
+
+
+	describe( 'Data source listeners', ()=>{
+		let listenerUninstallers: DocumentListenerUninstaller[]
+		let onUpdated = vi.fn()
+
+		beforeEach(()=>{
+			listenerUninstallers = Store.dataSource.installReferencePersistentPropsUpdaters( onUpdated )
+		})
+
+		afterEach(()=>{
+			listenerUninstallers.forEach( uninstaller => uninstaller() )
+		})
+
+		it( 'should update when a document is changed', async ()=>{
+			const userModel = Store.getModel<TestUser>( 'TestUser' )
+			const user1 = ( await userModel.findById( 'user1' ) )!
+			user1.age = 99
+			user1.admin = false
+			await userModel.save( user1 )
+
+			// await vi.waitFor( ()=>{
+			// 	if ( onUpdated.mock.calls.length == 0 ) throw 'Not updated' 
+			// })
+			const referenceModel = Store.getModel<UsesUserAsPersistentProp>( 'UsesUserAsPersistentProp' )
+			const reference = ( await referenceModel.findById( 'usesUserAsPersistentProp1' ) )!
+			expect( reference.user?.age ).toBe( 99 )
+			expect( reference.user?.admin ).toBeFalsy()
+		})
+
 	})
 
 	it('should pass Type tests', ()=>{

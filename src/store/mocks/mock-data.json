@@ -151,5 +151,20 @@
 			"__className": "SubClass",
 			"year": 1326
 		}
+	},
+	"UsesUserAsPersistentProp": {
+		"usesUserAsPersistentProp1": {
+			"__className": "UsesUserAsPersistentProp",
+			"id": "usesUserAsPersistentProp1",
+			"user": {
+				"id": "user1",
+				"__className": "TestUser",
+				"__documentReference": {
+					"storedInCollection": "TestUser"
+				},
+				"age": 23,
+				"admin": true
+			}
+		}
 	}
 }

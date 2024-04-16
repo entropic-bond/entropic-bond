@@ -1,4 +1,4 @@
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from 'uuid'
 import { ClassPropNames, SomeClassProps, UnderscoredProp } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
@@ -369,14 +369,14 @@ export class Persistent {
 		return value
 	}
 
-	static collectionPath( value: Persistent, prop: PersistentProperty ) {
+	static collectionPath( ownerInstance: Persistent, prop: PersistentProperty ) {
 		let storeInCollection: string
 
 		if ( typeof prop.storeInCollection === 'function' ) {
-			storeInCollection = prop.storeInCollection( value, prop )
+			storeInCollection = prop.storeInCollection( ownerInstance, prop )
 		}
 		else {
-			storeInCollection = prop.storeInCollection || value.className
+			storeInCollection = prop.storeInCollection ?? ownerInstance.className
 		}
 		return storeInCollection
 	}
@@ -564,7 +564,12 @@ export function persistentReference( target: Persistent, property: string ) {
  */
  export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
-		return persistentParser({ isReference: true, isPureReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[], storeInCollection })( target, property )
+		return persistentParser({ 
+			isReference: true, 
+			isPureReference: true, 
+			forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[], 
+			storeInCollection: storeInCollection 
+		})( target, property )
 	}
 }
 
