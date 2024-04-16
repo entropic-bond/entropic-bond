@@ -1,3 +1,15 @@
+# [1.51.0](https://github.com/entropic-bond/entropic-bond/compare/v1.50.5...v1.51.0) (2024-04-16)
+
+
+### Bug Fixes
+
+* update ts 5.4.5 ([61c6b1d](https://github.com/entropic-bond/entropic-bond/commit/61c6b1db2a8a63a8589db22c461d416f09dd19a9))
+
+
+### Features
+
+* update references with persistent props ([cd1fd62](https://github.com/entropic-bond/entropic-bond/commit/cd1fd6267f98514309bfe91d1daab3b92b542bd8))
+
 ## [1.50.5](https://github.com/entropic-bond/entropic-bond/compare/v1.50.4...v1.50.5) (2024-04-08)
 
 
