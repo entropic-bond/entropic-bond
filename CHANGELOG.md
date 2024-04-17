@@ -1,3 +1,10 @@
+## [1.51.1](https://github.com/entropic-bond/entropic-bond/compare/v1.51.0...v1.51.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* expose listener handlers ([6473e2e](https://github.com/entropic-bond/entropic-bond/commit/6473e2e558e429b4fe1f12b56f3313908dd61ecc))
+
 # [1.51.0](https://github.com/entropic-bond/entropic-bond/compare/v1.50.5...v1.51.0) (2024-04-16)
 
 
