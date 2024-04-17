@@ -1,6 +1,6 @@
 import { Collections, Persistent, PersistentObject, PersistentProperty } from '../persistent/persistent';
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListerner, DocumentListenerUninstaller, DocumentObject, QueryObject, QueryOperation } from "./data-source";
+import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentListenerUninstaller, DocumentObject, QueryObject, QueryOperation } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -157,13 +157,16 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override documentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentListenerUninstaller | undefined {
+	protected override subscribeToDocumentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
 		const collection = Persistent.collectionPath( undefined!, prop )
-		if ( !collection ) return ()=>{}
+		if ( !collection ) return
 
 		delete this._listener[ collection ]
 		this._listener[ collection ] = listener
-		return ()=> delete this._listener[ collection ]
+		return {
+			uninstall: ()=> delete this._listener[ collection ],
+			handler: listener
+		}
 	}
 
 	private notifyChange( collectionName: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {

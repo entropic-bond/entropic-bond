@@ -69,6 +69,10 @@ interface DocumentChange {
 }
 
 export type DocumentChangeListerner = ( change: DocumentChange ) => void
+export interface DocumentChangeListernerHandler {
+	uninstall: DocumentListenerUninstaller
+	handler: DocumentChangeListerner
+}
 
 /**
  * The data source interface.
@@ -78,35 +82,36 @@ export type DocumentChangeListerner = ( change: DocumentChange ) => void
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
-	installReferencePersistentPropsUpdaters( onUpdate?: ( doc: Persistent )=>void, throwOnNonImplementedListener = true ): DocumentListenerUninstaller[] {
+	installReferencePersistentPropsUpdaters( onUpdate?: ( doc: Persistent )=>void, throwOnNonImplementedListener = true ): DocumentChangeListernerHandler[] {
 		this.onUpdate = onUpdate
-		const uninstallers: DocumentListenerUninstaller[] = []
+		const handlers: DocumentChangeListernerHandler[] = []
 		const referencesWithStoredProps = DataSource.getSystemRegisteredReferencesWithStoredProps()
 
 		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
 				// const documentPath = Persistent.collectionPath( Persistent.createInstance( className ), propInfo )
 					
-				const listenerUninstaller = this.documentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
-				if ( !listenerUninstaller ) {
+				const listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+				if ( !listenerHandler ) {
 					if ( throwOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
 				}
-				else uninstallers.push( listenerUninstaller )
+				else handlers.push( listenerHandler )
 			})
 		})
 
-		return uninstallers
+		return handlers
 	}
 
 	/**
 	 * Installs a document change listener
 	 * Implement the required logic to install a listener that will be called
 	 * when a document is changed in your concrete the data source
-	 * @param documentPath the path of the document to be listened
-	 * @param listener the callback to be called when the document is changed
-	 * @returns a function that uninstalls the listener
+	 * @param prop the property that has a reference to a persistent object
+	 * @param listener the listener to be called when a document is changed
+	 * @returns a function that uninstalls the listener. If the returned value is undefined
+	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected documentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentListenerUninstaller | undefined {
+	protected subscribeToDocumentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 

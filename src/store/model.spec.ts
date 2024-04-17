@@ -3,7 +3,7 @@ import { DerivedUser, SubClass, TestUser, UsesUserAsPersistentProp } from './moc
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
-import { DataSource, DocumentListenerUninstaller } from './data-source'
+import { DataSource, DocumentChangeListernerHandler } from './data-source'
 import { Persistent } from '../persistent/persistent'
 
 describe( 'Model', ()=>{
@@ -653,15 +653,15 @@ describe( 'Model', ()=>{
 
 
 	describe( 'Data source listeners', ()=>{
-		let listenerUninstallers: DocumentListenerUninstaller[]
+		let listenerHandlers: DocumentChangeListernerHandler[]
 		let onUpdated = vi.fn()
 
 		beforeEach(()=>{
-			listenerUninstallers = Store.dataSource.installReferencePersistentPropsUpdaters( onUpdated )
+			listenerHandlers = Store.dataSource.installReferencePersistentPropsUpdaters( onUpdated )
 		})
 
 		afterEach(()=>{
-			listenerUninstallers.forEach( uninstaller => uninstaller() )
+			listenerHandlers.forEach( handler => handler.uninstall() )
 		})
 
 		it( 'should update when a document is changed', async ()=>{
