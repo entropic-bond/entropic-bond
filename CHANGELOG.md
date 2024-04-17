@@ -1,3 +1,10 @@
+## [1.51.2](https://github.com/entropic-bond/entropic-bond/compare/v1.51.1...v1.51.2) (2024-04-17)
+
+
+### Bug Fixes
+
+* native handler to be unknown type ([b01bd8f](https://github.com/entropic-bond/entropic-bond/commit/b01bd8fd4dc773b81f40b8a9e2d75c38161720a8))
+
 ## [1.51.1](https://github.com/entropic-bond/entropic-bond/compare/v1.51.0...v1.51.1) (2024-04-17)
 
 
