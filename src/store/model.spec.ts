@@ -651,7 +651,6 @@ describe( 'Model', ()=>{
 		
 	})
 
-
 	describe( 'Data source listeners', ()=>{
 		let listenerHandlers: DocumentChangeListernerHandler[]
 		let onUpdated = vi.fn()
