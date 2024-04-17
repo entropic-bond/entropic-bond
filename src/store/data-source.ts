@@ -71,7 +71,7 @@ interface DocumentChange {
 export type DocumentChangeListerner = ( change: DocumentChange ) => void
 export interface DocumentChangeListernerHandler {
 	uninstall: DocumentListenerUninstaller
-	handler: DocumentChangeListerner
+	nativeHandler: unknown
 }
 
 /**
