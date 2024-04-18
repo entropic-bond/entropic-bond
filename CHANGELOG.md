@@ -1,3 +1,10 @@
+## [1.51.3](https://github.com/entropic-bond/entropic-bond/compare/v1.51.2...v1.51.3) (2024-04-18)
+
+
+### Bug Fixes
+
+* renaming ([9feb266](https://github.com/entropic-bond/entropic-bond/commit/9feb2663cb97238af39cfd667935d2ccdd7c6707))
+
 ## [1.51.2](https://github.com/entropic-bond/entropic-bond/compare/v1.51.1...v1.51.2) (2024-04-17)
 
 
