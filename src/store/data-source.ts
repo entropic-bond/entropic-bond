@@ -89,7 +89,7 @@ export abstract class DataSource {
 
 		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
-				// const documentPath = Persistent.collectionPath( Persistent.createInstance( className ), propInfo )
+				if ( !propInfo.storeInCollection ) return
 					
 				const listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
 				if ( !listenerHandler ) {
