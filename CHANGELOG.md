@@ -1,3 +1,10 @@
+## [1.51.4](https://github.com/entropic-bond/entropic-bond/compare/v1.51.3...v1.51.4) (2024-04-18)
+
+
+### Bug Fixes
+
+* add collectionPath info in DocumentChangeListenerHandler ([beb2cea](https://github.com/entropic-bond/entropic-bond/commit/beb2cea57ad83ae4dacb07fdeef3753fe3043996))
+
 ## [1.51.3](https://github.com/entropic-bond/entropic-bond/compare/v1.51.2...v1.51.3) (2024-04-18)
 
 
