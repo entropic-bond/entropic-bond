@@ -653,10 +653,9 @@ describe( 'Model', ()=>{
 
 	describe( 'Data source listeners', ()=>{
 		let listenerHandlers: DocumentChangeListernerHandler[]
-		let onUpdated = vi.fn()
 
 		beforeEach(()=>{
-			listenerHandlers = Store.dataSource.installCachedPropsUpdaters( onUpdated )
+			listenerHandlers = Store.dataSource.installCachedPropsUpdaters()
 		})
 
 		afterEach(()=>{

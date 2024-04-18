@@ -75,6 +75,14 @@ export interface DocumentChangeListernerHandler {
 	collectionPath: string
 }
 
+type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty, collectionPath: string )=>void
+
+export interface CachedPropsUpdaterConfig {
+	onUpdate?: CachedPropsUpdateCallback
+	noThrowOnNonImplementedListener?: boolean
+	documentChangeListerner?: ( prop: PersistentProperty, listener: DocumentChangeListerner ) => DocumentChangeListernerHandler | undefined
+}
+
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -83,8 +91,8 @@ export interface DocumentChangeListernerHandler {
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
-	installCachedPropsUpdaters( onUpdate?: ( doc: Persistent )=>void, throwOnNonImplementedListener = true ): DocumentChangeListernerHandler[] {
-		this.onUpdate = onUpdate
+	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListernerHandler[] {
+		this.onUpdate = config.onUpdate
 		const handlers: DocumentChangeListernerHandler[] = []
 		const referencesWithStoredProps = DataSource.getSystemRegisteredReferencesWithStoredProps()
 
@@ -92,9 +100,17 @@ export abstract class DataSource {
 			props.forEach( propInfo => {
 				if ( !propInfo.storeInCollection ) return
 					
-				const listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+				let listenerHandler: DocumentChangeListernerHandler | undefined
+				
+				if ( config.documentChangeListerner ) {
+					listenerHandler = config.documentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+				}
+				else {
+					listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+				}
+
 				if ( !listenerHandler ) {
-					if ( throwOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
+					if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
 				}
 				else handlers.push( listenerHandler )
 			})
@@ -256,7 +272,7 @@ export abstract class DataSource {
 					if ( oldValue !== newValue ) {
 						document[ `_${ prop.name }` ][ `_${ persistentPropName }` ] = newValue
 						await model.save( document )
-						this.onUpdate?.( document )
+						this.onUpdate?.( document, prop, collectionPath )
 					}
 				})
 			})
@@ -277,5 +293,5 @@ export abstract class DataSource {
 		return referencesWithStoredProps
 	}
 
-	private onUpdate: (( doc: Persistent )=>void ) | undefined
+	private onUpdate: CachedPropsUpdateCallback | undefined
 }
