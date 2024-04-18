@@ -165,7 +165,8 @@ export class JsonDataSource extends DataSource {
 		this._listener[ collection ] = listener
 		return {
 			uninstall: ()=> delete this._listener[ collection ],
-			nativeHandler: listener
+			nativeHandler: listener,
+			collectionPath: collection
 		}
 	}
 

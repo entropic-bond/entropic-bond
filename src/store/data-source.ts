@@ -72,6 +72,7 @@ export type DocumentChangeListerner = ( change: DocumentChange ) => void
 export interface DocumentChangeListernerHandler {
 	uninstall: DocumentListenerUninstaller
 	nativeHandler: unknown
+	collectionPath: string
 }
 
 /**
