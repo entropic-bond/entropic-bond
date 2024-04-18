@@ -656,7 +656,7 @@ describe( 'Model', ()=>{
 		let onUpdated = vi.fn()
 
 		beforeEach(()=>{
-			listenerHandlers = Store.dataSource.installReferencePersistentPropsUpdaters( onUpdated )
+			listenerHandlers = Store.dataSource.installCachedPropsUpdaters( onUpdated )
 		})
 
 		afterEach(()=>{

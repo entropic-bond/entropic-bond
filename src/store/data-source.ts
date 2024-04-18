@@ -82,7 +82,7 @@ export interface DocumentChangeListernerHandler {
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
-	installReferencePersistentPropsUpdaters( onUpdate?: ( doc: Persistent )=>void, throwOnNonImplementedListener = true ): DocumentChangeListernerHandler[] {
+	installCachedPropsUpdaters( onUpdate?: ( doc: Persistent )=>void, throwOnNonImplementedListener = true ): DocumentChangeListernerHandler[] {
 		this.onUpdate = onUpdate
 		const handlers: DocumentChangeListernerHandler[] = []
 		const referencesWithStoredProps = DataSource.getSystemRegisteredReferencesWithStoredProps()
@@ -234,11 +234,11 @@ export abstract class DataSource {
 	}
 
 	private async onDocumentChange( event: DocumentChange, prop: PersistentProperty, collectionPath: string ) {
-		if ( !event.before || !prop.forcedPersistentProps ) return
+		if ( !event.before || !prop.cachedProps ) return
 		const model = Store.getModel<any>( collectionPath )
 		let query = model.find()
 
-		prop.forcedPersistentProps.forEach( persistentPropName => {
+		prop.cachedProps.forEach( persistentPropName => {
 			const oldValue = event.before![ persistentPropName ]
 			const newValue = event.after[ persistentPropName ]
 			if ( oldValue !== newValue ) {
@@ -249,7 +249,7 @@ export abstract class DataSource {
 		const result = await query.get()
 		return Promise.all([
 			result.map( async document =>{
-				prop.forcedPersistentProps?.forEach( async persistentPropName => {
+				prop.cachedProps?.forEach( async persistentPropName => {
 					const oldValue = event.before![ persistentPropName ]
 					const newValue = event.after[ persistentPropName ]
 					if ( oldValue !== newValue ) {
@@ -267,7 +267,7 @@ export abstract class DataSource {
 		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
 			const inst = Persistent.createInstance( className )
 			const propsWithStoredValue = inst.getPersistentProperties().filter( 
-				propInfo => propInfo.forcedPersistentProps
+				propInfo => propInfo.cachedProps
 			)
 			if ( propsWithStoredValue.length > 0 ) referencesWithStoredProps[className] = propsWithStoredValue
 			return referencesWithStoredProps

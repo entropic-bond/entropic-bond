@@ -390,7 +390,7 @@ export class Persistent {
 				if ( !prop.isPureReference ) {
 					this.pushDocument( rootCollections, Persistent.collectionPath( item, prop ), item )
 				}
-				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.forcedPersistentProps )
+				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.cachedProps )
 			})
 
 		}
@@ -398,13 +398,13 @@ export class Persistent {
 			if ( !prop.isPureReference ) {
 				this.pushDocument( rootCollections, Persistent.collectionPath( propValue, prop ), propValue )
 			}
-			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.forcedPersistentProps )
+			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.cachedProps )
 
 		}
 	}
 
-	private buildRefObject( value: Persistent, storeInCollection: string, forcedPersistentProps?: ClassPropNames<Persistent>[] ): DocumentReference {
-		const forcedObject = forcedPersistentProps?.reduce( ( obj, propName ) => {
+	private buildRefObject( value: Persistent, storeInCollection: string, catchedProps?: ClassPropNames<Persistent>[] ): DocumentReference {
+		const forcedObject = catchedProps?.reduce( ( obj, propName ) => {
 			if ( value[ propName ] !== undefined ) obj[ propName ] = value[ propName ]
 			return obj
 		}, {})
@@ -479,7 +479,7 @@ export interface PersistentProperty {
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
 	subCollection?: string
-	forcedPersistentProps?: ClassPropNames<Persistent>[]
+	cachedProps?: ClassPropNames<Persistent>[]
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
@@ -520,16 +520,16 @@ export function persistentReference( target: Persistent, property: string ) {
 
 /**
  * Decorator to declare a persistent reference (see @persistentReference) that stores
- * the values in forcedPersistentProps as values in the reference object. This is useful
+ * the values in cachedProps as values in the reference object. This is useful
  * when you are not able to wait for population of referenced properties.
- * @param forcedPersistentProps the properties whose values should be stored in the reference object
+ * @param cachedProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
  */
- export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
-			forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[],
+			cachedProps: cachedProps as ClassPropNames<Persistent>[],
 			storeInCollection: storeInCollection
 		}
 		return persistentParser( persistentProps )( target, property )
@@ -549,25 +549,25 @@ export function persistentReference( target: Persistent, property: string ) {
 
 /**
  * Decorator to declare a persistent property as a pure reference (see @persistentPureReference) that stores
- * the values of the properties listed in forcedPersistentProps as values in the reference object. This is useful
+ * the values of the properties listed in cachedProps as values in the reference object. This is useful
  * when you only need a few properties to be available without needing to populate the referenced property.
- * @param forcedPersistentProps the properties whose values should be stored in the reference object
+ * @param cachedProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
- * @see persistentReferenceWithPersistentProps
+ * @see persistentReferenceWithCachedProps
  * @see persistentPureReference
  * @sample
  * class User extends Persistent {
- * 	@persistentPureReferenceWithPersistentProps( ['name', 'email'] ) private _friend: User
+ * 	@persistentPureReferenceWithCachedProps( ['name', 'email'] ) private _friend: User
  * }
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
- export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			isReference: true, 
 			isPureReference: true, 
-			forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[], 
+			cachedProps: cachedProps as ClassPropNames<Persistent>[], 
 			storeInCollection: storeInCollection 
 		})( target, property )
 	}

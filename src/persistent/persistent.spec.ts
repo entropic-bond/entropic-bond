@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName, searchableArray, required, requiredWithValidator } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithCachedProps, persistentReferenceWithCachedProps, registerLegacyClassName, searchableArray, required, requiredWithValidator } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -19,7 +19,7 @@ class PersistentClass extends Persistent {
 	get persistentArray() { return this._persistentArray }
 	@persistent _persistentProp: number | undefined
 	@persistent @searchableArray _persistentArray: PersistentClass[] | undefined
-	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
+	@persistentPureReferenceWithCachedProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
 	_nonPersistentProp: number | undefined
 }
 
@@ -123,7 +123,7 @@ class Person extends Persistent {
 	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass | undefined
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject | undefined
-	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
+	@persistentReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
 	private _doNotPersist: number | undefined
 }
 
@@ -412,7 +412,7 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray', searchableArray: true },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, forcedPersistentProps: [ 'name', 'salary' ] }
+				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ] }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
@@ -562,7 +562,7 @@ describe( 'Persistent', ()=>{
 		})
 		
 
-		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
+		it( 'should store values of persistentReferenceWithCachedProps', ()=>{
 			const obj = person.toObject()
 
 			expect( obj.__rootCollections?.Person?.[0]?.id ).toEqual( person.id )
@@ -584,7 +584,7 @@ describe( 'Persistent', ()=>{
 			})
 		})
 
-		it( 'should not store values of persistentReferenceWithPersistentProps if value is undefined', ()=>{
+		it( 'should not store values of persistentReferenceWithCachedProps if value is undefined', ()=>{
 			person._referenceWithStoredValues!.persistentProp = undefined as any
 			const obj = person.toObject()
 
