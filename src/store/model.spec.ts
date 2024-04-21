@@ -669,9 +669,6 @@ describe( 'Model', ()=>{
 			user1.admin = false
 			await userModel.save( user1 )
 
-			// await vi.waitFor( ()=>{
-			// 	if ( onUpdated.mock.calls.length == 0 ) throw 'Not updated' 
-			// })
 			const referenceModel = Store.getModel<UsesUserAsPersistentProp>( 'UsesUserAsPersistentProp' )
 			const reference = ( await referenceModel.findById( 'usesUserAsPersistentProp1' ) )!
 			expect( reference.user?.age ).toBe( 99 )

@@ -57,10 +57,6 @@ export type QueryObject<T> = {
 	}
 }
 
-type PersistentPropertyCollection = {
-	[className: string]: PersistentProperty[]
-}
-
 export type DocumentListenerUninstaller = () => void
 
 interface DocumentChange {
@@ -94,7 +90,7 @@ export abstract class DataSource {
 	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListernerHandler[] {
 		this.onUpdate = config.onUpdate
 		const handlers: DocumentChangeListernerHandler[] = []
-		const referencesWithStoredProps = DataSource.getSystemRegisteredReferencesWithStoredProps()
+		const referencesWithStoredProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 
 		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
@@ -277,20 +273,6 @@ export abstract class DataSource {
 				})
 			})
 		])
-	}
-
-	private static getSystemRegisteredReferencesWithStoredProps(): PersistentPropertyCollection {
-		const systemRegisteredClasses = Persistent.registeredClasses()
-		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
-			const inst = Persistent.createInstance( className )
-			const propsWithStoredValue = inst.getPersistentProperties().filter( 
-				propInfo => propInfo.cachedProps
-			)
-			if ( propsWithStoredValue.length > 0 ) referencesWithStoredProps[className] = propsWithStoredValue
-			return referencesWithStoredProps
-		}, {} as PersistentPropertyCollection )
-		
-		return referencesWithStoredProps
 	}
 
 	private onUpdate: CachedPropsUpdateCallback | undefined

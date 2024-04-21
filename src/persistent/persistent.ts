@@ -48,6 +48,10 @@ export interface DocumentReference {
 	}
 }
 
+type PersistentPropertyCollection = {
+	[className: string]: PersistentProperty[]
+}
+
 /**
  * A class that provides several methods to serialize and deserialize objects.
  */
@@ -459,6 +463,24 @@ export class Persistent {
 	static propInfo<T extends Persistent>( registeredClassName: string, propName: ClassPropNames<T> ): PersistentProperty {
 		const inst = Persistent.createInstance( registeredClassName )
 		return inst.getPropInfo( propName )
+	}
+
+	/**
+	 * Retrieves a collection of references with the properties that are stored in the reference object
+	 * @returns the references collection
+	 */
+	static getSystemRegisteredReferencesWithCachedProps(): PersistentPropertyCollection {
+		const systemRegisteredClasses = Persistent.registeredClasses()
+		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
+			const inst = Persistent.createInstance( className )
+			const propsWithStoredValue = inst.getPersistentProperties().filter( 
+				propInfo => propInfo.cachedProps
+			)
+			if ( propsWithStoredValue.length > 0 ) referencesWithStoredProps[className] = propsWithStoredValue
+			return referencesWithStoredProps
+		}, {} as PersistentPropertyCollection )
+		
+		return referencesWithStoredProps
 	}
 
 	@persistent private _id: string

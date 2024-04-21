@@ -825,4 +825,18 @@ describe( 'Persistent', ()=>{
 			])
 		})
 	})
+
+	describe( 'Cached props in references', ()=>{
+		it( 'should retrieve cached props', ()=>{
+			const props = Persistent.getSystemRegisteredReferencesWithCachedProps()
+			expect( props ).toEqual({
+				LegacyClassName: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				PersistentClass: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				Person: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
+				WithAnnotations: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				WithAnnotations2: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				WithAnnotations3: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+			})
+		})
+	})
 })
