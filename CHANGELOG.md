@@ -1,3 +1,10 @@
+## [1.51.5](https://github.com/entropic-bond/entropic-bond/compare/v1.51.4...v1.51.5) (2024-04-18)
+
+
+### Bug Fixes
+
+* injectable documentChangeListener ([72c8078](https://github.com/entropic-bond/entropic-bond/commit/72c8078765968824ca72912933aa58f9bc42522c))
+
 ## [1.51.4](https://github.com/entropic-bond/entropic-bond/compare/v1.51.3...v1.51.4) (2024-04-18)
 
 
