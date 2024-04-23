@@ -62,7 +62,6 @@ export type DocumentListenerUninstaller = () => void
 interface DocumentChange {
 	before: Persistent | undefined
 	after: Persistent,
-	collectionPath: string
 }
 
 export type DocumentChangeListerner = ( change: DocumentChange ) => void
@@ -72,7 +71,7 @@ export interface DocumentChangeListernerHandler {
 	collectionPath: string
 }
 
-type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty, collectionPath: string )=>void
+type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>void
 
 export interface CachedPropsUpdaterConfig {
 	onUpdate?: CachedPropsUpdateCallback
@@ -80,7 +79,7 @@ export interface CachedPropsUpdaterConfig {
 	documentChangeListerner?: ( prop: PersistentProperty, listener: DocumentChangeListerner ) => DocumentChangeListernerHandler | undefined
 }
 
-export interface PropWithOwner { 
+interface PropWithOwner { 
 	prop: PersistentProperty
 	collectionPropOwner: string 
 }
@@ -113,7 +112,7 @@ export abstract class DataSource {
 		const handlers: DocumentChangeListernerHandler[] = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, props, e => this.onDocumentChange( e, props ) )
+			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, e => this.onDocumentChange( e, props ) )
 
 			if ( !listener ) {
 				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
@@ -148,13 +147,13 @@ export abstract class DataSource {
 	 * Installs a document change listener
 	 * Implement the required logic to install a listener that will be called
 	 * when a document is changed in your concrete the data source
-	 * @param collectionNameToListen the name of the collection to be watched
+	 * @param collectionPathToListen the name of the collection to be watched
 	 * @param props the properties to be watched in the collection
 	 * @param listener the listener to be called when a document is changed
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionNameToListen: string, props: PropWithOwner[], listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
@@ -301,7 +300,7 @@ export abstract class DataSource {
 						if ( oldValue !== newValue ) {
 							document[ `_${ propWithOwner.prop.name }` ][ `_${ persistentPropName }` ] = newValue
 							await model.save( document )
-							this.onUpdate?.( document, propWithOwner.prop, event.collectionPath )
+							this.onUpdate?.( document, propWithOwner.prop )
 						}
 					})
 				})

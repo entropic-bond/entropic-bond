@@ -1,6 +1,6 @@
-import { Collections, Persistent, PersistentObject, PersistentProperty } from '../persistent/persistent';
+import { Collections, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentListenerUninstaller, DocumentObject, PropWithOwner, QueryObject, QueryOperation } from "./data-source";
+import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -159,7 +159,7 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, props: PropWithOwner[], listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
+	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
 		delete this._listener[ collectionNameToListen ]
 		this._listener[ collectionNameToListen ] = listener
 		return {
