@@ -1,3 +1,10 @@
+## [1.51.7](https://github.com/entropic-bond/entropic-bond/compare/v1.51.6...v1.51.7) (2024-04-23)
+
+
+### Bug Fixes
+
+* refactor listener handlers ([7d8829b](https://github.com/entropic-bond/entropic-bond/commit/7d8829bc34e3bb08465f887ec70005a0a16efa49))
+
 ## [1.51.6](https://github.com/entropic-bond/entropic-bond/compare/v1.51.5...v1.51.6) (2024-04-21)
 
 
