@@ -1,3 +1,10 @@
+## [1.51.8](https://github.com/entropic-bond/entropic-bond/compare/v1.51.7...v1.51.8) (2024-04-23)
+
+
+### Bug Fixes
+
+* simplify data structures ([8f1d3e7](https://github.com/entropic-bond/entropic-bond/commit/8f1d3e781d9bdeea1ba6058a798aa01229e7d1a9))
+
 ## [1.51.7](https://github.com/entropic-bond/entropic-bond/compare/v1.51.6...v1.51.7) (2024-04-23)
 
 
