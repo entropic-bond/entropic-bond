@@ -1,6 +1,6 @@
 import { Store } from './store'
 import { Persistent, PersistentObject, Collections, PersistentProperty } from '../persistent/persistent'
-import { ClassPropNames } from '../types/utility-types'
+import { ClassPropNames, Collection } from '../types/utility-types'
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -60,8 +60,9 @@ export type QueryObject<T> = {
 export type DocumentListenerUninstaller = () => void
 
 interface DocumentChange {
-	before: DocumentObject | undefined
-	after: DocumentObject,
+	before: Persistent | undefined
+	after: Persistent,
+	collectionPath: string
 }
 
 export type DocumentChangeListerner = ( change: DocumentChange ) => void
@@ -79,6 +80,12 @@ export interface CachedPropsUpdaterConfig {
 	documentChangeListerner?: ( prop: PersistentProperty, listener: DocumentChangeListerner ) => DocumentChangeListernerHandler | undefined
 }
 
+export interface PropWithOwner { 
+	prop: PersistentProperty
+	collectionPropOwner: string 
+}
+
+
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -89,28 +96,50 @@ export interface CachedPropsUpdaterConfig {
 export abstract class DataSource {
 	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListernerHandler[] {
 		this.onUpdate = config.onUpdate
-		const handlers: DocumentChangeListernerHandler[] = []
 		const referencesWithStoredProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
+		const collectionsToWatch: Collection<PropWithOwner[]> = {}
 
 		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
-				if ( !propInfo.storeInCollection ) return
-					
-				let listenerHandler: DocumentChangeListernerHandler | undefined
-				
-				if ( config.documentChangeListerner ) {
-					listenerHandler = config.documentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
-				}
-				else {
-					listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
-				}
-
-				if ( !listenerHandler ) {
-					if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
-				}
-				else handlers.push( listenerHandler )
+				const collectionName = Persistent.collectionPath( Persistent.createInstance( className ), propInfo )
+				if ( !collectionsToWatch[ collectionName ] ) collectionsToWatch[ collectionName ] = []
+				collectionsToWatch[ collectionName ]!.push({
+					prop: propInfo,
+					collectionPropOwner: className
+				})
 			})
 		})
+
+		const handlers: DocumentChangeListernerHandler[] = []
+		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
+
+			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, props, e => this.onDocumentChange( e, props ) )
+
+			if ( !listener ) {
+				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
+			}
+			else handlers.push( listener )
+		})
+
+
+		// 	props.forEach( propInfo => {
+		// 		if ( !propInfo.storeInCollection ) return
+					
+		// 		let listenerHandler: DocumentChangeListernerHandler | undefined
+				
+		// 		if ( config.documentChangeListerner ) {
+		// 			listenerHandler = config.documentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+		// 		}
+		// 		else {
+		// 			listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
+		// 		}
+
+		// 		if ( !listenerHandler ) {
+		// 			if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
+		// 		}
+		// 		else handlers.push( listenerHandler )
+		// 	})
+		// })
 
 		return handlers
 	}
@@ -119,12 +148,13 @@ export abstract class DataSource {
 	 * Installs a document change listener
 	 * Implement the required logic to install a listener that will be called
 	 * when a document is changed in your concrete the data source
-	 * @param prop the property that has a reference to a persistent object
+	 * @param collectionNameToListen the name of the collection to be watched
+	 * @param props the properties to be watched in the collection
 	 * @param listener the listener to be called when a document is changed
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionNameToListen: string, props: PropWithOwner[], listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
@@ -246,33 +276,37 @@ export abstract class DataSource {
 		}
 	}
 
-	private async onDocumentChange( event: DocumentChange, prop: PersistentProperty, collectionPath: string ) {
-		if ( !event.before || !prop.cachedProps ) return
-		const model = Store.getModel<any>( collectionPath )
-		let query = model.find()
+	private async onDocumentChange( event: DocumentChange, propsToUpdate: PropWithOwner[] ) {
+		if ( !event.before ) return
 
-		prop.cachedProps.forEach( persistentPropName => {
-			const oldValue = event.before![ persistentPropName ]
-			const newValue = event.after[ persistentPropName ]
-			if ( oldValue !== newValue ) {
-				query = query.orDeepProp( `${ prop.name }.${ persistentPropName }`, '==', oldValue )
-			}
-		})
+		return propsToUpdate.map( async propWithOwner => {
 
-		const result = await query.get()
-		return Promise.all([
-			result.map( async document =>{
-				prop.cachedProps?.forEach( async persistentPropName => {
-					const oldValue = event.before![ persistentPropName ]
-					const newValue = event.after[ persistentPropName ]
-					if ( oldValue !== newValue ) {
-						document[ `_${ prop.name }` ][ `_${ persistentPropName }` ] = newValue
-						await model.save( document )
-						this.onUpdate?.( document, prop, collectionPath )
-					}
-				})
+			const model = Store.getModel<any>( propWithOwner.collectionPropOwner )
+			let query = model.find()
+
+			propWithOwner.prop.cachedProps?.forEach( persistentPropName => {
+				const oldValue = event.before![ persistentPropName ]
+				const newValue = event.after[ persistentPropName ]
+				if ( oldValue !== newValue ) {
+					query = query.orDeepProp( `${ propWithOwner.prop.name }.${ persistentPropName }`, '==', oldValue )
+				}
 			})
-		])
+
+			const result = await query.get()
+			return Promise.all([
+				result.map( async document =>{
+					propWithOwner.prop.cachedProps?.forEach( async persistentPropName => {
+						const oldValue = event.before![ persistentPropName ]
+						const newValue = event.after[ persistentPropName ]
+						if ( oldValue !== newValue ) {
+							document[ `_${ propWithOwner.prop.name }` ][ `_${ persistentPropName }` ] = newValue
+							await model.save( document )
+							this.onUpdate?.( document, propWithOwner.prop, event.collectionPath )
+						}
+					})
+				})
+			])
+		})
 	}
 
 	private onUpdate: CachedPropsUpdateCallback | undefined

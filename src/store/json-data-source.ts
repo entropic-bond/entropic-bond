@@ -1,6 +1,6 @@
 import { Collections, Persistent, PersistentObject, PersistentProperty } from '../persistent/persistent';
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentListenerUninstaller, DocumentObject, QueryObject, QueryOperation } from "./data-source";
+import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentListenerUninstaller, DocumentObject, PropWithOwner, QueryObject, QueryOperation } from "./data-source";
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -69,7 +69,9 @@ export class JsonDataSource extends DataSource {
 			collection?.forEach( document => {
 				const oldValue = this._jsonRawData[ collectionName ]![ document.id ]
 				this._jsonRawData[ collectionName ]![ document.id ] = document
-				this.notifyChange( collectionName, document, oldValue )
+				if ( oldValue )	{
+					this.notifyChange( collectionName, Persistent.createInstance( document ), Persistent.createInstance( oldValue ))
+				}
 			})
 		})
 
@@ -157,25 +159,23 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override subscribeToDocumentChangeListerner( prop: PersistentProperty, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
-		const collection = Persistent.collectionPath( undefined!, prop )
-		if ( !collection ) return
-
-		delete this._listener[ collection ]
-		this._listener[ collection ] = listener
+	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, props: PropWithOwner[], listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
+		delete this._listener[ collectionNameToListen ]
+		this._listener[ collectionNameToListen ] = listener
 		return {
-			uninstall: ()=> delete this._listener[ collection ],
+			uninstall: ()=> delete this._listener[ collectionNameToListen ],
 			nativeHandler: listener,
-			collectionPath: collection
+			collectionPath: collectionNameToListen,
 		}
 	}
 
-	private notifyChange( collectionName: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {
-		const listener = this._listener[ collectionName ]
+	private notifyChange( collectionPath: string, document: Persistent, oldValue: Persistent | undefined ) {
+		const listener = this._listener[ collectionPath ]
 		if ( listener ) {
 			const event = {
 				before: oldValue,
-				after: document
+				after: document,
+				collectionPath
 			}
 			listener( event )
 		}

@@ -407,8 +407,8 @@ export class Persistent {
 		}
 	}
 
-	private buildRefObject( value: Persistent, storeInCollection: string, catchedProps?: ClassPropNames<Persistent>[] ): DocumentReference {
-		const forcedObject = catchedProps?.reduce( ( obj, propName ) => {
+	private buildRefObject( value: Persistent, storeInCollection: string, cachedProps?: ClassPropNames<Persistent>[] ): DocumentReference {
+		const forcedObject = cachedProps?.reduce( ( obj, propName ) => {
 			if ( value[ propName ] !== undefined ) obj[ propName ] = value[ propName ]
 			return obj
 		}, {})
@@ -590,7 +590,7 @@ export function persistentPureReferenceWithCachedProps<T extends Persistent>( ca
 			isReference: true, 
 			isPureReference: true, 
 			cachedProps: cachedProps as ClassPropNames<Persistent>[], 
-			storeInCollection: storeInCollection 
+			storeInCollection: storeInCollection
 		})( target, property )
 	}
 }
