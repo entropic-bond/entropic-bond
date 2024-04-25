@@ -84,7 +84,6 @@ interface PropWithOwner {
 	collectionPropOwner: string 
 }
 
-
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -94,7 +93,7 @@ interface PropWithOwner {
  */
 export abstract class DataSource {
 	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListernerHandler[] {
-		this.onUpdate = config.onUpdate
+		DataSource.onUpdate = config.onUpdate
 		const referencesWithStoredProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 		const collectionsToWatch: Collection<PropWithOwner[]> = {}
 
@@ -112,7 +111,7 @@ export abstract class DataSource {
 		const handlers: DocumentChangeListernerHandler[] = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, e => this.onDocumentChange( e, props ) )
+			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, e => DataSource.onDocumentChange( e, props ) )
 
 			if ( !listener ) {
 				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
@@ -275,7 +274,7 @@ export abstract class DataSource {
 		}
 	}
 
-	private async onDocumentChange( event: DocumentChange, propsToUpdate: PropWithOwner[] ) {
+	static async onDocumentChange( event: DocumentChange, propsToUpdate: PropWithOwner[] ) {
 		if ( !event.before ) return
 
 		return propsToUpdate.map( async propWithOwner => {
@@ -308,5 +307,5 @@ export abstract class DataSource {
 		})
 	}
 
-	private onUpdate: CachedPropsUpdateCallback | undefined
+	private static onUpdate: CachedPropsUpdateCallback | undefined
 }
