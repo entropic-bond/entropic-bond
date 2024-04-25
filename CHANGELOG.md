@@ -1,3 +1,10 @@
+## [1.51.9](https://github.com/entropic-bond/entropic-bond/compare/v1.51.8...v1.51.9) (2024-04-25)
+
+
+### Bug Fixes
+
+* make onDocumentChange public and static ([f122cda](https://github.com/entropic-bond/entropic-bond/commit/f122cda659db809b0667506d72eeb335abd7cadc))
+
 ## [1.51.8](https://github.com/entropic-bond/entropic-bond/compare/v1.51.7...v1.51.8) (2024-04-23)
 
 
