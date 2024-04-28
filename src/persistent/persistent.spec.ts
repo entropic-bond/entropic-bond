@@ -736,7 +736,7 @@ describe( 'Persistent', ()=>{
 	describe( 'Persistent Class collection retrieval', ()=>{
 
 		it( 'should retrieve all registered classes by class name', ()=>{
-			expect( Persistent.registeredClasses() ).toHaveLength( 7 )
+			expect( Persistent.registeredClasses() ).toHaveLength( 8 )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
 			expect( Persistent.registeredClasses() ).toContain( 'LegacyClassName' )
