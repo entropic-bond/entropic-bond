@@ -1,3 +1,10 @@
+## [1.51.12](https://github.com/entropic-bond/entropic-bond/compare/v1.51.11...v1.51.12) (2024-04-28)
+
+
+### Bug Fixes
+
+* better error msg ([ce63051](https://github.com/entropic-bond/entropic-bond/commit/ce63051023e5ebaeee961ce94cec6ad3b57328f3))
+
 ## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-04-28)
 
 
