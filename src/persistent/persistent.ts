@@ -389,7 +389,7 @@ export class Persistent {
 		const propValue: Persistent | Persistent[] = this[ prop.name ]
 		
 		if ( Array.isArray( propValue ) ) {
-			if ( prop.cachedProps ) throw new Error( 'Cached props are not allowed in array references' )
+			if ( prop.cachedProps ) throw new Error( `${ this.className }.${ prop.name } is an array but cached props are not allowed in array references` )
 
 			return propValue.map( item => {
 				if ( !prop.isPureReference ) {
