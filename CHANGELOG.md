@@ -1,3 +1,10 @@
+## [1.51.10](https://github.com/entropic-bond/entropic-bond/compare/v1.51.9...v1.51.10) (2024-04-28)
+
+
+### Bug Fixes
+
+* force cached props to be primitives ([2f97b35](https://github.com/entropic-bond/entropic-bond/commit/2f97b35380869cdbd96e34805dbeee37a11c6e89))
+
 ## [1.51.9](https://github.com/entropic-bond/entropic-bond/compare/v1.51.8...v1.51.9) (2024-04-25)
 
 
