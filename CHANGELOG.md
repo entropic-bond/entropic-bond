@@ -1,3 +1,10 @@
+## [1.51.13](https://github.com/entropic-bond/entropic-bond/compare/v1.51.12...v1.51.13) (2024-04-28)
+
+
+### Bug Fixes
+
+* throw only on array cached props that are not searchable arrays ([0b0d529](https://github.com/entropic-bond/entropic-bond/commit/0b0d5291c4d9133cc023850c1a868a6692b2cd05))
+
 ## [1.51.12](https://github.com/entropic-bond/entropic-bond/compare/v1.51.11...v1.51.12) (2024-04-28)
 
 
