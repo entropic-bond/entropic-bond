@@ -167,6 +167,11 @@ class ConcreteClass extends AbstractClass {
 	pp(){}
 }
 
+@registerPersistentClass( 'ErrorProducer' )
+class ErrorProducer extends Persistent {
+	@persistentPureReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ]) _errors: string[] = []
+}
+
 describe( 'Persistent', ()=>{
 	let person: Person
 	let newPerson: Person
@@ -839,7 +844,14 @@ describe( 'Persistent', ()=>{
 				WithAnnotations: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
 				WithAnnotations2: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
 				WithAnnotations3: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				ErrorProducer: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
 			})
+		})
+
+		it( 'should throw when cached props are of an array type', ()=>{
+			expect(()=>{
+				new ErrorProducer().toObject()
+			}).toThrow( 'Cached props are not allowed in array references' )
 		})
 	})
 })

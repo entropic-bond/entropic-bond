@@ -389,6 +389,7 @@ export class Persistent {
 		const propValue: Persistent | Persistent[] = this[ prop.name ]
 		
 		if ( Array.isArray( propValue ) ) {
+			if ( prop.cachedProps ) throw new Error( 'Cached props are not allowed in array references' )
 
 			return propValue.map( item => {
 				if ( !prop.isPureReference ) {
@@ -408,7 +409,7 @@ export class Persistent {
 	}
 
 	private buildRefObject( value: Persistent, storeInCollection: string, cachedProps?: ClassPropNames<Persistent>[] ): DocumentReference {
-		const forcedObject = cachedProps?.reduce( ( obj, propName ) => {
+		const cachedPropsObj = cachedProps?.reduce( ( obj, propName ) => {
 			if ( value[ propName ] !== undefined ) obj[ propName ] = value[ propName ]
 			return obj
 		}, {})
@@ -419,7 +420,7 @@ export class Persistent {
 			__documentReference: {
 				storedInCollection: storeInCollection
 			}, 
-			...forcedObject	
+			...cachedPropsObj	
 		}
 	}
 
@@ -546,6 +547,8 @@ export function persistentReference( target: Persistent, property: string ) {
  * when you are not able to wait for population of referenced properties.
  * @param cachedProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @see persistentReference
+ * @see persistentPureReferenceWithCachedProps
  */
 export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
