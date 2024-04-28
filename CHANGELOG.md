@@ -1,3 +1,11 @@
+## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-04-28)
+
+
+### Bug Fixes
+
+* test ([e2cf4be](https://github.com/entropic-bond/entropic-bond/commit/e2cf4be4f47fd47a363dff61d50683148921c7ff))
+* throw on cached props over an array ([a97c9c0](https://github.com/entropic-bond/entropic-bond/commit/a97c9c002701cfc64a8f9a5d6a3e6193fd184c1c))
+
 ## [1.51.10](https://github.com/entropic-bond/entropic-bond/compare/v1.51.9...v1.51.10) (2024-04-28)
 
 
