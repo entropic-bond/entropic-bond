@@ -851,7 +851,7 @@ describe( 'Persistent', ()=>{
 		it( 'should throw when cached props are of an array type', ()=>{
 			expect(()=>{
 				new ErrorProducer().toObject()
-			}).toThrow( 'ErrorProducer._errors is an array but cached props are not allowed in array references' )
+			}).toThrow( 'ErrorProducer._errors is an array but cached array props are only allowed in searchable array references' )
 		})
 	})
 })
