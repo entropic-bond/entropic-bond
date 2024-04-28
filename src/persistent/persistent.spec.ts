@@ -23,6 +23,9 @@ class PersistentClass extends Persistent {
 	_nonPersistentProp: number | undefined
 }
 
+// @ts-expect-error
+persistentPureReferenceWithCachedProps<PersistentClass>([ 'persistentArray' ])
+
 class NotRegistered extends Persistent {}
 
 @registerPersistentClass( 'Person' )

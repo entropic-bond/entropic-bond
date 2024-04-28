@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { ClassPropNames, SomeClassProps, UnderscoredProp } from '../types/utility-types'
+import { ClassPropNames, ClassPropNamesOfType, Primitive, SomeClassProps, UnderscoredProp } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
 
@@ -547,7 +547,7 @@ export function persistentReference( target: Persistent, property: string ) {
  * @param cachedProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
  */
-export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
@@ -584,7 +584,7 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( cached
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
-export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			isReference: true, 
