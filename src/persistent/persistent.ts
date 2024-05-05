@@ -501,7 +501,6 @@ export interface PersistentProperty {
 	isReference?: boolean
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
-	subCollection?: string
 	cachedProps?: ClassPropNames<Persistent>[]
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
