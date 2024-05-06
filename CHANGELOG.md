@@ -1,3 +1,10 @@
+## [1.52.1](https://github.com/entropic-bond/entropic-bond/compare/v1.52.0...v1.52.1) (2024-05-06)
+
+
+### Bug Fixes
+
+* segregate upgradable cached props and non upgradable ([fc72fec](https://github.com/entropic-bond/entropic-bond/commit/fc72fec27156932d1543a0c55828c75ec6c9a0f0))
+
 # [1.52.0](https://github.com/entropic-bond/entropic-bond/compare/v1.51.13...v1.52.0) (2024-05-06)
 
 
