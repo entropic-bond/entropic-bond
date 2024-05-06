@@ -1,4 +1,4 @@
-import { persistent, Persistent, persistentReference, persistentReferenceAt, persistentReferenceWithCachedProps, registerPersistentClass, searchableArray } from '../../persistent/persistent'
+import { persistent, Persistent, persistentPureReferenceWithUpdatableCachedProps, persistentReference, persistentReferenceAt, persistentReferenceWithCachedProps, registerPersistentClass, searchableArray } from '../../persistent/persistent'
 
 interface Name { 
 	firstName: string, 
@@ -131,5 +131,5 @@ export class UsesUserAsPersistentProp extends Persistent {
 		return this._user
 	}
 
-	@persistentReferenceWithCachedProps( TestUser, [ 'age', 'admin' ], 'TestUser' ) private _user: TestUser | undefined
+	@persistentPureReferenceWithUpdatableCachedProps( TestUser, [ 'age', 'admin' ] ) private _user: TestUser | undefined
 }

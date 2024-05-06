@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithCachedProps, persistentReferenceWithCachedProps, registerLegacyClassName, searchableArray, required, requiredWithValidator } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithCachedProps, registerLegacyClassName, searchableArray, required, requiredWithValidator, persistentPureReferenceWithUpdatableCachedProps, persistentReferenceWithUpdatableCachedProps } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -29,7 +29,7 @@ class PersistentClass extends Persistent {
 	get persistentArray() { return this._persistentArray }
 	@persistent _persistentProp: number | undefined
 	@persistent @searchableArray _persistentArray: PersistentClass[] | undefined
-	@persistentPureReferenceWithCachedProps( ProtoPerson, [ 'name', 'salary' ]) _personPureRef: ProtoPerson | undefined
+	@persistentPureReferenceWithUpdatableCachedProps( ProtoPerson, [ 'name', 'salary' ]) _personPureRef: ProtoPerson | undefined
 	_nonPersistentProp: number | undefined
 }
 
@@ -118,7 +118,7 @@ class Person extends ProtoPerson {
 	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass | undefined
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject | undefined
-	@persistentReferenceWithCachedProps( PersistentClass, [ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
+	@persistentReferenceWithUpdatableCachedProps( PersistentClass, [ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
 	private _doNotPersist: number | undefined
 }
 
@@ -161,7 +161,7 @@ class ConcreteClass extends AbstractClass {
 
 @registerPersistentClass( 'ErrorProducer' )
 class ErrorProducer extends Persistent {
-	@persistentPureReferenceWithCachedProps( PersistentClass, [ 'persistentProp' ]) _errors: string[] = []
+	@persistentPureReferenceWithUpdatableCachedProps( PersistentClass, [ 'persistentProp' ]) _errors: string[] = []
 }
 
 describe( 'Persistent', ()=>{

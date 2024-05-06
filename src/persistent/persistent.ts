@@ -549,8 +549,41 @@ export function persistentReference( target: Persistent, property: string ) {
  * @param storedInCollection indicates the path of the collection where this reference is stored
  * @see persistentReference
  * @see persistentPureReferenceWithCachedProps
+ * @sample
+ * class User extends Persistent {
+ * 	@persistentReferenceWithCachedProps( ['name', 'email'] ) private _friend: User
+ * }
  */
-export function persistentReferenceWithCachedProps<T extends Persistent>( propType: PersistentConstructor<T> | T, cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+	return function( target: Persistent, property: string ) {
+		const persistentProps: Partial<PersistentProperty> = { 
+			isReference: true, 
+			cachedProps: cachedProps as ClassPropNames<Persistent>[],
+			storeInCollection: storeInCollection,
+		}
+		return persistentParser( persistentProps )( target, property )
+	}
+}
+
+/**
+ * Decorator to declare a persistent reference (see @persistentReference) that stores
+ * the values in cachedProps as values in the reference object. If 
+ * DataSource.installCachedPropsUpdaters has been called, the cached 
+ * properties are updated in the background when the reference is updates.
+ * This is useful
+ * when you are not able to wait for population of referenced properties.
+ * @param propType The type of the referenced property or an instance of it
+ * @param cachedProps the properties whose values should be stored in the reference object
+ * @param storeInCollection indicates the path of the collection where this reference is stored
+ * @see persistentReference
+ * @see persistentPureReferenceWithCachedProps
+ * @see DataSource.installCachedPropsUpdaters
+ * @sample
+ * class User extends Persistent {
+ * 	@persistentReferenceWithUpgradableCachedProps( User, ['name', 'email'] ) private _friend: User
+ * }
+ */
+export function persistentReferenceWithUpdatableCachedProps<T extends Persistent>( propType: PersistentConstructor<T> | T, cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
@@ -588,7 +621,37 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( propTy
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
-export function persistentPureReferenceWithCachedProps<T extends Persistent>( propType: PersistentConstructor<T> | T, cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ 
+			isReference: true, 
+			isPureReference: true, 
+			cachedProps: cachedProps as ClassPropNames<Persistent>[], 
+			storeInCollection: storeInCollection,
+		})( target, property )
+	}
+}
+
+/**
+ * Decorator to declare a persistent property as a pure reference 
+ * (see @persistentPureReference) that stores the values of the properties listed 
+ * in cachedProps as values in the reference object. If 
+ * DataSource.installCachedPropsUpdaters has been called, the cached
+ * properties are updated in the background when the reference is updates.
+ * This is useful when you only need a few properties to be available without 
+ * needing to populate the referenced property.
+ * @param propType The type of the referenced property or an instance of it
+ * @param cachedProps the properties whose values should be stored in the reference object
+ * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @see persistentReferenceWithCachedProps
+ * @see persistentPureReference
+ * @see DataSource.installCachedPropsUpdaters
+ * @sample
+ * class User extends Persistent {
+ * 	@persistentPureReferenceWithUpdatableCachedProps( User, ['name', 'email'] ) private _friend: User
+ * }	
+ */
+export function persistentPureReferenceWithUpdatableCachedProps<T extends Persistent>( propType: PersistentConstructor<T> | T, cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			isReference: true, 
