@@ -6,6 +6,16 @@ interface InnerObject {
 const beforeSerialize = vi.fn()
 const afterDeserialize = vi.fn()
 
+@registerPersistentClass( 'ProtoPerson' )
+class ProtoPerson extends Persistent {
+	set name( value: string | undefined ) { this._name = value }
+	get name() { return this._name }
+	set salary( value: number | undefined ) { this._salary = value }
+	get salary() { return this._salary }
+	@required @persistent private _name?: string
+	@persistent private _salary?: number
+}
+
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
@@ -13,13 +23,13 @@ class PersistentClass extends Persistent {
 	protected override afterDeserialize(): void { afterDeserialize() }
 	set persistentProp( val: number | undefined ) { this._persistentProp = val }
 	get persistentProp() { return this._persistentProp }
-	set personPureRef( value: Person | undefined ) { this._personPureRef = value }
+	set personPureRef( value: ProtoPerson | undefined ) { this._personPureRef = value }
 	get personPureRef() { return this._personPureRef }
 	set persistentArray( value: PersistentClass[] | undefined ) { this._persistentArray = value }
 	get persistentArray() { return this._persistentArray }
 	@persistent _persistentProp: number | undefined
 	@persistent @searchableArray _persistentArray: PersistentClass[] | undefined
-	@persistentPureReferenceWithCachedProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
+	@persistentPureReferenceWithCachedProps( ProtoPerson, [ 'name', 'salary' ]) _personPureRef: ProtoPerson | undefined
 	_nonPersistentProp: number | undefined
 }
 
@@ -29,29 +39,13 @@ persistentPureReferenceWithCachedProps<PersistentClass>([ 'persistentArray' ])
 class NotRegistered extends Persistent {}
 
 @registerPersistentClass( 'Person' )
-class Person extends Persistent {
+class Person extends ProtoPerson {
 	protected override beforeSerialize(): void {
 		beforeSerialize()
 	}
 
 	protected override afterDeserialize(): void {
 		afterDeserialize()
-	}
-
-	set name( value: string | undefined ) {
-		this._name = value
-	}
-
-	get name() {
-		return this._name
-	}
-
-	set salary( value: number | undefined ) {
-		this._salary = value
-	}
-
-	get salary() {
-		return this._salary
 	}
 
 	set doNotPersist( value: number | undefined ) {
@@ -110,8 +104,6 @@ class Person extends Persistent {
 		return this._persistentObject
 	}
 
-	@required @persistent private _name?: string
-	@persistent private _salary?: number
 	@requiredWithValidator(
 		( val, propInfo, instace ) => !!val && val.length > 0 && propInfo.name === 'skills' && instace.id === 'person9'
 	) @persistent private _skills: string[] | undefined
@@ -126,7 +118,7 @@ class Person extends Persistent {
 	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass | undefined
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject | undefined
-	@persistentReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
+	@persistentReferenceWithCachedProps( PersistentClass, [ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
 	private _doNotPersist: number | undefined
 }
 
@@ -169,7 +161,7 @@ class ConcreteClass extends AbstractClass {
 
 @registerPersistentClass( 'ErrorProducer' )
 class ErrorProducer extends Persistent {
-	@persistentPureReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ]) _errors: string[] = []
+	@persistentPureReferenceWithCachedProps( PersistentClass, [ 'persistentProp' ]) _errors: string[] = []
 }
 
 describe( 'Persistent', ()=>{
@@ -420,7 +412,7 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray', searchableArray: true },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ] }
+				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ], typeName: 'ProtoPerson' }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
@@ -736,7 +728,8 @@ describe( 'Persistent', ()=>{
 	describe( 'Persistent Class collection retrieval', ()=>{
 
 		it( 'should retrieve all registered classes by class name', ()=>{
-			expect( Persistent.registeredClasses() ).toHaveLength( 8 )
+			expect( Persistent.registeredClasses() ).toHaveLength( 9 )
+			expect( Persistent.registeredClasses() ).toContain( 'ProtoPerson' )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
 			expect( Persistent.registeredClasses() ).toContain( 'LegacyClassName' )

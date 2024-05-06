@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import { ClassPropNames, ClassPropNamesOfType, Primitive, SomeClassProps, UnderscoredProp } from '../types/utility-types'
 
-export type PersistentConstructor = new () => Persistent
+export type PersistentConstructor<T extends Persistent = Persistent> = new () => T
 
 interface FactoryMap {
 	[ id: string ]: {
@@ -506,6 +506,7 @@ export interface PersistentProperty {
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
 	validator?: ValidatorFunction<any, any>
+	typeName?: string
 }
 
 /**
@@ -549,12 +550,13 @@ export function persistentReference( target: Persistent, property: string ) {
  * @see persistentReference
  * @see persistentPureReferenceWithCachedProps
  */
-export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( propType: PersistentConstructor<T> | T, cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
 			cachedProps: cachedProps as ClassPropNames<Persistent>[],
-			storeInCollection: storeInCollection
+			storeInCollection: storeInCollection,
+			typeName: propType instanceof Persistent? propType.className : new propType().className
 		}
 		return persistentParser( persistentProps )( target, property )
 	}
@@ -586,13 +588,14 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( cached
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
-export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( propType: PersistentConstructor<T> | T, cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			isReference: true, 
 			isPureReference: true, 
 			cachedProps: cachedProps as ClassPropNames<Persistent>[], 
-			storeInCollection: storeInCollection
+			storeInCollection: storeInCollection,
+			typeName: propType instanceof Persistent? propType.className : new propType().className
 		})( target, property )
 	}
 }
