@@ -1,3 +1,10 @@
+# [1.52.0](https://github.com/entropic-bond/entropic-bond/compare/v1.51.13...v1.52.0) (2024-05-06)
+
+
+### Features
+
+* prop info to have typeName ([925e381](https://github.com/entropic-bond/entropic-bond/commit/925e3817cad30e8e11e33f8bc557fa753a7bd543))
+
 ## [1.51.13](https://github.com/entropic-bond/entropic-bond/compare/v1.51.12...v1.51.13) (2024-04-28)
 
 
