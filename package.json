@@ -1,7 +1,7 @@
 {
   "name": "entropic-bond",
   "type": "module",
-  "version": "1.51.11",
+  "version": "1.52.0",
   "description": "Tidy up your messy components",
   "main": "./lib/entropic-bond.umd.cjs",
   "module": "./lib/entropic-bond.js",
