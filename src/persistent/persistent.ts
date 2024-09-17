@@ -556,6 +556,7 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( cached
 			storeInCollection: storeInCollection,
 			typeName: propTypeName
 		}
+		
 		return persistentParser( persistentProps )( target, property )
 	}
 }
