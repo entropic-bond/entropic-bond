@@ -3,6 +3,14 @@
 
 ### Bug Fixes
 
+* npm update ([d9842b9](https://github.com/entropic-bond/entropic-bond/commit/d9842b9d5691b98d964f712fdde1a06eea9fd0aa))
+* PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
+
+## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-09-17)
+
+
+### Bug Fixes
+
 * PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
 
 ## [1.51.10](https://github.com/entropic-bond/entropic-bond/compare/v1.51.9...v1.51.10) (2024-04-28)
