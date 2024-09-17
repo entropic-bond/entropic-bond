@@ -506,6 +506,7 @@ export interface PersistentProperty {
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
 	validator?: ValidatorFunction<any, any>
+	typeName?: string | string[]
 }
 
 /**
@@ -547,12 +548,13 @@ export function persistentReference( target: Persistent, property: string ) {
  * @param cachedProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
  */
-export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
 			cachedProps: cachedProps as ClassPropNames<Persistent>[],
-			storeInCollection: storeInCollection
+			storeInCollection: storeInCollection,
+			typeName: propTypeName
 		}
 		return persistentParser( persistentProps )( target, property )
 	}
@@ -584,13 +586,14 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( cached
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
-export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
 	return function( target: Persistent, property: string ) {
 		return persistentParser({ 
 			isReference: true, 
 			isPureReference: true, 
 			cachedProps: cachedProps as ClassPropNames<Persistent>[], 
-			storeInCollection: storeInCollection
+			storeInCollection: storeInCollection,
+			typeName: propTypeName
 		})( target, property )
 	}
 }
