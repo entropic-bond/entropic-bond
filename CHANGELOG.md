@@ -1,3 +1,10 @@
+## [1.53.1](https://github.com/entropic-bond/entropic-bond/compare/v1.53.0...v1.53.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* add params to DocumentChange interface ([49fa6ce](https://github.com/entropic-bond/entropic-bond/commit/49fa6ce3a88062c3c3ca0a0d95c750b83fbc4588))
+
 # [1.53.0](https://github.com/entropic-bond/entropic-bond/compare/v1.52.0...v1.53.0) (2024-09-17)
 
 
