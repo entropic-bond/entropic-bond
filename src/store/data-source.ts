@@ -62,6 +62,7 @@ export type DocumentListenerUninstaller = () => void
 interface DocumentChange {
 	before: Persistent | undefined
 	after: Persistent,
+	params: { [key: string]: any }
 }
 
 export type DocumentChangeListerner = ( change: DocumentChange ) => void
