@@ -48,6 +48,12 @@ export interface DocumentReference {
 	}
 }
 
+export interface DocumentChange {
+	before: Persistent | undefined
+	after: Persistent,
+	params: { [key: string]: any }
+}
+
 type PersistentPropertyCollection = {
 	[className: string]: PersistentProperty[]
 }
@@ -495,10 +501,18 @@ export class Persistent {
 type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
 type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
 export type OwnerCollectionResolver = ( ownerClassName: string, params: {} ) => string
+/**
+ * Cached properties configuration
+ * @param cachedProps an array of properties whose values should be stored in the reference object
+ * @param updater a function that is called when the referenced object is updated
+ * @param ownerCollectionResolver a function that returns the collection path where the reference is stored
+ * @see persistentReferenceWithCachedProps
+ * @see persistentPureReferenceWithCachedProps
+ */
 export type CachedPropsConfig<T extends Persistent> = {
-cachedProps: ClassPropNamesOfType<T,Primitive>[]
-updater?: ( property: PersistentProperty ) => Promise<void>
-ownerCollectionResolver?: OwnerCollectionResolver
+	cachedProps: ClassPropNamesOfType<T,Primitive>[]
+	updater?: ( event: DocumentChange, property: PersistentProperty ) => Promise<void>
+	ownerCollectionResolver?: OwnerCollectionResolver
 }
 
 export interface PersistentProperty {
@@ -551,8 +565,22 @@ export function persistentReference( target: Persistent, property: string ) {
  * Decorator to declare a persistent reference (see @persistentReference) that stores
  * the values in cachedProps as values in the reference object. This is useful
  * when you are not able to wait for population of referenced properties.
- * @param cachedProps the properties whose values should be stored in the reference object
+ * @param cachedPropsConfig Pass an array of properties whose values should be stored in the reference object or an object
+ * with the cachedProps configuration.
  * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @param propTypeName the accepted type name or type names of the property
+ * @see persistentReference
+ * @see CachedPropsConfig
+ * @see persistentPureReferenceWithCachedProps
+ * @sample
+ * class UserGroup extends Persistent {
+ * 	@persistentReferenceWithCachedProps( ['name', 'email'], 'Customer/Clients', 'User' ) private _friend: User
+ * }
+ * 
+ * class SpecialUserGroup extends Persistent {
+ * 	@persistentReferenceWithCachedProps( { cachedProps: ['name', 'email'], updater: async ( event, prop ) => {
+ * 		// do something when the referenced user is updated
+ * 	}}, undefined, [ 'SpecialUser', 'User' ] ) private _friend: User
  */
 export function persistentReferenceWithCachedProps<T extends Persistent>( cachedPropsConfig: CachedPropsConfig<T> | ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
 	const config = Array.isArray( cachedPropsConfig )? { cachedProps: cachedPropsConfig } : cachedPropsConfig
@@ -582,13 +610,23 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( cached
  * Decorator to declare a persistent property as a pure reference (see @persistentPureReference) that stores
  * the values of the properties listed in cachedProps as values in the reference object. This is useful
  * when you only need a few properties to be available without needing to populate the referenced property.
- * @param cachedProps the properties whose values should be stored in the reference object
+ * @param cachedPropsConfig Pass an array of properties whose values should be stored in the reference object or an object
+ * with the cachedProps configuration.
  * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @param propTypeName the accepted type name or type names of the property
  * @see persistentReferenceWithCachedProps
  * @see persistentPureReference
+ * @see CachedPropsConfig
+ * @see persistentReferenceWithCachedProps
  * @sample
- * class User extends Persistent {
- * 	@persistentPureReferenceWithCachedProps( ['name', 'email'] ) private _friend: User
+ * class UserGroup extends Persistent {
+ * 	@persistentPureReferenceWithCachedProps( ['name', 'email'], 'Customer/Clients', 'User' ) private _friend: User
+ * }
+ * 
+ * class SpecialUserGroup extends Persistent {
+ * 	@persistentPureReferenceWithCachedProps( { cachedProps: ['name', 'email'], updater: async ( event, prop ) => {
+ * 		// do something when the referenced user is updated
+ * 	}}, undefined, [ 'SpecialUser', 'User' ] ) private _friend: User
  * }
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
