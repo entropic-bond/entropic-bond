@@ -1,3 +1,10 @@
+## [1.53.2](https://github.com/entropic-bond/entropic-bond/compare/v1.53.1...v1.53.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* introduce cachedPropsConfig ([d4eb9f6](https://github.com/entropic-bond/entropic-bond/commit/d4eb9f6082d6c28f522689a99c9fb5bf9b8f8d19))
+
 ## [1.53.1](https://github.com/entropic-bond/entropic-bond/compare/v1.53.0...v1.53.1) (2024-09-18)
 
 
