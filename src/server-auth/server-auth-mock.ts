@@ -41,5 +41,9 @@ export class ServerAuthMock extends ServerAuthService {
 		return this._userCredentials
 	}
 
+	notifyUserChanges() {
+		// do nothing
+	}
+
 	private _userCredentials: Collection<UserCredentials<{}>>
 }
