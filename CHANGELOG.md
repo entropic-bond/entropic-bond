@@ -1,3 +1,10 @@
+## [1.53.3](https://github.com/entropic-bond/entropic-bond/compare/v1.53.2...v1.53.3) (2024-09-23)
+
+
+### Bug Fixes
+
+* cached props updater function params ([ae1627e](https://github.com/entropic-bond/entropic-bond/commit/ae1627ed390bcc12a0161e2f1bb5618f7dde418f))
+
 ## [1.53.2](https://github.com/entropic-bond/entropic-bond/compare/v1.53.1...v1.53.2) (2024-09-23)
 
 
