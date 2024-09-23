@@ -59,7 +59,7 @@ export type QueryObject<T> = {
 
 export type DocumentListenerUninstaller = () => void
 
-interface DocumentChange {
+export interface DocumentChange {
 	before: Persistent | undefined
 	after: Persistent,
 	params: { [key: string]: any }
@@ -283,7 +283,7 @@ export abstract class DataSource {
 			const model = Store.getModel<any>( propWithOwner.collectionPropOwner )
 			let query = model.find()
 
-			propWithOwner.prop.cachedProps?.forEach( persistentPropName => {
+			propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( persistentPropName => {
 				const oldValue = event.before![ persistentPropName ]
 				const newValue = event.after[ persistentPropName ]
 				if ( oldValue !== newValue ) {
@@ -294,7 +294,7 @@ export abstract class DataSource {
 			const result = await query.get()
 			return Promise.all([
 				result.map( async document =>{
-					propWithOwner.prop.cachedProps?.forEach( async persistentPropName => {
+					propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( async persistentPropName => {
 						const oldValue = event.before![ persistentPropName ]
 						const newValue = event.after[ persistentPropName ]
 						if ( oldValue !== newValue ) {

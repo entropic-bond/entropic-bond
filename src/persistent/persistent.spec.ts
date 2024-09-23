@@ -415,7 +415,7 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray', searchableArray: true },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ] }
+				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
@@ -833,12 +833,12 @@ describe( 'Persistent', ()=>{
 		it( 'should retrieve cached props', ()=>{
 			const props = Persistent.getSystemRegisteredReferencesWithCachedProps()
 			expect( props ).toEqual({
-				LegacyClassName: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
-				PersistentClass: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
-				Person: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
-				WithAnnotations: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
-				WithAnnotations2: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
-				WithAnnotations3: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				LegacyClassName: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
+				PersistentClass: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
+				Person: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'persistentProp' ] } }) ],
+				WithAnnotations: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
+				WithAnnotations2: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
+				WithAnnotations3: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
 			})
 		})
 	})

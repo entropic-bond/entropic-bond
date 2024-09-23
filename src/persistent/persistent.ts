@@ -394,7 +394,7 @@ export class Persistent {
 				if ( !prop.isPureReference ) {
 					this.pushDocument( rootCollections, Persistent.collectionPath( item, prop ), item )
 				}
-				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.cachedProps )
+				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.cachedPropsConfig?.cachedProps )
 			})
 
 		}
@@ -402,7 +402,7 @@ export class Persistent {
 			if ( !prop.isPureReference ) {
 				this.pushDocument( rootCollections, Persistent.collectionPath( propValue, prop ), propValue )
 			}
-			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.cachedProps )
+			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.cachedPropsConfig?.cachedProps )
 
 		}
 	}
@@ -474,7 +474,7 @@ export class Persistent {
 		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
 			const inst = Persistent.createInstance( className )
 			const propsWithStoredValue = inst.getPersistentProperties().filter( 
-				propInfo => propInfo.cachedProps
+				propInfo => propInfo.cachedPropsConfig?.cachedProps
 			)
 			if ( propsWithStoredValue.length > 0 ) referencesWithStoredProps[className] = propsWithStoredValue
 			return referencesWithStoredProps
@@ -494,6 +494,12 @@ export class Persistent {
 
 type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
 type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
+export type OwnerCollectionResolver = ( ownerClassName: string, params: {} ) => string
+export type CachedPropsConfig<T extends Persistent> = {
+cachedProps: ClassPropNamesOfType<T,Primitive>[]
+updater?: ( property: PersistentProperty ) => Promise<void>
+ownerCollectionResolver?: OwnerCollectionResolver
+}
 
 export interface PersistentProperty {
 	name: string
@@ -501,12 +507,12 @@ export interface PersistentProperty {
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
 	subCollection?: string
-	cachedProps?: ClassPropNames<Persistent>[]
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
 	validator?: ValidatorFunction<any, any>
 	typeName?: string | string[]
+	cachedPropsConfig?: CachedPropsConfig<Persistent>
 }
 
 /**
@@ -548,13 +554,14 @@ export function persistentReference( target: Persistent, property: string ) {
  * @param cachedProps the properties whose values should be stored in the reference object
  * @param storedInCollection indicates the path of the collection where this reference is stored
  */
-export function persistentReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( cachedPropsConfig: CachedPropsConfig<T> | ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
+	const config = Array.isArray( cachedPropsConfig )? { cachedProps: cachedPropsConfig } : cachedPropsConfig
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
-			cachedProps: cachedProps as ClassPropNames<Persistent>[],
 			storeInCollection: storeInCollection,
-			typeName: propTypeName
+			typeName: propTypeName,
+			cachedPropsConfig: config as unknown as CachedPropsConfig<Persistent>
 		}
 		return persistentParser( persistentProps )( target, property )
 	}
@@ -586,14 +593,15 @@ export function persistentReferenceWithCachedProps<T extends Persistent>( cached
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
-export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedProps: ClassPropNamesOfType<T,Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( cachedPropsConfig: CachedPropsConfig<T> | ClassPropNamesOfType<T, Primitive>[], storeInCollection?: string | CollectionPathCallback, propTypeName?: string | string[] ) {
 	return function( target: Persistent, property: string ) {
+		const config = Array.isArray( cachedPropsConfig )? { cachedProps: cachedPropsConfig } : cachedPropsConfig
 		return persistentParser({ 
 			isReference: true, 
 			isPureReference: true, 
-			cachedProps: cachedProps as ClassPropNames<Persistent>[], 
 			storeInCollection: storeInCollection,
-			typeName: propTypeName
+			typeName: propTypeName,
+			cachedPropsConfig: config as unknown as CachedPropsConfig<Persistent>
 		})( target, property )
 	}
 }
