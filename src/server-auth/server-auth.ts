@@ -9,7 +9,6 @@ export abstract class ServerAuthService {
 	abstract getUser<T extends CustomCredentials>( userId: string ): Promise<UserCredentials<T> | undefined>
 	abstract updateUser<T extends CustomCredentials>( userId: string, credentials: Partial<UserCredentials<T>> ): Promise<UserCredentials<T>>
 	abstract deleteUser( userId: string ): Promise<void>
-	abstract notifyUserChanges(): void
 }
 
 export class ServerAuth extends ServerAuthService {
@@ -43,10 +42,6 @@ export class ServerAuth extends ServerAuthService {
 
 	deleteUser( userId: string ) {
 		return ServerAuth._authService.deleteUser( userId )
-	}
-
-	notifyUserChanges() {
-		ServerAuth._authService.notifyUserChanges()
 	}
 
 	private static _instance: ServerAuth | undefined = undefined
