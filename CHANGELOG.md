@@ -1,3 +1,10 @@
+## [1.53.6](https://github.com/entropic-bond/entropic-bond/compare/v1.53.5...v1.53.6) (2024-09-24)
+
+
+### Bug Fixes
+
+* fire change event implementation ([01b775b](https://github.com/entropic-bond/entropic-bond/commit/01b775b0e41dfc48080adceae7d52a8325315ecc))
+
 ## [1.53.5](https://github.com/entropic-bond/entropic-bond/compare/v1.53.4...v1.53.5) (2024-09-24)
 
 
