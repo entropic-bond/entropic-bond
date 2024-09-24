@@ -1,6 +1,7 @@
 import { Store } from './store'
 import { Persistent, PersistentObject, Collections, PersistentProperty } from '../persistent/persistent'
 import { ClassPropNames, Collection } from '../types/utility-types'
+import { Unsubscriber } from '../observable/observable'
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -58,11 +59,12 @@ export type QueryObject<T> = {
 }
 
 export type DocumentListenerUninstaller = () => void
-
+export type DocumentChangeType = 'create' | 'update' | 'delete'
 export interface DocumentChange {
 	before: Persistent | undefined
 	after: Persistent,
 	params: { [key: string]: any }
+	type: DocumentChangeType
 }
 
 export type DocumentChangeListerner = ( change: DocumentChange ) => void
@@ -221,6 +223,10 @@ export abstract class DataSource {
 	 * @see QueryObject
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
+
+	abstract onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner ): Unsubscriber
+
+	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListerner ): Unsubscriber
 
 	/**
 	 * Utility method to convert a query object to a property path query object

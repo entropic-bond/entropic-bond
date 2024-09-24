@@ -1,6 +1,7 @@
+import { Unsubscriber } from '../observable/observable'
 import { Collections, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentChangeType, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -118,6 +119,22 @@ export class JsonDataSource extends DataSource {
 		)
 	}
 
+	override onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner ): Unsubscriber {
+		this._listener[ collectionName ] = change => {
+			if ( change.before ) {
+				listener( change )
+			}
+		}
+		return ()=> delete this._listener[ collectionName ]
+	}
+
+	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListerner ): Unsubscriber {
+		this._listener[ collectionName ] = change => {
+			if ( change.after.id === documentId ) listener( change )
+		}
+		return ()=> delete this._listener[ collectionName ]
+	}
+
 	/**
 	 * @returns the raw data store data as a JSON object
 	 */
@@ -175,7 +192,9 @@ export class JsonDataSource extends DataSource {
 			const event = {
 				before: oldValue,
 				after: document,
-				collectionPath
+				collectionPath,
+				params: {},
+				type: (oldValue? 'update' : 'create') as DocumentChangeType
 			}
 			listener( event )
 		}

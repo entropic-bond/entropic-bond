@@ -1,6 +1,7 @@
+import { Unsubscriber } from '../observable/observable'
 import { Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListerner } from './data-source'
 
 /**
  * Provides abstraction to the database access. You should gain access to a Model
@@ -133,6 +134,14 @@ export class Model<T extends Persistent>{
 	 */
 	next<U extends T>( limit?: number ): Promise<U[]> {
 		return this.mapToInstance( () => this._stream.next( limit ) )
+	}
+
+	onDocumentChange( collectionPathToListen: string, documentId: string, listener: DocumentChangeListerner ): Unsubscriber {
+		return this._stream.onDocumentChange( collectionPathToListen, documentId, listener )
+	}
+
+	onCollectionChange( query: Query<T>, listener: DocumentChangeListerner ): Unsubscriber {
+		return this._stream.onCollectionChange( query.getQueryObject(), this.collectionName, listener )
 	}
 
 	// /**
@@ -455,6 +464,10 @@ export class Query<T extends Persistent> {
 	 */
 	count() {
 		return this.model.count( this.queryObject )
+	}
+
+	getQueryObject(): QueryObject<T> {
+		return this.queryObject
 	}
 
 	private queryObject: QueryObject<T> = { operations: [] } as QueryObject<T>
