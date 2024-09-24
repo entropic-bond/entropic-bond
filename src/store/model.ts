@@ -136,11 +136,11 @@ export class Model<T extends Persistent>{
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
-	onDocumentChange( collectionPathToListen: string, documentId: string, listener: DocumentChangeListerner ): Unsubscriber {
+	onDocumentChange( collectionPathToListen: string, documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
 		return this._stream.onDocumentChange( collectionPathToListen, documentId, listener )
 	}
 
-	onCollectionChange( query: Query<T>, listener: DocumentChangeListerner ): Unsubscriber {
+	onCollectionChange( query: Query<T>, listener: DocumentChangeListerner<T> ): Unsubscriber {
 		return this._stream.onCollectionChange( query.getQueryObject(), this.collectionName, listener )
 	}
 

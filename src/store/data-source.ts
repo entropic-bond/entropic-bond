@@ -60,14 +60,14 @@ export type QueryObject<T> = {
 
 export type DocumentListenerUninstaller = () => void
 export type DocumentChangeType = 'create' | 'update' | 'delete'
-export interface DocumentChange {
-	before: Persistent | undefined
-	after: Persistent,
+export interface DocumentChange<T extends Persistent> {
+	before: T | undefined
+	after: T,
 	params: { [key: string]: any }
 	type: DocumentChangeType
 }
 
-export type DocumentChangeListerner = ( change: DocumentChange ) => void
+export type DocumentChangeListerner<T extends Persistent> = ( change: DocumentChange<T> ) => void
 export interface DocumentChangeListernerHandler {
 	uninstall: DocumentListenerUninstaller
 	nativeHandler: unknown
@@ -79,7 +79,7 @@ type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>
 export interface CachedPropsUpdaterConfig {
 	onUpdate?: CachedPropsUpdateCallback
 	noThrowOnNonImplementedListener?: boolean
-	documentChangeListerner?: ( prop: PersistentProperty, listener: DocumentChangeListerner ) => DocumentChangeListernerHandler | undefined
+	documentChangeListerner?: ( prop: PersistentProperty, listener: DocumentChangeListerner<Persistent> ) => DocumentChangeListernerHandler | undefined
 }
 
 interface PropWithOwner { 
@@ -155,7 +155,7 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<Persistent> ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
@@ -224,9 +224,9 @@ export abstract class DataSource {
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
-	abstract onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner ): Unsubscriber
+	abstract onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner<T> ): Unsubscriber
 
-	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListerner ): Unsubscriber
+	abstract onDocumentChange<T extends Persistent>( documentPath: string, documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber
 
 	/**
 	 * Utility method to convert a query object to a property path query object
@@ -281,7 +281,7 @@ export abstract class DataSource {
 		}
 	}
 
-	static async onDocumentChange( event: DocumentChange, propsToUpdate: PropWithOwner[] ) {
+	static async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PropWithOwner[] ) {
 		if ( !event.before ) return
 
 		return propsToUpdate.map( async propWithOwner => {

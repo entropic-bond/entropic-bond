@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentChangeType, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { DataSource, DocumentChange, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentChangeType, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -119,20 +119,21 @@ export class JsonDataSource extends DataSource {
 		)
 	}
 
-	override onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner ): Unsubscriber {
-		this._listener[ collectionName ] = change => {
-			if ( change.before ) {
+	override onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
+		this._collectionListeners[ collectionName ] = ( change: DocumentChange<T> ) => {
+			const isMatch = this.retrieveQueryDocs([ change.before!.toObject() ], query.operations! ).length > 0
+			if ( isMatch ) {
 				listener( change )
 			}
 		}
-		return ()=> delete this._listener[ collectionName ]
+		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
 
-	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListerner ): Unsubscriber {
-		this._listener[ collectionName ] = change => {
+	override onDocumentChange<T extends Persistent>( collectionName: string, documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
+		this._documentListeners[ collectionName ] = ( change: DocumentChange<T> ) => {
 			if ( change.after.id === documentId ) listener( change )
 		}
-		return ()=> delete this._listener[ collectionName ]
+		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
 
 	/**
@@ -176,28 +177,28 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, listener: DocumentChangeListerner ): DocumentChangeListernerHandler | undefined {
-		delete this._listener[ collectionNameToListen ]
-		this._listener[ collectionNameToListen ] = listener
+	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, listener: DocumentChangeListerner<Persistent> ): DocumentChangeListernerHandler | undefined {
+		delete this._serverCollectionListeners[ collectionNameToListen ]
+		this._serverCollectionListeners[ collectionNameToListen ] = listener
 		return {
-			uninstall: ()=> delete this._listener[ collectionNameToListen ],
+			uninstall: ()=> delete this._serverCollectionListeners[ collectionNameToListen ],
 			nativeHandler: listener,
 			collectionPath: collectionNameToListen,
 		}
 	}
 
 	private notifyChange( collectionPath: string, document: Persistent, oldValue: Persistent | undefined ) {
-		const listener = this._listener[ collectionPath ]
-		if ( listener ) {
-			const event = {
-				before: oldValue,
-				after: document,
-				collectionPath,
-				params: {},
-				type: (oldValue? 'update' : 'create') as DocumentChangeType
-			}
-			listener( event )
+		const event = {
+			before: oldValue,
+			after: document,
+			collectionPath,
+			params: {},
+			type: (oldValue? 'update' : 'create') as DocumentChangeType
 		}
+
+		this._serverCollectionListeners[ collectionPath ]?.( event )
+		this._documentListeners[ collectionPath ]?.( event )
+		this._collectionListeners[ collectionPath ]?.( event )
 	}
 
 	private decCursor( amount: number ) {
@@ -300,5 +301,7 @@ export class JsonDataSource extends DataSource {
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
-	private _listener: Collection<DocumentChangeListerner> = {}
+	private _documentListeners: Collection<DocumentChangeListerner<Persistent>> = {}
+	private _collectionListeners: Collection<DocumentChangeListerner<Persistent>> = {}
+	private _serverCollectionListeners: Collection<DocumentChangeListerner<Persistent>> = {}
 }

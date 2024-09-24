@@ -5,6 +5,8 @@ import { Store } from './store'
 import testData from './mocks/mock-data.json'
 import { DataSource, DocumentChangeListernerHandler } from './data-source'
 import { Persistent } from '../persistent/persistent'
+import { Unsubscriber } from '../observable/observable'
+import { Mock } from 'vitest'
 
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
@@ -676,6 +678,70 @@ describe( 'Model', ()=>{
 		})
 
 	})
+
+
+	describe( 'Collection and document listeners', ()=>{
+		let unsubscribeDocumentListener: Unsubscriber
+		let unsubscribeCollectionListener: Unsubscriber
+		let documentListener: Mock
+		let collectionListener: Mock
+
+		beforeEach(()=>{
+			documentListener = vi.fn()
+			collectionListener = vi.fn()
+
+			unsubscribeDocumentListener = model.onDocumentChange( 'TestUser', 'user1', documentListener)
+
+			const query = model.find().where( 'age', '==', 23 )
+			unsubscribeCollectionListener = model.onCollectionChange( query, collectionListener)
+		})
+
+		afterEach(()=>{
+			unsubscribeDocumentListener()
+			unsubscribeCollectionListener()
+		})
+
+		it( 'should call document listener when assigned document changes', async ()=>{
+			model.save( new TestUser( 'user1' ) )
+			expect( documentListener ).toBeCalledTimes( 1 )
+			expect( documentListener ).toBeCalledWith({ 
+				after: expect.objectContaining({ id: 'user1' }),
+				before: expect.objectContaining({ id: 'user1' }),
+				collectionPath: 'TestUser',
+				params: {},
+				type: 'update'
+			})
+		})
+
+		it( 'should not call document listener when other document changes', async ()=>{
+			model.save( new TestUser( 'user234' ) )
+			expect( documentListener ).not.toBeCalled()
+		})
+
+		it( 'should call collection listener when a document in the query changes', async ()=>{
+			const modUser = await model.findById( 'user1' )
+			modUser!.skills = []
+			model.save( modUser! )
+
+			expect( collectionListener ).toBeCalledTimes( 1 )
+			expect( collectionListener ).toBeCalledWith({ 
+				after: expect.objectContaining({ id: 'user1' }),
+				before: expect.objectContaining({ id: 'user1' }),
+				collectionPath: 'TestUser',
+				params: {},
+				type: 'update'
+			})
+		})
+
+		it( 'should not call collection listener when a document out of the query changes', async ()=>{
+			const modUser = await model.findById( 'user2' )
+			modUser!.skills = []
+			model.save( modUser! )
+
+			expect( collectionListener ).not.toBeCalled()
+		})
+	})
+
 
 	it('should pass Type tests', ()=>{
 		//@ts-expect-error
