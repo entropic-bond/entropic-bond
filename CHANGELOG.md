@@ -1,3 +1,10 @@
+## [1.53.5](https://github.com/entropic-bond/entropic-bond/compare/v1.53.4...v1.53.5) (2024-09-24)
+
+
+### Bug Fixes
+
+* revert notifyUserChanges ([27d3c63](https://github.com/entropic-bond/entropic-bond/commit/27d3c631c86375621d67d51d82bb811452259648))
+
 ## [1.53.4](https://github.com/entropic-bond/entropic-bond/compare/v1.53.3...v1.53.4) (2024-09-23)
 
 
