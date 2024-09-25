@@ -1,3 +1,10 @@
+## [1.53.8](https://github.com/entropic-bond/entropic-bond/compare/v1.53.7...v1.53.8) (2024-09-25)
+
+
+### Bug Fixes
+
+* remove unneeded parameter in onDocumentChange ([d394813](https://github.com/entropic-bond/entropic-bond/commit/d394813f901a9ceb76705ed9875b016ad686e39d))
+
 ## [1.53.7](https://github.com/entropic-bond/entropic-bond/compare/v1.53.6...v1.53.7) (2024-09-25)
 
 
