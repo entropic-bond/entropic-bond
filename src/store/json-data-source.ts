@@ -71,7 +71,7 @@ export class JsonDataSource extends DataSource {
 				const oldValue = this._jsonRawData[ collectionName ]![ document.id ]
 				this._jsonRawData[ collectionName ]![ document.id ] = document
 				if ( oldValue )	{
-					this.notifyChange( collectionName, Persistent.createInstance( document ), Persistent.createInstance( oldValue ))
+					this.notifyChange( collectionName, document, oldValue )
 				}
 			})
 		})
@@ -119,9 +119,10 @@ export class JsonDataSource extends DataSource {
 		)
 	}
 
-	override onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
-		this._collectionListeners[ collectionName ] = ( change: DocumentChange<T> ) => {
-			const isMatch = this.retrieveQueryDocs([ change.before!.toObject() ], query.operations! ).length > 0
+	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+		this._collectionListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
+			if ( !change.after ) return
+			const isMatch = this.retrieveQueryDocs([ change.after ], query.operations! ).length > 0
 			if ( isMatch ) {
 				listener( change )
 			}
@@ -129,9 +130,9 @@ export class JsonDataSource extends DataSource {
 		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
 
-	override onDocumentChange<T extends Persistent>( collectionName: string, documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
-		this._documentListeners[ collectionName ] = ( change: DocumentChange<T> ) => {
-			if ( change.after.id === documentId ) listener( change )
+	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+		this._documentListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
+			if ( change.after && change.after.id === documentId ) listener( change )
 		}
 		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
@@ -177,7 +178,7 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, listener: DocumentChangeListerner<Persistent> ): DocumentChangeListernerHandler | undefined {
+	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, listener: DocumentChangeListerner<DocumentObject> ): DocumentChangeListernerHandler | undefined {
 		delete this._serverCollectionListeners[ collectionNameToListen ]
 		this._serverCollectionListeners[ collectionNameToListen ] = listener
 		return {
@@ -187,7 +188,7 @@ export class JsonDataSource extends DataSource {
 		}
 	}
 
-	private notifyChange( collectionPath: string, document: Persistent, oldValue: Persistent | undefined ) {
+	private notifyChange( collectionPath: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {
 		const event = {
 			before: oldValue,
 			after: document,
@@ -301,7 +302,7 @@ export class JsonDataSource extends DataSource {
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
-	private _documentListeners: Collection<DocumentChangeListerner<Persistent>> = {}
-	private _collectionListeners: Collection<DocumentChangeListerner<Persistent>> = {}
-	private _serverCollectionListeners: Collection<DocumentChangeListerner<Persistent>> = {}
+	private _documentListeners: Collection<DocumentChangeListerner<DocumentObject>> = {}
+	private _collectionListeners: Collection<DocumentChangeListerner<DocumentObject>> = {}
+	private _serverCollectionListeners: Collection<DocumentChangeListerner<DocumentObject>> = {}
 }

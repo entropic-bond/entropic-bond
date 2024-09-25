@@ -60,14 +60,14 @@ export type QueryObject<T> = {
 
 export type DocumentListenerUninstaller = () => void
 export type DocumentChangeType = 'create' | 'update' | 'delete'
-export interface DocumentChange<T extends Persistent> {
+export interface DocumentChange<T extends Persistent | DocumentObject> {
 	before: T | undefined
-	after: T,
+	after: T | undefined,
 	params: { [key: string]: any }
 	type: DocumentChangeType
 }
 
-export type DocumentChangeListerner<T extends Persistent> = ( change: DocumentChange<T> ) => void
+export type DocumentChangeListerner<T extends Persistent | DocumentObject> = ( change: DocumentChange<T> ) => void
 export interface DocumentChangeListernerHandler {
 	uninstall: DocumentListenerUninstaller
 	nativeHandler: unknown
@@ -155,7 +155,7 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<Persistent> ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<DocumentObject> ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
@@ -224,9 +224,9 @@ export abstract class DataSource {
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
-	abstract onCollectionChange<T extends Persistent>( query: QueryObject<T>, collectionName: string, listener: DocumentChangeListerner<T> ): Unsubscriber
+	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber
 
-	abstract onDocumentChange<T extends Persistent>( documentPath: string, documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber
+	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber
 
 	/**
 	 * Utility method to convert a query object to a property path query object
@@ -281,7 +281,7 @@ export abstract class DataSource {
 		}
 	}
 
-	static async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PropWithOwner[] ) {
+	static async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PropWithOwner[] ) {
 		if ( !event.before ) return
 
 		return propsToUpdate.map( async propWithOwner => {
@@ -290,8 +290,8 @@ export abstract class DataSource {
 			let query = model.find()
 
 			propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( persistentPropName => {
-				const oldValue = event.before![ persistentPropName ]
-				const newValue = event.after[ persistentPropName ]
+				const oldValue = event.before?.[ persistentPropName ]
+				const newValue = event.after?.[ persistentPropName ]
 				if ( oldValue !== newValue ) {
 					query = query.orDeepProp( `${ propWithOwner.prop.name }.${ persistentPropName }`, '==', oldValue )
 				}
@@ -301,8 +301,8 @@ export abstract class DataSource {
 			return Promise.all([
 				result.map( async document =>{
 					propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( async persistentPropName => {
-						const oldValue = event.before![ persistentPropName ]
-						const newValue = event.after[ persistentPropName ]
+						const oldValue = event.before?.[ persistentPropName ]
+						const newValue = event.after?.[ persistentPropName ]
 						if ( oldValue !== newValue ) {
 							document[ `_${ propWithOwner.prop.name }` ][ `_${ persistentPropName }` ] = newValue
 							await model.save( document )
