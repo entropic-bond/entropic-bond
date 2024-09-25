@@ -136,9 +136,9 @@ export class Model<T extends Persistent>{
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
-	onDocumentChange( collectionPathToListen: string, documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
+	onDocumentChange( documentId: string, listener: DocumentChangeListerner<T> ): Unsubscriber {
 		return this._stream.onDocumentChange( 
-			collectionPathToListen, 
+			this.collectionName, 
 			documentId, 
 			( change: DocumentChange<PersistentObject<T>> ) => listener( this.toPersistentChangeObject( change ) ) 
 		)
