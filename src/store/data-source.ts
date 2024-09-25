@@ -61,9 +61,9 @@ export type QueryObject<T> = {
 export type DocumentListenerUninstaller = () => void
 export type DocumentChangeType = 'create' | 'update' | 'delete'
 export interface DocumentChange<T extends Persistent | DocumentObject> {
-	before: T | undefined
-	after: T | undefined,
-	params: { [key: string]: any }
+	before?: T
+	after?: T
+	params?: { [key: string]: any }
 	type: DocumentChangeType
 }
 
