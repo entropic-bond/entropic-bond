@@ -690,7 +690,7 @@ describe( 'Model', ()=>{
 			documentListener = vi.fn()
 			collectionListener = vi.fn()
 
-			unsubscribeDocumentListener = model.onDocumentChange( 'TestUser', 'user1', documentListener)
+			unsubscribeDocumentListener = model.onDocumentChange( 'user1', documentListener)
 
 			const query = model.find().where( 'age', '==', 23 )
 			unsubscribeCollectionListener = model.onCollectionChange( query, collectionListener)
