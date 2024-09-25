@@ -1,3 +1,10 @@
+## [1.53.7](https://github.com/entropic-bond/entropic-bond/compare/v1.53.6...v1.53.7) (2024-09-25)
+
+
+### Bug Fixes
+
+* DataSource to deal with DocumentObjects instead of Persistent ([70fc553](https://github.com/entropic-bond/entropic-bond/commit/70fc5531fee14dd40aac5f7b79f0040bf9789779))
+
 ## [1.53.6](https://github.com/entropic-bond/entropic-bond/compare/v1.53.5...v1.53.6) (2024-09-24)
 
 
