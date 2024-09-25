@@ -1,5 +1,5 @@
 import { Store } from './store'
-import { Persistent, PersistentObject, Collections, PersistentProperty } from '../persistent/persistent'
+import { Persistent, PersistentObject, Collections, PersistentProperty, DocumentChange } from '../persistent/persistent'
 import { ClassPropNames, Collection } from '../types/utility-types'
 import { Unsubscriber } from '../observable/observable'
 
@@ -59,13 +59,6 @@ export type QueryObject<T> = {
 }
 
 export type DocumentListenerUninstaller = () => void
-export type DocumentChangeType = 'create' | 'update' | 'delete'
-export interface DocumentChange<T extends Persistent | DocumentObject> {
-	before?: T
-	after?: T
-	params?: { [key: string]: any }
-	type: DocumentChangeType
-}
 
 export type DocumentChangeListerner<T extends Persistent | DocumentObject> = ( change: DocumentChange<T> ) => void
 export interface DocumentChangeListernerHandler {

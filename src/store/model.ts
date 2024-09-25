@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
-import { Persistent, PersistentObject } from '../persistent/persistent'
+import { DocumentChange, Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListerner, DocumentChange } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListerner } from './data-source'
 
 /**
  * Provides abstraction to the database access. You should gain access to a Model

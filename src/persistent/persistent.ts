@@ -3,6 +3,14 @@ import { ClassPropNames, ClassPropNamesOfType, Primitive, SomeClassProps, Unders
 
 export type PersistentConstructor = new () => Persistent
 
+export type DocumentChangeType = 'create' | 'update' | 'delete'
+export interface DocumentChange<T extends Persistent | PersistentObject<Persistent>> {
+	before?: T
+	after?: T
+	params?: { [key: string]: any }
+	type: DocumentChangeType
+}
+
 interface FactoryMap {
 	[ id: string ]: {
 		factory: PersistentConstructor
@@ -46,12 +54,6 @@ export interface DocumentReference {
 	__documentReference: {
 		storedInCollection: string
 	}
-}
-
-export interface DocumentChange {
-	before: Persistent | undefined
-	after: Persistent,
-	params: { [key: string]: any }
 }
 
 type PersistentPropertyCollection = {
@@ -511,7 +513,7 @@ export type OwnerCollectionResolver = ( ownerClassName: string, params: {} ) => 
  */
 export type CachedPropsConfig<T extends Persistent> = {
 	cachedProps: ClassPropNamesOfType<T,Primitive>[]
-	updater?: ( event: DocumentChange, property: PersistentProperty ) => Promise<void>
+	updater?: ( event: DocumentChange<T>, property: PersistentProperty ) => Promise<void>
 	ownerCollectionResolver?: OwnerCollectionResolver
 }
 
