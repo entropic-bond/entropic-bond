@@ -56,19 +56,19 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@type-challenges/utils": "^0.1.1",
-    "@types/node": "^22.5.5",
+    "@types/node": "^22.13.5",
     "@types/uuid": "^10.0.0",
     "git-branch-is": "^4.0.0",
-    "husky": "^9.1.6",
-    "semantic-release": "^24.1.1",
-    "typedoc": "^0.26.7",
-    "typedoc-plugin-markdown": "^4.2.7",
-    "typescript": "^5.6.2",
-    "vite-plugin-dts": "^4.2.1",
-    "vitest": "^2.1.1"
+    "husky": "^9.1.7",
+    "semantic-release": "^24.2.3",
+    "typedoc": "^0.27.9",
+    "typedoc-plugin-markdown": "^4.4.2",
+    "typescript": "^5.7.3",
+    "vite-plugin-dts": "^4.5.0",
+    "vitest": "^3.0.7"
   },
   "dependencies": {
-    "uuid": "^10.0.0"
+    "uuid": "^11.1.0"
   },
   "husky": {
     "hooks": {
