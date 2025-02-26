@@ -1,3 +1,10 @@
+## [1.53.9](https://github.com/entropic-bond/entropic-bond/compare/v1.53.8...v1.53.9) (2024-09-25)
+
+
+### Bug Fixes
+
+* move DocumentChange definition to Persistent ([01318d9](https://github.com/entropic-bond/entropic-bond/commit/01318d939814b0feb78ec34293c57e2969110d17))
+
 ## [1.53.8](https://github.com/entropic-bond/entropic-bond/compare/v1.53.7...v1.53.8) (2024-09-25)
 
 
