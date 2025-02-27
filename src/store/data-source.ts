@@ -148,7 +148,7 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<DocumentObject> ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<Persistent> ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
@@ -274,19 +274,19 @@ export abstract class DataSource {
 		}
 	}
 
-	static async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PropWithOwner[] ) {
+	static async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PropWithOwner[] ) {
 		if ( !event.before ) return
 
 		return propsToUpdate.map( async propWithOwner => {
 
-			const model = Store.getModel<any>( propWithOwner.collectionPropOwner )
+			const model = Store.getModel<Persistent>( propWithOwner.collectionPropOwner )
 			let query = model.find()
 
 			propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( persistentPropName => {
 				const oldValue = event.before?.[ persistentPropName ]
 				const newValue = event.after?.[ persistentPropName ]
 				if ( oldValue !== newValue ) {
-					query = query.orDeepProp( `${ propWithOwner.prop.name }.${ persistentPropName }`, '==', oldValue )
+					query = query.orDeepProp( `${ propWithOwner.prop.name }.${ persistentPropName }` as any, '==', oldValue as any )
 				}
 			})
 
