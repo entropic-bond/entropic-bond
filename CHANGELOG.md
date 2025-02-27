@@ -1,3 +1,10 @@
+## [1.53.11](https://github.com/entropic-bond/entropic-bond/compare/v1.53.10...v1.53.11) (2025-02-27)
+
+
+### Bug Fixes
+
+* onDocumentChange to accept persistent ([7cb44e8](https://github.com/entropic-bond/entropic-bond/commit/7cb44e83d8a4613990a3c52ded4f22d7ef86ec79))
+
 ## [1.53.10](https://github.com/entropic-bond/entropic-bond/compare/v1.53.9...v1.53.10) (2025-02-26)
 
 
