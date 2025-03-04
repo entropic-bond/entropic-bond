@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
-import { Collections, Persistent, PersistentObject } from '../persistent/persistent'
+import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChange, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentChangeType, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {

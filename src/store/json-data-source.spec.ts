@@ -85,20 +85,20 @@ describe( 'Json DataSource', ()=>{
 			model = Store.getModel<TestUser>( 'TestUser' )
 		})
 
-		it( 'should simulate error on findById', ()=>{
-			expect(	model.findById( 'a' )	).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on findById', async ()=>{
+			await expect(	model.findById( 'a' )	).rejects.toThrow( 'Simulated error' )
 		})
 
-		it( 'should simulate error on find', ()=>{
-			expect(	model.find().get() ).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on find', async ()=>{
+			await expect(	model.find().get() ).rejects.toThrow( 'Simulated error' )
 		})
 
-		it( 'should simulate error on save', ()=>{
-			expect(	model.save( new TestUser('id') ) ).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on save', async ()=>{
+			await expect(	model.save( new TestUser('id') ) ).rejects.toThrow( 'Simulated error' )
 		})
 		
-		it( 'should simulate error on delete', ()=>{
-			expect(	model.delete( 'b' ) ).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on delete', async ()=>{
+			await expect(	model.delete( 'b' ) ).rejects.toThrow( 'Simulated error' )
 		})
 	})
 })

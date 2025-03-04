@@ -7,9 +7,9 @@
   "module": "./lib/entropic-bond.js",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "import": "./lib/entropic-bond.js",
-      "require": "./lib/entropic-bond.umd.cjs",
-      "types": "./lib/index.d.ts"
+      "require": "./lib/entropic-bond.umd.cjs"
     }
   },
   "types": "./lib/index.d.ts",
@@ -56,15 +56,15 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@type-challenges/utils": "^0.1.1",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.9",
     "@types/uuid": "^10.0.0",
     "git-branch-is": "^4.0.0",
     "husky": "^9.1.7",
     "semantic-release": "^24.2.3",
     "typedoc": "^0.27.9",
     "typedoc-plugin-markdown": "^4.4.2",
-    "typescript": "^5.7.3",
-    "vite-plugin-dts": "^4.5.0",
+    "typescript": "^5.8.2",
+    "vite-plugin-dts": "^4.5.3",
     "vitest": "^3.0.7"
   },
   "dependencies": {

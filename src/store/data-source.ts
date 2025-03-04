@@ -107,7 +107,7 @@ export abstract class DataSource {
 		const handlers: DocumentChangeListernerHandler[] = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, e => DataSource.onDocumentChange( e, props ) )
+			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, e => DataSource.processDocumentChange( e, props ) )
 
 			if ( !listener ) {
 				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
@@ -148,7 +148,7 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<Persistent> ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<DocumentObject> ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
@@ -274,7 +274,7 @@ export abstract class DataSource {
 		}
 	}
 
-	static async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PropWithOwner[] ) {
+	static async processDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PropWithOwner[] ) {
 		if ( !event.before ) return
 
 		return propsToUpdate.map( async propWithOwner => {
