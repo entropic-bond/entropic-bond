@@ -130,7 +130,7 @@ export class JsonDataSource extends DataSource {
 		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
 
-	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListerner< DocumentObject > ): Unsubscriber {
 		this._documentListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
 			if ( change.after && change.after.id === documentId ) listener( change )
 		}

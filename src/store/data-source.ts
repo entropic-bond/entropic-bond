@@ -148,7 +148,7 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListerner has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner<DocumentObject> ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner< DocumentObject > ): DocumentChangeListernerHandler | undefined {
 		return undefined
 	}
 
