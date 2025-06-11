@@ -1,3 +1,10 @@
+## [1.53.12](https://github.com/entropic-bond/entropic-bond/compare/v1.53.11...v1.53.12) (2025-03-04)
+
+
+### Bug Fixes
+
+* trigger release for previous commit ([1cd3f21](https://github.com/entropic-bond/entropic-bond/commit/1cd3f211c420b725c77e40b38f493dcd7f1213f1))
+
 ## [1.53.11](https://github.com/entropic-bond/entropic-bond/compare/v1.53.10...v1.53.11) (2025-02-27)
 
 
