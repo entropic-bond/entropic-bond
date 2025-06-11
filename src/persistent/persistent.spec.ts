@@ -380,7 +380,7 @@ describe( 'Persistent', ()=>{
 
 			expect(()=>{
 				person.toObject()
-			}).toThrow( 'You should register this class prior to streaming it.' )
+			}).toThrow( 'You should register `NotRegistered` class prior to streaming it.' )
 		})
 
 		it( 'should throw if class not registered on reading from stream', ()=>{

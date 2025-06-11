@@ -291,7 +291,7 @@ export class Persistent {
 		this.beforeSerialize()
 
 		const obj: PersistentObject<this> = {} as any
-		if ( !this.className ) throw new Error( `You should register \`${ this.className || 'this' }\` class prior to streaming it.` )
+		if ( !this.className ) throw new Error( `You should register \`${ this.constructor.name || this.toString() || 'this' }\` class prior to streaming it.` )
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
