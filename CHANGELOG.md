@@ -1,3 +1,11 @@
+## [1.53.13](https://github.com/entropic-bond/entropic-bond/compare/v1.53.12...v1.53.13) (2025-06-11)
+
+
+### Bug Fixes
+
+* better error message ([792ebe9](https://github.com/entropic-bond/entropic-bond/commit/792ebe9bfafe323a60a36b3521444a06ded309f7))
+* show constructor name ([6b78fa9](https://github.com/entropic-bond/entropic-bond/commit/6b78fa9f515ad3748397486af675c4610ac2afd9))
+
 ## [1.53.12](https://github.com/entropic-bond/entropic-bond/compare/v1.53.11...v1.53.12) (2025-03-04)
 
 
