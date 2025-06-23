@@ -15,6 +15,7 @@ interface FactoryMap {
 	[ id: string ]: {
 		factory: PersistentConstructor
 		annotation: unknown
+		isLegacy?: boolean
 	}
 }
 
@@ -71,8 +72,8 @@ export class Persistent {
 	 * @param factory the constructor of the registered class
 	 * @param annotation an annotation associated with the class
 	 */
-	static registerFactory( className: string, factory: PersistentConstructor, annotation?: unknown ) {
-		this._factoryMap[ className ] = { factory, annotation }
+	static registerFactory( className: string, factory: PersistentConstructor, annotation?: unknown, isLegacy: boolean = false ) {
+		this._factoryMap[ className ] = { factory, annotation, isLegacy }
 	}
 
 	/**
@@ -98,6 +99,18 @@ export class Persistent {
 	 * @see classFactory
 	 */
 	static registeredClasses() {
+		return Object.entries( this._factoryMap )
+			.filter(([ , obj ]) => !obj.isLegacy )
+			.map(([ className ]) => className )
+	}
+
+	/**
+	 * Returns the names of all registered classes, including legacy names
+	 * @returns the names of all registered classes, including legacy names
+	 * @see registerFactory
+	 * @see classFactory
+	 */
+	static registeredClassesAndLegacyNames() {
 		return Object.keys( this._factoryMap )
 	}
 
@@ -110,7 +123,7 @@ export class Persistent {
 	 */
 	static classesExtending( derivedFrom: PersistentConstructor | Function ) {
 		return Object.entries( this._factoryMap )
-			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom )
+			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom && !obj.isLegacy )
 			.map(([ className ]) => className )
 	}
 
@@ -478,7 +491,7 @@ export class Persistent {
 	 * @returns the references collection
 	 */
 	static getSystemRegisteredReferencesWithCachedProps(): PersistentPropertyCollection {
-		const systemRegisteredClasses = Persistent.registeredClasses()
+		const systemRegisteredClasses = Persistent.registeredClassesAndLegacyNames()
 		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
 			const inst = Persistent.createInstance( className )
 			const propsWithStoredValue = inst.getPersistentProperties().filter( 
@@ -691,7 +704,7 @@ export function registerPersistentClass( className: string, annotation?: unknown
  */
 export function registerLegacyClassName( legacyName: string ) {
 	return ( constructor: PersistentConstructor ) => {
-		Persistent.registerFactory( legacyName, constructor )
+		Persistent.registerFactory( legacyName, constructor, undefined, true )
 	}
 }
 

@@ -731,16 +731,16 @@ describe( 'Persistent', ()=>{
 	describe( 'Persistent Class collection retrieval', ()=>{
 
 		it( 'should retrieve all registered classes by class name', ()=>{
-			expect( Persistent.registeredClasses() ).toHaveLength( 7 )
+			expect( Persistent.registeredClasses() ).toHaveLength( 6 )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
-			expect( Persistent.registeredClasses() ).toContain( 'LegacyClassName' )
+			expect( Persistent.registeredClasses() ).not.toContain( 'LegacyClassName' )
 		})
 		
 		it( 'should retrieve classes by type', ()=>{
-			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 5 )
+			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 4 )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'PersistentClass' )
-			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'LegacyClassName' )
+			expect( Persistent.classesExtending( PersistentClass ) ).not.toContain( 'LegacyClassName' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations3' )
 		})
