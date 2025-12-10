@@ -1,3 +1,10 @@
+## [1.53.14](https://github.com/entropic-bond/entropic-bond/compare/v1.53.13...v1.53.14) (2025-06-23)
+
+
+### Bug Fixes
+
+* remove legacy names from system classes results ([4adb173](https://github.com/entropic-bond/entropic-bond/commit/4adb173a735d172ca41889329646993a82b157b0))
+
 ## [1.53.13](https://github.com/entropic-bond/entropic-bond/compare/v1.53.12...v1.53.13) (2025-06-11)
 
 
