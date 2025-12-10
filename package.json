@@ -18,6 +18,9 @@
   ],
   "publishConfig": {
     "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest",
+    "provenance": true,
     "branches": [
       "master"
     ]
