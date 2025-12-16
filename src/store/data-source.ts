@@ -60,12 +60,14 @@ export type QueryObject<T> = {
 
 export type DocumentListenerUninstaller = () => void
 
-export type DocumentChangeListerner<T extends Persistent | DocumentObject> = ( change: DocumentChange<T> ) => void
-export interface DocumentChangeListernerHandler {
+export type DocumentChangeListener<T extends Persistent | DocumentObject> = ( change: DocumentChange<T> ) => void
+export interface DocumentChangeListenerHandler {
 	uninstall: DocumentListenerUninstaller
 	nativeHandler: unknown
 	collectionPath: string
 }
+/* @deprecated: use DocumentChangeListener instead */ export type DocumentChangeListerner<T extends Persistent | DocumentObject> = DocumentChangeListener<T>
+/* @deprecated: use DocumentChangeListenerHandler instead */ export type DocumentChangeListernerHandler = DocumentChangeListenerHandler
 
 type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>void
 
