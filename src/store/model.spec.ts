@@ -3,7 +3,7 @@ import { DerivedUser, SubClass, TestUser, UsesUserAsPersistentProp } from './moc
 import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
-import { DataSource, DocumentChangeListernerHandler } from './data-source'
+import { DataSource, DocumentChangeListenerHandler } from './data-source'
 import { Persistent } from '../persistent/persistent'
 import { Unsubscriber } from '../observable/observable'
 import { Mock } from 'vitest'
@@ -654,7 +654,7 @@ describe( 'Model', ()=>{
 	})
 
 	describe( 'Data source listeners', ()=>{
-		let listenerHandlers: DocumentChangeListernerHandler[]
+		let listenerHandlers: DocumentChangeListenerHandler[]
 
 		beforeEach(()=>{
 			listenerHandlers = Store.dataSource.installCachedPropsUpdaters()

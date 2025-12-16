@@ -66,15 +66,12 @@ export interface DocumentChangeListenerHandler {
 	nativeHandler: unknown
 	collectionPath: string
 }
-/* @deprecated: use DocumentChangeListener instead */ export type DocumentChangeListerner<T extends Persistent | DocumentObject> = DocumentChangeListener<T>
-/* @deprecated: use DocumentChangeListenerHandler instead */ export type DocumentChangeListernerHandler = DocumentChangeListenerHandler
 
 type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>void
 
 export interface CachedPropsUpdaterConfig {
 	onUpdate?: CachedPropsUpdateCallback
 	noThrowOnNonImplementedListener?: boolean
-	documentChangeListerner?: ( prop: PersistentProperty, listener: DocumentChangeListerner<Persistent> ) => DocumentChangeListernerHandler | undefined
 }
 
 interface PropWithOwner { 
@@ -90,7 +87,7 @@ interface PropWithOwner {
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
-	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListernerHandler[] {
+	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListenerHandler[] {
 		DataSource.onUpdate = config.onUpdate
 		const referencesWithStoredProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 		const collectionsToWatch: Collection<PropWithOwner[]> = {}
@@ -106,36 +103,16 @@ export abstract class DataSource {
 			})
 		})
 
-		const handlers: DocumentChangeListernerHandler[] = []
+		const handlers: DocumentChangeListenerHandler[] = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListerner( collectionNameToListen, e => DataSource.processDocumentChange( e, props ) )
+			const listener = this.subscribeToDocumentChangeListener( collectionNameToListen, e => DataSource.processDocumentChange( e, props ) )
 
 			if ( !listener ) {
-				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
+				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
 			}
 			else handlers.push( listener )
 		})
-
-
-		// 	props.forEach( propInfo => {
-		// 		if ( !propInfo.storeInCollection ) return
-					
-		// 		let listenerHandler: DocumentChangeListernerHandler | undefined
-				
-		// 		if ( config.documentChangeListerner ) {
-		// 			listenerHandler = config.documentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
-		// 		}
-		// 		else {
-		// 			listenerHandler = this.subscribeToDocumentChangeListerner( propInfo, e => this.onDocumentChange( e, propInfo, className ) )
-		// 		}
-
-		// 		if ( !listenerHandler ) {
-		// 			if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListerner has not been implemented in the concrete data source` )
-		// 		}
-		// 		else handlers.push( listenerHandler )
-		// 	})
-		// })
 
 		return handlers
 	}
@@ -148,9 +125,9 @@ export abstract class DataSource {
 	 * @param props the properties to be watched in the collection
 	 * @param listener the listener to be called when a document is changed
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
-	 * the method documentChangeListerner has not been implemented in the concrete data source
+	 * the method documentChangeListener has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListerner( collectionPathToListen: string, listener: DocumentChangeListerner< DocumentObject > ): DocumentChangeListernerHandler | undefined {
+	protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener< DocumentObject > ): DocumentChangeListenerHandler | undefined {
 		return undefined
 	}
 
@@ -219,9 +196,9 @@ export abstract class DataSource {
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
-	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber
+	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
-	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber
+	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
 	/**
 	 * Utility method to convert a query object to a property path query object

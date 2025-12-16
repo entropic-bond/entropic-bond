@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListerner, DocumentChangeListernerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { DataSource, DocumentChangeListener, DocumentChangeListenerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -119,7 +119,7 @@ export class JsonDataSource extends DataSource {
 		)
 	}
 
-	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber {
 		this._collectionListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
 			if ( !change.after ) return
 			const isMatch = this.retrieveQueryDocs([ change.after ], query.operations! ).length > 0
@@ -130,7 +130,7 @@ export class JsonDataSource extends DataSource {
 		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
 
-	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListerner< DocumentObject > ): Unsubscriber {
+	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListener< DocumentObject > ): Unsubscriber {
 		this._documentListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
 			if ( change.after && change.after.id === documentId ) listener( change )
 		}
@@ -178,7 +178,7 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override subscribeToDocumentChangeListerner( collectionNameToListen: string, listener: DocumentChangeListerner<DocumentObject> ): DocumentChangeListernerHandler | undefined {
+	protected override subscribeToDocumentChangeListener( collectionNameToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
 		delete this._serverCollectionListeners[ collectionNameToListen ]
 		this._serverCollectionListeners[ collectionNameToListen ] = listener
 		return {
@@ -302,7 +302,7 @@ export class JsonDataSource extends DataSource {
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
-	private _documentListeners: Collection<DocumentChangeListerner<DocumentObject>> = {}
-	private _collectionListeners: Collection<DocumentChangeListerner<DocumentObject>> = {}
-	private _serverCollectionListeners: Collection<DocumentChangeListerner<DocumentObject>> = {}
+	private _documentListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
+	private _collectionListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
+	private _serverCollectionListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
 }
