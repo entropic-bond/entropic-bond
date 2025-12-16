@@ -67,6 +67,8 @@ export interface DocumentChangeListenerHandler {
 	collectionPath: string
 }
 
+export type CollectionChangeListener<T> = ( changes: T[] ) => void
+
 type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>void
 
 export interface CachedPropsUpdaterConfig {
@@ -196,7 +198,7 @@ export abstract class DataSource {
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
-	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
+	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 

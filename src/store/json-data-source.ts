@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DataSource, DocumentChangeListener, DocumentChangeListenerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentChangeListenerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -119,13 +119,11 @@ export class JsonDataSource extends DataSource {
 		)
 	}
 
-	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber {
+	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
 		this._collectionListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
 			if ( !change.after ) return
-			const isMatch = this.retrieveQueryDocs([ change.after ], query.operations! ).length > 0
-			if ( isMatch ) {
-				listener( change )
-			}
+			const docs = this.retrieveQueryDocs([ change.after ], query.operations! )
+			if ( docs.length > 0 ) listener( docs )
 		}
 		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}

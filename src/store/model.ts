@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { DocumentChange, Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListener } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListener, CollectionChangeListener } from './data-source'
 
 /**
  * Provides abstraction to the database access. You should gain access to a Model
@@ -144,11 +144,11 @@ export class Model<T extends Persistent>{
 		)
 	}
 
-	onCollectionChange( query: Query<T>, listener: DocumentChangeListener<T> ): Unsubscriber {
+	onCollectionChange( query: Query<T>, listener: CollectionChangeListener<T> ): Unsubscriber {
 		return this._stream.onCollectionChange( 
 			query.getQueryObject() as unknown as QueryObject<DocumentObject>, 
 			this.collectionName, 
-			change => listener( this.toPersistentChangeObject( change as DocumentChange<PersistentObject<T>> ) ) 
+			change => listener( change.map(( doc: PersistentObject<T> ) => Persistent.createInstance( doc ) ) )
 		)
 	}
 
