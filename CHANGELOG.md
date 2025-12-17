@@ -1,3 +1,10 @@
+## [1.53.20](https://github.com/entropic-bond/entropic-bond/compare/v1.53.19...v1.53.20) (2025-12-17)
+
+
+### Bug Fixes
+
+* conversion of change to persistent class ([bc4bafa](https://github.com/entropic-bond/entropic-bond/commit/bc4bafa14b3edd422203110b04e4fd3f1667da7b))
+
 ## [1.53.19](https://github.com/entropic-bond/entropic-bond/compare/v1.53.18...v1.53.19) (2025-12-17)
 
 
