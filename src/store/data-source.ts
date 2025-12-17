@@ -67,7 +67,7 @@ export interface DocumentChangeListenerHandler {
 	collectionPath: string
 }
 
-export type CollectionChangeListener<T> = ( changes: T[] ) => void
+export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[] ) => void
 
 type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>void
 
