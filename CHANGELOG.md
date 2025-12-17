@@ -1,3 +1,10 @@
+## [1.53.19](https://github.com/entropic-bond/entropic-bond/compare/v1.53.18...v1.53.19) (2025-12-17)
+
+
+### Bug Fixes
+
+* CollectionChangeListener to include change info ([f45457c](https://github.com/entropic-bond/entropic-bond/commit/f45457ca557983631750f17cfa34138b0e617ec6))
+
 ## [1.53.18](https://github.com/entropic-bond/entropic-bond/compare/v1.53.17...v1.53.18) (2025-12-16)
 
 
