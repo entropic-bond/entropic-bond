@@ -148,7 +148,12 @@ export class Model<T extends Persistent>{
 		return this._stream.onCollectionChange( 
 			query.getQueryObject() as unknown as QueryObject<DocumentObject>, 
 			this.collectionName, 
-			change => listener( change.map(( doc: PersistentObject<T> ) => Persistent.createInstance( doc ) ) )
+			changes => listener( changes.map(( change ) => ({
+				after: change.after && Persistent.createInstance( change.after ),
+				before: change.before && Persistent.createInstance( change.before ),
+				type: change.type,
+				params: change.params,
+			} as DocumentChange<T> )))
 		)
 	}
 

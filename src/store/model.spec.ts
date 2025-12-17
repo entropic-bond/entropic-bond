@@ -724,9 +724,12 @@ describe( 'Model', ()=>{
 			model.save( modUser! )
 
 			expect( collectionListener ).toBeCalledTimes( 1 )
-			expect( collectionListener ).toBeCalledWith([ 
-				expect.objectContaining({ id: 'user1' }),
-			])
+			expect( collectionListener ).toBeCalledWith([{  
+				after: expect.objectContaining({ id: 'user1' }),
+				before: undefined,
+				params: {},
+				type: 'update'
+			}])
 		})
 
 		it( 'should not call collection listener when a document out of the query changes', async ()=>{

@@ -123,7 +123,12 @@ export class JsonDataSource extends DataSource {
 		this._collectionListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
 			if ( !change.after ) return
 			const docs = this.retrieveQueryDocs([ change.after ], query.operations! )
-			if ( docs.length > 0 ) listener( docs )
+			if ( docs.length > 0 ) listener( docs.map( doc => ({ 
+				before: undefined,
+				after: doc,
+				type: change.type,
+				params: change.params,
+			} as DocumentChange<DocumentObject> )) )
 		}
 		return ()=> delete this._serverCollectionListeners[ collectionName ]
 	}
