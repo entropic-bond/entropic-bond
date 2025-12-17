@@ -59,7 +59,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@type-challenges/utils": "^0.1.1",
-    "@types/node": "^25.0.2",
+    "@types/node": "^25.0.3",
     "@types/uuid": "^10.0.0",
     "git-branch-is": "^4.0.0",
     "husky": "^9.1.7",
@@ -68,7 +68,7 @@
     "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "^5.9.3",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.16"
   },
   "dependencies": {
     "uuid": "^13.0.0"
