@@ -1,3 +1,10 @@
+## [1.53.21](https://github.com/entropic-bond/entropic-bond/compare/v1.53.20...v1.53.21) (2025-12-18)
+
+
+### Bug Fixes
+
+* onCollectionChange needs query preprocessing ([14c809a](https://github.com/entropic-bond/entropic-bond/commit/14c809a326ff952fbe2f02b20b80625fbf6361be))
+
 ## [1.53.20](https://github.com/entropic-bond/entropic-bond/compare/v1.53.19...v1.53.20) (2025-12-17)
 
 
