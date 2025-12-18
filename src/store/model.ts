@@ -146,7 +146,7 @@ export class Model<T extends Persistent>{
 
 	onCollectionChange( query: Query<T>, listener: CollectionChangeListener<T> ): Unsubscriber {
 		return this._stream.onCollectionChange( 
-			query.getQueryObject() as unknown as QueryObject<DocumentObject>, 
+			this.preprocessQueryObject( query.getQueryObject() ), 
 			this.collectionName, 
 			changes => listener( changes.map(( change ) => ({
 				after: change.after && Persistent.createInstance( change.after ),

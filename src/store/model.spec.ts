@@ -739,6 +739,43 @@ describe( 'Model', ()=>{
 
 			expect( collectionListener ).not.toBeCalled()
 		})
+
+		it( 'should call collection listener when query is an array contains operation', async ()=>{
+			const model = Store.getModel<TestUser>( 'TestUser' )
+			const user3 = ( await model.findById( 'user3' ))!
+			const query = model.find().where( 'colleagues', 'contains', user3 )
+			const collectionListenerForArrayContains = vi.fn()
+			const unsubscribe = model.onCollectionChange( query, collectionListenerForArrayContains )
+
+			const user2 = ( await model.findById( 'user2' ) )!
+			user2.age = 57
+			model.save( user2 )
+
+			expect( collectionListenerForArrayContains ).toBeCalledTimes( 1 )
+			expect( collectionListenerForArrayContains ).toBeCalledWith([{
+				after: expect.objectContaining({ id: 'user2' }),
+				before: undefined,
+				params: {},
+				type: 'update'
+			}])
+
+			unsubscribe()
+		})
+
+		it( 'should not call collection listener when query is an array contains operation and mod is not within the query', async ()=>{
+			const model = Store.getModel<TestUser>( 'TestUser' )
+			const user3 = ( await model.findById( 'user3' ))!
+			const query = model.find().where( 'colleagues', 'contains', user3 )
+			const collectionListenerForArrayContains = vi.fn()
+			const unsubscribe = model.onCollectionChange( query, collectionListenerForArrayContains )
+
+			const user1 = ( await model.findById( 'user1' ) )!
+			user1.age = 57
+			model.save( user1 )
+
+			expect( collectionListenerForArrayContains ).toBeCalledTimes( 0 )
+			unsubscribe()
+		})
 	})
 
 
