@@ -70,9 +70,7 @@ export class JsonDataSource extends DataSource {
 			collection?.forEach( document => {
 				const oldValue = this._jsonRawData[ collectionName ]![ document.id ]
 				this._jsonRawData[ collectionName ]![ document.id ] = document
-				if ( oldValue )	{
-					this.notifyChange( collectionName, document, oldValue )
-				}
+				this.notifyChange( collectionName, document, oldValue )
 			})
 		})
 
@@ -120,7 +118,12 @@ export class JsonDataSource extends DataSource {
 	}
 
 	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
-		this._collectionListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
+		let listeners = this._collectionListeners[ collectionName ]
+		if ( !listeners ) {
+			this._collectionListeners[ collectionName ] = {}
+			listeners = this._collectionListeners[ collectionName ]
+		}
+		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
 			if ( !change.after ) return
 			const docs = this.retrieveQueryDocs([ change.after ], query.operations! )
 			if ( docs.length > 0 ) listener( docs.map( doc => ({ 
@@ -130,14 +133,24 @@ export class JsonDataSource extends DataSource {
 				params: change.params,
 			} as DocumentChange<DocumentObject> )) )
 		}
-		return ()=> delete this._serverCollectionListeners[ collectionName ]
+		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+		listeners[ uid ] = finalListener
+		return ()=> delete listeners[ uid ]
 	}
 
 	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListener< DocumentObject > ): Unsubscriber {
-		this._documentListeners[ collectionName ] = ( change: DocumentChange<DocumentObject> ) => {
+		let listeners = this._documentListeners[ collectionName ] 
+		if ( !listeners ) {
+			this._documentListeners[ collectionName ] = {}
+			listeners = this._documentListeners[ collectionName ]
+		}
+		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
 			if ( change.after && change.after.id === documentId ) listener( change )
 		}
-		return ()=> delete this._serverCollectionListeners[ collectionName ]
+
+		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+		listeners[ uid ] = finalListener
+		return ()=> delete listeners[ uid ]
 	}
 
 	/**
@@ -201,8 +214,8 @@ export class JsonDataSource extends DataSource {
 		}
 
 		this._serverCollectionListeners[ collectionPath ]?.( event )
-		this._documentListeners[ collectionPath ]?.( event )
-		this._collectionListeners[ collectionPath ]?.( event )
+		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
+		Object.values( this._collectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 	}
 
 	private decCursor( amount: number ) {
@@ -305,7 +318,7 @@ export class JsonDataSource extends DataSource {
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
-	private _documentListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
-	private _collectionListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
+	private _documentListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
+	private _collectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 	private _serverCollectionListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
 }
