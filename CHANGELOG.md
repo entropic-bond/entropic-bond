@@ -1,3 +1,10 @@
+## [1.53.22](https://github.com/entropic-bond/entropic-bond/compare/v1.53.21...v1.53.22) (2025-12-20)
+
+
+### Bug Fixes
+
+* json data source collection and document change events ([cc6d5ca](https://github.com/entropic-bond/entropic-bond/commit/cc6d5ca1061ce8b9591e09d6e62bd14e6bc3194e))
+
 ## [1.53.21](https://github.com/entropic-bond/entropic-bond/compare/v1.53.20...v1.53.21) (2025-12-18)
 
 
