@@ -125,7 +125,7 @@ export class JsonDataSource extends DataSource {
 		}
 		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
 			if ( !change.after ) return
-			const docs = this.retrieveQueryDocs([ change.after ], query.operations! )
+			const docs = this.retrieveQueryDocs([ change.before ?? change.after ], query.operations! )
 			if ( docs.length > 0 ) listener( docs.map( doc => ({ 
 				before: undefined,
 				after: doc,

@@ -1,8 +1,19 @@
-import { DocumentObject, JsonDataSource, Model, Persistent, registerPersistentClass, Store } from '..'
+import { DocumentObject, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from '..'
 import { TestUser } from './mocks/test-user'
 
 @registerPersistentClass( 'TestCollection' )
-class TestCollection extends Persistent {}
+class TestCollection extends Persistent {
+	set prop( value: string ) {
+		this._prop = value
+	}
+	
+	get prop(): string {
+		return this._prop
+	}
+	
+	@persistent private _prop: string = this.id
+}
+
 @registerPersistentClass( 'TestCollection2' )
 class TestCollection2 extends Persistent {}
 
@@ -110,7 +121,7 @@ describe( 'Json DataSource', ()=>{
 
 		beforeAll(()=>{
 			datasource = new JsonDataSource({
-				TestCollection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } } as any
+				TestCollection: { a: new TestCollection( 'a' ).toObject(), b: new TestCollection( 'b' ).toObject(), c: new TestCollection( 'c' ).toObject() } as any
 			})
 			Store.useDataSource( datasource )
 			model = Store.getModel<TestCollection>( 'TestCollection' )
@@ -174,6 +185,17 @@ describe( 'Json DataSource', ()=>{
 			uninstall1()
 			uninstall2()
 		})
+
+		it( 'should notify when document loose query requirements', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onCollectionChange( model.find().where( 'prop', '>', 'a' ), listener )
+			const doc = new TestCollection('b')
+			doc.prop = 'a'
+			model.save( doc )
+
+			expect( listener ).toHaveBeenCalled()
+			uninstall()
+		})
 	})
 
 	describe( 'Document listeners', ()=>{
@@ -181,7 +203,7 @@ describe( 'Json DataSource', ()=>{
 
 		beforeAll(()=>{
 			datasource = new JsonDataSource({
-				TestCollection: { a: new TestCollection( 'a' ), b: new TestCollection( 'b' ), c: new TestCollection( 'c' ) } as any
+				TestCollection: { a: new TestCollection( 'a' ).toObject(), b: new TestCollection( 'b' ).toObject(), c: new TestCollection( 'c' ).toObject() } as any
 			})
 			Store.useDataSource( datasource )
 			model = Store.getModel<TestCollection>( 'TestCollection' )
