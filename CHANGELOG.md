@@ -1,3 +1,10 @@
+## [1.53.23](https://github.com/entropic-bond/entropic-bond/compare/v1.53.22...v1.53.23) (2025-12-21)
+
+
+### Bug Fixes
+
+* notify collection changes when document looses scope of query ([d19a6cf](https://github.com/entropic-bond/entropic-bond/commit/d19a6cf43cae3f337ed58dd46df071e987f26b39))
+
 ## [1.53.22](https://github.com/entropic-bond/entropic-bond/compare/v1.53.21...v1.53.22) (2025-12-20)
 
 
