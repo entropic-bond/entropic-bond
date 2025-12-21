@@ -196,6 +196,17 @@ describe( 'Json DataSource', ()=>{
 			expect( listener ).toHaveBeenCalled()
 			uninstall()
 		})
+
+		it( 'should notify when document acquires query requirements', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onCollectionChange( model.find().where( 'prop', '>', 'a' ), listener )
+			const doc = new TestCollection('a')
+			doc.prop = 'b'
+			model.save( doc )
+
+			expect( listener ).toHaveBeenCalled()
+			uninstall()
+		})
 	})
 
 	describe( 'Document listeners', ()=>{
