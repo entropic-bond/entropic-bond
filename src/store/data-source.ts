@@ -96,7 +96,7 @@ export abstract class DataSource {
 
 		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
-				const collectionName = Persistent.collectionPath( Persistent.createInstance( className ), propInfo )
+				const collectionName = Persistent.collectionPath( propInfo, Persistent.createInstance( className ) )
 				if ( !collectionsToWatch[ collectionName ] ) collectionsToWatch[ collectionName ] = []
 				collectionsToWatch[ collectionName ]!.push({
 					prop: propInfo,

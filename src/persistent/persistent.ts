@@ -155,7 +155,7 @@ export class Persistent {
 	 * Gets the class name of this instance.
 	 */
 	get className(): string {
-		return this[ '__className' ];
+		return this[ '__className' ] ?? this.constructor.name
 	}
 
 	/**
@@ -195,7 +195,8 @@ export class Persistent {
 		if ( !this._persistentProperties ) return []
 		return this._persistentProperties.map( prop => ({
 			...prop,
-			name: prop.name.slice( 1 ) 
+			name: prop.name.slice( 1 ),
+			ownerClassName: prop._target.className === '_Persistent' ? 'Persistent' : prop._target.className,
 		}))
 	}
 
@@ -304,7 +305,7 @@ export class Persistent {
 		this.beforeSerialize()
 
 		const obj: PersistentObject<this> = {} as any
-		if ( !this.className ) throw new Error( `You should register \`${ this.constructor.name || this.toString() || 'this' }\` class prior to streaming it.` )
+		if ( !this.className || !Persistent.registeredClasses().includes( this.className ) ) throw new Error( `You should register \`${ this.constructor.name || this.toString() || 'this' }\` class prior to streaming it.` )
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
@@ -344,7 +345,6 @@ export class Persistent {
 		if ( value[ '__documentReference' ] ) {
 			const ref: DocumentReference = value as DocumentReference
 			const emptyInstance = Persistent.createInstance( ref )
-			// emptyInstance._id = ref.id
 			emptyInstance['__documentReference'] = value[ '__documentReference' ]
 			return emptyInstance
 		}
@@ -394,8 +394,9 @@ export class Persistent {
 		return value
 	}
 
-	static collectionPath( ownerInstance: Persistent, prop: PersistentProperty ) {
+	static collectionPath( prop: PersistentProperty, ownerInstance?: Persistent ) {
 		let storeInCollection: string
+		ownerInstance = ownerInstance || prop._target
 
 		if ( typeof prop.storeInCollection === 'function' ) {
 			storeInCollection = prop.storeInCollection( ownerInstance, prop )
@@ -413,17 +414,17 @@ export class Persistent {
 
 			return propValue.map( item => {
 				if ( !prop.isPureReference ) {
-					this.pushDocument( rootCollections, Persistent.collectionPath( item, prop ), item )
+					this.pushDocument( rootCollections, Persistent.collectionPath( prop, item ), item )
 				}
-				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.cachedPropsConfig?.cachedProps )
+				return this.buildRefObject( item, Persistent.collectionPath( prop, item ), prop.cachedPropsConfig?.cachedProps )
 			})
 
 		}
 		else {
 			if ( !prop.isPureReference ) {
-				this.pushDocument( rootCollections, Persistent.collectionPath( propValue, prop ), propValue )
+				this.pushDocument( rootCollections, Persistent.collectionPath( prop, propValue ), propValue )
 			}
-			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.cachedPropsConfig?.cachedProps )
+			return this.buildRefObject( propValue, Persistent.collectionPath( prop, propValue ), prop.cachedPropsConfig?.cachedProps )
 
 		}
 	}
@@ -532,6 +533,8 @@ export type CachedPropsConfig<T extends Persistent> = {
 
 export interface PersistentProperty {
 	name: string
+	/** The class that owns this property. It is not an instance of the class, but rather the class itself */ ownerClassName?: string
+	_target: Persistent 
 	isReference?: boolean
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
@@ -678,6 +681,7 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 		else {
 			target[ '_persistentProperties' ]!.push({
 				name: property,
+				_target: target,
 				...options
 			})
 		}
@@ -690,8 +694,9 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
  * @param className the name of the class
  * @param annotation an optional annotation that can be used to store additional information
  */
-export function registerPersistentClass( className: string, annotation?: unknown ) {
+export function registerPersistentClass( className?: string, annotation?: unknown ) {
 	return ( constructor: PersistentConstructor ) => {
+		if ( !className ) className = constructor.name
 		Persistent.registerFactory( className, constructor, annotation )
 		constructor.prototype.__className = className
 	}
@@ -710,8 +715,8 @@ export function registerLegacyClassName( legacyName: string ) {
 
 /**
  * Decorator to make a `Persistent` array property searchable by the 
- * persistance engine.
- * When a property is marked as searchable, the persistance engine will
+ * persistence engine.
+ * When a property is marked as searchable, the persistence engine will
  * generate internally a new property with the same name but with the suffix `_searchable`
  * and prefixed with the `_` character. This new property will contain an array
  * with the `id` of the persistent elements in the original array.

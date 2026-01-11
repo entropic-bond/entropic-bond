@@ -203,17 +203,18 @@ describe( 'Persistent', ()=>{
 		// Therefore we need to access the decorator created private properties
 		// in order to test the behaviour of the decorator
 		expect( a[ '_persistentProperties' ] ).toEqual( expect.arrayContaining([
-			{ name: '_name', validator: expect.any( Function ) },
-			{ name: '_skills', validator: expect.any( Function ) }
+			{ name: '_name', validator: expect.any( Function ), _target: expect.objectContaining({ __className: 'Person' }) },
+			{ name: '_skills', validator: expect.any( Function ), _target: expect.objectContaining({ __className: 'Person' }) }
 		]))
 		expect( b[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ expect.objectContaining({
-			name: '_name'
+			name: '_name',
+			_target: expect.objectContaining({ __className: 'PersistentClass' })
 		})]))
 		expect( a[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining([ expect.objectContaining({
 			name: '_persistentProp'
 		})]))
 		expect( b[ '_persistentProperties' ] ).toEqual( expect.arrayContaining( [ {
-			name: '_persistentProp'
+			name: '_persistentProp', _target: expect.anything()
 		} ] ) )
 	})
 
@@ -411,20 +412,20 @@ describe( 'Persistent', ()=>{
 		})
 
 		it( 'should return registered properties', ()=>{
-			expect( new PersistentClass().getPersistentProperties() ).toEqual([
-				{ name: 'id' }, 
-				{ name: 'persistentProp' }, 
-				{ name: 'persistentArray', searchableArray: true },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }
+			const props = new PersistentClass().getPersistentProperties()
+			expect( props ).toEqual([
+				{ name: 'id', ownerClassName: 'Persistent', _target: expect.anything() }, 
+				{ name: 'persistentProp', ownerClassName: 'PersistentClass', _target: expect.anything() }, 
+				{ name: 'persistentArray', ownerClassName: 'PersistentClass', searchableArray: true, _target: expect.anything() },
+				{ name: 'personPureRef', ownerClassName: 'PersistentClass', isReference: true, isPureReference: true, cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] }, _target: expect.anything() }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
-				{ name: 'name', validator: expect.any( Function ) },
-				{ name: 'document', isReference: true },
-				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName' }
+				{ name: 'name', ownerClassName: 'Person', validator: expect.any( Function ), _target: expect.anything() },
+				{ name: 'document', ownerClassName: 'Person', isReference: true, _target: expect.anything() },
+				{ name: 'docAtArbitraryCollection', ownerClassName: 'Person', isReference: true, storeInCollection: 'ArbitraryCollectionName', _target: expect.anything() }
 			]))
 		})
-		
 	})
 
 	describe( 'Document as reference', ()=>{
@@ -751,8 +752,15 @@ describe( 'Persistent', ()=>{
 		})
 		
 		it( 'should retrieve property info', ()=>{
-			expect( Persistent.propInfo<Person>( 'Person', 'name' ) ).toEqual({
-				name: 'name', validator: expect.any( Function )
+			const propInfo = Persistent.propInfo<Person>( 'Person', 'name' )
+
+			expect( propInfo.ownerClassName ).toEqual( 'Person' )
+
+			expect( propInfo ).toEqual({
+				name: 'name', 
+				ownerClassName: 'Person',
+				validator: expect.any( Function ),
+				_target: expect.anything()
 			})
 		})
 	})
