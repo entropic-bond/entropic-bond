@@ -1,3 +1,10 @@
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.24...v1.54.0) (2026-01-11)
+
+
+### Features
+
+* propInfo includes owner class name ([0c12739](https://github.com/entropic-bond/entropic-bond/commit/0c127396fa0237a2f2d217611f0304b1cbb1f657))
+
 ## [1.53.24](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.53.24) (2025-12-21)
 
 
