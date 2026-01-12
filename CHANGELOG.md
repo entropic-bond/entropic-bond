@@ -7,6 +7,26 @@
 * renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
 * semantic ([05762e4](https://github.com/entropic-bond/entropic-bond/commit/05762e40bb9e29b4442c70944ff7674a5dc690f6))
 * semantic release ([a8f0324](https://github.com/entropic-bond/entropic-bond/commit/a8f03247c650ad623cc6ce2cccef58fc55ff5802))
+* trigger release after tag conflict ([369f3c2](https://github.com/entropic-bond/entropic-bond/commit/369f3c2ac6c674cb3118da00245155101c6d9e0e))
+* trigger release after tag conflict ([529f261](https://github.com/entropic-bond/entropic-bond/commit/529f2616a615a72da836497a44b9743f28992a5d))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([e9366da](https://github.com/entropic-bond/entropic-bond/commit/e9366da11c81180079f3c04f83e4e621d9937874))
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* semantic ([05762e4](https://github.com/entropic-bond/entropic-bond/commit/05762e40bb9e29b4442c70944ff7674a5dc690f6))
+* semantic release ([a8f0324](https://github.com/entropic-bond/entropic-bond/commit/a8f03247c650ad623cc6ce2cccef58fc55ff5802))
 * trigger release after tag conflict ([529f261](https://github.com/entropic-bond/entropic-bond/commit/529f2616a615a72da836497a44b9743f28992a5d))
 * trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
 
