@@ -10,6 +10,21 @@
 
 ### Features
 
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
 * trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
 
 ## [1.53.24](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.53.24) (2026-01-12)
