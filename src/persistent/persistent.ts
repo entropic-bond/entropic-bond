@@ -394,14 +394,14 @@ export class Persistent {
 		return value
 	}
 
-	static collectionPath( ownerInstance: Persistent, prop: PersistentProperty ) {
+	static collectionPath( propInstance: Persistent, prop: PersistentProperty ) {
 		let storeInCollection: string
 
 		if ( typeof prop.storeInCollection === 'function' ) {
-			storeInCollection = prop.storeInCollection( ownerInstance, prop )
+			storeInCollection = prop.storeInCollection( propInstance, prop )
 		}
 		else {
-			storeInCollection = prop.storeInCollection ?? ownerInstance.className
+			storeInCollection = prop.storeInCollection ?? propInstance.className
 		}
 		return storeInCollection
 	}
@@ -710,8 +710,8 @@ export function registerLegacyClassName( legacyName: string ) {
 
 /**
  * Decorator to make a `Persistent` array property searchable by the 
- * persistance engine.
- * When a property is marked as searchable, the persistance engine will
+ * persistence engine.
+ * When a property is marked as searchable, the persistence engine will
  * generate internally a new property with the same name but with the suffix `_searchable`
  * and prefixed with the `_` character. This new property will contain an array
  * with the `id` of the persistent elements in the original array.
