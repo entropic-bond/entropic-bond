@@ -1,3 +1,10 @@
+## [1.53.24](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.53.24) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+
 ## [1.53.23](https://github.com/entropic-bond/entropic-bond/compare/v1.53.22...v1.53.23) (2025-12-21)
 
 
