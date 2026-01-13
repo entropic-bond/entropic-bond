@@ -1,3 +1,10 @@
+## [1.54.1](https://github.com/entropic-bond/entropic-bond/compare/v1.54.0...v1.54.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* trigger release after tag conflict ([70e5214](https://github.com/entropic-bond/entropic-bond/commit/70e521448ba43fe55d7e115a5ea9aacb80c0d41c))
+
 # [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
 
 
