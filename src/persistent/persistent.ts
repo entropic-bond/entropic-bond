@@ -394,11 +394,11 @@ export class Persistent {
 		return value
 	}
 
-	static collectionPath( propInstance: Persistent, prop: PersistentProperty ) {
+	static collectionPath( propInstance: Persistent, prop: PersistentProperty, params?: unknown ): string {
 		let storeInCollection: string
 
 		if ( typeof prop.storeInCollection === 'function' ) {
-			storeInCollection = prop.storeInCollection( propInstance, prop )
+			storeInCollection = prop.storeInCollection( propInstance, prop, params )
 		}
 		else {
 			storeInCollection = prop.storeInCollection ?? propInstance.className
@@ -513,7 +513,7 @@ export class Persistent {
 //Decorators
 ///////////////////////////////////
 
-type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
+type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty, params?: unknown ) => string
 type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
 export type OwnerCollectionResolver = ( ownerClassName: string, params: {} ) => string
 /**
