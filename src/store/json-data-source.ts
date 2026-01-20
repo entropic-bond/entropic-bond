@@ -130,7 +130,7 @@ export class JsonDataSource extends DataSource {
 			const docs = this.retrieveQueryDocs(testDocs, query.operations!)
 			const uniqueDocs = docs.filter((doc, index, self) => index === self.findIndex(d => d.id === doc.id))
 			if ( uniqueDocs.length > 0 ) listener( uniqueDocs.map( doc => ({ 
-				before: undefined,
+				before: change.before,
 				after: doc,
 				type: change.type,
 				params: change.params,

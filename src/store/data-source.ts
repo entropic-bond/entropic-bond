@@ -1,6 +1,6 @@
 import { Store } from './store'
 import { Persistent, PersistentObject, Collections, PersistentProperty, DocumentChange } from '../persistent/persistent'
-import { ClassPropNames, Collection } from '../types/utility-types'
+import { ClassPropNames } from '../types/utility-types'
 import { Unsubscriber } from '../observable/observable'
 
 export type DocumentObject = PersistentObject<Persistent>
@@ -89,35 +89,6 @@ interface PropWithOwner {
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
-	installCachedPropsUpdaters( config: CachedPropsUpdaterConfig = {} ): DocumentChangeListenerHandler[] {
-		DataSource.onUpdate = config.onUpdate
-		const referencesWithStoredProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
-		const collectionsToWatch: Collection<PropWithOwner[]> = {}
-
-		Object.entries( referencesWithStoredProps ).forEach(([ className, props ]) => {
-			props.forEach( propInfo => {
-				const collectionName = Persistent.collectionPath( Persistent.createInstance( className ), propInfo )
-				if ( !collectionsToWatch[ collectionName ] ) collectionsToWatch[ collectionName ] = []
-				collectionsToWatch[ collectionName ]!.push({
-					prop: propInfo,
-					collectionPropOwner: className
-				})
-			})
-		})
-
-		const handlers: DocumentChangeListenerHandler[] = []
-		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
-
-			const listener = this.subscribeToDocumentChangeListener( collectionNameToListen, e => DataSource.processDocumentChange( e, props ) )
-
-			if ( !listener ) {
-				if ( config.noThrowOnNonImplementedListener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
-			}
-			else handlers.push( listener )
-		})
-
-		return handlers
-	}
 
 	/**
 	 * Installs a document change listener
@@ -263,7 +234,7 @@ export abstract class DataSource {
 			const model = Store.getModel<Persistent>( propWithOwner.collectionPropOwner )
 			let query = model.find()
 
-			propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( persistentPropName => {
+			propWithOwner.prop.cachedProps?.cachedProps?.forEach( persistentPropName => {
 				const oldValue = event.before?.[ persistentPropName ]
 				const newValue = event.after?.[ persistentPropName ]
 				if ( oldValue !== newValue ) {
@@ -274,7 +245,7 @@ export abstract class DataSource {
 			const result = await query.get()
 			return Promise.all([
 				result.map( async document =>{
-					propWithOwner.prop.cachedPropsConfig?.cachedProps?.forEach( async persistentPropName => {
+					propWithOwner.prop.cachedProps?.cachedProps?.forEach( async persistentPropName => {
 						const oldValue = event.before?.[ persistentPropName ]
 						const newValue = event.after?.[ persistentPropName ]
 						if ( oldValue !== newValue ) {

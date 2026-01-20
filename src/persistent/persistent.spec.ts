@@ -6,6 +6,8 @@ interface InnerObject {
 const beforeSerialize = vi.fn()
 const afterDeserialize = vi.fn()
 
+const collectionResolver = (a,b,c)=> `ArbitraryCollectionName/${ a.className }`
+
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
 class PersistentClass extends Persistent {
@@ -19,7 +21,7 @@ class PersistentClass extends Persistent {
 	get persistentArray() { return this._persistentArray }
 	@persistent _persistentProp: number | undefined
 	@persistent @searchableArray _persistentArray: PersistentClass[] | undefined
-	@persistentPureReferenceWithCachedProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
+	@persistentPureReferenceWithCachedProps<Person>([ 'name', 'salary' ], 'Person' ) _personPureRef: Person | undefined
 	_nonPersistentProp: number | undefined
 }
 
@@ -126,7 +128,7 @@ class Person extends Persistent {
 	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass | undefined
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject | undefined
-	@persistentReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
+	@persistentReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ], 'PersistentClass', collectionResolver ) _referenceWithStoredValues: PersistentClass | undefined
 	private _doNotPersist: number | undefined
 }
 
@@ -415,7 +417,7 @@ describe( 'Persistent', ()=>{
 				{ name: 'id' }, 
 				{ name: 'persistentProp' }, 
 				{ name: 'persistentArray', searchableArray: true },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }
+				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ], storeInCollection: undefined, typeName: 'Person' }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
@@ -833,12 +835,11 @@ describe( 'Persistent', ()=>{
 		it( 'should retrieve cached props', ()=>{
 			const props = Persistent.getSystemRegisteredReferencesWithCachedProps()
 			expect( props ).toEqual({
-				LegacyClassName: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
-				PersistentClass: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
-				Person: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'persistentProp' ] } }) ],
-				WithAnnotations: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
-				WithAnnotations2: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
-				WithAnnotations3: [	expect.objectContaining({ cachedPropsConfig: { cachedProps: [ 'name', 'salary' ] } }) ],
+				PersistentClass: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				Person: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
+				WithAnnotations: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				WithAnnotations2: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				WithAnnotations3: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
 			})
 		})
 	})
