@@ -3,17 +3,12 @@ import { Collection } from '../types/utility-types'
 import { DocumentChangeListenerHandler, DocumentChangeListener } from './data-source'
 import { Store } from './store'
 
-interface PropWithOwner { 
-	prop: PersistentProperty
-	propOwnerClassName: string 
-}
-
 export class UpdateCachedProps {
 	constructor( private onAllPropsUpdated?: () => void ) {}
 
 	installCachedPropsUpdaters(): DocumentChangeListenerHandler[] {
 		const referencesWithCachedProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
-		const collectionsToWatch: Collection<PropWithOwner[]> = {}
+		const collectionsToWatch: Collection<PersistentProperty[]> = {}
 
 		Object.entries( referencesWithCachedProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
@@ -22,10 +17,7 @@ export class UpdateCachedProps {
 
 				typeNames.map( tName => Persistent.collectionPath( Persistent.createInstance( tName ), propInfo )).forEach( collection => {
 					if ( !collectionsToWatch[ collection ] ) collectionsToWatch[ collection ] = []
-					collectionsToWatch[ collection ]!.push({
-						prop: propInfo,
-						propOwnerClassName: className
-					})
+					collectionsToWatch[ collection ]!.push( propInfo)
 				})
 			})
 		})
@@ -56,24 +48,24 @@ export class UpdateCachedProps {
 		}
 	}
 
-	protected async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PropWithOwner[] ) {
+	protected async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PersistentProperty[] ) {
 		if ( !event.before ) return
 
-		await Promise.all( propsToUpdate.map( async propWithOwner => {
-			const ownerCollection = UpdateCachedProps.ownerCollectionPath( Persistent.createInstance( propWithOwner.propOwnerClassName ), propWithOwner.prop, event.params )
+		await Promise.all( propsToUpdate.map( async prop => {
+			const ownerCollection = UpdateCachedProps.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, event.params )
 			const ownerModel = Store.getModel<any>( ownerCollection )
 			let query = ownerModel.find()
 
 			let hasChanges = false
-			propWithOwner.prop.cachedProps?.forEach( persistentPropName => {
+			prop.cachedProps?.forEach( persistentPropName => {
 				const oldValue = event.before![ persistentPropName ]
 				const newValue = event.after![ persistentPropName ]
 				if ( oldValue !== newValue ) hasChanges = true
 			})
 
 			if ( hasChanges ) {
-				if ( propWithOwner.prop.searchableArray ) query = query.where( propWithOwner.prop.name, 'contains', event.before! )
-				else query = query.where( propWithOwner.prop.name, '==', event.before! )
+				if ( prop.searchableArray ) query = query.where( prop.name, 'contains', event.before! )
+				else query = query.where( prop.name, '==', event.before! )
 			}
 
 			const result = await query.get()
@@ -81,18 +73,18 @@ export class UpdateCachedProps {
 			return Promise.all([
 				result.map( async document =>{
 					let hasChanges = false
-					propWithOwner.prop.cachedProps?.forEach( persistentPropName => {
+					prop.cachedProps?.forEach( persistentPropName => {
 						const oldValue = event.before![ persistentPropName ]
 						const newValue = event.after![ persistentPropName ]
 						if ( oldValue !== newValue ) hasChanges = true
 					})
 					if ( hasChanges ) {
-						if ( propWithOwner.prop.searchableArray ) {
-							const index = ( document[ propWithOwner.prop.name ] as Persistent[] ).findIndex( obj => obj.id === event.before!.id )
-							document[ propWithOwner.prop.name ][ index ] = event.after
+						if ( prop.searchableArray ) {
+							const index = ( document[ prop.name ] as Persistent[] ).findIndex( obj => obj.id === event.before!.id )
+							document[ prop.name ][ index ] = event.after
 						}
 						else {
-							document[ `_${ propWithOwner.prop.name }` ] = event.after
+							document[ `_${ prop.name }` ] = event.after
 						}
 						// await document.markAsServerChange()
 						await ownerModel.save( document )
