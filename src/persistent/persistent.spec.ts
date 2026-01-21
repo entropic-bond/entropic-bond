@@ -205,8 +205,8 @@ describe( 'Persistent', ()=>{
 		// Therefore we need to access the decorator created private properties
 		// in order to test the behaviour of the decorator
 		expect( a[ '_persistentProperties' ] ).toEqual( expect.arrayContaining([
-			{ name: '_name', validator: expect.any( Function ) },
-			{ name: '_skills', validator: expect.any( Function ) }
+			{ name: '_name', validator: expect.any( Function ), ownerClassName: expect.any( Function ) },
+			{ name: '_skills', validator: expect.any( Function ), ownerClassName: expect.any( Function ) },
 		]))
 		expect( b[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ expect.objectContaining({
 			name: '_name'
@@ -215,7 +215,7 @@ describe( 'Persistent', ()=>{
 			name: '_persistentProp'
 		})]))
 		expect( b[ '_persistentProperties' ] ).toEqual( expect.arrayContaining( [ {
-			name: '_persistentProp'
+			name: '_persistentProp', ownerClassName: expect.any( Function )
 		} ] ) )
 	})
 
@@ -414,17 +414,21 @@ describe( 'Persistent', ()=>{
 
 		it( 'should return registered properties', ()=>{
 			expect( new PersistentClass().getPersistentProperties() ).toEqual([
-				{ name: 'id' }, 
-				{ name: 'persistentProp' }, 
-				{ name: 'persistentArray', searchableArray: true },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ], storeInCollection: undefined, typeName: 'Person' }
+				{ name: 'id', ownerClassName: expect.any( Function ), ownerCollection: undefined }, 
+				{ name: 'persistentProp', ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'persistentArray', searchableArray: true, ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ], storeInCollection: undefined, typeName: 'Person', ownerClassName: expect.any( Function ), ownerCollection: undefined }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
-				{ name: 'name', validator: expect.any( Function ) },
-				{ name: 'document', isReference: true },
-				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName' }
+				{ name: 'name', validator: expect.any( Function ), ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'document', isReference: true, ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName', ownerClassName: expect.any( Function ), ownerCollection: undefined }
 			]))
+		})
+
+		it( 'should report property owner class name', ()=>{
+			expect( Persistent.propInfo<Person>( 'Person', 'name' ).ownerClassName() ).toEqual( 'Person' )
 		})
 		
 	})
@@ -754,7 +758,7 @@ describe( 'Persistent', ()=>{
 		
 		it( 'should retrieve property info', ()=>{
 			expect( Persistent.propInfo<Person>( 'Person', 'name' ) ).toEqual({
-				name: 'name', validator: expect.any( Function )
+				name: 'name', validator: expect.any( Function ), ownerClassName: expect.any( Function )
 			})
 		})
 	})

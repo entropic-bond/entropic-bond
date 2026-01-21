@@ -522,13 +522,13 @@ export interface PersistentProperty {
 	isReference?: boolean
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
-	targetCollection?: string | CollectionPathCallback
-	// subCollection?: string
+	ownerCollection?: string | CollectionPathCallback
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
 	searchableArray?: boolean
 	validator?: ValidatorFunction<any, any>
-	typeName?: string | string[]
+	typeName?: string | string[],
+	ownerClassName: () => string
 	cachedProps?: ClassPropNamesOfType<Persistent,Primitive>[]
 }
 
@@ -600,7 +600,7 @@ export function persistentReferenceWithCachedProps<T extends Persistent>(
 			storeInCollection: storeInCollection,
 			typeName: propTypeName,
 			cachedProps: cachedProps as ClassPropNamesOfType<Persistent, Primitive>[],
-			targetCollection: targetCollection ?? target.className
+			ownerCollection: targetCollection ?? target.className
 		}
 		return persistentParser( persistentProps )( target, property )
 	}
@@ -656,7 +656,7 @@ export function persistentPureReferenceWithCachedProps<T extends Persistent>(
 			isReference: true, 
 			isPureReference: true, 
 			storeInCollection: storeInCollection,
-			targetCollection: targetCollection ?? target.className,
+			ownerCollection: targetCollection,
 			typeName: propTypeName,
 			cachedProps: cachedProps as ClassPropNamesOfType<Persistent, Primitive>[]
 		})( target, property )
@@ -682,6 +682,7 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 		else {
 			target[ '_persistentProperties' ]!.push({
 				name: property,
+				ownerClassName: () => target.className,
 				...options
 			})
 		}

@@ -108,11 +108,11 @@ export class UpdateCachedProps {
 	private static ownerCollectionPath( owner: Persistent, prop: PersistentProperty, params?: any ): string {
 		let ownerCollection: string
 
-		if ( typeof prop.targetCollection === 'function' ) {
-			ownerCollection = prop.targetCollection( owner, prop, params )
+		if ( typeof prop.ownerCollection === 'function' ) {
+			ownerCollection = prop.ownerCollection( owner, prop, params )
 		}
 		else {
-			ownerCollection = prop.targetCollection ?? owner.className
+			ownerCollection = prop.ownerCollection ?? owner.className
 		}
 		return ownerCollection
 	}
