@@ -1,3 +1,10 @@
+# [1.55.0](https://github.com/entropic-bond/entropic-bond/compare/v1.54.2...v1.55.0) (2026-01-21)
+
+
+### Features
+
+* cached props updater optimized ([2b0701b](https://github.com/entropic-bond/entropic-bond/commit/2b0701b84be001babd5fcf2e99fdf0fd93081080))
+
 ## [1.54.2](https://github.com/entropic-bond/entropic-bond/compare/v1.54.1...v1.54.2) (2026-01-13)
 
 
