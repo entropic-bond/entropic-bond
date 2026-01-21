@@ -1,3 +1,10 @@
+## [1.54.2](https://github.com/entropic-bond/entropic-bond/compare/v1.54.1...v1.54.2) (2026-01-13)
+
+
+### Bug Fixes
+
+* update collectionPath and CollectionPathCallback to accept optional params ([d93e18b](https://github.com/entropic-bond/entropic-bond/commit/d93e18bca342b248a4141f6286e2542f5892602c))
+
 ## [1.54.1](https://github.com/entropic-bond/entropic-bond/compare/v1.54.0...v1.54.1) (2026-01-12)
 
 
