@@ -1,7 +1,8 @@
-import { Store } from './store'
-import { Persistent, PersistentObject, Collections, PersistentProperty, DocumentChange } from '../persistent/persistent'
+import { Persistent, PersistentObject, Collections, DocumentChange } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
 import { Unsubscriber } from '../observable/observable'
+import { CachedPropsUpdater, CachedPropsUpdaterConfig } from './cached-props-updater'
+import { Store } from './store'
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -69,18 +70,6 @@ export interface DocumentChangeListenerHandler {
 
 export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[] ) => void
 
-type CachedPropsUpdateCallback = ( doc: Persistent, prop: PersistentProperty )=>void
-
-export interface CachedPropsUpdaterConfig {
-	onUpdate?: CachedPropsUpdateCallback
-	noThrowOnNonImplementedListener?: boolean
-}
-
-interface PropWithOwner { 
-	prop: PersistentProperty
-	collectionPropOwner: string 
-}
-
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -100,9 +89,24 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListener has not been implemented in the concrete data source
 	 */
-	protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener< DocumentObject > ): DocumentChangeListenerHandler | undefined {
-		return undefined
+	protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
+		const model = Store.getModel<Persistent>( collectionPathToListen )
+		const handler = model.onCollectionChange( model.find(), event => {
+			const snapshot = event[0]!
+			listener({
+				...snapshot,
+				before: snapshot.before?.toObject(),
+				after: snapshot.after?.toObject(),
+			})
+		})
+		
+		return {
+			uninstall: handler,
+			nativeHandler: handler,
+			collectionPath: collectionPathToListen
+		}
 	}
+
 
 	/**
 	 * Retrieves a document by id
@@ -173,6 +177,21 @@ export abstract class DataSource {
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
+	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): DocumentChangeListenerHandler[] {
+		this._cachedPropsUpdater = new CachedPropsUpdater( config )
+		this._cachedPropsUpdater.documentChangeListenerSubscriber = this.subscribeToDocumentChangeListener.bind( this )
+		return this._cachedPropsUpdater.installUpdaters()
+	}
+
+	uninstallCachedPropsUpdater(): void {
+		this._cachedPropsUpdater?.uninstallUpdaters()
+		this._cachedPropsUpdater = undefined
+	}
+
+	get cachedPropsUpdater(): CachedPropsUpdater | undefined {
+		return this._cachedPropsUpdater
+	}
+
 	/**
 	 * Utility method to convert a query object to a property path query object
 	 * 
@@ -214,50 +233,25 @@ export abstract class DataSource {
 	static isArrayOperator( operator: QueryOperator ): boolean {
 		return operator === 'containsAny' || operator === 'contains' //|| operator === 'in' || operator === '!in'  
 	}
+	
+	static toPersistentDocumentChange<T extends Persistent>( change: DocumentChange<PersistentObject<T>> ): DocumentChange<T> {
+		return {
+			...change,
+			before: change.before && Persistent.createInstance( change.before ),
+			after: change.after && Persistent.createInstance( change.after )
+		}
+	}
 
-	private static toPropertyPathValue( obj: {} ): [ string | undefined, unknown ] {
+	static toPropertyPathValue( obj: {} ): [ string | undefined, unknown ] {
 		if ( typeof obj === 'object' && !Array.isArray( obj ) ) {
 			const propName = Object.keys( obj )[0]!
 			const [ propPath, value ] = this.toPropertyPathValue( obj[ propName ] )
 			return [ `${ propName }${ propPath? '.'+propPath : '' }`, value ]
-		}
+		}	
 		else {
 			return [ undefined, obj ]
-		}
-	}
+		}	
+	}	
 
-	static async processDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PropWithOwner[] ) {
-		if ( !event.before ) return
-
-		return propsToUpdate.map( async propWithOwner => {
-
-			const model = Store.getModel<Persistent>( propWithOwner.collectionPropOwner )
-			let query = model.find()
-
-			propWithOwner.prop.cachedProps?.cachedProps?.forEach( persistentPropName => {
-				const oldValue = event.before?.[ persistentPropName ]
-				const newValue = event.after?.[ persistentPropName ]
-				if ( oldValue !== newValue ) {
-					query = query.orDeepProp( `${ propWithOwner.prop.name }.${ persistentPropName }` as any, '==', oldValue as any )
-				}
-			})
-
-			const result = await query.get()
-			return Promise.all([
-				result.map( async document =>{
-					propWithOwner.prop.cachedProps?.cachedProps?.forEach( async persistentPropName => {
-						const oldValue = event.before?.[ persistentPropName ]
-						const newValue = event.after?.[ persistentPropName ]
-						if ( oldValue !== newValue ) {
-							document[ `_${ propWithOwner.prop.name }` ][ `_${ persistentPropName }` ] = newValue
-							await model.save( document )
-							this.onUpdate?.( document, propWithOwner.prop )
-						}
-					})
-				})
-			])
-		})
-	}
-
-	private static onUpdate: CachedPropsUpdateCallback | undefined
+	private _cachedPropsUpdater: CachedPropsUpdater | undefined = undefined
 }

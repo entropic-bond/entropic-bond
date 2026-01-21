@@ -140,7 +140,7 @@ export class Model<T extends Persistent>{
 		return this._stream.onDocumentChange( 
 			this.collectionName, 
 			documentId, 
-			( change: DocumentChange<PersistentObject<T>> ) => listener( this.toPersistentChangeObject( change ) ) 
+			( change: DocumentChange<PersistentObject<T>> ) => listener( DataSource.toPersistentDocumentChange( change ) ) 
 		)
 	}
 
@@ -148,21 +148,10 @@ export class Model<T extends Persistent>{
 		return this._stream.onCollectionChange( 
 			this.preprocessQueryObject( query.getQueryObject() ), 
 			this.collectionName, 
-			changes => listener( changes.map(( change ) => ({
-				after: change.after && Persistent.createInstance( change.after ),
-				before: change.before && Persistent.createInstance( change.before ),
-				type: change.type,
-				params: change.params,
-			} as DocumentChange<T> )))
+			changes => listener( changes.map(
+				( change: DocumentChange<PersistentObject<T>> ) => DataSource.toPersistentDocumentChange( change ) 
+			))
 		)
-	}
-
-	private toPersistentChangeObject( change: DocumentChange<PersistentObject<T>> ): DocumentChange<T> {
-		return {
-			...change,
-			before: change.before && Persistent.createInstance( change.before ),
-			after: change.after && Persistent.createInstance( change.after )
-		}
 	}
 
 	// /**

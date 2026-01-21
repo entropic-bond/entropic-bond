@@ -3,7 +3,7 @@ import { Store } from './store'
 import { Model } from './model'
 import { JsonDataSource } from './json-data-source'
 import { DocumentChangeListenerHandler } from './data-source'
-import { UpdateCachedProps } from './cached-props'
+import { CachedPropsUpdater } from './cached-props-updater'
 
 @registerPersistentClass( 'Root' )
 class Root extends Persistent {
@@ -88,21 +88,21 @@ describe( 'Persistent with cached props reference', ()=>{
 	let parent: Parent
 	let child: Child
 	let handlers: DocumentChangeListenerHandler[]
-	let updateCachedProps: UpdateCachedProps
+	let updateCachedProps: CachedPropsUpdater
 	let allPropsUpdatedCalled: Promise<boolean>
 
 	beforeEach( async ()=>{
 		datasource = new JsonDataSource({})
 		Store.useDataSource( datasource )
-		updateCachedProps = new UpdateCachedProps()
+		handlers = datasource.installCachedPropsUpdater()
+		updateCachedProps = datasource.cachedPropsUpdater!
 		allPropsUpdatedCalled = new Promise<boolean>( resolve => {
-				updateCachedProps.onAllPropsUpdated( () => resolve( true ) )
+				updateCachedProps.onAllPropsUpdated = () => resolve( true )
 		})
-		handlers = updateCachedProps.installUpdaters()
 	})
 
 	afterEach( ()=>{
-		updateCachedProps.unistallUpdaters()
+		datasource.uninstallCachedPropsUpdater()
 	})
 
 	it( 'should register handler for cached props', ()=>{
@@ -228,11 +228,11 @@ describe( 'Persistent with cached props reference', ()=>{
 		})
 
 		it( 'should notify before and after update', async ()=>{
-			updateCachedProps.beforeUpdateDocument(( document: Parent, prop: PersistentProperty ) => {
+			updateCachedProps.beforeUpdateDocument =( document: Parent, prop: PersistentProperty ) => {
 				document.markAsSeverChange = true
-			})
+			}
 			const spy = vi.fn()
-			updateCachedProps.afterUpdateDocument( spy)
+			updateCachedProps.afterUpdateDocument = spy
 
 			child.name = 'a2-updated'
 			await modelChild.save( child )

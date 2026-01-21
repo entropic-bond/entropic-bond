@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentChangeListenerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -197,15 +197,15 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override subscribeToDocumentChangeListener( collectionNameToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
-		delete this._serverCollectionListeners[ collectionNameToListen ]
-		this._serverCollectionListeners[ collectionNameToListen ] = listener
-		return {
-			uninstall: ()=> delete this._serverCollectionListeners[ collectionNameToListen ],
-			nativeHandler: listener,
-			collectionPath: collectionNameToListen,
-		}
-	}
+	// protected override subscribeToDocumentChangeListener( collectionNameToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
+	// 	delete this._serverCollectionListeners[ collectionNameToListen ]
+	// 	this._serverCollectionListeners[ collectionNameToListen ] = listener
+	// 	return {
+	// 		uninstall: ()=> delete this._serverCollectionListeners[ collectionNameToListen ],
+	// 		nativeHandler: listener,
+	// 		collectionPath: collectionNameToListen,
+	// 	}
+	// }
 
 	private notifyChange( collectionPath: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {
 		const event = {

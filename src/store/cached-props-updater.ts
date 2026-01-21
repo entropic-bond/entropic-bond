@@ -1,9 +1,26 @@
 import { PersistentProperty, Persistent, DocumentChange } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DocumentChangeListenerHandler, DocumentChangeListener } from './data-source'
+import { DocumentChangeListenerHandler, DocumentChangeListener, DocumentObject, DataSource } from './data-source'
 import { Store } from './store'
 
-export class UpdateCachedProps {
+type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
+type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> DocumentChangeListenerHandler | undefined
+
+export interface CachedPropsUpdaterConfig {
+	beforeUpdateDocument?: CachedPropsUpdaterCallback
+	afterUpdateDocument?: CachedPropsUpdaterCallback
+	onAllPropsUpdated?: () => void
+}
+
+export class CachedPropsUpdater {
+	constructor( config?: CachedPropsUpdaterConfig ) {
+		if ( config ) {
+			this.beforeUpdate = config.beforeUpdateDocument
+			this.afterUpdate = config.afterUpdateDocument
+			this.onAllPropsUpdatedCallback = config.onAllPropsUpdated
+		}
+	}	
+
 	installUpdaters(): DocumentChangeListenerHandler[] {
 		const referencesWithCachedProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 		const collectionsToWatch: Collection<PersistentProperty[]> = {}
@@ -23,7 +40,10 @@ export class UpdateCachedProps {
 		this.handlers = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListener( collectionNameToListen, e => this.onDocumentChange( e, props ) )
+			const listener = this.subscribeToDocumentChangeListener( 
+				collectionNameToListen, 
+				e => this.onDocumentChange( e, props ) 
+			)
 
 			if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
 			else this.handlers.push( listener )
@@ -32,55 +52,60 @@ export class UpdateCachedProps {
 		return this.handlers
 	}
 
-	unistallUpdaters() {
+	uninstallUpdaters() {
 		this.handlers.forEach( handler => handler.uninstall() )
 		this.handlers = []
 	}
 
-	onAllPropsUpdated( callback: () => void ) {
+	set onAllPropsUpdated( callback: () => void ) {
 		this.onAllPropsUpdatedCallback = callback
 	}
 
-	beforeUpdateDocument( callback: ( document: Persistent, prop: PersistentProperty ) => void ) {
+	set beforeUpdateDocument( callback: CachedPropsUpdaterCallback ) {
 		this.beforeUpdate = callback
 	}
 
-	afterUpdateDocument( callback: ( document: Persistent, prop: PersistentProperty ) => void ) {
+	set afterUpdateDocument( callback: ( document: Persistent, prop: PersistentProperty ) => void ) {
 		this.afterUpdate = callback
 	}
 
-	protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<Persistent> ): DocumentChangeListenerHandler | undefined {
-		const model = Store.getModel<Persistent>( collectionPathToListen )
-		const handler = model.onCollectionChange( model.find(), event => {
-			const snapshot = event[0]!
-			listener( snapshot )
-		})
-		
-		return {
-			uninstall: handler,
-			nativeHandler: handler,
-			collectionPath: collectionPathToListen
-		}
+	set documentChangeListenerSubscriber( subscriber: DocumentChangeListenerSubscriber ) {
+		this.subscribeToDocumentChangeListener = subscriber
 	}
 
-	protected async onDocumentChange( event: DocumentChange<Persistent>, propsToUpdate: PersistentProperty[] ) {
-		if ( !event.before ) return
+	// protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<Persistent> ): DocumentChangeListenerHandler | undefined {
+	// 	const model = Store.getModel<Persistent>( collectionPathToListen )
+	// 	const handler = model.onCollectionChange( model.find(), event => {
+	// 		const snapshot = event[0]!
+	// 		listener( snapshot )
+	// 	})
+		
+	// 	return {
+	// 		uninstall: handler,
+	// 		nativeHandler: handler,
+	// 		collectionPath: collectionPathToListen
+	// 	}
+	// }
+
+	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
+		const change = DataSource.toPersistentDocumentChange( event )
+		if ( !change.before ) return
 
 		await Promise.all( propsToUpdate.map( async prop => {
-			const ownerCollection = UpdateCachedProps.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, event.params )
+			const ownerCollection = CachedPropsUpdater.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, change.params )
 			const ownerModel = Store.getModel<any>( ownerCollection )
 			let query = ownerModel.find()
 
 			let hasChanges = false
 			prop.cachedProps?.forEach( persistentPropName => {
-				const oldValue = event.before![ persistentPropName ]
-				const newValue = event.after![ persistentPropName ]
+				const oldValue = change.before![ persistentPropName ]
+				const newValue = change.after![ persistentPropName ]
 				if ( oldValue !== newValue ) hasChanges = true
 			})
 
 			if ( hasChanges ) {
-				if ( prop.searchableArray ) query = query.where( prop.name, 'contains', event.before! )
-				else query = query.where( prop.name, '==', event.before! )
+				if ( prop.searchableArray ) query = query.where( prop.name, 'contains', change.before! )
+				else query = query.where( prop.name, '==', change.before! )
 			}
 
 			const result = await query.get()
@@ -89,17 +114,17 @@ export class UpdateCachedProps {
 				result.map( async document =>{
 					let hasChanges = false
 					prop.cachedProps?.forEach( persistentPropName => {
-						const oldValue = event.before![ persistentPropName ]
-						const newValue = event.after![ persistentPropName ]
+						const oldValue = change.before![ persistentPropName ]
+						const newValue = change.after![ persistentPropName ]
 						if ( oldValue !== newValue ) hasChanges = true
 					})
 					if ( hasChanges ) {
 						if ( prop.searchableArray ) {
-							const index = ( document[ prop.name ] as Persistent[] ).findIndex( obj => obj.id === event.before!.id )
-							document[ prop.name ][ index ] = event.after
+							const index = ( document[ prop.name ] as Persistent[] ).findIndex( obj => obj.id === change.before!.id )
+							document[ prop.name ][ index ] = change.after
 						}
 						else {
-							document[ `_${ prop.name }` ] = event.after
+							document[ `_${ prop.name }` ] = change.after
 						}
 						this.beforeUpdate?.( document, prop )
 						// await document.markAsServerChange()
@@ -130,4 +155,5 @@ export class UpdateCachedProps {
 	private afterUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
 	private onAllPropsUpdatedCallback: (() => void ) | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
+	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
 }
