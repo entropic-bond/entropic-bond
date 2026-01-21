@@ -55,16 +55,26 @@ class Parent extends Persistent {
 	get propInSubcollectionForRootCollection(): Child | undefined {
 		return this._propInSubcollectionForRootCollection
 	}
+
+	set markAsSeverChange( value: boolean ) {
+		this._markAsSeverChange = value
+	}
+	
+	get markAsSeverChange(): boolean {
+		return this._markAsSeverChange
+	}
+	
 	
 	static propCollectionPath( target: Persistent, prop: PersistentProperty, params?: unknown  ): string {
 		return `Root/a/${ target.className }`
 	}
-
+	
 	static thisCollectionPath( target: Persistent, prop: PersistentProperty, params?: any ): string {
 		// return `Root/a/Parent` // in general, we can use the same function for parent and prop collection path
 		return Parent.propCollectionPath( target, prop, params )
 	}
 	
+	@persistent private _markAsSeverChange: boolean = false
 	@persistentPureReferenceWithCachedProps<Child>(['name'], 'Child') private _propInRootForRootCollection: Child | undefined
 	@persistentPureReferenceWithCachedProps<Child>(['name'], 'Child', Parent.propCollectionPath, Parent.thisCollectionPath ) private _propInSubcollectionForSubcollection: Child | undefined
 	@persistentPureReferenceWithCachedProps<Child>(['name'], 'Child', undefined, Parent.thisCollectionPath ) private _propInRootForSubcollection: Child | undefined
@@ -84,16 +94,15 @@ describe( 'Persistent with cached props reference', ()=>{
 	beforeEach( async ()=>{
 		datasource = new JsonDataSource({})
 		Store.useDataSource( datasource )
+		updateCachedProps = new UpdateCachedProps()
 		allPropsUpdatedCalled = new Promise<boolean>( resolve => {
-			updateCachedProps = new UpdateCachedProps( () => resolve( true ) )
+				updateCachedProps.onAllPropsUpdated( () => resolve( true ) )
 		})
-		// updateCachedProps = new UpdateCachedProps( )
-		handlers = updateCachedProps.installCachedPropsUpdaters()
+		handlers = updateCachedProps.installUpdaters()
 	})
 
 	afterEach( ()=>{
-		// updateCachedProps.uninstallAllHandlers()
-
+		updateCachedProps.unistallUpdaters()
 	})
 
 	it( 'should register handler for cached props', ()=>{
@@ -120,7 +129,7 @@ describe( 'Persistent with cached props reference', ()=>{
 
 		it( 'should update cached props on referenced object change', async ()=>{
 			child.name = 'a2-updated'
-			await modelChild.save( child )
+			modelChild.save( child )
 
 			await allPropsUpdatedCalled
 
@@ -203,4 +212,39 @@ describe( 'Persistent with cached props reference', ()=>{
 			expect( updatedParent.propInSubcollectionForSubcollection?.name ).toBe( 'a2-updated' )
 		})
 	})
+
+	describe( 'Notifications collection with root prop', ()=>{
+
+		beforeEach( async ()=>{
+			datasource.setDataStore({
+				Parent: { a: { id: 'a', __className: 'Parent', name: 'a', propInRootForRootCollection: { id: 'a2', __className: 'Child', name: 'a2', __documentReference: { storedInCollection: 'Child' } } }, b: { id: 'b', __className: 'Parent', name: 'b' }, c: { id: 'c', __className: 'Parent', name: 'c' } } as any,
+				Child: { a2: { id: 'a2', __className: 'Child', name: 'a2' }, b2: { id: 'b2', __className: 'Child', name: 'b2' }, c2: { id: 'c2', __className: 'Child', name: 'c2' } } as any
+			})
+			modelParent = Store.getModel<Parent>( 'Parent' )
+			modelChild = Store.getModel<Child>( 'Child' )
+
+			parent = ( await modelParent.findById( 'a' ))!
+			child = ( await modelChild.findById( 'a2' ))!
+		})
+
+		it( 'should notify before and after update', async ()=>{
+			updateCachedProps.beforeUpdateDocument(( document: Parent, prop: PersistentProperty ) => {
+				document.markAsSeverChange = true
+			})
+			const spy = vi.fn()
+			updateCachedProps.afterUpdateDocument( spy)
+
+			child.name = 'a2-updated'
+			await modelChild.save( child )
+
+			await allPropsUpdatedCalled
+
+			const updatedParent = ( await modelParent.findById( 'a' ))!
+			expect( updatedParent.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
+			expect( updatedParent.markAsSeverChange ).toBe( true )
+			expect( spy ).toHaveBeenCalledTimes( 1 )
+			expect( spy ).toHaveBeenCalledWith( expect.objectContaining({ id: 'a' }), expect.objectContaining({ name: 'propInRootForRootCollection' }) )
+		})
+	})
+
 })

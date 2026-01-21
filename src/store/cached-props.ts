@@ -4,9 +4,7 @@ import { DocumentChangeListenerHandler, DocumentChangeListener } from './data-so
 import { Store } from './store'
 
 export class UpdateCachedProps {
-	constructor( private onAllPropsUpdated?: () => void ) {}
-
-	installCachedPropsUpdaters(): DocumentChangeListenerHandler[] {
+	installUpdaters(): DocumentChangeListenerHandler[] {
 		const referencesWithCachedProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 		const collectionsToWatch: Collection<PersistentProperty[]> = {}
 
@@ -22,16 +20,33 @@ export class UpdateCachedProps {
 			})
 		})
 
-		const handlers: DocumentChangeListenerHandler[] = []
+		this.handlers = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
 			const listener = this.subscribeToDocumentChangeListener( collectionNameToListen, e => this.onDocumentChange( e, props ) )
 
 			if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
-			else handlers.push( listener )
+			else this.handlers.push( listener )
 		})
 
-		return handlers
+		return this.handlers
+	}
+
+	unistallUpdaters() {
+		this.handlers.forEach( handler => handler.uninstall() )
+		this.handlers = []
+	}
+
+	onAllPropsUpdated( callback: () => void ) {
+		this.onAllPropsUpdatedCallback = callback
+	}
+
+	beforeUpdateDocument( callback: ( document: Persistent, prop: PersistentProperty ) => void ) {
+		this.beforeUpdate = callback
+	}
+
+	afterUpdateDocument( callback: ( document: Persistent, prop: PersistentProperty ) => void ) {
+		this.afterUpdate = callback
 	}
 
 	protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<Persistent> ): DocumentChangeListenerHandler | undefined {
@@ -86,15 +101,17 @@ export class UpdateCachedProps {
 						else {
 							document[ `_${ prop.name }` ] = event.after
 						}
+						this.beforeUpdate?.( document, prop )
 						// await document.markAsServerChange()
 						await ownerModel.save( document )
+						this.afterUpdate?.( document, prop )
 					}
 					else await Promise.resolve()
 				})
 			])
 		}))
 
-		if ( this.onAllPropsUpdated ) this.onAllPropsUpdated()
+		this.onAllPropsUpdatedCallback?.()
 	}
 
 	private static ownerCollectionPath( owner: Persistent, prop: PersistentProperty, params?: any ): string {
@@ -108,4 +125,9 @@ export class UpdateCachedProps {
 		}
 		return ownerCollection
 	}
+
+	private beforeUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
+	private afterUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
+	private onAllPropsUpdatedCallback: (() => void ) | undefined
+	private handlers: DocumentChangeListenerHandler[] = []
 }
