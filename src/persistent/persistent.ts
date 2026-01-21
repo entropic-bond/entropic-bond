@@ -116,7 +116,7 @@ export class Persistent {
 
 	/**
 	 * Returns the names of all registered classes that extend a given class
-	 * @param derivedFrom the class to be extended
+	 * @param derivedFrom the parent class to be queried
 	 * @returns the names of all registered classes that extend the given class
 	 * @see registerFactory
 	 * @see classFactory
@@ -487,6 +487,33 @@ export class Persistent {
 	}
 
 	/**
+	 * Return the type of a persistent property.
+	 * Several strategies are used to determine the type:
+	 * - If the typeName is defined in the property info a decorator, it is used
+	 * - If the property value is an array, the type of the first element is used
+	 * - If the property value is a Persistent instance, its class name is used
+	 * - Otherwise, the typeof operator is used to determine the type
+	 * @param propInfo the persistent property info to retrieve the type
+	 * @returns the type of the property or the type of the first element if the property is an array or undefined if cannot be determined
+	 */
+	static propType( propInfo: PersistentProperty ): string {
+		if ( propInfo.typeName ) return Array.isArray( propInfo.typeName ) ? 'undefined[]' : propInfo.typeName ?? 'undefined'
+
+		const ownerInstance = Persistent.createInstance( propInfo.ownerClassName() )
+		const propValue = ownerInstance[ propInfo.name ]
+		if ( Array.isArray( propValue ) ) {
+			if ( propValue.length === 0 ) return 'undefined[]'
+			const firstElem = propValue[0]
+			if ( firstElem instanceof Persistent ) return firstElem.className + '[]'
+			else return typeof firstElem + '[]'
+		}
+		else {
+			if ( propValue instanceof Persistent ) return propValue.className
+			else return typeof propValue
+		}
+	}
+
+	/**
 	 * Retrieves a collection of references with the properties that are stored in the reference object
 	 * @returns the references collection
 	 */
@@ -742,5 +769,24 @@ export function required( target: Persistent, property: string ) {
 export function requiredWithValidator<T extends Persistent, P extends ClassPropNames<T>>( validator: ValidatorFunction<T, P> = ( value: T[P] ) => value !== undefined && value !== null ) {
 	return function( target: T, property: UnderscoredProp<P> ) {
 		return persistentParser({ validator: validator })( target, property )
+	}
+}
+
+/**
+ * Decorator to define the type name or type names of a persistent property.
+ * This is useful when the type cannot be inferred automatically by the persistence engine which typically
+ * happens when the property is initialized as null or undefined.
+ * @param typeName the type name or the acceptable type names (in case of inheritance) of the property
+ */
+export function typeName( typeNames: string | string[] | PersistentConstructor ) {
+	let typeName: string | string[]
+	if ( typeof typeNames === 'function' ) {
+		typeName = new typeNames().className
+	}
+	else {
+		typeName = typeNames
+	}
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ typeName })( target, property )
 	}
 }

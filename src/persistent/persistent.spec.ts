@@ -1,4 +1,4 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithCachedProps, persistentReferenceWithCachedProps, registerLegacyClassName, searchableArray, required, requiredWithValidator } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithCachedProps, persistentReferenceWithCachedProps, registerLegacyClassName, searchableArray, required, requiredWithValidator, typeName } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
@@ -112,6 +112,14 @@ class Person extends Persistent {
 		return this._persistentObject
 	}
 
+	set referenceWithStoredValues( value: PersistentClass | undefined ) {
+		this._referenceWithStoredValues = value
+	}
+	
+	get referenceWithStoredValues(): PersistentClass | undefined {
+		return this._referenceWithStoredValues
+	}
+	
 	@required @persistent private _name?: string
 	@persistent private _salary?: number
 	@requiredWithValidator(
@@ -167,6 +175,64 @@ abstract class AbstractClass extends Persistent {
 @registerPersistentClass( 'ConcreteClass' )
 class ConcreteClass extends AbstractClass {
 	pp(){}
+}
+
+@registerPersistentClass( 'InitializedMemberClass' )
+class InitializedMemberClass extends Persistent {
+	set stringMember( value: string ) {
+		this._stringMember = value
+	}
+	
+	get stringMember(): string {
+		return this._stringMember
+	}
+
+	set numberMember( value: number ) {
+		this._numberMember = value
+	}
+	
+	get numberMember(): number {
+		return this._numberMember
+	}
+
+	set persistentMember( value: Person ) {
+		this._persistentMember = value
+	}
+	
+	get persistentMember(): Person {
+		return this._persistentMember
+	}
+
+	set arrayBooleanMember( value: boolean[] ) {
+		this._arrayBooleanMember = value
+	}
+	
+	get arrayBooleanMember(): boolean[] {
+		return this._arrayBooleanMember
+	}
+
+	set arrayPersistentMember( value: Person[] ) {
+		this._arrayPersistentMember = value
+	}
+	
+	get arrayPersistentMember(): Person[] {
+		return this._arrayPersistentMember
+	}
+
+	set decoratedMember( value: PersistentClass | undefined ) {
+		this._decoratedMember = value
+	}
+	
+	get decoratedMember(): PersistentClass | undefined {
+		return this._decoratedMember
+	}
+	
+	@persistent private _arrayPersistentMember: Person[] = [ new Person() ]
+	@persistent private _arrayBooleanMember: boolean[] = [false, true]
+	@persistent private _persistentMember: Person = new Person()
+	@persistent private _numberMember: number = 0 
+	@persistent private _stringMember: string = ''
+	@persistent @typeName( PersistentClass ) private _decoratedMember: PersistentClass | undefined
 }
 
 describe( 'Persistent', ()=>{
@@ -429,6 +495,18 @@ describe( 'Persistent', ()=>{
 
 		it( 'should report property owner class name', ()=>{
 			expect( Persistent.propInfo<Person>( 'Person', 'name' ).ownerClassName() ).toEqual( 'Person' )
+		})
+
+		it( 'should report property type', ()=>{
+			expect( Persistent.propType( Persistent.propInfo<Person>( 'Person', 'name' ) ) ).toEqual( 'undefined' )
+			expect( Persistent.propType( Persistent.propInfo<Person>( 'Person', 'document' ) ) ).toEqual( 'undefined' )
+			expect( Persistent.propType( Persistent.propInfo<Person>( 'Person', 'referenceWithStoredValues' ) ) ).toEqual( 'PersistentClass' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'stringMember' ) ) ).toEqual( 'string' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'numberMember' ) ) ).toEqual( 'number' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'persistentMember' ) ) ).toEqual( 'Person' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'arrayBooleanMember' ) ) ).toEqual( 'boolean[]' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'arrayPersistentMember' ) ) ).toEqual( 'Person[]' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'decoratedMember' ) ) ).toEqual( 'PersistentClass' )
 		})
 		
 	})
@@ -737,7 +815,7 @@ describe( 'Persistent', ()=>{
 	describe( 'Persistent Class collection retrieval', ()=>{
 
 		it( 'should retrieve all registered classes by class name', ()=>{
-			expect( Persistent.registeredClasses() ).toHaveLength( 6 )
+			expect( Persistent.registeredClasses() ).toHaveLength( 7 )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
 			expect( Persistent.registeredClasses() ).not.toContain( 'LegacyClassName' )
