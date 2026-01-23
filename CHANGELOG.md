@@ -1,3 +1,10 @@
+## [1.55.1](https://github.com/entropic-bond/entropic-bond/compare/v1.55.0...v1.55.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* manage cached props with template collections ([e26a495](https://github.com/entropic-bond/entropic-bond/commit/e26a495d23b0cfe9cfb802822b727370a4c87a64))
+
 # [1.55.0](https://github.com/entropic-bond/entropic-bond/compare/v1.54.2...v1.55.0) (2026-01-21)
 
 
