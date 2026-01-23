@@ -1,4 +1,4 @@
-import { DocumentObject, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from '..'
+import { DataSource, DocumentObject, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from '..'
 import { TestUser } from './mocks/test-user'
 
 @registerPersistentClass( 'TestCollection' )
@@ -276,6 +276,29 @@ describe( 'Json DataSource', ()=>{
 
 			uninstall1()
 			uninstall2()
+		})
+	})
+
+	describe( 'Helper methods', ()=>{
+		describe( 'isStringMatchingTemplate', ()=>{
+			it( 'should match simple templates', ()=>{
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/2/Audit' )).toBe( true )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/faad-dfaa-00f0/Audit' )).toBe( true )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/2/Au' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Cus/2/Audit' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/Audit' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Audit' )).toBe( false )
+			})
+		})
+
+		describe( 'extractTemplateParams', ()=>{
+			it( 'should extract params from simple templates', ()=>{
+				expect( DataSource.extractTemplateParams( 'Customer/2/Audit', 'Customer/{customerId}/Audit' )).toEqual( { customerId: '2' } )
+				expect( DataSource.extractTemplateParams( 'Customer/faad-dfaa-00f0/Audit', 'Customer/{customerId}/Audit' )).toEqual( { customerId: 'faad-dfaa-00f0' } )
+				expect( DataSource.extractTemplateParams( 'Customer/2/Order/5', 'Customer/{customerId}/Order/{orderId}' )).toEqual( { customerId: '2', orderId: '5' } )
+				expect( DataSource.extractTemplateParams( 'Customer/2/Order/5/Item/9', 'Customer/{customerId}/Order/{orderId}/Item/{itemId}' )).toEqual( { customerId: '2', orderId: '5', itemId: '9' } )
+			})
 		})
 	})
 })

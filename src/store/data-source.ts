@@ -2,7 +2,6 @@ import { Persistent, PersistentObject, Collections, DocumentChange } from '../pe
 import { ClassPropNames } from '../types/utility-types'
 import { Unsubscriber } from '../observable/observable'
 import { CachedPropsUpdater, CachedPropsUpdaterConfig } from './cached-props-updater'
-import { Store } from './store'
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -88,25 +87,10 @@ export abstract class DataSource {
 	 * @param listener the listener to be called when a document is changed
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListener has not been implemented in the concrete data source
-	 */
-	protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
-		const model = Store.getModel<Persistent>( collectionPathToListen )
-		const handler = model.onCollectionChange( model.find(), event => {
-			const snapshot = event[0]!
-			listener({
-				...snapshot,
-				before: snapshot.before?.toObject(),
-				after: snapshot.after?.toObject(),
-			})
-		})
-		
-		return {
-			uninstall: handler,
-			nativeHandler: handler,
-			collectionPath: collectionPathToListen
-		}
-	}
+	*/
+	protected abstract subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined
 
+	protected abstract collectionsMatchingTemplate( template: string ): string[]
 
 	/**
 	 * Retrieves a document by id
@@ -180,6 +164,7 @@ export abstract class DataSource {
 	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): DocumentChangeListenerHandler[] {
 		this._cachedPropsUpdater = new CachedPropsUpdater( config )
 		this._cachedPropsUpdater.documentChangeListenerSubscriber = this.subscribeToDocumentChangeListener.bind( this )
+		this._cachedPropsUpdater.collectionsMatchingTemplateFunction = this.collectionsMatchingTemplate.bind( this )
 		return this._cachedPropsUpdater.installUpdaters()
 	}
 
@@ -251,7 +236,36 @@ export abstract class DataSource {
 		else {
 			return [ undefined, obj ]
 		}	
-	}	
+	}
+	
+	static isStringMatchingTemplate( template: string, value: string ): boolean {
+		const escaped = template.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' )
+		const regexStr = escaped.replace( /\\\$\\\{[^}]+\\\}/g, '([^/]+)' )
+								.replace( /\\\{[^}]+\\\}/g, '([^/]+)' )
+		const regex = new RegExp( '^' + regexStr + '$' )
+		return regex.test( value )
+	}
+
+	static extractTemplateParams( source: string, template: string ): Record<string, string> {
+		const paramNames: string[] = []
+		const escaped = template.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' )
+		const regexStr = escaped.replace( /\\\{([^}]+)\\\}/g, ( match, paramName ) => {
+			paramNames.push( paramName )
+			return '([^/]+)'
+		})
+
+		const regex = new RegExp( '^' + regexStr + '$' )
+		const match = source.match( regex )
+		const params: Record<string, string> = {}
+
+		if ( match ) {
+			paramNames.forEach( ( name, index ) => {
+				params[ name ] = match[ index + 1 ]!
+			})
+		}
+
+		return params
+	}
 
 	private _cachedPropsUpdater: CachedPropsUpdater | undefined = undefined
 }

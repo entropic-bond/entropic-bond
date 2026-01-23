@@ -8,6 +8,7 @@ export interface DocumentChange<T extends Persistent | PersistentObject<Persiste
 	before?: T
 	after?: T
 	params?: { [key: string]: any }
+	collectionPath?: string
 	type: DocumentChangeType
 }
 

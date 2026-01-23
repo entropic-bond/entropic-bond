@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentChangeListenerHandler, DocumentObject, QueryObject, QueryOperation } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -132,6 +132,7 @@ export class JsonDataSource extends DataSource {
 			if ( uniqueDocs.length > 0 ) listener( uniqueDocs.map( doc => ({ 
 				before: change.before,
 				after: doc,
+			
 				type: change.type,
 				params: change.params,
 			} as DocumentChange<DocumentObject> )) )
@@ -197,18 +198,41 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	// protected override subscribeToDocumentChangeListener( collectionNameToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
-	// 	delete this._serverCollectionListeners[ collectionNameToListen ]
-	// 	this._serverCollectionListeners[ collectionNameToListen ] = listener
-	// 	return {
-	// 		uninstall: ()=> delete this._serverCollectionListeners[ collectionNameToListen ],
-	// 		nativeHandler: listener,
-	// 		collectionPath: collectionNameToListen,
-	// 	}
-	// }
+	protected override subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
+		const matchingCollections = this.collectionsMatchingTemplate( collectionPathToListen )
+		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+
+		matchingCollections.forEach( collectionName => {
+			let listeners = this._serverCollectionListeners[ collectionName ]
+			if ( !listeners ) listeners = this._serverCollectionListeners[ collectionName ] = {}
+
+
+			listeners[ uid ] = ( event: DocumentChange<DocumentObject> ) => {
+				const params = DataSource.extractTemplateParams( collectionName, collectionPathToListen )
+				listener({
+					...event,
+					before: event.before,
+					after: event.after,
+					collectionPath: collectionName,
+					params: {
+						...event.params,
+						...params
+					}
+				})
+			}
+		})
+		
+		return {
+			uninstall: ()=> {
+				matchingCollections.forEach( collectionName => delete this._serverCollectionListeners[ collectionName ]?.[ uid ])
+			},
+			nativeHandler: undefined,
+			collectionPath: collectionPathToListen
+		}
+	}
 
 	private notifyChange( collectionPath: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {
-		const event = {
+		const event: DocumentChange<DocumentObject> = {
 			before: oldValue,
 			after: document,
 			collectionPath,
@@ -216,7 +240,7 @@ export class JsonDataSource extends DataSource {
 			type: (oldValue? 'update' : 'create') as DocumentChangeType
 		}
 
-		this._serverCollectionListeners[ collectionPath ]?.( event )
+		Object.values( this._serverCollectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 		Object.values( this._collectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 	}
@@ -314,6 +338,10 @@ export class JsonDataSource extends DataSource {
 		return promise
 	}
 
+	collectionsMatchingTemplate( template: string ): string[] {
+		return Object.keys( this._jsonRawData ).filter( collectionName => DataSource.isStringMatchingTemplate( template, collectionName ) )
+	}
+
 	private _jsonRawData: JsonRawData = {}
 	private _lastMatchingDocs: DocumentObject[] = []
 	private _lastLimit: number = 0
@@ -323,5 +351,5 @@ export class JsonDataSource extends DataSource {
 	private _simulateError: ErrorOnOperation | undefined
 	private _documentListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 	private _collectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
-	private _serverCollectionListeners: Collection<DocumentChangeListener<DocumentObject>> = {}
+	private _serverCollectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 }

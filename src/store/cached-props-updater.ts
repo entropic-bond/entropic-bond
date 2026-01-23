@@ -73,68 +73,61 @@ export class CachedPropsUpdater {
 		this.subscribeToDocumentChangeListener = subscriber
 	}
 
-	// protected subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<Persistent> ): DocumentChangeListenerHandler | undefined {
-	// 	const model = Store.getModel<Persistent>( collectionPathToListen )
-	// 	const handler = model.onCollectionChange( model.find(), event => {
-	// 		const snapshot = event[0]!
-	// 		listener( snapshot )
-	// 	})
-		
-	// 	return {
-	// 		uninstall: handler,
-	// 		nativeHandler: handler,
-	// 		collectionPath: collectionPathToListen
-	// 	}
-	// }
-
+	set collectionsMatchingTemplateFunction( func: ( template: string ) => string[] ) {
+		this.collectionsMatchingTemplate = func
+	}
 	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
 		const change = DataSource.toPersistentDocumentChange( event )
 		if ( !change.before ) return
 
 		await Promise.all( propsToUpdate.map( async prop => {
-			const ownerCollection = CachedPropsUpdater.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, change.params )
-			const ownerModel = Store.getModel<any>( ownerCollection )
-			let query = ownerModel.find()
+			const ownerCollectionTemplate = CachedPropsUpdater.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, change.params )
+			const matchingCollections = this.collectionsMatchingTemplate( ownerCollectionTemplate )
 
-			let hasChanges = false
-			prop.cachedProps?.forEach( persistentPropName => {
-				const oldValue = change.before![ persistentPropName ]
-				const newValue = change.after![ persistentPropName ]
-				if ( oldValue !== newValue ) hasChanges = true
-			})
+			await Promise.all( matchingCollections.map( async ownerCollection => {
+				const ownerModel = Store.getModel<any>( ownerCollection )
+				let query = ownerModel.find()
 
-			if ( hasChanges ) {
-				if ( prop.searchableArray ) query = query.where( prop.name, 'contains', change.before! )
-				else query = query.where( prop.name, '==', change.before! )
-			}
-
-			const result = await query.get()
-
-			return Promise.all([
-				result.map( async document =>{
-					let hasChanges = false
-					prop.cachedProps?.forEach( persistentPropName => {
-						const oldValue = change.before![ persistentPropName ]
-						const newValue = change.after![ persistentPropName ]
-						if ( oldValue !== newValue ) hasChanges = true
-					})
-					if ( hasChanges ) {
-						if ( prop.searchableArray ) {
-							const index = ( document[ prop.name ] as Persistent[] ).findIndex( obj => obj.id === change.before!.id )
-							document[ prop.name ][ index ] = change.after
-						}
-						else {
-							document[ `_${ prop.name }` ] = change.after
-						}
-						this.beforeUpdate?.( document, prop )
-						// await document.markAsServerChange()
-						await ownerModel.save( document )
-						this.afterUpdate?.( document, prop )
-					}
-					else await Promise.resolve()
+				let hasChanges = false
+				prop.cachedProps?.forEach( persistentPropName => {
+					const oldValue = change.before![ persistentPropName ]
+					const newValue = change.after![ persistentPropName ]
+					if ( oldValue !== newValue ) hasChanges = true
 				})
-			])
-		}))
+
+				if ( hasChanges ) {
+					if ( prop.searchableArray ) query = query.where( prop.name, 'contains', change.before! )
+					else query = query.where( prop.name, '==', change.before! )
+				}
+
+				const result = await query.get()
+
+				return Promise.all([
+					result.map( async document =>{
+						let hasChanges = false
+						prop.cachedProps?.forEach( persistentPropName => {
+							const oldValue = change.before![ persistentPropName ]
+							const newValue = change.after![ persistentPropName ]
+							if ( oldValue !== newValue ) hasChanges = true
+						})
+						if ( hasChanges ) {
+							if ( prop.searchableArray ) {
+								const index = ( document[ prop.name ] as Persistent[] ).findIndex( obj => obj.id === change.before!.id )
+								document[ prop.name ][ index ] = change.after
+							}
+							else {
+								document[ `_${ prop.name }` ] = change.after
+							}
+							this.beforeUpdate?.( document, prop )
+							// await document.markAsServerChange()
+							await ownerModel.save( document )
+							this.afterUpdate?.( document, prop )
+						}
+						else await Promise.resolve()
+					})
+				])
+			}))
+		}))	
 
 		this.onAllPropsUpdatedCallback?.()
 	}
@@ -156,4 +149,5 @@ export class CachedPropsUpdater {
 	private onAllPropsUpdatedCallback: (() => void ) | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
 	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
+	private collectionsMatchingTemplate: ( template: string ) => string[] = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
 }
