@@ -4,7 +4,7 @@ import { DocumentChangeListenerHandler, DocumentChangeListener, DocumentObject, 
 import { Store } from './store'
 
 type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
-type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> DocumentChangeListenerHandler | undefined
+type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> Promise<DocumentChangeListenerHandler | undefined>
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback
@@ -21,7 +21,7 @@ export class CachedPropsUpdater {
 		}
 	}	
 
-	installUpdaters(): DocumentChangeListenerHandler[] {
+	async installUpdaters(): Promise<DocumentChangeListenerHandler[]> {
 		const referencesWithCachedProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 		const collectionsToWatch: Collection<PersistentProperty[]> = {}
 
@@ -38,16 +38,16 @@ export class CachedPropsUpdater {
 		})
 
 		this.handlers = []
-		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
+		await Promise.all( Object.entries( collectionsToWatch ).map(async ([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListener( 
+			const listener = await this.subscribeToDocumentChangeListener( 
 				collectionNameToListen, 
 				e => this.onDocumentChange( e, props ) 
 			)
 
 			if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
 			else this.handlers.push( listener )
-		})
+		}))
 
 		return this.handlers
 	}
@@ -73,7 +73,7 @@ export class CachedPropsUpdater {
 		this.subscribeToDocumentChangeListener = subscriber
 	}
 
-	set collectionsMatchingTemplateFunction( func: ( template: string ) => string[] ) {
+	set collectionsMatchingTemplateFunction( func: ( template: string ) => Promise<string[]> ) {
 		this.collectionsMatchingTemplate = func
 	}
 	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
@@ -82,7 +82,7 @@ export class CachedPropsUpdater {
 
 		await Promise.all( propsToUpdate.map( async prop => {
 			const ownerCollectionTemplate = CachedPropsUpdater.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, change.params )
-			const matchingCollections = this.collectionsMatchingTemplate( ownerCollectionTemplate )
+			const matchingCollections = await this.collectionsMatchingTemplate( ownerCollectionTemplate )
 
 			await Promise.all( matchingCollections.map( async ownerCollection => {
 				const ownerModel = Store.getModel<any>( ownerCollection )
@@ -149,5 +149,5 @@ export class CachedPropsUpdater {
 	private onAllPropsUpdatedCallback: (() => void ) | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
 	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
-	private collectionsMatchingTemplate: ( template: string ) => string[] = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
+	private collectionsMatchingTemplate: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
 }
