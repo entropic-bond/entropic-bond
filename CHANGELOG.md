@@ -1,3 +1,10 @@
+## [1.55.2](https://github.com/entropic-bond/entropic-bond/compare/v1.55.1...v1.55.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* update cached props updater methods to use Promises for async operations ([9ca5b96](https://github.com/entropic-bond/entropic-bond/commit/9ca5b9687897bd62f255133d3ef5021921b2abc0))
+
 ## [1.55.1](https://github.com/entropic-bond/entropic-bond/compare/v1.55.0...v1.55.1) (2026-01-23)
 
 
