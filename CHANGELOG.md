@@ -1,3 +1,10 @@
+## [1.55.3](https://github.com/entropic-bond/entropic-bond/compare/v1.55.2...v1.55.3) (2026-01-25)
+
+
+### Bug Fixes
+
+* test-user ([6bc7237](https://github.com/entropic-bond/entropic-bond/commit/6bc723743f6eb0394bf80a670f8b60e75f901c6a))
+
 ## [1.55.2](https://github.com/entropic-bond/entropic-bond/compare/v1.55.1...v1.55.2) (2026-01-24)
 
 
