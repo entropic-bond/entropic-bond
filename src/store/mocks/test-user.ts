@@ -131,5 +131,5 @@ export class UsesUserAsPersistentProp extends Persistent {
 		return this._user
 	}
 
-	@persistentReferenceWithCachedProps<TestUser>({cachedProps: [ 'age', 'admin' ]}, 'TestUser' ) private _user: TestUser | undefined
+	@persistentReferenceWithCachedProps<TestUser>([ 'age', 'admin' ], 'TestUser' ) private _user: TestUser | undefined
 }
