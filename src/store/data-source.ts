@@ -88,9 +88,9 @@ export abstract class DataSource {
 	 * @returns a function that uninstalls the listener. If the returned value is undefined
 	 * the method documentChangeListener has not been implemented in the concrete data source
 	*/
-	protected abstract subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): Promise<DocumentChangeListenerHandler | undefined>
+	protected abstract subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined
 
-	protected abstract collectionsMatchingTemplate( template: string ): Promise<string[]>
+	protected abstract resolveCollectionPaths( template: string ): Promise<string[]>
 
 	/**
 	 * Retrieves a document by id
@@ -161,10 +161,10 @@ export abstract class DataSource {
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
-	async installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): Promise<DocumentChangeListenerHandler[]> {
+	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): DocumentChangeListenerHandler[] {
 		this._cachedPropsUpdater = new CachedPropsUpdater( config )
 		this._cachedPropsUpdater.documentChangeListenerSubscriber = this.subscribeToDocumentChangeListener.bind( this )
-		this._cachedPropsUpdater.collectionsMatchingTemplateFunction = this.collectionsMatchingTemplate.bind( this )
+		this._cachedPropsUpdater.collectionsMatchingTemplateFunction = this.resolveCollectionPaths.bind( this )
 		return this._cachedPropsUpdater.installUpdaters()
 	}
 

@@ -4,7 +4,7 @@ import { DocumentChangeListenerHandler, DocumentChangeListener, DocumentObject, 
 import { Store } from './store'
 
 type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
-type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> Promise<DocumentChangeListenerHandler | undefined>
+type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> DocumentChangeListenerHandler | undefined
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback
@@ -21,7 +21,7 @@ export class CachedPropsUpdater {
 		}
 	}	
 
-	async installUpdaters(): Promise<DocumentChangeListenerHandler[]> {
+	installUpdaters(): DocumentChangeListenerHandler[] {
 		const referencesWithCachedProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
 		const collectionsToWatch: Collection<PersistentProperty[]> = {}
 
@@ -38,16 +38,16 @@ export class CachedPropsUpdater {
 		})
 
 		this.handlers = []
-		await Promise.all( Object.entries( collectionsToWatch ).map(async ([ collectionNameToListen, props ]) => {
+		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = await this.subscribeToDocumentChangeListener( 
+			const listener = this.subscribeToDocumentChangeListener( 
 				collectionNameToListen, 
 				e => this.onDocumentChange( e, props ) 
 			)
 
 			if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
 			else this.handlers.push( listener )
-		}))
+		})
 
 		return this.handlers
 	}

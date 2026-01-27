@@ -93,15 +93,15 @@ describe( 'Persistent with cached props reference', ()=>{
 	let updateCachedProps: CachedPropsUpdater
 	let allPropsUpdatedCalled: Promise<boolean>
 
-	async function setupUpdateCachedPropsUpdater() {
-		handlers = await datasource.installCachedPropsUpdater()
+	function setupUpdateCachedPropsUpdater() {
+		handlers = datasource.installCachedPropsUpdater()
 		updateCachedProps = datasource.cachedPropsUpdater!
 		allPropsUpdatedCalled = new Promise<boolean>( resolve => {
 				updateCachedProps.onAllPropsUpdated = () => resolve( true )
 		})
 	}
 
-	beforeEach( async ()=>{
+	beforeEach(()=>{
 		datasource = new JsonDataSource({})
 		Store.useDataSource( datasource )
 	})
@@ -111,7 +111,7 @@ describe( 'Persistent with cached props reference', ()=>{
 	})
 
 	it( 'should register handler for cached props', async ()=>{
-		await setupUpdateCachedPropsUpdater()
+		setupUpdateCachedPropsUpdater()
 
 		expect( handlers ).toEqual( expect.arrayContaining([
 			expect.objectContaining({ collectionPath: 'Child' }), 
@@ -127,7 +127,7 @@ describe( 'Persistent with cached props reference', ()=>{
 				Parent: { a: { id: 'a', __className: 'Parent', name: 'a', propInRootForRootCollection: { id: 'a2', __className: 'Child', name: 'a2', __documentReference: { storedInCollection: 'Child' } } }, b: { id: 'b', __className: 'Parent', name: 'b' }, c: { id: 'c', __className: 'Parent', name: 'c' } } as any,
 				Child: { a2: { id: 'a2', __className: 'Child', name: 'a2' }, b2: { id: 'b2', __className: 'Child', name: 'b2' }, c2: { id: 'c2', __className: 'Child', name: 'c2' } } as any
 			})
-			await setupUpdateCachedPropsUpdater()
+			setupUpdateCachedPropsUpdater()
 			modelParent = Store.getModel<Parent>( 'Parent' )
 			modelChild = Store.getModel<Child>( 'Child' )
 
@@ -154,7 +154,7 @@ describe( 'Persistent with cached props reference', ()=>{
 				'Root/a/Child': { a2: { id: 'a2', __className: 'Child', name: 'a2' }, b2: { id: 'b2', __className: 'Child', name: 'b2' }, c2: { id: 'c2', __className: 'Child', name: 'c2' } } as any
 			})
 
-			await setupUpdateCachedPropsUpdater()
+			setupUpdateCachedPropsUpdater()
 			modelParent = Store.getModel<Parent>( 'Parent' )
 			parent = ( await modelParent.findById( 'a' ))!
 			modelChild = Store.getModelForSubCollection<Child>( new Root('a'), 'Child' )
@@ -180,7 +180,7 @@ describe( 'Persistent with cached props reference', ()=>{
 				Child: { a2: { id: 'a2', __className: 'Child', name: 'a2' }, b2: { id: 'b2', __className: 'Child', name: 'b2' }, c2: { id: 'c2', __className: 'Child', name: 'c2' } } as any
 			})
 
-			await setupUpdateCachedPropsUpdater()
+			setupUpdateCachedPropsUpdater()
 			modelParent = Store.getModelForSubCollection<Parent>( new Root('a'), 'Parent' )
 			parent = ( await modelParent.findById( 'a' ))!
 			modelChild = Store.getModel<Child>( 'Child' )
@@ -206,7 +206,7 @@ describe( 'Persistent with cached props reference', ()=>{
 				'Root/a/Child': { a2: { id: 'a2', __className: 'Child', name: 'a2' }, b2: { id: 'b2', __className: 'Child', name: 'b2' }, c2: { id: 'c2', __className: 'Child', name: 'c2' } } as any
 			})
 			
-			await setupUpdateCachedPropsUpdater()
+			setupUpdateCachedPropsUpdater()
 			modelParent = Store.getModelForSubCollection<Parent>( new Root('a'), 'Parent' )
 			parent = ( await modelParent.findById( 'a' ))!
 			modelChild = Store.getModelForSubCollection<Child>( new Root('a'), 'Child' )
@@ -232,7 +232,7 @@ describe( 'Persistent with cached props reference', ()=>{
 				Child: { a2: { id: 'a2', __className: 'Child', name: 'a2' }, b2: { id: 'b2', __className: 'Child', name: 'b2' }, c2: { id: 'c2', __className: 'Child', name: 'c2' } } as any
 			})
 			
-			await setupUpdateCachedPropsUpdater()
+			setupUpdateCachedPropsUpdater()
 			modelParent = Store.getModel<Parent>( 'Parent' )
 			modelChild = Store.getModel<Child>( 'Child' )
 

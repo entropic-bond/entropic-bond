@@ -198,8 +198,8 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
-	protected override async subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): Promise<DocumentChangeListenerHandler | undefined> {
-		const matchingCollections = await this.collectionsMatchingTemplate( collectionPathToListen )
+	protected override subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
+		const matchingCollections = this.collectionsMatchingTemplate( collectionPathToListen )
 		const uid = Math.random().toString( 36 ).substring( 2, 9 )
 
 		matchingCollections.forEach( collectionName => {
@@ -338,10 +338,12 @@ export class JsonDataSource extends DataSource {
 		return promise
 	}
 
-	collectionsMatchingTemplate( template: string ): Promise<string[]> {
-		return Promise.resolve( 
-			Object.keys( this._jsonRawData ).filter( collectionName => DataSource.isStringMatchingTemplate( template, collectionName ) ) 
-		)
+	protected resolveCollectionPaths( template: string ): Promise<string[]> {
+		return Promise.resolve( this.collectionsMatchingTemplate( template ))
+	}
+
+	private collectionsMatchingTemplate( template: string ): string[] {
+		return Object.keys( this._jsonRawData ).filter( collectionName => DataSource.isStringMatchingTemplate( template, collectionName ) )
 	}
 
 	private _jsonRawData: JsonRawData = {}
