@@ -1,3 +1,10 @@
+## [1.55.4](https://github.com/entropic-bond/entropic-bond/compare/v1.55.3...v1.55.4) (2026-01-27)
+
+
+### Bug Fixes
+
+* remove promise from subscribeToDocumentChangeListener ([2d6a362](https://github.com/entropic-bond/entropic-bond/commit/2d6a362eb35337e3222a0bfb1dddee6312949acf))
+
 ## [1.55.3](https://github.com/entropic-bond/entropic-bond/compare/v1.55.2...v1.55.3) (2026-01-25)
 
 
