@@ -164,7 +164,7 @@ export abstract class DataSource {
 	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): DocumentChangeListenerHandler[] {
 		this._cachedPropsUpdater = new CachedPropsUpdater( config )
 		this._cachedPropsUpdater.documentChangeListenerSubscriber = this.subscribeToDocumentChangeListener.bind( this )
-		this._cachedPropsUpdater.collectionsMatchingTemplateFunction = this.resolveCollectionPaths.bind( this )
+		this._cachedPropsUpdater.resolveCollectionPaths = this.resolveCollectionPaths.bind( this )
 		return this._cachedPropsUpdater.installUpdaters()
 	}
 

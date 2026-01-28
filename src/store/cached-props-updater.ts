@@ -73,16 +73,17 @@ export class CachedPropsUpdater {
 		this.subscribeToDocumentChangeListener = subscriber
 	}
 
-	set collectionsMatchingTemplateFunction( func: ( template: string ) => Promise<string[]> ) {
-		this.collectionsMatchingTemplate = func
+	set resolveCollectionPaths( func: ( template: string ) => Promise<string[]> ) {
+		this._resolveCollectionPaths = func
 	}
+
 	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
 		const change = DataSource.toPersistentDocumentChange( event )
 		if ( !change.before ) return
 
 		await Promise.all( propsToUpdate.map( async prop => {
 			const ownerCollectionTemplate = CachedPropsUpdater.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, change.params )
-			const matchingCollections = await this.collectionsMatchingTemplate( ownerCollectionTemplate )
+			const matchingCollections = await this._resolveCollectionPaths( ownerCollectionTemplate )
 
 			await Promise.all( matchingCollections.map( async ownerCollection => {
 				const ownerModel = Store.getModel<any>( ownerCollection )
@@ -149,5 +150,5 @@ export class CachedPropsUpdater {
 	private onAllPropsUpdatedCallback: (() => void ) | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
 	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
-	private collectionsMatchingTemplate: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
+	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
 }
