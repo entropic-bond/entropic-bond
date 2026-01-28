@@ -1,3 +1,10 @@
+## [1.55.5](https://github.com/entropic-bond/entropic-bond/compare/v1.55.4...v1.55.5) (2026-01-28)
+
+
+### Bug Fixes
+
+* rename function ([0896338](https://github.com/entropic-bond/entropic-bond/commit/08963381210fb2daf46eef0247a1a4875eb7aab1))
+
 ## [1.55.4](https://github.com/entropic-bond/entropic-bond/compare/v1.55.3...v1.55.4) (2026-01-27)
 
 
