@@ -5,11 +5,18 @@ import { Store } from './store'
 
 type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
 type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> DocumentChangeListenerHandler | undefined
+export interface UpdatedResults {
+	[ matchingCollection: string ]: {
+		totalDocumentsToUpdate: number
+		updatedDocuments: string[] 
+	}
+}
+type AllPropsUpdatedCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback
 	afterUpdateDocument?: CachedPropsUpdaterCallback
-	onAllPropsUpdated?: () => void
+	onAllPropsUpdated?: AllPropsUpdatedCallback
 }
 
 export class CachedPropsUpdater {
@@ -57,7 +64,7 @@ export class CachedPropsUpdater {
 		this.handlers = []
 	}
 
-	set onAllPropsUpdated( callback: () => void ) {
+	set onAllPropsUpdated( callback: AllPropsUpdatedCallback ) {
 		this.onAllPropsUpdatedCallback = callback
 	}
 
@@ -79,6 +86,8 @@ export class CachedPropsUpdater {
 
 	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
 		const change = DataSource.toPersistentDocumentChange( event )
+		const results: UpdatedResults = {}
+
 		if ( !change.before ) return
 
 		await Promise.all( propsToUpdate.map( async prop => {
@@ -103,6 +112,11 @@ export class CachedPropsUpdater {
 
 				const result = await query.get()
 
+				results[ ownerCollection ] = {
+					totalDocumentsToUpdate: result.length,
+					updatedDocuments: []
+				}
+
 				return Promise.all([
 					result.map( async document =>{
 						let hasChanges = false
@@ -122,6 +136,7 @@ export class CachedPropsUpdater {
 							this.beforeUpdate?.( document, prop )
 							// await document.markAsServerChange()
 							await ownerModel.save( document )
+							results[ ownerCollection ]?.updatedDocuments.push( document.id )
 							this.afterUpdate?.( document, prop )
 						}
 						else await Promise.resolve()
@@ -130,7 +145,7 @@ export class CachedPropsUpdater {
 			}))
 		}))	
 
-		this.onAllPropsUpdatedCallback?.()
+		this.onAllPropsUpdatedCallback?.( results, propsToUpdate )
 	}
 
 	private static ownerCollectionPath( owner: Persistent, prop: PersistentProperty, params?: any ): string {
@@ -147,7 +162,7 @@ export class CachedPropsUpdater {
 
 	private beforeUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
 	private afterUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
-	private onAllPropsUpdatedCallback: (() => void ) | undefined
+	private onAllPropsUpdatedCallback: AllPropsUpdatedCallback | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
 	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
 	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }

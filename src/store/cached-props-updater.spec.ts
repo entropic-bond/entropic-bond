@@ -3,7 +3,12 @@ import { Store } from './store'
 import { Model } from './model'
 import { JsonDataSource } from './json-data-source'
 import { DocumentChangeListenerHandler } from './data-source'
-import { CachedPropsUpdater } from './cached-props-updater'
+import { CachedPropsUpdater, UpdatedResults } from './cached-props-updater'
+
+interface AllPropsUpdatedCallbackResult {
+	updatedResult: UpdatedResults
+	propsToUpdate: PersistentProperty[]
+}
 
 @registerPersistentClass( 'Root' )
 class Root extends Persistent {
@@ -91,13 +96,16 @@ describe( 'Persistent with cached props reference', ()=>{
 	let child: Child
 	let handlers: DocumentChangeListenerHandler[]
 	let updateCachedProps: CachedPropsUpdater
-	let allPropsUpdatedCalled: Promise<boolean>
+	let allPropsUpdatedCalled: Promise<AllPropsUpdatedCallbackResult>
 
 	function setupUpdateCachedPropsUpdater() {
 		handlers = datasource.installCachedPropsUpdater()
 		updateCachedProps = datasource.cachedPropsUpdater!
-		allPropsUpdatedCalled = new Promise<boolean>( resolve => {
-				updateCachedProps.onAllPropsUpdated = () => resolve( true )
+		allPropsUpdatedCalled = new Promise<AllPropsUpdatedCallbackResult>( resolve => {
+			updateCachedProps.onAllPropsUpdated = ( updatedResult, propsToUpdate ) => resolve({ 
+				updatedResult: updatedResult!, 
+				propsToUpdate: propsToUpdate! 
+			})
 		})
 	}
 
@@ -139,11 +147,18 @@ describe( 'Persistent with cached props reference', ()=>{
 			child.name = 'a2-updated'
 			modelChild.save( child )
 
-			await allPropsUpdatedCalled
+			const { updatedResult, propsToUpdate } = await allPropsUpdatedCalled
 
 			const updatedParent = ( await modelParent.findById( 'a' ))!
 			expect( updatedParent.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
-		})
+
+			expect( updatedResult ).toEqual({
+				Parent: {
+					totalDocumentsToUpdate: 1,
+					updatedDocuments: [ 'a' ]
+				}
+			})
+		})	
 	})
 
 	describe( 'Root collection with subcollection prop', ()=>{
