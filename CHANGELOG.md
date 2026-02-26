@@ -1,3 +1,10 @@
+## [1.55.6](https://github.com/entropic-bond/entropic-bond/compare/v1.55.5...v1.55.6) (2026-02-25)
+
+
+### Bug Fixes
+
+* allPropsUpdated paramenter ([3a1de27](https://github.com/entropic-bond/entropic-bond/commit/3a1de2711b8ee6ecfeb7fc37d595cf369fad11b9))
+
 ## [1.55.5](https://github.com/entropic-bond/entropic-bond/compare/v1.55.4...v1.55.5) (2026-01-28)
 
 
