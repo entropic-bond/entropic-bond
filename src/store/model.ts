@@ -480,6 +480,10 @@ export class Query<T extends Persistent> {
 		return this.queryObject
 	}
 
+	getQueryModel() {
+		return this.model
+	}
+
 	private queryObject: QueryObject<T> = { operations: [] } as QueryObject<T>
 	private model: Model<T>
 }

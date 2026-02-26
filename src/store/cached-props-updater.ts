@@ -1,6 +1,7 @@
 import { PersistentProperty, Persistent, DocumentChange } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
 import { DocumentChangeListenerHandler, DocumentChangeListener, DocumentObject, DataSource } from './data-source'
+import { Query } from './model'
 import { Store } from './store'
 
 type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
@@ -12,11 +13,13 @@ export interface UpdatedResults {
 	}
 }
 type AllPropsUpdatedCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
+type BeforeQueryOwnerCollection = ( query: Query<any> ) => Query<any> | void
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback
 	afterUpdateDocument?: CachedPropsUpdaterCallback
 	onAllPropsUpdated?: AllPropsUpdatedCallback
+	beforeQueryOwnerCollection?: BeforeQueryOwnerCollection
 }
 
 export class CachedPropsUpdater {
@@ -25,6 +28,7 @@ export class CachedPropsUpdater {
 			this.beforeUpdate = config.beforeUpdateDocument
 			this.afterUpdate = config.afterUpdateDocument
 			this.onAllPropsUpdatedCallback = config.onAllPropsUpdated
+			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
 		}
 	}	
 
@@ -72,12 +76,16 @@ export class CachedPropsUpdater {
 		this.beforeUpdate = callback
 	}
 
-	set afterUpdateDocument( callback: ( document: Persistent, prop: PersistentProperty ) => void ) {
+	set afterUpdateDocument( callback: CachedPropsUpdaterCallback ) {
 		this.afterUpdate = callback
 	}
 
 	set documentChangeListenerSubscriber( subscriber: DocumentChangeListenerSubscriber ) {
 		this.subscribeToDocumentChangeListener = subscriber
+	}
+
+	set beforeQueryOwnerCollection( subscriber: BeforeQueryOwnerCollection ) {
+		this._beforeQueryOwnerCollection = subscriber
 	}
 
 	set resolveCollectionPaths( func: ( template: string ) => Promise<string[]> ) {
@@ -110,6 +118,7 @@ export class CachedPropsUpdater {
 					else query = query.where( prop.name, '==', change.before! )
 				}
 
+				query = this._beforeQueryOwnerCollection?.( query ) ?? query
 				const result = await query.get()
 
 				results[ ownerCollection ] = {
@@ -160,9 +169,10 @@ export class CachedPropsUpdater {
 		return ownerCollection
 	}
 
-	private beforeUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
-	private afterUpdate: (( document: Persistent, prop: PersistentProperty ) => void ) | undefined
+	private beforeUpdate: CachedPropsUpdaterCallback | undefined
+	private afterUpdate: CachedPropsUpdaterCallback | undefined
 	private onAllPropsUpdatedCallback: AllPropsUpdatedCallback | undefined
+	private _beforeQueryOwnerCollection: BeforeQueryOwnerCollection | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
 	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
 	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
