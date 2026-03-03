@@ -1,3 +1,10 @@
+# [1.56.0](https://github.com/entropic-bond/entropic-bond/compare/v1.55.6...v1.56.0) (2026-02-26)
+
+
+### Features
+
+* beforeQueryOwnerCollection in update cached props ([534490b](https://github.com/entropic-bond/entropic-bond/commit/534490b6414f9988011b9427ab0bdefb077726fe))
+
 ## [1.55.6](https://github.com/entropic-bond/entropic-bond/compare/v1.55.5...v1.55.6) (2026-02-25)
 
 
