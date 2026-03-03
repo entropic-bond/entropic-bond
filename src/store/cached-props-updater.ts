@@ -10,6 +10,7 @@ export interface UpdatedResults {
 	[ matchingCollection: string ]: {
 		totalDocumentsToUpdate: number
 		updatedDocuments: string[] 
+		documentsToUpdate: string[]
 	}
 }
 type AllPropsUpdatedCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
@@ -123,7 +124,8 @@ export class CachedPropsUpdater {
 
 				results[ ownerCollection ] = {
 					totalDocumentsToUpdate: result.length,
-					updatedDocuments: []
+					updatedDocuments: [],
+					documentsToUpdate: result.map( doc => doc.name ?? doc.id )
 				}
 
 				return Promise.all([
