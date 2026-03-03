@@ -155,7 +155,8 @@ describe( 'Persistent with cached props reference', ()=>{
 			expect( updatedResult ).toEqual({
 				Parent: {
 					totalDocumentsToUpdate: 1,
-					updatedDocuments: [ 'a' ]
+					updatedDocuments: [ 'a' ],
+					documentsToUpdate: [ 'a' ]
 				}
 			})
 		})	
