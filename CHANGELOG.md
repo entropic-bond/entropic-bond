@@ -1,3 +1,11 @@
+## [1.56.1](https://github.com/entropic-bond/entropic-bond/compare/v1.56.0...v1.56.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* add documentsToUpdate to UpdatedResults in CachedPropsUpdater ([60e7ecf](https://github.com/entropic-bond/entropic-bond/commit/60e7ecfee4aaae78622eb06bb72e978ea9e45645))
+* test ([0a24b03](https://github.com/entropic-bond/entropic-bond/commit/0a24b035a8c942656f1b1e868771c3bfa8675f00))
+
 # [1.56.0](https://github.com/entropic-bond/entropic-bond/compare/v1.55.6...v1.56.0) (2026-02-26)
 
 
