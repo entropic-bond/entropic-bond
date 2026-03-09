@@ -1,3 +1,10 @@
+## [1.56.2](https://github.com/entropic-bond/entropic-bond/compare/v1.56.1...v1.56.2) (2026-03-09)
+
+
+### Bug Fixes
+
+* add enable/disable change listener methods in CachedPropsUpdater ([65f0788](https://github.com/entropic-bond/entropic-bond/commit/65f0788a8dda10e73b482fe857aacfc2011eb395))
+
 ## [1.56.1](https://github.com/entropic-bond/entropic-bond/compare/v1.56.0...v1.56.1) (2026-03-03)
 
 
