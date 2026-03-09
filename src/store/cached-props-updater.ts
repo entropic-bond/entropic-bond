@@ -98,6 +98,7 @@ export class CachedPropsUpdater {
 		const results: UpdatedResults = {}
 
 		if ( !change.before ) return
+		if ( change.after?.id && this._disabledChangeListeners.has( change.after?.id ) ) return
 
 		await Promise.all( propsToUpdate.map( async prop => {
 			const ownerCollectionTemplate = CachedPropsUpdater.ownerCollectionPath( Persistent.createInstance( prop.ownerClassName() ), prop, change.params )
@@ -146,7 +147,9 @@ export class CachedPropsUpdater {
 							}
 							this.beforeUpdate?.( document, prop )
 							// await document.markAsServerChange()
+							this.disableChangeListener( document )
 							await ownerModel.save( document )
+							this.enableChangeListener( document )
 							results[ ownerCollection ]?.updatedDocuments.push( document.id )
 							this.afterUpdate?.( document, prop )
 						}
@@ -157,6 +160,14 @@ export class CachedPropsUpdater {
 		}))	
 
 		this.onAllPropsUpdatedCallback?.( results, propsToUpdate )
+	}
+
+	private disableChangeListener( document: DocumentObject ) {
+		this._disabledChangeListeners.add( document.id! )
+	}
+
+	private enableChangeListener( document: DocumentObject ) {
+		this._disabledChangeListeners.delete( document.id! )
 	}
 
 	private static ownerCollectionPath( owner: Persistent, prop: PersistentProperty, params?: any ): string {
@@ -178,4 +189,5 @@ export class CachedPropsUpdater {
 	private handlers: DocumentChangeListenerHandler[] = []
 	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
 	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
+	private _disabledChangeListeners = new Set<string>()
 }
