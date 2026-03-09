@@ -1,3 +1,10 @@
+## [1.56.3](https://github.com/entropic-bond/entropic-bond/compare/v1.56.2...v1.56.3) (2026-03-09)
+
+
+### Bug Fixes
+
+* prevent duplicate properties in collectionsToWatch and add props to DocumentChangeListenerHandler ([dcf2644](https://github.com/entropic-bond/entropic-bond/commit/dcf26445f97f2ed5950e471f77e49e1c09a4dac0))
+
 ## [1.56.2](https://github.com/entropic-bond/entropic-bond/compare/v1.56.1...v1.56.2) (2026-03-09)
 
 
