@@ -44,7 +44,8 @@ export class CachedPropsUpdater {
 
 				typeNames.map( tName => Persistent.collectionPath( Persistent.createInstance( tName ), propInfo )).forEach( collection => {
 					if ( !collectionsToWatch[ collection ] ) collectionsToWatch[ collection ] = []
-					collectionsToWatch[ collection ]!.push( propInfo)
+					const existsProp = collectionsToWatch[ collection ]!.find( prop => prop.name === propInfo.name && prop.ownerClassName() === propInfo.ownerClassName() )
+					if ( !existsProp ) collectionsToWatch[ collection ]!.push( propInfo)
 				})
 			})
 		})
@@ -56,9 +57,12 @@ export class CachedPropsUpdater {
 				collectionNameToListen, 
 				e => this.onDocumentChange( e, props ) 
 			)
-
+			
 			if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
-			else this.handlers.push( listener )
+			else {
+				listener.props = props
+				this.handlers.push( listener )
+			}
 		})
 
 		return this.handlers

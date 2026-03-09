@@ -1,4 +1,4 @@
-import { Persistent, PersistentObject, Collections, DocumentChange } from '../persistent/persistent'
+import { Persistent, PersistentObject, Collections, DocumentChange, PersistentProperty } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
 import { Unsubscriber } from '../observable/observable'
 import { CachedPropsUpdater, CachedPropsUpdaterConfig } from './cached-props-updater'
@@ -65,6 +65,7 @@ export interface DocumentChangeListenerHandler {
 	uninstall: DocumentListenerUninstaller
 	nativeHandler: unknown
 	collectionPath: string
+	props: PersistentProperty[]
 }
 
 export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[] ) => void
