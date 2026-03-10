@@ -1,3 +1,10 @@
+## [1.56.5](https://github.com/entropic-bond/entropic-bond/compare/v1.56.4...v1.56.5) (2026-03-10)
+
+
+### Bug Fixes
+
+* add beforeDocumentChange callback to CachedPropsUpdater configuration ([d1b5a9f](https://github.com/entropic-bond/entropic-bond/commit/d1b5a9fd9eb18002a5b4e704b9d639b666adcc2c))
+
 ## [1.56.4](https://github.com/entropic-bond/entropic-bond/compare/v1.56.3...v1.56.4) (2026-03-10)
 
 
