@@ -274,6 +274,20 @@ describe( 'Persistent with cached props reference', ()=>{
 			expect( spy ).toHaveBeenCalledTimes( 1 )
 			expect( spy ).toHaveBeenCalledWith( expect.objectContaining({ id: 'a' }), expect.objectContaining({ name: 'propInRootForRootCollection' }) )
 		})
+
+		it( 'should notify before document change', async ()=>{
+			const beforeSpy = vi.fn()
+			updateCachedProps.beforeDocumentChange = beforeSpy
+
+			child.name = 'a2-updated'
+			await modelChild.save( child )
+
+			await allPropsUpdatedCalled
+
+			expect( beforeSpy ).toHaveBeenCalledTimes( 1 )
+			expect( beforeSpy ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'a2' }) }), expect.arrayContaining([ expect.objectContaining({ name: 'propInRootForRootCollection' }) ]) )
+		})
+
 	})
 
 })
