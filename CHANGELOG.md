@@ -1,3 +1,10 @@
+## [1.56.4](https://github.com/entropic-bond/entropic-bond/compare/v1.56.3...v1.56.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* rename onAllPropsUpdated to afterDocumentChange and update related callbacks ([0ec273a](https://github.com/entropic-bond/entropic-bond/commit/0ec273a463778bb61b18352f01a1798eb7bb3e65))
+
 ## [1.56.3](https://github.com/entropic-bond/entropic-bond/compare/v1.56.2...v1.56.3) (2026-03-09)
 
 
