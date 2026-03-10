@@ -31,6 +31,7 @@ export class CachedPropsUpdater {
 			this._beforeUpdate = config.beforeUpdateDocument
 			this._afterUpdate = config.afterUpdateDocument
 			this._afterDocumentChange = config.afterDocumentChange
+			this._beforeDocumentChange = config.beforeDocumentChange
 			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
 		}
 	}	
