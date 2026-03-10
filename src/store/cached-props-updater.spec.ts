@@ -102,7 +102,7 @@ describe( 'Persistent with cached props reference', ()=>{
 		handlers = datasource.installCachedPropsUpdater()
 		updateCachedProps = datasource.cachedPropsUpdater!
 		allPropsUpdatedCalled = new Promise<AllPropsUpdatedCallbackResult>( resolve => {
-			updateCachedProps.onAllPropsUpdated = ( updatedResult, propsToUpdate ) => resolve({ 
+			updateCachedProps.afterDocumentChange = ( updatedResult, propsToUpdate ) => resolve({ 
 				updatedResult: updatedResult!, 
 				propsToUpdate: propsToUpdate! 
 			})

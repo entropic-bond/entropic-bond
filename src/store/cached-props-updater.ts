@@ -13,22 +13,24 @@ export interface UpdatedResults {
 		documentsToUpdate: string[]
 	}
 }
-type AllPropsUpdatedCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
+type AfterDocumentChangeCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
+type BeforeDocumentChangeCallback = ( change: DocumentChange<Persistent>, propsToUpdate?: PersistentProperty[] ) => void
 type BeforeQueryOwnerCollection = ( query: Query<any> ) => Query<any> | void
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback
 	afterUpdateDocument?: CachedPropsUpdaterCallback
-	onAllPropsUpdated?: AllPropsUpdatedCallback
+	beforeDocumentChange?: BeforeDocumentChangeCallback
+	afterDocumentChange?: AfterDocumentChangeCallback
 	beforeQueryOwnerCollection?: BeforeQueryOwnerCollection
 }
 
 export class CachedPropsUpdater {
 	constructor( config?: CachedPropsUpdaterConfig ) {
 		if ( config ) {
-			this.beforeUpdate = config.beforeUpdateDocument
-			this.afterUpdate = config.afterUpdateDocument
-			this.onAllPropsUpdatedCallback = config.onAllPropsUpdated
+			this._beforeUpdate = config.beforeUpdateDocument
+			this._afterUpdate = config.afterUpdateDocument
+			this._afterDocumentChange = config.afterDocumentChange
 			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
 		}
 	}	
@@ -53,7 +55,7 @@ export class CachedPropsUpdater {
 		this.handlers = []
 		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this.subscribeToDocumentChangeListener( 
+			const listener = this._subscribeToDocumentChangeListener( 
 				collectionNameToListen, 
 				e => this.onDocumentChange( e, props ) 
 			)
@@ -73,20 +75,48 @@ export class CachedPropsUpdater {
 		this.handlers = []
 	}
 
-	set onAllPropsUpdated( callback: AllPropsUpdatedCallback ) {
-		this.onAllPropsUpdatedCallback = callback
+	/**
+	 * Set a callback to be executed before updating each document that has a cached prop to update. 
+	 * The callback receives the document to update and the prop that triggered the update as parameters.
+	 * @param callback The callback to be executed before updating each document that has a cached prop to update.
+	 */
+	set beforeDocumentChange( callback: BeforeDocumentChangeCallback ) {
+		this._beforeDocumentChange = callback
 	}
 
+	/**
+	 * Set a callback to be executed after updating each document that has a cached prop to update. 
+	 * The callback receives the document that was updated and the prop that triggered the update as parameters.
+	 * @param callback The callback to be executed after updating each document that has a cached prop to update.
+	 */
+	set afterDocumentChange( callback: AfterDocumentChangeCallback ) {
+		this._afterDocumentChange = callback
+	}
+
+	/**
+	 * Set a callback to be executed before updating each document that has a cached prop to update.
+	 * The callback receives the document to update and the prop that triggered the update as parameters.
+	 * @param callback The callback to be executed before updating each document that has a cached prop to update.
+	 */
 	set beforeUpdateDocument( callback: CachedPropsUpdaterCallback ) {
-		this.beforeUpdate = callback
+		this._beforeUpdate = callback
 	}
 
+	/**
+	 * Set a callback to be executed after updating each document that has a cached prop to update.
+	 * The callback receives the document that was updated and the prop that triggered the update as parameters.
+	 * @param callback The callback to be executed after updating each document that has a cached prop to update.
+	 */
 	set afterUpdateDocument( callback: CachedPropsUpdaterCallback ) {
-		this.afterUpdate = callback
+		this._afterUpdate = callback
 	}
 
+	/**
+	 * Set a subscriber for handling document change events.
+	 * @param subscriber The subscriber to be used for handling document change events.
+	 */
 	set documentChangeListenerSubscriber( subscriber: DocumentChangeListenerSubscriber ) {
-		this.subscribeToDocumentChangeListener = subscriber
+		this._subscribeToDocumentChangeListener = subscriber
 	}
 
 	set beforeQueryOwnerCollection( subscriber: BeforeQueryOwnerCollection ) {
@@ -99,6 +129,7 @@ export class CachedPropsUpdater {
 
 	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
 		const change = DataSource.toPersistentDocumentChange( event )
+		this._beforeDocumentChange?.( change, propsToUpdate )
 		const results: UpdatedResults = {}
 
 		if ( !change.before ) return
@@ -149,13 +180,12 @@ export class CachedPropsUpdater {
 							else {
 								document[ `_${ prop.name }` ] = change.after
 							}
-							this.beforeUpdate?.( document, prop )
-							// await document.markAsServerChange()
+							this._beforeUpdate?.( document, prop )
 							this.disableChangeListener( document )
 							await ownerModel.save( document )
 							this.enableChangeListener( document )
 							results[ ownerCollection ]?.updatedDocuments.push( document.id )
-							this.afterUpdate?.( document, prop )
+							this._afterUpdate?.( document, prop )
 						}
 						else await Promise.resolve()
 					})
@@ -163,7 +193,7 @@ export class CachedPropsUpdater {
 			}))
 		}))	
 
-		this.onAllPropsUpdatedCallback?.( results, propsToUpdate )
+		this._afterDocumentChange?.( results, propsToUpdate )
 	}
 
 	private disableChangeListener( document: DocumentObject ) {
@@ -186,12 +216,13 @@ export class CachedPropsUpdater {
 		return ownerCollection
 	}
 
-	private beforeUpdate: CachedPropsUpdaterCallback | undefined
-	private afterUpdate: CachedPropsUpdaterCallback | undefined
-	private onAllPropsUpdatedCallback: AllPropsUpdatedCallback | undefined
+	private _beforeUpdate: CachedPropsUpdaterCallback | undefined
+	private _afterUpdate: CachedPropsUpdaterCallback | undefined
+	private _beforeDocumentChange: BeforeDocumentChangeCallback | undefined
+	private _afterDocumentChange: AfterDocumentChangeCallback | undefined
 	private _beforeQueryOwnerCollection: BeforeQueryOwnerCollection | undefined
 	private handlers: DocumentChangeListenerHandler[] = []
-	private subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
+	private _subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
 	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
 	private _disabledChangeListeners = new Set<string>()
 }
