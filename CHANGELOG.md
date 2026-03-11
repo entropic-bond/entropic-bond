@@ -1,3 +1,10 @@
+# [1.57.0](https://github.com/entropic-bond/entropic-bond/compare/v1.56.5...v1.57.0) (2026-03-11)
+
+
+### Features
+
+* simplify CachedPropsUpdater and remove unused document change listener logic ([6d101df](https://github.com/entropic-bond/entropic-bond/commit/6d101df02618bdb523e4aa4208b31d24c782103c))
+
 ## [1.56.5](https://github.com/entropic-bond/entropic-bond/compare/v1.56.4...v1.56.5) (2026-03-10)
 
 
