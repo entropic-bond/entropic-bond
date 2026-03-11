@@ -119,9 +119,9 @@ export class CachedPropsUpdater {
 		return this._collectionsToWatch
 	}
 
-	updateProps( documentPath: string, event: DocumentChange<DocumentObject> ) {
+	updateProps( documentPath: string, event: DocumentChange<DocumentObject> ): Promise<void> {
 		const propsToUpdate = this._collectionsToWatch[ documentPath ]
-		if ( !propsToUpdate ) return
+		if ( !propsToUpdate ) return Promise.resolve()
 
 		return this.onDocumentChange( event, propsToUpdate )
 	}
@@ -131,7 +131,7 @@ export class CachedPropsUpdater {
 		this._beforeDocumentChange?.( change, propsToUpdate )
 		const results: UpdatedResults = {}
 
-		if ( !change.before ) return
+		if ( event.type !== 'update' || !change.before ) return
 		if ( change.after?.id && this._disabledChangeListeners.has( change.after?.id ) ) return
 
 		await Promise.all( propsToUpdate.map( async prop => {
