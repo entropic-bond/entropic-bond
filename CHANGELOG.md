@@ -1,3 +1,10 @@
+## [1.57.1](https://github.com/entropic-bond/entropic-bond/compare/v1.57.0...v1.57.1) (2026-03-11)
+
+
+### Bug Fixes
+
+* updateProps method now returns a Promise and handles missing propsToUpdate case ([9652fa7](https://github.com/entropic-bond/entropic-bond/commit/9652fa73f3d0cba9250668bc7025e9bc52cce16b))
+
 # [1.57.0](https://github.com/entropic-bond/entropic-bond/compare/v1.56.5...v1.57.0) (2026-03-11)
 
 
