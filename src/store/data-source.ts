@@ -79,18 +79,6 @@ export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( 
  */
 export abstract class DataSource {
 
-	/**
-	 * Installs a document change listener
-	 * Implement the required logic to install a listener that will be called
-	 * when a document is changed in your concrete the data source
-	 * @param collectionPathToListen the name of the collection to be watched
-	 * @param props the properties to be watched in the collection
-	 * @param listener the listener to be called when a document is changed
-	 * @returns a function that uninstalls the listener. If the returned value is undefined
-	 * the method documentChangeListener has not been implemented in the concrete data source
-	*/
-	protected abstract subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined
-
 	protected abstract resolveCollectionPaths( template: string ): Promise<string[]>
 
 	/**
@@ -162,16 +150,10 @@ export abstract class DataSource {
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
-	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): DocumentChangeListenerHandler[] {
+	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): CachedPropsUpdater {
 		this._cachedPropsUpdater = new CachedPropsUpdater( config )
-		this._cachedPropsUpdater.documentChangeListenerSubscriber = this.subscribeToDocumentChangeListener.bind( this )
 		this._cachedPropsUpdater.resolveCollectionPaths = this.resolveCollectionPaths.bind( this )
-		return this._cachedPropsUpdater.installUpdaters()
-	}
-
-	uninstallCachedPropsUpdater(): void {
-		this._cachedPropsUpdater?.uninstallUpdaters()
-		this._cachedPropsUpdater = undefined
+		return this._cachedPropsUpdater
 	}
 
 	get cachedPropsUpdater(): CachedPropsUpdater | undefined {

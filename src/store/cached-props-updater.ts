@@ -1,11 +1,10 @@
 import { PersistentProperty, Persistent, DocumentChange } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DocumentChangeListenerHandler, DocumentChangeListener, DocumentObject, DataSource } from './data-source'
+import { DocumentObject, DataSource } from './data-source'
 import { Query } from './model'
 import { Store } from './store'
 
 type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
-type DocumentChangeListenerSubscriber = ( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> )=> DocumentChangeListenerHandler | undefined
 export interface UpdatedResults {
 	[ matchingCollection: string ]: {
 		totalDocumentsToUpdate: number
@@ -34,11 +33,12 @@ export class CachedPropsUpdater {
 			this._beforeDocumentChange = config.beforeDocumentChange
 			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
 		}
+		this.installUpdaters()
 	}	
 
-	installUpdaters(): DocumentChangeListenerHandler[] {
+	private installUpdaters() {
 		const referencesWithCachedProps = Persistent.getSystemRegisteredReferencesWithCachedProps()
-		const collectionsToWatch: Collection<PersistentProperty[]> = {}
+		this._collectionsToWatch = {}
 
 		Object.entries( referencesWithCachedProps ).forEach(([ className, props ]) => {
 			props.forEach( propInfo => {
@@ -46,34 +46,29 @@ export class CachedPropsUpdater {
 				const typeNames = Array.isArray( propInfo.typeName ) ? propInfo.typeName : [ propInfo?.typeName ?? className ]
 
 				typeNames.map( tName => Persistent.collectionPath( Persistent.createInstance( tName ), propInfo )).forEach( collection => {
-					if ( !collectionsToWatch[ collection ] ) collectionsToWatch[ collection ] = []
-					const existsProp = collectionsToWatch[ collection ]!.find( prop => prop.name === propInfo.name && prop.ownerClassName() === propInfo.ownerClassName() )
-					if ( !existsProp ) collectionsToWatch[ collection ]!.push( propInfo)
+					if ( !this._collectionsToWatch[ collection ] ) this._collectionsToWatch[ collection ] = []
+					const existsProp = this._collectionsToWatch[ collection ]!.find( prop => prop.name === propInfo.name && prop.ownerClassName() === propInfo.ownerClassName() )
+					if ( !existsProp ) this._collectionsToWatch[ collection ]!.push( propInfo)
 				})
 			})
 		})
 
-		this.handlers = []
-		Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
+		// this.handlers = []
+		// Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
 
-			const listener = this._subscribeToDocumentChangeListener( 
-				collectionNameToListen, 
-				e => this.onDocumentChange( e, props ) 
-			)
+		// 	const listener = this._subscribeToDocumentChangeListener( 
+		// 		collectionNameToListen, 
+		// 		e => this.onDocumentChange( e, props ) 
+		// 	)
 			
-			if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
-			else {
-				listener.props = props
-				this.handlers.push( listener )
-			}
-		})
+		// 	if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
+		// 	else {
+		// 		listener.props = props
+		// 		this.handlers.push( listener )
+		// 	}
+		// })
 
-		return this.handlers
-	}
-
-	uninstallUpdaters() {
-		this.handlers.forEach( handler => handler.uninstall() )
-		this.handlers = []
+		// return this.handlers
 	}
 
 	/**
@@ -112,14 +107,6 @@ export class CachedPropsUpdater {
 		this._afterUpdate = callback
 	}
 
-	/**
-	 * Set a subscriber for handling document change events.
-	 * @param subscriber The subscriber to be used for handling document change events.
-	 */
-	set documentChangeListenerSubscriber( subscriber: DocumentChangeListenerSubscriber ) {
-		this._subscribeToDocumentChangeListener = subscriber
-	}
-
 	set beforeQueryOwnerCollection( subscriber: BeforeQueryOwnerCollection ) {
 		this._beforeQueryOwnerCollection = subscriber
 	}
@@ -128,7 +115,18 @@ export class CachedPropsUpdater {
 		this._resolveCollectionPaths = func
 	}
 
-	protected async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
+	get collectionsToWatch(): Readonly<Collection<PersistentProperty[]>> {
+		return this._collectionsToWatch
+	}
+
+	updateProps( documentPath: string, event: DocumentChange<DocumentObject> ) {
+		const propsToUpdate = this._collectionsToWatch[ documentPath ]
+		if ( !propsToUpdate ) return
+
+		return this.onDocumentChange( event, propsToUpdate )
+	}
+
+	private async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
 		const change = DataSource.toPersistentDocumentChange( event )
 		this._beforeDocumentChange?.( change, propsToUpdate )
 		const results: UpdatedResults = {}
@@ -188,7 +186,7 @@ export class CachedPropsUpdater {
 							results[ ownerCollection ]?.updatedDocuments.push( document.id )
 							this._afterUpdate?.( document, prop )
 						}
-						else await Promise.resolve()
+						else return Promise.resolve()
 					})
 				])
 			}))
@@ -222,8 +220,7 @@ export class CachedPropsUpdater {
 	private _beforeDocumentChange: BeforeDocumentChangeCallback | undefined
 	private _afterDocumentChange: AfterDocumentChangeCallback | undefined
 	private _beforeQueryOwnerCollection: BeforeQueryOwnerCollection | undefined
-	private handlers: DocumentChangeListenerHandler[] = []
-	private _subscribeToDocumentChangeListener: DocumentChangeListenerSubscriber = ()=> { throw new Error( 'The method subscribeToDocumentChangeListener has not been implemented in the concrete data source' ) }
 	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
 	private _disabledChangeListeners = new Set<string>()
+	private _collectionsToWatch: Collection<PersistentProperty[]> = {}
 }
