@@ -154,6 +154,13 @@ export class Model<T extends Persistent>{
 		)
 	}
 
+	onCollectionTemplateChange( collectionTemplate: string, listener: DocumentChangeListener<T> ): Unsubscriber {
+		return this._stream.onDocumentTemplateChange(
+			collectionTemplate,
+			( change: DocumentChange<PersistentObject<T>> ) => listener( DataSource.toPersistentDocumentChange( change ) )
+		)
+	}
+
 	// /**
 	//  * Get the previous bunch of documents matching the last query
 	//  * @param limit the max amount of documents to retrieve. If not set, uses the

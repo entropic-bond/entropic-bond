@@ -96,7 +96,7 @@ class Parent extends Persistent {
 	// @persistentPureReferenceWithCachedProps<Child>(['name'], ['Parent', 'Child'], Parent.propCollectionPath, Parent.thisCollectionPath ) private _propWithMultipleTypes: Child | undefined
 }
 
-describe.skip( 'Persistent with cached props reference', ()=>{
+describe( 'Persistent with cached props reference', ()=>{
 	let datasource: JsonDataSource
 	let modelParent: Model<Parent>
 	let modelChild: Model<Child>
@@ -107,6 +107,11 @@ describe.skip( 'Persistent with cached props reference', ()=>{
 
 	function setupUpdateCachedPropsUpdater() {
 		cachedPropsUpdater = datasource.installCachedPropsUpdater()
+		datasource.onDocumentTemplateChange( '{rootCollection}/{rootDocumentId}/{subCollection}/{subDocumentId}', event => {
+			const { rootCollection, subCollection } = event.params!
+			const documentPath = subCollection? `${ rootCollection }/{customerId}/${ subCollection }` : rootCollection
+			cachedPropsUpdater.updateProps( documentPath, event )
+		})
 		allPropsUpdatedCalled = new Promise<AllPropsUpdatedCallbackResult>( resolve => {
 			cachedPropsUpdater.afterDocumentChange = ( updatedResult, propsToUpdate ) => resolve({ 
 				updatedResult: updatedResult!, 
@@ -147,7 +152,7 @@ describe.skip( 'Persistent with cached props reference', ()=>{
 			child.name = 'a2-updated'
 			modelChild.save( child )
 
-			const { updatedResult, propsToUpdate } = await allPropsUpdatedCalled
+			const { updatedResult } = await allPropsUpdatedCalled
 
 			const updatedParent = ( await modelParent.findById( 'a' ))!
 			expect( updatedParent.propInRootForRootCollection?.name ).toBe( 'a2-updated' )

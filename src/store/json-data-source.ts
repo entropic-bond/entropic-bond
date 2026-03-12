@@ -157,6 +157,30 @@ export class JsonDataSource extends DataSource {
 		return ()=> delete listeners[ uid ]
 	}
 
+	override onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener< DocumentObject > ): Unsubscriber {
+		const allCollections = this.collectionsMatchingTemplate( collectionTemplate )
+		const unsubscribers: Unsubscriber[] = []
+
+		allCollections.forEach( collectionName => {
+			let listeners = this._documentListeners[ collectionName ] 
+			if ( !listeners ) {
+				this._documentListeners[ collectionName ] = {}
+				listeners = this._documentListeners[ collectionName ]
+			}
+			const finalListener = ( change: DocumentChange<DocumentObject> ) => {
+				change.params = DataSource.extractTemplateParams( collectionName, collectionTemplate )
+				listener( change )
+			}
+
+			const uid = Math.random().toString( 36 ).substring( 2, 9 )
+			listeners[ uid ] = finalListener
+			unsubscribers.push( () => delete listeners![ uid ] )
+		})
+
+		return () => unsubscribers.forEach( unsubscriber => unsubscriber() )
+	}
+
+
 	/**
 	 * @returns the raw data store data as a JSON object
 	 */
@@ -207,7 +231,6 @@ export class JsonDataSource extends DataSource {
 			type: (oldValue? 'update' : 'create') as DocumentChangeType
 		}
 
-		Object.values( this._serverCollectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 		Object.values( this._collectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 	}
@@ -322,5 +345,4 @@ export class JsonDataSource extends DataSource {
 	private _simulateError: ErrorOnOperation | undefined
 	private _documentListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 	private _collectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
-	private _serverCollectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 }

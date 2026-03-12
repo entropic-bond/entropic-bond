@@ -279,6 +279,65 @@ describe( 'Json DataSource', ()=>{
 		})
 	})
 
+	describe( 'Document template listeners', ()=>{
+		beforeAll(()=>{
+			datasource = new JsonDataSource()
+			Store.useDataSource( datasource )
+		})
+
+		it( 'should support collection templates with partial matches and notify all matched documents', ()=>{
+			datasource.setDataStore({
+				'Customer/1/Audit': { 'a': { id: 'a', val: 1 } },
+				'Customer/2/Audit': { 'a': { id: 'a', val: 2 } },
+			} as any )
+			const listener = vi.fn()
+			const uninstall = datasource.onDocumentTemplateChange( 'Customer/{customerId}/Audit', listener )
+			
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 11 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 11 }),
+				params: { customerId: '1' },
+				collectionPath: 'Customer/1/Audit'
+			}) )
+
+			listener.mockClear()
+			datasource.save({ 'Customer/2/Audit': [{ id: 'a', val: 22 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 22 }),
+				params: { customerId: '2' },
+				collectionPath: 'Customer/2/Audit'
+			}) )
+
+			uninstall()
+		})
+
+		it( 'should support collection templates and notify all matched documents', ()=>{
+			datasource.setDataStore({
+				'Customer/1/Audit': { 'a': { id: 'a', val: 1 } },
+				'Customer/2/Audit': { 'a': { id: 'a', val: 2 } },
+			} as any )
+			const listener = vi.fn()
+			const uninstall = datasource.onDocumentTemplateChange( '{rootCollection}/{customerId}/{subCollection}', listener )
+
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 11 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 11 }),
+				params: { rootCollection: 'Customer', customerId: '1', subCollection: 'Audit' },
+				collectionPath: 'Customer/1/Audit'
+			}) )
+
+			listener.mockClear()
+			datasource.save({ 'Customer/2/Audit': [{ id: 'a', val: 22 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 22 }),
+				params: { rootCollection: 'Customer', customerId: '2', subCollection: 'Audit' },
+				collectionPath: 'Customer/2/Audit'
+			}) )
+
+			uninstall()
+		})
+	})
+
 	describe( 'Helper methods', ()=>{
 		describe( 'isStringMatchingTemplate', ()=>{
 			it( 'should match simple templates', ()=>{
@@ -289,6 +348,7 @@ describe( 'Json DataSource', ()=>{
 				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/Audit' )).toBe( false )
 				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer' )).toBe( false )
 				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Audit' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( '{rootCollection}/{customerId}/{subCollection}', 'Audit' )).toBe( true )
 			})
 		})
 
@@ -298,6 +358,8 @@ describe( 'Json DataSource', ()=>{
 				expect( DataSource.extractTemplateParams( 'Customer/faad-dfaa-00f0/Audit', 'Customer/{customerId}/Audit' )).toEqual( { customerId: 'faad-dfaa-00f0' } )
 				expect( DataSource.extractTemplateParams( 'Customer/2/Order/5', 'Customer/{customerId}/Order/{orderId}' )).toEqual( { customerId: '2', orderId: '5' } )
 				expect( DataSource.extractTemplateParams( 'Customer/2/Order/5/Item/9', 'Customer/{customerId}/Order/{orderId}/Item/{itemId}' )).toEqual( { customerId: '2', orderId: '5', itemId: '9' } )
+				expect( DataSource.extractTemplateParams( 'Audit', '{rootCollection}/{customerId}/{subCollection}' )).toEqual( { rootCollection: 'Audit' } )
+				expect( DataSource.extractTemplateParams( 'Customer/2/Audit', '{rootCollection}/{customerId}/{subCollection}' )).toEqual( { rootCollection: 'Customer', customerId: '2', subCollection: 'Audit' } )
 			})
 		})
 	})

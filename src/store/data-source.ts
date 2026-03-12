@@ -150,6 +150,8 @@ export abstract class DataSource {
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
+	abstract onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
+
 	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): CachedPropsUpdater {
 		this._cachedPropsUpdater = new CachedPropsUpdater( config )
 		this._cachedPropsUpdater.resolveCollectionPaths = this.resolveCollectionPaths.bind( this )
@@ -222,29 +224,53 @@ export abstract class DataSource {
 	}
 	
 	static isStringMatchingTemplate( template: string, value: string ): boolean {
-		const escaped = template.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' )
-		const regexStr = escaped.replace( /\\\$\\\{[^}]+\\\}/g, '([^/]+)' )
-								.replace( /\\\{[^}]+\\\}/g, '([^/]+)' )
-		const regex = new RegExp( '^' + regexStr + '$' )
-		return regex.test( value )
+		const templateSegments = template.split( '/' )
+		const valueSegments = value.split( '/' )
+
+		if ( valueSegments.length > templateSegments.length ) return false
+
+		for ( let i = 0; i < valueSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const v = valueSegments[i]!
+			const isParam = ( t.startsWith( '{' ) && t.endsWith( '}' ) ) || ( t.startsWith( '${' ) && t.endsWith( '}' ) )
+			if ( !isParam && t !== v ) return false
+		}
+
+		for ( let i = valueSegments.length; i < templateSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const isParam = ( t.startsWith( '{' ) && t.endsWith( '}' ) ) || ( t.startsWith( '${' ) && t.endsWith( '}' ) )
+			if ( !isParam ) return false
+		}
+
+		return true
 	}
 
 	static extractTemplateParams( source: string, template: string ): Record<string, string> {
-		const paramNames: string[] = []
-		const escaped = template.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' )
-		const regexStr = escaped.replace( /\\\{([^}]+)\\\}/g, ( match, paramName ) => {
-			paramNames.push( paramName )
-			return '([^/]+)'
-		})
-
-		const regex = new RegExp( '^' + regexStr + '$' )
-		const match = source.match( regex )
+		const templateSegments = template.split( '/' )
+		const sourceSegments = source.split( '/' )
 		const params: Record<string, string> = {}
 
-		if ( match ) {
-			paramNames.forEach( ( name, index ) => {
-				params[ name ] = match[ index + 1 ]!
-			})
+		if ( sourceSegments.length > templateSegments.length ) return params
+
+		for ( let i = 0; i < sourceSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const s = sourceSegments[i]!
+			
+			if ( t.startsWith( '{' ) && t.endsWith( '}' ) ) {
+				params[ t.slice( 1, -1 ) ] = s
+			}
+			else if ( t.startsWith( '${' ) && t.endsWith( '}' ) ) {
+				params[ t.slice( 2, -1 ) ] = s
+			}
+			else if ( t !== s ) {
+				return {}
+			}
+		}
+
+		for ( let i = sourceSegments.length; i < templateSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const isParam = ( t.startsWith( '{' ) && t.endsWith( '}' ) ) || ( t.startsWith( '${' ) && t.endsWith( '}' ) )
+			if ( !isParam ) return {}
 		}
 
 		return params
