@@ -1,3 +1,10 @@
+# [1.58.0](https://github.com/entropic-bond/entropic-bond/compare/v1.57.1...v1.58.0) (2026-03-12)
+
+
+### Features
+
+* onDocumentTemplateChange ([7d648b7](https://github.com/entropic-bond/entropic-bond/commit/7d648b79c41db476ee5bd66c30f578ca51f1b6ff))
+
 ## [1.57.1](https://github.com/entropic-bond/entropic-bond/compare/v1.57.0...v1.57.1) (2026-03-11)
 
 
