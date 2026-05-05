@@ -1,3 +1,10 @@
+# [1.59.0](https://github.com/entropic-bond/entropic-bond/compare/v1.58.0...v1.59.0) (2026-05-05)
+
+
+### Features
+
+* isInstanceOf ([1138f3e](https://github.com/entropic-bond/entropic-bond/commit/1138f3e59978eca51cf948ccbfb820867f6c6085))
+
 # [1.58.0](https://github.com/entropic-bond/entropic-bond/compare/v1.57.1...v1.58.0) (2026-03-12)
 
 
