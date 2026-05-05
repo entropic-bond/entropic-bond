@@ -839,6 +839,57 @@ describe( 'Persistent', ()=>{
 				name: 'name', validator: expect.any( Function ), ownerClassName: expect.any( Function )
 			})
 		})
+
+		describe( 'isInstanceOf', ()=>{
+			it( 'should work for instances', ()=>{
+				const personInstance = new Person( 'personX' )
+				expect( Persistent.isInstanceOf( personInstance, 'Person' ) ).toBeTruthy()
+				expect( Persistent.isInstanceOf( personInstance, 'PersistentClass' ) ).toBeFalsy()
+			})
+
+			it( 'should work for objects with __className', ()=>{
+				const obj = { __className: 'Person', id: 'personY' }
+				expect( Persistent.isInstanceOf( obj, 'Person' ) ).toBeTruthy()
+			})
+
+			it( 'should work for class names as strings', ()=>{
+				expect( Persistent.isInstanceOf( 'Person', 'Person' ) ).toBeTruthy()
+			})
+
+			it( 'should work for legacy names', ()=>{
+				const legacyObj = { __className: 'LegacyClassName', id: 'legacyX' }
+				expect( Persistent.isInstanceOf( legacyObj, 'PersistentClass' ) ).toBeTruthy()
+			})
+
+			describe( 'derived classes', ()=>{
+				class Employee extends Person {}
+
+				beforeAll( ()=>{
+					registerPersistentClass( 'Employee' )( Employee )
+				})
+
+				it( 'should work for derived instances', ()=>{
+					const emp = new Employee( 'emp1' )
+					expect( Persistent.isInstanceOf( emp, 'Employee' ) ).toBeTruthy()
+					expect( Persistent.isInstanceOf( emp, 'Person' ) ).toBeTruthy()
+					expect( Persistent.isInstanceOf( emp, 'PersistentClass' ) ).toBeFalsy()
+				})
+
+				it( 'should work for derived objects with __className', ()=>{
+					const empObj = { __className: 'Employee', id: 'emp2' }
+					expect( Persistent.isInstanceOf( empObj, 'Person' ) ).toBeTruthy()
+				})
+
+				it( 'should work for derived class names as strings', ()=>{
+					expect( Persistent.isInstanceOf( 'Employee', 'Person' ) ).toBeTruthy()
+				})
+
+				it( 'should fail when checking base instance against derived class', ()=>{
+					const person = new Person( 'personZ' )
+					expect( Persistent.isInstanceOf( person, 'Employee' ) ).toBeFalsy()
+				})
+			})
+		})
 	})
 
 	describe( 'Persistent instantation', ()=>{
@@ -919,6 +970,7 @@ describe( 'Persistent', ()=>{
 			expect( props ).toEqual({
 				PersistentClass: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
 				Person: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
+				Employee: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
 				WithAnnotations: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
 				WithAnnotations2: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
 				WithAnnotations3: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],

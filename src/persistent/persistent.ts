@@ -129,6 +129,25 @@ export class Persistent {
 	}
 
 	/**
+	 * Emulates the `instanceof` operator for a registered class. 
+	 * This is useful when you want to check if an object or named class is an 
+	 * instance of a registered class without having to import the class.
+	 * @param value the object or named class to be checked
+	 * @param className the name of the class to be checked against
+	 * @returns true if the object or named class is an instance of the registered class
+	 * @see registerFactory
+	 * @see classFactory
+	 * @see classesExtending
+	 */
+	static isInstanceOf( value: Persistent | PersistentObject<Persistent> | string, className: string ): boolean {
+		const testClass = Persistent.classFactory( className )
+		if ( value instanceof Persistent ) return value instanceof testClass
+
+		const instance = Persistent.createInstance( value )	
+		return instance instanceof testClass
+	}
+
+	/**
 	 * Returns the annotation associated with a registered class
 	 * @param className the name of the class to be retrieved
 	 * @returns the annotation associated with the class
