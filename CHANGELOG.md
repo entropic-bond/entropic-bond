@@ -1,3 +1,11 @@
+## [1.59.1](https://github.com/entropic-bond/entropic-bond/compare/v1.59.0...v1.59.1) (2026-05-10)
+
+
+### Bug Fixes
+
+* add value ([b93ac8e](https://github.com/entropic-bond/entropic-bond/commit/b93ac8e0da8837e381a5fa2859915c6529a19db2))
+* add value in callbacks ([438b834](https://github.com/entropic-bond/entropic-bond/commit/438b834b8b10b42f1b70e4d17a24f44316bede0d))
+
 # [1.59.0](https://github.com/entropic-bond/entropic-bond/compare/v1.58.0...v1.59.0) (2026-05-05)
 
 
