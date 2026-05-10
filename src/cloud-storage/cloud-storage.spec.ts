@@ -5,13 +5,14 @@ import { Store } from '../store/store'
 import { CloudStorage } from './cloud-storage'
 import { MockCloudStorage } from './mock-cloud-storage'
 import { StoredFile, StoredFileEvent } from './stored-file'
+import { vi, Mock } from 'vitest'
 
 function MockFile(this: any,  data: any[], filename: string ) {
 	this.data = data as any[]
 	this.name = filename
 }
 
-global.File = MockFile as any
+globalThis.File = MockFile as any
 
 @registerPersistentClass( 'Test' )
 class Test extends Persistent {
@@ -111,7 +112,7 @@ describe( 'Cloud Storage', ()=>{
 	})
 
 	describe( 'Notify on change', ()=>{
-		let spy: vi.Mock
+		let spy: Mock
 
 		beforeEach(()=>{
 			spy = vi.fn()

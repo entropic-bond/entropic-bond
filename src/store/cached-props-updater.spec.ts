@@ -277,7 +277,7 @@ describe( 'Persistent with cached props reference', ()=>{
 			expect( updatedParent.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
 			expect( updatedParent.markAsSeverChange ).toBe( true )
 			expect( spy ).toHaveBeenCalledTimes( 1 )
-			expect( spy ).toHaveBeenCalledWith( expect.objectContaining({ id: 'a' }), expect.objectContaining({ name: 'propInRootForRootCollection' }) )
+			expect( spy ).toHaveBeenCalledWith( expect.objectContaining({ id: 'a' }), expect.objectContaining({ name: 'propInRootForRootCollection' }), expect.objectContaining({ id: 'a2' }) )
 		})
 
 		it( 'should notify before document change', async ()=>{
