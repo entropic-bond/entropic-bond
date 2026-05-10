@@ -4,7 +4,7 @@ import { DocumentObject, DataSource } from './data-source'
 import { Query } from './model'
 import { Store } from './store'
 
-type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty )=>void
+type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty, value: unknown )=>void
 export interface UpdatedResults {
 	[ matchingCollection: string ]: {
 		totalDocumentsToUpdate: number
@@ -27,8 +27,8 @@ export interface CachedPropsUpdaterConfig {
 export class CachedPropsUpdater {
 	constructor( config?: CachedPropsUpdaterConfig ) {
 		if ( config ) {
-			this._beforeUpdate = config.beforeUpdateDocument
-			this._afterUpdate = config.afterUpdateDocument
+			this._beforeUpdateDocument = config.beforeUpdateDocument
+			this._afterUpdateDocument = config.afterUpdateDocument
 			this._afterDocumentChange = config.afterDocumentChange
 			this._beforeDocumentChange = config.beforeDocumentChange
 			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
@@ -52,23 +52,6 @@ export class CachedPropsUpdater {
 				})
 			})
 		})
-
-		// this.handlers = []
-		// Object.entries( collectionsToWatch ).forEach(([ collectionNameToListen, props ]) => {
-
-		// 	const listener = this._subscribeToDocumentChangeListener( 
-		// 		collectionNameToListen, 
-		// 		e => this.onDocumentChange( e, props ) 
-		// 	)
-			
-		// 	if ( !listener ) throw new Error( `The method documentChangeListener has not been implemented in the concrete data source` )
-		// 	else {
-		// 		listener.props = props
-		// 		this.handlers.push( listener )
-		// 	}
-		// })
-
-		// return this.handlers
 	}
 
 	/**
@@ -95,7 +78,7 @@ export class CachedPropsUpdater {
 	 * @param callback The callback to be executed before updating each document that has a cached prop to update.
 	 */
 	set beforeUpdateDocument( callback: CachedPropsUpdaterCallback ) {
-		this._beforeUpdate = callback
+		this._beforeUpdateDocument = callback
 	}
 
 	/**
@@ -104,7 +87,7 @@ export class CachedPropsUpdater {
 	 * @param callback The callback to be executed after updating each document that has a cached prop to update.
 	 */
 	set afterUpdateDocument( callback: CachedPropsUpdaterCallback ) {
-		this._afterUpdate = callback
+		this._afterUpdateDocument = callback
 	}
 
 	set beforeQueryOwnerCollection( subscriber: BeforeQueryOwnerCollection ) {
@@ -179,12 +162,12 @@ export class CachedPropsUpdater {
 							else {
 								document[ `_${ prop.name }` ] = change.after
 							}
-							this._beforeUpdate?.( document, prop )
+							this._beforeUpdateDocument?.( document, prop, change.after )
 							this.disableChangeListener( document )
 							await ownerModel.save( document )
 							this.enableChangeListener( document )
 							results[ ownerCollection ]?.updatedDocuments.push( document.id )
-							this._afterUpdate?.( document, prop )
+							this._afterUpdateDocument?.( document, prop, change.after )
 						}
 						else return Promise.resolve()
 					})
@@ -215,8 +198,8 @@ export class CachedPropsUpdater {
 		return ownerCollection
 	}
 
-	private _beforeUpdate: CachedPropsUpdaterCallback | undefined
-	private _afterUpdate: CachedPropsUpdaterCallback | undefined
+	private _beforeUpdateDocument: CachedPropsUpdaterCallback | undefined
+	private _afterUpdateDocument: CachedPropsUpdaterCallback | undefined
 	private _beforeDocumentChange: BeforeDocumentChangeCallback | undefined
 	private _afterDocumentChange: AfterDocumentChangeCallback | undefined
 	private _beforeQueryOwnerCollection: BeforeQueryOwnerCollection | undefined
