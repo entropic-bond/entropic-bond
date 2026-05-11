@@ -15,6 +15,13 @@ export default defineConfig({
 		},
 		sourcemap: true,
 		outDir: "lib",
+		rollupOptions: {
+			output: {
+				sourcemapPathTransform: (relativeSourcePath) => {
+					return relativeSourcePath.replace(/^..\/src\//, '');
+				}
+			}
+		}
 	},
 	plugins: [
 		dts({ tsconfigPath: './tsconfig-build.json' })
