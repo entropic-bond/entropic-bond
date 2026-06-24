@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
     "sourceMap": true,
+    "inlineSources": true,
     "outDir": "lib",
     "rootDir": "src/",
 		"resolveJsonModule": true,
