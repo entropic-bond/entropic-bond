@@ -1,3 +1,10 @@
+## [1.59.3](https://github.com/entropic-bond/entropic-bond/compare/v1.59.2...v1.59.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* npm updates ([6c2fb14](https://github.com/entropic-bond/entropic-bond/commit/6c2fb14b917051d3a490e73a6f5df0e60c24daaf))
+
 ## [1.59.2](https://github.com/entropic-bond/entropic-bond/compare/v1.59.1...v1.59.2) (2026-05-11)
 
 
