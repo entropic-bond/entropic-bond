@@ -1,4 +1,8 @@
-export interface UserCredentials<T extends {} = {}> {
+export interface CredentialsCustomData {
+	[ key: string ]: any
+}
+
+export interface UserCredentials<T extends CredentialsCustomData = {}> {
 	id: string
 	email: string
 	name?: string

@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation } from "./data-source"
+import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation, QueryOrder } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -252,14 +252,16 @@ export class JsonDataSource extends DataSource {
 
 			operations: ( operations: QueryOperation<T>[] ) => this.retrieveQueryDocs( docs, operations ),
 
-			sort: ({ order, propertyName }) => docs.sort( ( a, b ) => {
-				if ( order === 'asc' ) {
-					return this.deepValue( a, propertyName ) > this.deepValue( b, propertyName )? 1 : -1 
-				}
-				else {
-					return this.deepValue( a, propertyName ) < this.deepValue( b, propertyName )? 1 : -1
-				}
-			})
+		sort: ({ order, propertyName }:{ order: QueryOrder, propertyName: string }) => docs.sort( ( a, b ) => {
+			const aVal = this.deepValue( a, propertyName )
+			const bVal = this.deepValue( b, propertyName )
+			if ( order === 'asc' ) {
+				return aVal > bVal? 1 : -1 
+			}
+			else {
+				return aVal < bVal? 1 : -1
+			}
+		})
 		}
 
 		return processors[ processMethod ]( value )
@@ -278,7 +280,7 @@ export class JsonDataSource extends DataSource {
 		}, docs )
 	}
 
-	private deepValue( obj: {}, propertyPath: string /*like person.name.firstName*/) {
+	private deepValue( obj: DocumentObject, propertyPath: string /*like person.name.firstName*/) {
 		const propChain = propertyPath.split( '.' )
 		return propChain.reduce(( value, prop ) => value[ prop ], obj )
 	}

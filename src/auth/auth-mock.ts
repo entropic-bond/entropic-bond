@@ -1,10 +1,10 @@
 import { Collection } from '../types/utility-types'
 import { AuthService, RejectedCallback, ResovedCallback } from "./auth"
-import { UserCredentials, SignData, AuthProvider } from "./user-auth-types"
+import { UserCredentials, SignData, AuthProvider, CredentialsCustomData } from "./user-auth-types"
 
 export class AuthMock extends AuthService {
 
-	signUp<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
+	signUp<T extends CredentialsCustomData>( signData: SignData ): Promise<UserCredentials<T>> {
 		const { verificationLink, email, password, authProvider } = signData
 	
 		const promise = new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
@@ -27,7 +27,7 @@ export class AuthMock extends AuthService {
 		return promise
 	}
 
-	login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
+	login<T extends CredentialsCustomData>( signData: SignData ): Promise<UserCredentials<T>> {
 		const fakeUser = Object.values( this._fakeRegisteredUsers ).find( 
 			user => user.email === signData.email 
 		)
@@ -39,7 +39,7 @@ export class AuthMock extends AuthService {
 		return this.signUp( signData )
 	}
 
-	onAuthStateChange<T extends {}>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
+	onAuthStateChange<T extends CredentialsCustomData>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
 		this.notifyChange = onChange
 		this.notifyChange( this._loggedUser )
 	}
@@ -89,7 +89,7 @@ export class AuthMock extends AuthService {
     this.pendingPromises = []
 	}
 
-	fakeRegisteredUser<T extends {}>( userCredentials: UserCredentials<T> ) {
+	fakeRegisteredUser<T extends CredentialsCustomData>( userCredentials: UserCredentials<T> ) {
 		if ( this._fakeRegisteredUsers[ userCredentials.id ] ) throw new Error( `User with id ${ userCredentials.id } already exists in fake user list`)
 		this._fakeRegisteredUsers[ userCredentials.id ] = userCredentials
 		return this
@@ -99,7 +99,7 @@ export class AuthMock extends AuthService {
 		return this._fakeRegisteredUsers
 	}
 
-	private userCredentials<T extends {}>( signData: SignData ): UserCredentials<T> {
+	private userCredentials<T extends CredentialsCustomData>( signData: SignData ): UserCredentials<T> {
 		const fakeUser = Object.values( this._fakeRegisteredUsers ).find( 
 			user => user.email === signData.email 
 		)
@@ -123,7 +123,7 @@ export class AuthMock extends AuthService {
 	}
 
 	private pendingPromises: Promise<any>[] = []
-	private _loggedUser: UserCredentials<{}> | undefined
-	private notifyChange: (( userCredentials: UserCredentials<{}> | undefined ) => void ) | undefined
-	private _fakeRegisteredUsers: Collection<UserCredentials<{}>> = {}
+	private _loggedUser: UserCredentials<CredentialsCustomData> | undefined
+	private notifyChange: (( userCredentials: UserCredentials<CredentialsCustomData> | undefined ) => void ) | undefined
+	private _fakeRegisteredUsers: Collection<UserCredentials<CredentialsCustomData>> = {}
 }

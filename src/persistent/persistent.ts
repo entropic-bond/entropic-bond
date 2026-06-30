@@ -279,14 +279,14 @@ export class Persistent {
 	 * @see clone
 	 * @see toObject
 	 */
-	fromObject( obj: Partial<PersistentObject<this>> |{}): this {
+	fromObject( obj: Partial<PersistentObject<this>> | Record<string, unknown> ): this {
 		this.fromObj( obj )
 		this.afterDeserialize()
 
 		return this
 	}
 
-	private fromObj( obj: Partial<PersistentObject<this>> | {}) {
+	private fromObj( obj: Partial<PersistentObject<this>> | Record<string, unknown> ) {
 		if ( !this._persistentProperties ) return this
 
 		this._persistentProperties.forEach( prop => {
@@ -562,7 +562,6 @@ export class Persistent {
 
 type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty, params?: unknown ) => string
 type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
-export type OwnerCollectionResolver = ( ownerClassName: string, params: {} ) => string
 
 export interface PersistentProperty {
 	name: string
