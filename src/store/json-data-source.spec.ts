@@ -19,7 +19,7 @@ class TestCollection2 extends Persistent {}
 
 describe( 'Json DataSource', ()=>{
 	let datasource: JsonDataSource
-	const resolveDelay = 50
+	const resolveDelay = 10
 
 	describe( 'Delayed promise resolution', ()=>{
 	
