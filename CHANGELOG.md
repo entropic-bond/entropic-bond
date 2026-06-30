@@ -1,3 +1,15 @@
+## [1.59.4](https://github.com/entropic-bond/entropic-bond/compare/v1.59.3...v1.59.4) (2026-06-30)
+
+
+### Bug Fixes
+
+* bump tsc 6.x.x ([9157e20](https://github.com/entropic-bond/entropic-bond/commit/9157e20ef834c15d63a904e2e93f677a83c15a74))
+
+
+### Performance Improvements
+
+* reduce resolveDelay from 50ms to 10ms in json-data-source.spec ([55e6c0b](https://github.com/entropic-bond/entropic-bond/commit/55e6c0bcdfbab1eef23c0654d907cd9b83424dd0))
+
 ## [1.59.3](https://github.com/entropic-bond/entropic-bond/compare/v1.59.2...v1.59.3) (2026-06-24)
 
 
