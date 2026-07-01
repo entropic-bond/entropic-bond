@@ -1,0 +1,10 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "plugin": ["typedoc-plugin-markdown"],
+  "tsconfig": "tsconfig.json",
+  "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/mocks/**"],
+  "excludePrivate": true,
+  "excludeInternal": true
+}

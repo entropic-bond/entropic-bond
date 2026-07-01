@@ -1,97 +1,99 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / CloudFunctionsMock
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / CloudFunctionsMock
 
 # Class: CloudFunctionsMock
+
+Defined in: [cloud-functions/cloud-functions-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions-mock.ts#L7)
 
 ## Implements
 
 - [`CloudFunctionsService`](../interfaces/CloudFunctionsService.md)
 
-## Table of contents
-
-### Constructors
-
-- [constructor](CloudFunctionsMock.md#constructor)
-
-### Methods
-
-- [callFunction](CloudFunctionsMock.md#callfunction)
-- [retrieveFunction](CloudFunctionsMock.md#retrievefunction)
-
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new CloudFunctionsMock**(`registeredFunctions`)
+> **new CloudFunctionsMock**(`registeredFunctions`): `CloudFunctionsMock`
+
+Defined in: [cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions-mock.ts#L8)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `registeredFunctions` | `FunctionCollection` |
+##### registeredFunctions
 
-#### Defined in
+`FunctionCollection`
 
-[cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions-mock.ts#L8)
+#### Returns
+
+`CloudFunctionsMock`
 
 ## Methods
 
-### callFunction
+### callFunction()
 
-▸ **callFunction**<`P`, `R`\>(`func`, `params`): `Promise`<`R`\>
+> **callFunction**\<`P`, `R`\>(`func`, `params`): `Promise`\<`R`\>
 
-#### Type parameters
+Defined in: [cloud-functions/cloud-functions-mock.ts:18](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions-mock.ts#L18)
 
-| Name |
-| :------ |
-| `P` |
-| `R` |
+#### Type Parameters
 
-#### Parameters
+##### P
 
-| Name | Type |
-| :------ | :------ |
-| `func` | [`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\> |
-| `params` | `P` |
+`P`
 
-#### Returns
+##### R
 
-`Promise`<`R`\>
-
-#### Implementation of
-
-[CloudFunctionsService](../interfaces/CloudFunctionsService.md).[callFunction](../interfaces/CloudFunctionsService.md#callfunction)
-
-#### Defined in
-
-[cloud-functions/cloud-functions-mock.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions-mock.ts#L16)
-
-___
-
-### retrieveFunction
-
-▸ **retrieveFunction**<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `P` |
-| `R` |
+`R`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudFunction` | `string` |
+##### func
+
+[`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
+
+##### params
+
+`P`
 
 #### Returns
 
-[`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
+`Promise`\<`R`\>
 
 #### Implementation of
 
-[CloudFunctionsService](../interfaces/CloudFunctionsService.md).[retrieveFunction](../interfaces/CloudFunctionsService.md#retrievefunction)
+[`CloudFunctionsService`](../interfaces/CloudFunctionsService.md).[`callFunction`](../interfaces/CloudFunctionsService.md#callfunction)
 
-#### Defined in
+***
 
-[cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions-mock.ts#L12)
+### retrieveFunction()
+
+> **retrieveFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
+
+Defined in: [cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions-mock.ts#L12)
+
+#### Type Parameters
+
+##### P
+
+`P`
+
+##### R
+
+`R`
+
+#### Parameters
+
+##### cloudFunction
+
+`string`
+
+#### Returns
+
+[`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
+
+#### Implementation of
+
+[`CloudFunctionsService`](../interfaces/CloudFunctionsService.md).[`retrieveFunction`](../interfaces/CloudFunctionsService.md#retrievefunction)

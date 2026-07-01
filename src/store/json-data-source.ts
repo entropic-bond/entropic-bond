@@ -39,7 +39,7 @@ export class JsonDataSource extends DataSource {
 	/**
 	 * Set the JSON object to initialize the data store. Use to set the it after 
 	 * the constructor has been called.
-	 * @param jsonRawData the JSON object to be used as data store
+	 * @param rawDataStore the JSON object to be used as data store
 	 */
 	setDataStore( rawDataStore: JsonRawData ) {
 		this._jsonRawData = rawDataStore;

@@ -1,13 +1,19 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / Store
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / Store
 
 # Class: Store
+
+Defined in: [store/store.ts:20](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L20)
 
 The store is the main entry point for the data access layer.
 It provides methods to retrieve models for collections and subcollections.
 It also provides methods to populate property references with actual data from the store.
 You need to register a data source before using the store.
 
-**`Example`**
+## Example
 
 ```ts
 // Register a data source
@@ -20,138 +26,125 @@ const model = Store.getModelForSubCollection( user, 'Posts' )
 const user = await Store.populate( user )
 ```
 
-## Table of contents
-
-### Properties
-
-- [error](Store.md#error)
-
-### Accessors
-
-- [dataSource](Store.md#datasource)
-
-### Methods
-
-- [getModel](Store.md#getmodel)
-- [getModelForSubCollection](Store.md#getmodelforsubcollection)
-- [isPopulated](Store.md#ispopulated)
-- [populate](Store.md#populate)
-- [useDataSource](Store.md#usedatasource)
-
 ## Properties
 
 ### error
 
-▪ `Static` **error**: `Object`
+> `static` **error**: `object`
 
-#### Type declaration
+Defined in: [store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L23)
 
-| Name | Type |
-| :------ | :------ |
-| `shouldBeRegistered` | `string` |
+#### shouldBeRegistered
 
-#### Defined in
-
-[store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L23)
+> **shouldBeRegistered**: `string` = `'You should register a data source before using the data Store.'`
 
 ## Accessors
 
 ### dataSource
 
-• `Static` `get` **dataSource**(): [`DataSource`](DataSource.md)
+#### Get Signature
+
+> **get** `static` **dataSource**(): [`DataSource`](DataSource.md)
+
+Defined in: [store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L38)
 
 The data source currently used by the store
 
-#### Returns
+##### Returns
 
 [`DataSource`](DataSource.md)
 
 the data source
 
-#### Defined in
-
-[store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L38)
-
 ## Methods
 
-### getModel
+### getModel()
 
-▸ `Static` **getModel**<`T`\>(`classId`): [`Model`](Model.md)<`T`\>
+> `static` **getModel**\<`T`\>(`classId`): [`Model`](Model.md)\<`T`\>
+
+Defined in: [store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L47)
 
 Retrieves a model for a collection
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`Persistent`](Persistent.md)<`T`\> |
+##### T
+
+`T` *extends* [`Persistent`](Persistent.md)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `classId` | `string` \| `T` | the class name or an instance of the document type stored in the collection |
+##### classId
+
+`string` \| `T`
+
+the class name or an instance of the document type stored in the collection
 
 #### Returns
 
-[`Model`](Model.md)<`T`\>
+[`Model`](Model.md)\<`T`\>
 
 the model for the collection
 
-#### Defined in
+***
 
-[store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L47)
+### getModelForSubCollection()
 
-___
+> `static` **getModelForSubCollection**\<`T`\>(`document`, `subCollection`): [`Model`](Model.md)\<`T`\>
 
-### getModelForSubCollection
-
-▸ `Static` **getModelForSubCollection**<`T`\>(`document`, `subCollection`): [`Model`](Model.md)<`T`\>
+Defined in: [store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L58)
 
 Retrieves a model for a subcollection
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`Persistent`](Persistent.md)<`T`\> |
+##### T
+
+`T` *extends* [`Persistent`](Persistent.md)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `document` | [`Persistent`](Persistent.md) | the persistent object that owns the subcollection |
-| `subCollection` | `string` | the name of the subcollection |
+##### document
+
+[`Persistent`](Persistent.md)
+
+the persistent object that owns the subcollection
+
+##### subCollection
+
+`string`
+
+the name of the subcollection
 
 #### Returns
 
-[`Model`](Model.md)<`T`\>
+[`Model`](Model.md)\<`T`\>
 
 the model for the subcollection
 
-#### Defined in
+***
 
-[store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L58)
+### isPopulated()
 
-___
+> `static` **isPopulated**\<`T`\>(`instance`): `boolean`
 
-### isPopulated
-
-▸ `Static` **isPopulated**<`T`\>(`instance`): `boolean`
+Defined in: [store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L100)
 
 Checks if an instance is populated
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`Persistent`](Persistent.md)<`T`\> |
+##### T
+
+`T` *extends* [`Persistent`](Persistent.md)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `instance` | `T` \| readonly `T`[] | the instance or array of instances to be checked |
+##### instance
+
+`T` \| readonly `T`[]
+
+the instance or array of instances to be checked
 
 #### Returns
 
@@ -159,60 +152,56 @@ Checks if an instance is populated
 
 true if the instance is populated
 
-#### Defined in
+***
 
-[store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L100)
+### populate()
 
-___
+> `static` **populate**\<`T`\>(`instance`): `Promise`\<`T`\>
 
-### populate
-
-▸ `Static` **populate**<`T`\>(`instance`): `Promise`<`T`\>
+Defined in: [store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L69)
 
 Populates property references with actual data from the store.
 It will not retrieve data if the instance is already populated
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`Persistent`](Persistent.md) \| [`Persistent`](Persistent.md)[] |
+##### T
+
+`T` *extends* [`Persistent`](Persistent.md) \| [`Persistent`](Persistent.md)[]
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `instance` | `T` | the data to be populated. |
+##### instance
+
+`T`
+
+the data to be populated.
 
 #### Returns
 
-`Promise`<`T`\>
+`Promise`\<`T`\>
 
 the populated instance
 
-#### Defined in
+***
 
-[store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L69)
+### useDataSource()
 
-___
+> `static` **useDataSource**(`dataSource`): `void`
 
-### useDataSource
-
-▸ `Static` **useDataSource**(`dataSource`): `void`
+Defined in: [store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L30)
 
 Registers a data source to be used by the store.
 You need to register a data source before using the store.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `dataSource` | [`DataSource`](DataSource.md) | the data source to be used by the store |
+##### dataSource
+
+[`DataSource`](DataSource.md)
+
+the data source to be used by the store
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/store/store.ts#L30)

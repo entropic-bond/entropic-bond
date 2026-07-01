@@ -165,7 +165,7 @@ export abstract class DataSource {
 	/**
 	 * Utility method to convert a query object to a property path query object
 	 * 
-	 * @param queryObject the query object to be converted
+	 * @param operations the query object to be converted
 	 * @returns a property path query object
 	 * @example
 	 * const queryObject = {

@@ -1,63 +1,49 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / SignData
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / SignData
 
 # Interface: SignData
 
-## Table of contents
-
-### Properties
-
-- [authProvider](SignData.md#authprovider)
-- [email](SignData.md#email)
-- [name](SignData.md#name)
-- [password](SignData.md#password)
-- [verificationLink](SignData.md#verificationlink)
+Defined in: [auth/user-auth-types.ts:19](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L19)
 
 ## Properties
 
 ### authProvider
 
-• **authProvider**: [`AuthProvider`](../modules.md#authprovider)
+> **authProvider**: [`AuthProvider`](../type-aliases/AuthProvider.md)
 
-#### Defined in
+Defined in: [auth/user-auth-types.ts:20](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L20)
 
-[auth/user-auth-types.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/user-auth-types.ts#L16)
+***
 
-___
+### email?
 
-### email
+> `optional` **email?**: `string`
 
-• `Optional` **email**: `string`
+Defined in: [auth/user-auth-types.ts:21](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L21)
 
-#### Defined in
+***
 
-[auth/user-auth-types.ts:17](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/user-auth-types.ts#L17)
+### name?
 
-___
+> `optional` **name?**: `string`
 
-### name
+Defined in: [auth/user-auth-types.ts:23](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L23)
 
-• `Optional` **name**: `string`
+***
 
-#### Defined in
+### password?
 
-[auth/user-auth-types.ts:19](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/user-auth-types.ts#L19)
+> `optional` **password?**: `string`
 
-___
+Defined in: [auth/user-auth-types.ts:22](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L22)
 
-### password
+***
 
-• `Optional` **password**: `string`
+### verificationLink?
 
-#### Defined in
+> `optional` **verificationLink?**: `string`
 
-[auth/user-auth-types.ts:18](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/user-auth-types.ts#L18)
-
-___
-
-### verificationLink
-
-• `Optional` **verificationLink**: `string`
-
-#### Defined in
-
-[auth/user-auth-types.ts:20](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/user-auth-types.ts#L20)
+Defined in: [auth/user-auth-types.ts:24](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L24)

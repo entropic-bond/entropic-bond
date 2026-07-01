@@ -1,188 +1,203 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / AuthService
+[**entropic-bond**](../README.md)
 
-# Class: AuthService
+***
+
+[entropic-bond](../globals.md) / AuthService
+
+# Abstract Class: AuthService
+
+Defined in: [auth/auth.ts:8](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L8)
 
 The AuthService class is an abstract class that defines the interface of an authentication service.
 You should derive from this class to implement your own authentication service.
 
-## Hierarchy
+## Extended by
 
-- **`AuthService`**
-
-  ↳ [`Auth`](Auth.md)
-
-  ↳ [`AuthMock`](AuthMock.md)
-
-## Table of contents
-
-### Constructors
-
-- [constructor](AuthService.md#constructor)
-
-### Methods
-
-- [linkAdditionalProvider](AuthService.md#linkadditionalprovider)
-- [login](AuthService.md#login)
-- [logout](AuthService.md#logout)
-- [onAuthStateChange](AuthService.md#onauthstatechange)
-- [resetEmailPassword](AuthService.md#resetemailpassword)
-- [signUp](AuthService.md#signup)
-- [unlinkProvider](AuthService.md#unlinkprovider)
+- [`Auth`](Auth.md)
+- [`AuthMock`](AuthMock.md)
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new AuthService**()
+> **new AuthService**(): `AuthService`
+
+#### Returns
+
+`AuthService`
 
 ## Methods
 
-### linkAdditionalProvider
+### linkAdditionalProvider()
 
-▸ `Abstract` **linkAdditionalProvider**(`provider`): `Promise`<`unknown`\>
+> `abstract` **linkAdditionalProvider**(`provider`): `Promise`\<`unknown`\>
 
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `provider` | [`AuthProvider`](../modules.md#authprovider) |
-
-#### Returns
-
-`Promise`<`unknown`\>
-
-#### Defined in
-
-[auth/auth.ts:13](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L13)
-
-___
-
-### login
-
-▸ `Abstract` **login**<`T`\>(`signData`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+Defined in: [auth/auth.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L14)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `signData` | [`SignData`](../interfaces/SignData.md) |
+##### provider
+
+[`AuthProvider`](../type-aliases/AuthProvider.md)
 
 #### Returns
 
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+`Promise`\<`unknown`\>
 
-#### Defined in
+***
 
-[auth/auth.ts:10](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L10)
+### login()
 
-___
+> `abstract` **login**\<`T`\>(`signData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-### logout
+Defined in: [auth/auth.ts:10](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L10)
 
-▸ `Abstract` **logout**(): `Promise`<`void`\>
+#### Type Parameters
 
-#### Returns
+##### T
 
-`Promise`<`void`\>
-
-#### Defined in
-
-[auth/auth.ts:11](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L11)
-
-___
-
-### onAuthStateChange
-
-▸ `Abstract` **onAuthStateChange**<`T`\>(`onChange`): `void`
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `onChange` | (`userCredentials`: [`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>) => `void` |
+##### signData
+
+[`SignData`](../interfaces/SignData.md)
+
+#### Returns
+
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+***
+
+### logout()
+
+> `abstract` **logout**(): `Promise`\<`void`\>
+
+Defined in: [auth/auth.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L11)
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### onAuthStateChange()
+
+> `abstract` **onAuthStateChange**\<`T`\>(`onChange`): `void`
+
+Defined in: [auth/auth.ts:16](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L16)
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
+
+#### Parameters
+
+##### onChange
+
+(`userCredentials`) => `void`
 
 #### Returns
 
 `void`
 
-#### Defined in
+***
 
-[auth/auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L15)
+### refreshToken()
 
-___
+> `abstract` **refreshToken**(): `Promise`\<`void`\>
 
-### resetEmailPassword
-
-▸ `Abstract` **resetEmailPassword**(`email`): `Promise`<`void`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `email` | `string` |
+Defined in: [auth/auth.ts:13](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L13)
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
-#### Defined in
+***
 
-[auth/auth.ts:12](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L12)
+### resendVerificationEmail()
 
-___
+> `abstract` **resendVerificationEmail**(`email`, `password`, `verificationLink`): `Promise`\<`void`\>
 
-### signUp
-
-▸ `Abstract` **signUp**<`T`\>(`signData`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+Defined in: [auth/auth.ts:17](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L17)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `signData` | [`SignData`](../interfaces/SignData.md) |
+##### email
+
+`string`
+
+##### password
+
+`string`
+
+##### verificationLink
+
+`string`
 
 #### Returns
 
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+`Promise`\<`void`\>
 
-#### Defined in
+***
 
-[auth/auth.ts:9](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L9)
+### resetEmailPassword()
 
-___
+> `abstract` **resetEmailPassword**(`email`): `Promise`\<`void`\>
 
-### unlinkProvider
-
-▸ `Abstract` **unlinkProvider**(`provider`): `Promise`<`unknown`\>
+Defined in: [auth/auth.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L12)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `provider` | [`AuthProvider`](../modules.md#authprovider) |
+##### email
+
+`string`
 
 #### Returns
 
-`Promise`<`unknown`\>
+`Promise`\<`void`\>
 
-#### Defined in
+***
 
-[auth/auth.ts:14](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L14)
+### signUp()
+
+> `abstract` **signUp**\<`T`\>(`signData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+Defined in: [auth/auth.ts:9](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L9)
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
+
+#### Parameters
+
+##### signData
+
+[`SignData`](../interfaces/SignData.md)
+
+#### Returns
+
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+***
+
+### unlinkProvider()
+
+> `abstract` **unlinkProvider**(`provider`): `Promise`\<`unknown`\>
+
+Defined in: [auth/auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L15)
+
+#### Parameters
+
+##### provider
+
+[`AuthProvider`](../type-aliases/AuthProvider.md)
+
+#### Returns
+
+`Promise`\<`unknown`\>

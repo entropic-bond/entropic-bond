@@ -165,7 +165,7 @@ export class Persistent {
 
 	/**
 	 * Returns a new instance of Persistent class.
-	 * @param className the initial id of this instance. If not provided, a new id will be generated
+	 * @param id the initial id of this instance. If not provided, a new id will be generated
 	 */
 	constructor( id: string = uuid() ) {
 		this._id = id
@@ -617,7 +617,7 @@ export function persistentReference( target: Persistent, property: string ) {
  * @param cachedProps Pass an array of properties whose values should be stored in the reference object or an object
  * with the cachedProps configuration.
  * @param propTypeName the accepted type name or type names of the property
- * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @param storeInCollection indicates the path of the collection where this reference is stored
  * @param targetCollection indicates the path of the target collection. The storedCollection param refers to the collection
  * where this reference is stored whereas the targetCollection param refers to the collection where the object containing the 
  * property is stored.
@@ -670,7 +670,7 @@ export function persistentReferenceWithCachedProps<T extends Persistent>(
  * @param cachedProps Pass an array of properties whose values should be stored in the reference object or an object
  * with the cachedProps configuration.
  * @param propTypeName the accepted type name or type names of the property
- * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @param storeInCollection indicates the path of the collection where this reference is stored
  * @param targetCollection indicates the path of the target collection. The storedCollection param refers to the collection
  * where this reference is stored whereas the targetCollection param refers to the collection where the object containing the 
  * property is stored.
@@ -795,7 +795,7 @@ export function requiredWithValidator<T extends Persistent, P extends ClassPropN
  * Decorator to define the type name or type names of a persistent property.
  * This is useful when the type cannot be inferred automatically by the persistence engine which typically
  * happens when the property is initialized as null or undefined.
- * @param typeName the type name or the acceptable type names (in case of inheritance) of the property
+ * @param typeNames the type name or the acceptable type names (in case of inheritance) of the property
  */
 export function typeName( typeNames: string | string[] | PersistentConstructor ) {
 	let typeName: string | string[]

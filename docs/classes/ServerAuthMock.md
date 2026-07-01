@@ -1,176 +1,163 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / ServerAuthMock
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / ServerAuthMock
 
 # Class: ServerAuthMock
 
-## Hierarchy
+Defined in: [server-auth/server-auth-mock.ts:5](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L5)
+
+## Extends
 
 - [`ServerAuthService`](ServerAuthService.md)
 
-  ↳ **`ServerAuthMock`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](ServerAuthMock.md#constructor)
-
-### Accessors
-
-- [userCredentials](ServerAuthMock.md#usercredentials)
-
-### Methods
-
-- [deleteUser](ServerAuthMock.md#deleteuser)
-- [getUser](ServerAuthMock.md#getuser)
-- [setCustomCredentials](ServerAuthMock.md#setcustomcredentials)
-- [updateUser](ServerAuthMock.md#updateuser)
-
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new ServerAuthMock**(`userCredentials`)
+> **new ServerAuthMock**(`userCredentials`): `ServerAuthMock`
+
+Defined in: [server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L6)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `userCredentials` | [`Collection`](../interfaces/Collection.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\> |
+##### userCredentials
+
+[`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
+
+#### Returns
+
+`ServerAuthMock`
 
 #### Overrides
 
-[ServerAuthService](ServerAuthService.md).[constructor](ServerAuthService.md#constructor)
-
-#### Defined in
-
-[server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L6)
+[`ServerAuthService`](ServerAuthService.md).[`constructor`](ServerAuthService.md#constructor)
 
 ## Accessors
 
 ### userCredentials
 
-• `get` **userCredentials**(): [`Collection`](../interfaces/Collection.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\>
+#### Get Signature
 
-#### Returns
+> **get** **userCredentials**(): [`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
 
-[`Collection`](../interfaces/Collection.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\>
+Defined in: [server-auth/server-auth-mock.ts:40](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L40)
 
-#### Defined in
+##### Returns
 
-[server-auth/server-auth-mock.ts:39](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L39)
+[`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
 
 ## Methods
 
-### deleteUser
+### deleteUser()
 
-▸ **deleteUser**(`userId`): `Promise`<`void`\>
+> **deleteUser**(`userId`): `Promise`\<`void`\>
 
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `userId` | `string` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Overrides
-
-[ServerAuthService](ServerAuthService.md).[deleteUser](ServerAuthService.md#deleteuser)
-
-#### Defined in
-
-[server-auth/server-auth-mock.ts:34](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L34)
-
-___
-
-### getUser
-
-▸ **getUser**<`T`\>(`userId`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`CustomCredentials`](../interfaces/CustomCredentials.md) |
+Defined in: [server-auth/server-auth-mock.ts:35](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L35)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `userId` | `string` |
+##### userId
+
+`string`
 
 #### Returns
 
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[ServerAuthService](ServerAuthService.md).[getUser](ServerAuthService.md#getuser)
+[`ServerAuthService`](ServerAuthService.md).[`deleteUser`](ServerAuthService.md#deleteuser)
 
-#### Defined in
+***
 
-[server-auth/server-auth-mock.ts:11](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L11)
+### getUser()
 
-___
+> **getUser**\<`T`\>(`userId`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\> \| `undefined`\>
 
-### setCustomCredentials
+Defined in: [server-auth/server-auth-mock.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L11)
 
-▸ **setCustomCredentials**<`T`\>(`userId`, `customCredentials`): `Promise`<`void`\>
+#### Type Parameters
 
-#### Type parameters
+##### T
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`CustomCredentials`](../interfaces/CustomCredentials.md) |
+`T` *extends* [`CustomCredentials`](../interfaces/CustomCredentials.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `userId` | `string` |
-| `customCredentials` | `T` |
+##### userId
+
+`string`
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\> \| `undefined`\>
 
 #### Overrides
 
-[ServerAuthService](ServerAuthService.md).[setCustomCredentials](ServerAuthService.md#setcustomcredentials)
+[`ServerAuthService`](ServerAuthService.md).[`getUser`](ServerAuthService.md#getuser)
 
-#### Defined in
+***
 
-[server-auth/server-auth-mock.ts:17](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L17)
+### setCustomCredentials()
 
-___
+> **setCustomCredentials**\<`T`\>(`userId`, `customCredentials`): `Promise`\<`void`\>
 
-### updateUser
+Defined in: [server-auth/server-auth-mock.ts:17](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L17)
 
-▸ **updateUser**<`T`\>(`userId`, `credentials`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+#### Type Parameters
 
-#### Type parameters
+##### T
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`CustomCredentials`](../interfaces/CustomCredentials.md) |
+`T` *extends* [`CustomCredentials`](../interfaces/CustomCredentials.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `userId` | `string` |
-| `credentials` | `Partial`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\> |
+##### userId
+
+`string`
+
+##### customCredentials
+
+`T`
 
 #### Returns
 
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[ServerAuthService](ServerAuthService.md).[updateUser](ServerAuthService.md#updateuser)
+[`ServerAuthService`](ServerAuthService.md).[`setCustomCredentials`](ServerAuthService.md#setcustomcredentials)
 
-#### Defined in
+***
 
-[server-auth/server-auth-mock.ts:24](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/server-auth/server-auth-mock.ts#L24)
+### updateUser()
+
+> **updateUser**\<`T`\>(`userId`, `credentials`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+Defined in: [server-auth/server-auth-mock.ts:25](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L25)
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CustomCredentials`](../interfaces/CustomCredentials.md)
+
+#### Parameters
+
+##### userId
+
+`string`
+
+##### credentials
+
+`Partial`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+#### Returns
+
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+#### Overrides
+
+[`ServerAuthService`](ServerAuthService.md).[`updateUser`](ServerAuthService.md#updateuser)

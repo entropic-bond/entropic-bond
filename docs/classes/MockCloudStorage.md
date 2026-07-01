@@ -1,197 +1,196 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / MockCloudStorage
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / MockCloudStorage
 
 # Class: MockCloudStorage
 
-## Hierarchy
+Defined in: [cloud-storage/mock-cloud-storage.ts:4](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L4)
+
+## Extends
 
 - [`CloudStorage`](CloudStorage.md)
 
-  ↳ **`MockCloudStorage`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](MockCloudStorage.md#constructor)
-
-### Properties
-
-- [mockFileSystem](MockCloudStorage.md#mockfilesystem)
-- [\_defaultCloudStorage](MockCloudStorage.md#_defaultcloudstorage)
-
-### Accessors
-
-- [className](MockCloudStorage.md#classname)
-- [defaultCloudStorage](MockCloudStorage.md#defaultcloudstorage)
-
-### Methods
-
-- [delete](MockCloudStorage.md#delete)
-- [getUrl](MockCloudStorage.md#geturl)
-- [save](MockCloudStorage.md#save)
-- [uploadControl](MockCloudStorage.md#uploadcontrol)
-- [createInstance](MockCloudStorage.md#createinstance)
-- [registerCloudStorage](MockCloudStorage.md#registercloudstorage)
-- [useCloudStorage](MockCloudStorage.md#usecloudstorage)
-
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new MockCloudStorage**(`pathToMockFiles?`)
+> **new MockCloudStorage**(`pathToMockFiles?`): `MockCloudStorage`
+
+Defined in: [cloud-storage/mock-cloud-storage.ts:5](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L5)
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `pathToMockFiles` | `string` | `''` |
+##### pathToMockFiles?
+
+`string` = `''`
+
+#### Returns
+
+`MockCloudStorage`
 
 #### Overrides
 
-[CloudStorage](CloudStorage.md).[constructor](CloudStorage.md#constructor)
-
-#### Defined in
-
-[cloud-storage/mock-cloud-storage.ts:5](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L5)
+[`CloudStorage`](CloudStorage.md).[`constructor`](CloudStorage.md#constructor)
 
 ## Properties
 
 ### mockFileSystem
 
-• **mockFileSystem**: `Object` = `{}`
+> **mockFileSystem**: `object` = `{}`
 
-#### Defined in
+Defined in: [cloud-storage/mock-cloud-storage.ts:71](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L71)
 
-[cloud-storage/mock-cloud-storage.ts:43](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L43)
-
-___
+***
 
 ### \_defaultCloudStorage
 
-▪ `Static` **\_defaultCloudStorage**: [`CloudStorage`](CloudStorage.md)
+> `static` **\_defaultCloudStorage**: [`CloudStorage`](CloudStorage.md)
+
+Defined in: [cloud-storage/cloud-storage.ts:51](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L51)
 
 #### Inherited from
 
-[CloudStorage](CloudStorage.md).[_defaultCloudStorage](CloudStorage.md#_defaultcloudstorage)
-
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:50](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L50)
+[`CloudStorage`](CloudStorage.md).[`_defaultCloudStorage`](CloudStorage.md#_defaultcloudstorage)
 
 ## Accessors
 
 ### className
 
-• `get` **className**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** **className**(): `string`
+
+Defined in: [cloud-storage/cloud-storage.ts:37](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L37)
+
+##### Returns
 
 `string`
 
 #### Inherited from
 
-CloudStorage.className
+[`CloudStorage`](CloudStorage.md).[`className`](CloudStorage.md#classname)
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L36)
-
-___
+***
 
 ### defaultCloudStorage
 
-• `Static` `get` **defaultCloudStorage**(): [`CloudStorage`](CloudStorage.md)
+#### Get Signature
 
-#### Returns
+> **get** `static` **defaultCloudStorage**(): [`CloudStorage`](CloudStorage.md)
+
+Defined in: [cloud-storage/cloud-storage.ts:45](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L45)
+
+##### Returns
 
 [`CloudStorage`](CloudStorage.md)
 
 #### Inherited from
 
-CloudStorage.defaultCloudStorage
-
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L44)
+[`CloudStorage`](CloudStorage.md).[`defaultCloudStorage`](CloudStorage.md#defaultcloudstorage)
 
 ## Methods
 
-### delete
+### delete()
 
-▸ **delete**(`reference`): `Promise`<`void`\>
+> **delete**(`reference`): `Promise`\<`void`\>
 
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `reference` | `string` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Overrides
-
-[CloudStorage](CloudStorage.md).[delete](CloudStorage.md#delete)
-
-#### Defined in
-
-[cloud-storage/mock-cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L36)
-
-___
-
-### getUrl
-
-▸ **getUrl**(`reference`): `Promise`<`string`\>
+Defined in: [cloud-storage/mock-cloud-storage.ts:62](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L62)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `reference` | `string` |
+##### reference
+
+`string`
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[CloudStorage](CloudStorage.md).[getUrl](CloudStorage.md#geturl)
+[`CloudStorage`](CloudStorage.md).[`delete`](CloudStorage.md#delete)
 
-#### Defined in
+***
 
-[cloud-storage/mock-cloud-storage.ts:32](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L32)
+### getUrl()
 
-___
+> **getUrl**(`reference`): `Promise`\<`string`\>
 
-### save
-
-▸ **save**(`id`, `data`): `Promise`<`string`\>
+Defined in: [cloud-storage/mock-cloud-storage.ts:58](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L58)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `id` | `string` |
-| `data` | [`StorableData`](../modules.md#storabledata) |
+##### reference
+
+`string`
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`\<`string`\>
 
 #### Overrides
 
-[CloudStorage](CloudStorage.md).[save](CloudStorage.md#save)
+[`CloudStorage`](CloudStorage.md).[`getUrl`](CloudStorage.md#geturl)
 
-#### Defined in
+***
 
-[cloud-storage/mock-cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L10)
+### save()
 
-___
+> **save**(`id`, `data`): `Promise`\<`string`\>
 
-### uploadControl
+Defined in: [cloud-storage/mock-cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L36)
 
-▸ **uploadControl**(): [`UploadControl`](../interfaces/UploadControl.md)
+#### Parameters
+
+##### id
+
+`string`
+
+##### data
+
+[`StorableData`](../type-aliases/StorableData.md)
+
+#### Returns
+
+`Promise`\<`string`\>
+
+#### Overrides
+
+[`CloudStorage`](CloudStorage.md).[`save`](CloudStorage.md#save)
+
+***
+
+### simulateDelay()
+
+> **simulateDelay**(`miliSeconds`): `MockCloudStorage`
+
+Defined in: [cloud-storage/mock-cloud-storage.ts:15](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L15)
+
+Introduce a delay in the execution of operations to simulate a real data source
+
+#### Parameters
+
+##### miliSeconds
+
+`number`
+
+the number of milliseconds to delay the execution of operations
+
+#### Returns
+
+`MockCloudStorage`
+
+a chainable reference to this object
+
+***
+
+### uploadControl()
+
+> **uploadControl**(): [`UploadControl`](../interfaces/UploadControl.md)
+
+Defined in: [cloud-storage/mock-cloud-storage.ts:49](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/mock-cloud-storage.ts#L49)
 
 #### Returns
 
@@ -199,23 +198,21 @@ ___
 
 #### Overrides
 
-[CloudStorage](CloudStorage.md).[uploadControl](CloudStorage.md#uploadcontrol)
+[`CloudStorage`](CloudStorage.md).[`uploadControl`](CloudStorage.md#uploadcontrol)
 
-#### Defined in
+***
 
-[cloud-storage/mock-cloud-storage.ts:23](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/mock-cloud-storage.ts#L23)
+### createInstance()
 
-___
+> `static` **createInstance**(`providerName`): [`CloudStorage`](CloudStorage.md)
 
-### createInstance
-
-▸ `Static` **createInstance**(`providerName`): [`CloudStorage`](CloudStorage.md)
+Defined in: [cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L28)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `providerName` | `string` |
+##### providerName
+
+`string`
 
 #### Returns
 
@@ -223,24 +220,25 @@ ___
 
 #### Inherited from
 
-[CloudStorage](CloudStorage.md).[createInstance](CloudStorage.md#createinstance)
+[`CloudStorage`](CloudStorage.md).[`createInstance`](CloudStorage.md#createinstance)
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L28)
+### registerCloudStorage()
 
-___
+> `static` **registerCloudStorage**(`cloudStorageProviderName`, `factory`): `void`
 
-### registerCloudStorage
-
-▸ `Static` **registerCloudStorage**(`cloudStorageProviderName`, `factory`): `void`
+Defined in: [cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L24)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudStorageProviderName` | `string` |
-| `factory` | `CloudStorageFactory` |
+##### cloudStorageProviderName
+
+`string`
+
+##### factory
+
+`CloudStorageFactory`
 
 #### Returns
 
@@ -248,23 +246,21 @@ ___
 
 #### Inherited from
 
-[CloudStorage](CloudStorage.md).[registerCloudStorage](CloudStorage.md#registercloudstorage)
+[`CloudStorage`](CloudStorage.md).[`registerCloudStorage`](CloudStorage.md#registercloudstorage)
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L24)
+### useCloudStorage()
 
-___
+> `static` **useCloudStorage**(`provider`): `void`
 
-### useCloudStorage
-
-▸ `Static` **useCloudStorage**(`provider`): `void`
+Defined in: [cloud-storage/cloud-storage.ts:41](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L41)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `provider` | [`CloudStorage`](CloudStorage.md) |
+##### provider
+
+[`CloudStorage`](CloudStorage.md)
 
 #### Returns
 
@@ -272,8 +268,4 @@ ___
 
 #### Inherited from
 
-[CloudStorage](CloudStorage.md).[useCloudStorage](CloudStorage.md#usecloudstorage)
-
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:40](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L40)
+[`CloudStorage`](CloudStorage.md).[`useCloudStorage`](CloudStorage.md#usecloudstorage)

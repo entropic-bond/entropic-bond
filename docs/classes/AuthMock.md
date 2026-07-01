@@ -1,191 +1,169 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / AuthMock
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / AuthMock
 
 # Class: AuthMock
+
+Defined in: [auth/auth-mock.ts:5](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L5)
 
 The AuthService class is an abstract class that defines the interface of an authentication service.
 You should derive from this class to implement your own authentication service.
 
-## Hierarchy
+## Extends
 
 - [`AuthService`](AuthService.md)
 
-  ↳ **`AuthMock`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](AuthMock.md#constructor)
-
-### Accessors
-
-- [fakeRegisteredUsers](AuthMock.md#fakeregisteredusers)
-
-### Methods
-
-- [fakeRegisteredUser](AuthMock.md#fakeregistereduser)
-- [flush](AuthMock.md#flush)
-- [linkAdditionalProvider](AuthMock.md#linkadditionalprovider)
-- [login](AuthMock.md#login)
-- [logout](AuthMock.md#logout)
-- [onAuthStateChange](AuthMock.md#onauthstatechange)
-- [resetEmailPassword](AuthMock.md#resetemailpassword)
-- [signUp](AuthMock.md#signup)
-- [unlinkProvider](AuthMock.md#unlinkprovider)
-
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new AuthMock**()
+> **new AuthMock**(): `AuthMock`
+
+#### Returns
+
+`AuthMock`
 
 #### Inherited from
 
-[AuthService](AuthService.md).[constructor](AuthService.md#constructor)
+[`AuthService`](AuthService.md).[`constructor`](AuthService.md#constructor)
 
 ## Accessors
 
 ### fakeRegisteredUsers
 
-• `get` **fakeRegisteredUsers**(): [`Collection`](../interfaces/Collection.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\>
+#### Get Signature
 
-#### Returns
+> **get** **fakeRegisteredUsers**(): [`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
 
-[`Collection`](../interfaces/Collection.md)<[`UserCredentials`](../interfaces/UserCredentials.md)<{}\>\>
+Defined in: [auth/auth-mock.ts:98](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L98)
 
-#### Defined in
+##### Returns
 
-[auth/auth-mock.ts:85](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L85)
+[`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
 
 ## Methods
 
-### fakeRegisteredUser
+### fakeRegisteredUser()
 
-▸ **fakeRegisteredUser**<`T`\>(`userCredentials`): [`AuthMock`](AuthMock.md)
+> **fakeRegisteredUser**\<`T`\>(`userCredentials`): `AuthMock`
 
-#### Type parameters
+Defined in: [auth/auth-mock.ts:92](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L92)
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+#### Type Parameters
 
-#### Parameters
+##### T
 
-| Name | Type |
-| :------ | :------ |
-| `userCredentials` | [`UserCredentials`](../interfaces/UserCredentials.md)<`T`\> |
-
-#### Returns
-
-[`AuthMock`](AuthMock.md)
-
-#### Defined in
-
-[auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L79)
-
-___
-
-### flush
-
-▸ **flush**(): `Promise`<`void`\>
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[auth/auth-mock.ts:74](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L74)
-
-___
-
-### linkAdditionalProvider
-
-▸ **linkAdditionalProvider**(`provider`): `Promise`<`unknown`\>
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `provider` | [`AuthProvider`](../modules.md#authprovider) |
+##### userCredentials
+
+[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>
 
 #### Returns
 
-`Promise`<`unknown`\>
+`AuthMock`
+
+***
+
+### flush()
+
+> **flush**(): `Promise`\<`void`\>
+
+Defined in: [auth/auth-mock.ts:87](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L87)
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### linkAdditionalProvider()
+
+> **linkAdditionalProvider**(`provider`): `Promise`\<`unknown`\>
+
+Defined in: [auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L79)
+
+#### Parameters
+
+##### provider
+
+[`AuthProvider`](../type-aliases/AuthProvider.md)
+
+#### Returns
+
+`Promise`\<`unknown`\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[linkAdditionalProvider](AuthService.md#linkadditionalprovider)
+[`AuthService`](AuthService.md).[`linkAdditionalProvider`](AuthService.md#linkadditionalprovider)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L66)
+### login()
 
-___
+> **login**\<`T`\>(`signData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-### login
+Defined in: [auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L30)
 
-▸ **login**<`T`\>(`signData`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+#### Type Parameters
 
-#### Type parameters
+##### T
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `signData` | [`SignData`](../interfaces/SignData.md) |
+##### signData
+
+[`SignData`](../interfaces/SignData.md)
 
 #### Returns
 
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[login](AuthService.md#login)
+[`AuthService`](AuthService.md).[`login`](AuthService.md#login)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L30)
+### logout()
 
-___
+> **logout**(): `Promise`\<`void`\>
 
-### logout
-
-▸ **logout**(): `Promise`<`void`\>
+Defined in: [auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L47)
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[logout](AuthService.md#logout)
+[`AuthService`](AuthService.md).[`logout`](AuthService.md#logout)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L47)
+### onAuthStateChange()
 
-___
+> **onAuthStateChange**\<`T`\>(`onChange`): `void`
 
-### onAuthStateChange
+Defined in: [auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L42)
 
-▸ **onAuthStateChange**<`T`\>(`onChange`): `void`
+#### Type Parameters
 
-#### Type parameters
+##### T
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `onChange` | (`userCredentials`: [`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>) => `void` |
+##### onChange
+
+(`userCredentials`) => `void`
 
 #### Returns
 
@@ -193,86 +171,122 @@ ___
 
 #### Overrides
 
-[AuthService](AuthService.md).[onAuthStateChange](AuthService.md#onauthstatechange)
+[`AuthService`](AuthService.md).[`onAuthStateChange`](AuthService.md#onauthstatechange)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L42)
+### refreshToken()
 
-___
+> **refreshToken**(): `Promise`\<`void`\>
 
-### resetEmailPassword
-
-▸ **resetEmailPassword**(`email`): `Promise`<`void`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `email` | `string` |
+Defined in: [auth/auth-mock.ts:75](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L75)
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[resetEmailPassword](AuthService.md#resetemailpassword)
+[`AuthService`](AuthService.md).[`refreshToken`](AuthService.md#refreshtoken)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L57)
+### resendVerificationEmail()
 
-___
+> **resendVerificationEmail**(`email`, `_password`, `_verificationLink`): `Promise`\<`void`\>
 
-### signUp
-
-▸ **signUp**<`T`\>(`signData`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+Defined in: [auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L66)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `signData` | [`SignData`](../interfaces/SignData.md) |
+##### email
+
+`string`
+
+##### \_password
+
+`string`
+
+##### \_verificationLink
+
+`string`
 
 #### Returns
 
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[signUp](AuthService.md#signup)
+[`AuthService`](AuthService.md).[`resendVerificationEmail`](AuthService.md#resendverificationemail)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L7)
+### resetEmailPassword()
 
-___
+> **resetEmailPassword**(`email`): `Promise`\<`void`\>
 
-### unlinkProvider
-
-▸ **unlinkProvider**(`provider`): `Promise`<`unknown`\>
+Defined in: [auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L57)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `provider` | [`AuthProvider`](../modules.md#authprovider) |
+##### email
+
+`string`
 
 #### Returns
 
-`Promise`<`unknown`\>
+`Promise`\<`void`\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[unlinkProvider](AuthService.md#unlinkprovider)
+[`AuthService`](AuthService.md).[`resetEmailPassword`](AuthService.md#resetemailpassword)
 
-#### Defined in
+***
 
-[auth/auth-mock.ts:70](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth-mock.ts#L70)
+### signUp()
+
+> **signUp**\<`T`\>(`signData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+Defined in: [auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L7)
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
+
+#### Parameters
+
+##### signData
+
+[`SignData`](../interfaces/SignData.md)
+
+#### Returns
+
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+#### Overrides
+
+[`AuthService`](AuthService.md).[`signUp`](AuthService.md#signup)
+
+***
+
+### unlinkProvider()
+
+> **unlinkProvider**(`provider`): `Promise`\<`unknown`\>
+
+Defined in: [auth/auth-mock.ts:83](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L83)
+
+#### Parameters
+
+##### provider
+
+[`AuthProvider`](../type-aliases/AuthProvider.md)
+
+#### Returns
+
+`Promise`\<`unknown`\>
+
+#### Overrides
+
+[`AuthService`](AuthService.md).[`unlinkProvider`](AuthService.md#unlinkprovider)

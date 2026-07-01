@@ -1,49 +1,39 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / DocumentReference
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / DocumentReference
 
 # Interface: DocumentReference
 
+Defined in: [persistent/persistent.ts:53](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L53)
+
 Stores information about a reference in another collection.
-
-## Table of contents
-
-### Properties
-
-- [\_\_className](DocumentReference.md#__classname)
-- [\_\_documentReference](DocumentReference.md#__documentreference)
-- [id](DocumentReference.md#id)
 
 ## Properties
 
 ### \_\_className
 
-• **\_\_className**: `string`
+> **\_\_className**: `string`
 
-#### Defined in
+Defined in: [persistent/persistent.ts:55](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L55)
 
-[persistent/persistent.ts:45](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L45)
-
-___
+***
 
 ### \_\_documentReference
 
-• **\_\_documentReference**: `Object`
+> **\_\_documentReference**: `object`
 
-#### Type declaration
+Defined in: [persistent/persistent.ts:56](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L56)
 
-| Name | Type |
-| :------ | :------ |
-| `storedInCollection` | `string` |
+#### storedInCollection
 
-#### Defined in
+> **storedInCollection**: `string`
 
-[persistent/persistent.ts:46](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L46)
-
-___
+***
 
 ### id
 
-• **id**: `string`
+> **id**: `string`
 
-#### Defined in
-
-[persistent/persistent.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/persistent/persistent.ts#L44)
+Defined in: [persistent/persistent.ts:54](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L54)

@@ -1,30 +1,25 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / AuthError
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / AuthError
 
 # Interface: AuthError
 
-## Table of contents
-
-### Properties
-
-- [code](AuthError.md#code)
-- [message](AuthError.md#message)
+Defined in: [auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L22)
 
 ## Properties
 
 ### code
 
-• **code**: [`AuthErrorCode`](../modules.md#autherrorcode)
+> **code**: [`AuthErrorCode`](../type-aliases/AuthErrorCode.md)
 
-#### Defined in
+Defined in: [auth/auth.ts:23](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L23)
 
-[auth/auth.ts:21](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L21)
-
-___
+***
 
 ### message
 
-• **message**: `string`
+> **message**: `string`
 
-#### Defined in
-
-[auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L22)
+Defined in: [auth/auth.ts:24](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L24)

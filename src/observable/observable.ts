@@ -33,7 +33,7 @@ export class Observable<T> {
 	/**
 	 * Removes the callback from the notification list.
 	 * 
-	 * @param listenerCallback the listener callback to remove
+	 * @param callback the listener callback to remove
 	 */
 	unsubscribe( callback: Callback<T> ) {
 		this.subscribers.delete( callback )

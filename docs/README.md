@@ -1,4 +1,6 @@
-entropic-bond / [Exports](modules.md)
+**entropic-bond**
+
+***
 
 # Entropic Bond
 

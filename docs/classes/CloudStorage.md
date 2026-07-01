@@ -1,215 +1,191 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / CloudStorage
+[**entropic-bond**](../README.md)
 
-# Class: CloudStorage
+***
 
-## Hierarchy
+[entropic-bond](../globals.md) / CloudStorage
 
-- **`CloudStorage`**
+# Abstract Class: CloudStorage
 
-  ↳ [`MockCloudStorage`](MockCloudStorage.md)
+Defined in: [cloud-storage/cloud-storage.ts:18](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L18)
 
-## Table of contents
+## Extended by
 
-### Constructors
-
-- [constructor](CloudStorage.md#constructor)
-
-### Properties
-
-- [\_defaultCloudStorage](CloudStorage.md#_defaultcloudstorage)
-
-### Accessors
-
-- [className](CloudStorage.md#classname)
-- [defaultCloudStorage](CloudStorage.md#defaultcloudstorage)
-
-### Methods
-
-- [delete](CloudStorage.md#delete)
-- [getUrl](CloudStorage.md#geturl)
-- [save](CloudStorage.md#save)
-- [uploadControl](CloudStorage.md#uploadcontrol)
-- [createInstance](CloudStorage.md#createinstance)
-- [registerCloudStorage](CloudStorage.md#registercloudstorage)
-- [useCloudStorage](CloudStorage.md#usecloudstorage)
+- [`MockCloudStorage`](MockCloudStorage.md)
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new CloudStorage**()
+> **new CloudStorage**(): `CloudStorage`
+
+#### Returns
+
+`CloudStorage`
 
 ## Properties
 
 ### \_defaultCloudStorage
 
-▪ `Static` **\_defaultCloudStorage**: [`CloudStorage`](CloudStorage.md)
+> `static` **\_defaultCloudStorage**: `CloudStorage`
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:50](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L50)
+Defined in: [cloud-storage/cloud-storage.ts:51](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L51)
 
 ## Accessors
 
 ### className
 
-• `get` **className**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** **className**(): `string`
+
+Defined in: [cloud-storage/cloud-storage.ts:37](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L37)
+
+##### Returns
 
 `string`
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:36](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L36)
-
-___
+***
 
 ### defaultCloudStorage
 
-• `Static` `get` **defaultCloudStorage**(): [`CloudStorage`](CloudStorage.md)
+#### Get Signature
 
-#### Returns
+> **get** `static` **defaultCloudStorage**(): `CloudStorage`
 
-[`CloudStorage`](CloudStorage.md)
+Defined in: [cloud-storage/cloud-storage.ts:45](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L45)
 
-#### Defined in
+##### Returns
 
-[cloud-storage/cloud-storage.ts:44](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L44)
+`CloudStorage`
 
 ## Methods
 
-### delete
+### delete()
 
-▸ `Abstract` **delete**(`reference`): `Promise`<`void`\>
+> `abstract` **delete**(`reference`): `Promise`\<`void`\>
 
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `reference` | `string` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:22](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L22)
-
-___
-
-### getUrl
-
-▸ `Abstract` **getUrl**(`reference`): `Promise`<`string`\>
+Defined in: [cloud-storage/cloud-storage.ts:22](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L22)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `reference` | `string` |
+##### reference
+
+`string`
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`\<`void`\>
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:20](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L20)
+### getUrl()
 
-___
+> `abstract` **getUrl**(`reference`): `Promise`\<`string`\>
 
-### save
-
-▸ `Abstract` **save**(`id`, `data`, `progress`): `Promise`<`string`\>
+Defined in: [cloud-storage/cloud-storage.ts:20](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L20)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `id` | `string` |
-| `data` | [`StorableData`](../modules.md#storabledata) |
-| `progress` | [`UploadProgress`](../modules.md#uploadprogress) |
+##### reference
+
+`string`
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`\<`string`\>
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:19](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L19)
+### save()
 
-___
+> `abstract` **save**(`id`, `data`, `progress?`): `Promise`\<`string`\>
 
-### uploadControl
+Defined in: [cloud-storage/cloud-storage.ts:19](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L19)
 
-▸ `Abstract` **uploadControl**(): [`UploadControl`](../interfaces/UploadControl.md)
+#### Parameters
+
+##### id
+
+`string`
+
+##### data
+
+[`StorableData`](../type-aliases/StorableData.md)
+
+##### progress?
+
+[`UploadProgress`](../type-aliases/UploadProgress.md)
+
+#### Returns
+
+`Promise`\<`string`\>
+
+***
+
+### uploadControl()
+
+> `abstract` **uploadControl**(): [`UploadControl`](../interfaces/UploadControl.md)
+
+Defined in: [cloud-storage/cloud-storage.ts:21](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L21)
 
 #### Returns
 
 [`UploadControl`](../interfaces/UploadControl.md)
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:21](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L21)
+### createInstance()
 
-___
+> `static` **createInstance**(`providerName`): `CloudStorage`
 
-### createInstance
-
-▸ `Static` **createInstance**(`providerName`): [`CloudStorage`](CloudStorage.md)
+Defined in: [cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L28)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `providerName` | `string` |
+##### providerName
+
+`string`
 
 #### Returns
 
-[`CloudStorage`](CloudStorage.md)
+`CloudStorage`
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L28)
+### registerCloudStorage()
 
-___
+> `static` **registerCloudStorage**(`cloudStorageProviderName`, `factory`): `void`
 
-### registerCloudStorage
-
-▸ `Static` **registerCloudStorage**(`cloudStorageProviderName`, `factory`): `void`
+Defined in: [cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L24)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudStorageProviderName` | `string` |
-| `factory` | `CloudStorageFactory` |
+##### cloudStorageProviderName
 
-#### Returns
+`string`
 
-`void`
+##### factory
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L24)
-
-___
-
-### useCloudStorage
-
-▸ `Static` **useCloudStorage**(`provider`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `provider` | [`CloudStorage`](CloudStorage.md) |
+`CloudStorageFactory`
 
 #### Returns
 
 `void`
 
-#### Defined in
+***
 
-[cloud-storage/cloud-storage.ts:40](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L40)
+### useCloudStorage()
+
+> `static` **useCloudStorage**(`provider`): `void`
+
+Defined in: [cloud-storage/cloud-storage.ts:41](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L41)
+
+#### Parameters
+
+##### provider
+
+`CloudStorage`
+
+#### Returns
+
+`void`

@@ -1,69 +1,69 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / CloudFunctionsService
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / CloudFunctionsService
 
 # Interface: CloudFunctionsService
 
-## Implemented by
-
-- [`CloudFunctionsMock`](../classes/CloudFunctionsMock.md)
-
-## Table of contents
-
-### Methods
-
-- [callFunction](CloudFunctionsService.md#callfunction)
-- [retrieveFunction](CloudFunctionsService.md#retrievefunction)
+Defined in: [cloud-functions/cloud-functions.ts:6](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L6)
 
 ## Methods
 
-### callFunction
+### callFunction()
 
-▸ **callFunction**<`P`, `R`\>(`func`, `params`): `Promise`<`R`\>
+> **callFunction**\<`P`, `R`\>(`func`, `params`): `Promise`\<`R`\>
 
-#### Type parameters
+Defined in: [cloud-functions/cloud-functions.ts:8](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L8)
 
-| Name |
-| :------ |
-| `P` |
-| `R` |
+#### Type Parameters
 
-#### Parameters
+##### P
 
-| Name | Type |
-| :------ | :------ |
-| `func` | [`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\> |
-| `params` | `P` |
+`P`
 
-#### Returns
+##### R
 
-`Promise`<`R`\>
-
-#### Defined in
-
-[cloud-functions/cloud-functions.ts:8](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L8)
-
-___
-
-### retrieveFunction
-
-▸ **retrieveFunction**<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `P` |
-| `R` |
+`R`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudFunction` | `string` |
+##### func
+
+[`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
+
+##### params
+
+`P`
 
 #### Returns
 
-[`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
+`Promise`\<`R`\>
 
-#### Defined in
+***
 
-[cloud-functions/cloud-functions.ts:7](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L7)
+### retrieveFunction()
+
+> **retrieveFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
+
+Defined in: [cloud-functions/cloud-functions.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L7)
+
+#### Type Parameters
+
+##### P
+
+`P`
+
+##### R
+
+`R`
+
+#### Parameters
+
+##### cloudFunction
+
+`string`
+
+#### Returns
+
+[`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>

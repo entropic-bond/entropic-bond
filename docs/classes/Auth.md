@@ -1,135 +1,133 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / Auth
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / Auth
 
 # Class: Auth
+
+Defined in: [auth/auth.ts:38](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L38)
 
 The Auth class is a singleton that provides a unified interface to the authentication service.
 You should register an authentication service by using `Auth.useAuthService` 
 method before using the Auth class.
 
-## Hierarchy
+## Extends
 
 - [`AuthService`](AuthService.md)
 
-  ↳ **`Auth`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](Auth.md#constructor)
-
-### Properties
-
-- [error](Auth.md#error)
-
-### Accessors
-
-- [instance](Auth.md#instance)
-
-### Methods
-
-- [linkAdditionalProvider](Auth.md#linkadditionalprovider)
-- [login](Auth.md#login)
-- [logout](Auth.md#logout)
-- [onAuthStateChange](Auth.md#onauthstatechange)
-- [removeAuthStateChange](Auth.md#removeauthstatechange)
-- [resetEmailPassword](Auth.md#resetemailpassword)
-- [signUp](Auth.md#signup)
-- [unlinkProvider](Auth.md#unlinkprovider)
-- [useAuthService](Auth.md#useauthservice)
-
 ## Constructors
 
-### constructor
+### Constructor
 
-• `Protected` **new Auth**()
+> `protected` **new Auth**(): `Auth`
+
+Defined in: [auth/auth.ts:41](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L41)
+
+#### Returns
+
+`Auth`
 
 #### Overrides
 
-[AuthService](AuthService.md).[constructor](AuthService.md#constructor)
-
-#### Defined in
-
-[auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L39)
+[`AuthService`](AuthService.md).[`constructor`](AuthService.md#constructor)
 
 ## Properties
 
 ### error
 
-▪ `Static` **error**: `Object`
+> `static` **error**: `object`
 
-#### Type declaration
+Defined in: [auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L39)
 
-| Name | Type |
-| :------ | :------ |
-| `shouldBeRegistered` | `string` |
+#### shouldBeRegistered
 
-#### Defined in
-
-[auth/auth.ts:37](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L37)
+> **shouldBeRegistered**: `string` = `'You should register an auth service before using Auth.'`
 
 ## Accessors
 
 ### instance
 
-• `Static` `get` **instance**(): [`Auth`](Auth.md)
+#### Get Signature
+
+> **get** `static` **instance**(): `Auth`
+
+Defined in: [auth/auth.ts:65](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L65)
 
 The instance of the Auth class
 
-#### Returns
+##### Returns
 
-[`Auth`](Auth.md)
+`Auth`
 
 the authentication service
 
-#### Defined in
-
-[auth/auth.ts:63](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L63)
-
 ## Methods
 
-### linkAdditionalProvider
+### linkAdditionalProvider()
 
-▸ **linkAdditionalProvider**(`provider`): `Promise`<`unknown`\>
+> **linkAdditionalProvider**(`provider`): `Promise`\<`unknown`\>
+
+Defined in: [auth/auth.ts:162](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L162)
 
 Links an additional authentication provider to the authenticated user.
 
-**`Example`**
+#### Parameters
+
+##### provider
+
+[`AuthProvider`](../type-aliases/AuthProvider.md)
+
+the provider to be linked
+
+#### Returns
+
+`Promise`\<`unknown`\>
+
+a promise that resolves when the process is done
+
+#### Example
 
 ```ts
 // Link a Google account to the auth service
 Auth.instance.linkAdditionalProvider({ authProvider: 'google' })
 ```
 
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `provider` | [`AuthProvider`](../modules.md#authprovider) | the provider to be linked |
-
-#### Returns
-
-`Promise`<`unknown`\>
-
-a promise that resolves when the process is done
-
 #### Overrides
 
-[AuthService](AuthService.md).[linkAdditionalProvider](AuthService.md#linkadditionalprovider)
+[`AuthService`](AuthService.md).[`linkAdditionalProvider`](AuthService.md#linkadditionalprovider)
 
-#### Defined in
+***
 
-[auth/auth.ts:148](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L148)
+### login()
 
-___
+> **login**\<`T`\>(`singData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-### login
-
-▸ **login**<`T`\>(`singData`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+Defined in: [auth/auth.ts:93](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L93)
 
 Logs in an existing user
 
-**`Example`**
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
+
+#### Parameters
+
+##### singData
+
+[`SignData`](../interfaces/SignData.md)
+
+the data to be used to log in the user
+
+#### Returns
+
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+a promise that resolves to the user credentials
+
+#### Example
 
 ```ts
 // Log in an existing user with email and password
@@ -138,63 +136,63 @@ Auth.instance.login({ authProvider: 'email', email: 'john@test.com', password: '
 Auth.instance.login({ authProvider: 'google'})
 ```
 
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `singData` | [`SignData`](../interfaces/SignData.md) | the data to be used to log in the user |
-
-#### Returns
-
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
-
-a promise that resolves to the user credentials
-
 #### Overrides
 
-[AuthService](AuthService.md).[login](AuthService.md#login)
+[`AuthService`](AuthService.md).[`login`](AuthService.md#login)
 
-#### Defined in
+***
 
-[auth/auth.ts:91](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L91)
+### logout()
 
-___
+> **logout**(): `Promise`\<`void`\>
 
-### logout
-
-▸ **logout**(): `Promise`<`void`\>
+Defined in: [auth/auth.ts:101](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L101)
 
 Logs out the current user
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 a promise that resolves when the user is logged out
 
 #### Overrides
 
-[AuthService](AuthService.md).[logout](AuthService.md#logout)
+[`AuthService`](AuthService.md).[`logout`](AuthService.md#logout)
 
-#### Defined in
+***
 
-[auth/auth.ts:99](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L99)
+### onAuthStateChange()
 
-___
+> **onAuthStateChange**\<`T`\>(`onChange`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-### onAuthStateChange
-
-▸ **onAuthStateChange**<`T`\>(`onChange`): [`Unsubscriber`](../modules.md#unsubscriber)
+Defined in: [auth/auth.ts:142](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L142)
 
 Adds a listener to be called when the authentication state changes.
 
-**`Example`**
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
+
+#### Parameters
+
+##### onChange
+
+(`userCredentials`) => `void`
+
+the listener to be called when the authentication state changes.
+The listener is called with the user credentials as a parameter.
+If the user is logged out, the listener is called with `undefined` as a parameter.
+
+#### Returns
+
+[`Unsubscriber`](../type-aliases/Unsubscriber.md)
+
+a function to remove the listener
+
+#### Example
 
 ```ts
 // Add a listener to be called when the authentication state changes
@@ -207,97 +205,147 @@ const removeListener = Auth.instance.onAuthStateChange( userCredentials => {
 })
 ```
 
-#### Type parameters
+#### Overrides
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+[`AuthService`](AuthService.md).[`onAuthStateChange`](AuthService.md#onauthstatechange)
 
-#### Parameters
+***
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `onChange` | (`userCredentials`: [`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>) => `void` | the listener to be called when the authentication state changes. The listener is called with the user credentials as a parameter. If the user is logged out, the listener is called with `undefined` as a parameter. |
+### refreshToken()
+
+> **refreshToken**(): `Promise`\<`void`\>
+
+Defined in: [auth/auth.ts:122](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L122)
 
 #### Returns
 
-[`Unsubscriber`](../modules.md#unsubscriber)
-
-a function to remove the listener
+`Promise`\<`void`\>
 
 #### Overrides
 
-[AuthService](AuthService.md).[onAuthStateChange](AuthService.md#onauthstatechange)
+[`AuthService`](AuthService.md).[`refreshToken`](AuthService.md#refreshtoken)
 
-#### Defined in
+***
 
-[auth/auth.ts:128](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L128)
+### removeAuthStateChange()
 
-___
+> **removeAuthStateChange**\<`T`\>(`onChange`): `void`
 
-### removeAuthStateChange
-
-▸ **removeAuthStateChange**<`T`\>(`onChange`): `void`
+Defined in: [auth/auth.ts:150](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L150)
 
 Removes a listener that was added by `onAuthStateChange` method.
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `onChange` | (`userCredentials`: [`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>) => `void` | the listener to be removed |
+##### onChange
+
+(`userCredentials`) => `void`
+
+the listener to be removed
 
 #### Returns
 
 `void`
 
-#### Defined in
+***
 
-[auth/auth.ts:136](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L136)
+### resendVerificationEmail()
 
-___
+> **resendVerificationEmail**(`email`, `password`, `verificationLink`): `Promise`\<`void`\>
 
-### resetEmailPassword
+Defined in: [auth/auth.ts:118](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L118)
 
-▸ **resetEmailPassword**(`email`): `Promise`<`void`\>
-
-Resets the password associated with the email.
+Resends the email verification to the user.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `email` | `string` | the email address of the user to reset the password |
+##### email
+
+`string`
+
+##### password
+
+`string`
+
+##### verificationLink
+
+`string`
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 a promise that resolves when the process is done
 
 #### Overrides
 
-[AuthService](AuthService.md).[resetEmailPassword](AuthService.md#resetemailpassword)
+[`AuthService`](AuthService.md).[`resendVerificationEmail`](AuthService.md#resendverificationemail)
 
-#### Defined in
+***
 
-[auth/auth.ts:108](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L108)
+### resetEmailPassword()
 
-___
+> **resetEmailPassword**(`email`): `Promise`\<`void`\>
 
-### signUp
+Defined in: [auth/auth.ts:110](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L110)
 
-▸ **signUp**<`T`\>(`singData`): `Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
+Resets the password associated with the email.
+
+#### Parameters
+
+##### email
+
+`string`
+
+the email address of the user to reset the password
+
+#### Returns
+
+`Promise`\<`void`\>
+
+a promise that resolves when the process is done
+
+#### Overrides
+
+[`AuthService`](AuthService.md).[`resetEmailPassword`](AuthService.md#resetemailpassword)
+
+***
+
+### signUp()
+
+> **signUp**\<`T`\>(`singData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+Defined in: [auth/auth.ts:79](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L79)
 
 Signs up a new user
 
-**`Example`**
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)
+
+#### Parameters
+
+##### singData
+
+[`SignData`](../interfaces/SignData.md)
+
+the data to be used to sign up the user
+
+#### Returns
+
+`Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
+
+a promise that resolves to the user credentials
+
+#### Example
 
 ```ts
 // Sign up a new user with email and password
@@ -306,86 +354,64 @@ Auth.instance.signUp({ authProvider: 'email', email: 'john@test.com', password: 
 Auth.instance.signUp({ authProvider: 'google'})
 ```
 
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Object` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `singData` | [`SignData`](../interfaces/SignData.md) | the data to be used to sign up the user |
-
-#### Returns
-
-`Promise`<[`UserCredentials`](../interfaces/UserCredentials.md)<`T`\>\>
-
-a promise that resolves to the user credentials
-
 #### Overrides
 
-[AuthService](AuthService.md).[signUp](AuthService.md#signup)
+[`AuthService`](AuthService.md).[`signUp`](AuthService.md#signup)
 
-#### Defined in
+***
 
-[auth/auth.ts:77](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L77)
+### unlinkProvider()
 
-___
+> **unlinkProvider**(`provider`): `Promise`\<`unknown`\>
 
-### unlinkProvider
-
-▸ **unlinkProvider**(`provider`): `Promise`<`unknown`\>
+Defined in: [auth/auth.ts:174](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L174)
 
 Unlinks an authentication provider from the authenticated user.
 
-**`Example`**
+#### Parameters
+
+##### provider
+
+[`AuthProvider`](../type-aliases/AuthProvider.md)
+
+the provider to be unlinked
+
+#### Returns
+
+`Promise`\<`unknown`\>
+
+a promise that resolves when the process is done
+
+#### Example
 
 ```ts
 // Unlink the Google account from the auth service
 Auth.instance.unlinkProvider({ authProvider: 'google' })
 ```
 
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `provider` | [`AuthProvider`](../modules.md#authprovider) | the provider to be unlinked |
-
-#### Returns
-
-`Promise`<`unknown`\>
-
-a promise that resolves when the process is done
-
 #### Overrides
 
-[AuthService](AuthService.md).[unlinkProvider](AuthService.md#unlinkprovider)
+[`AuthService`](AuthService.md).[`unlinkProvider`](AuthService.md#unlinkprovider)
 
-#### Defined in
+***
 
-[auth/auth.ts:160](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L160)
+### useAuthService()
 
-___
+> `static` **useAuthService**(`authService`): `void`
 
-### useAuthService
-
-▸ `Static` **useAuthService**(`authService`): `void`
+Defined in: [auth/auth.ts:54](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L54)
 
 Registers an authentication service to be used by the Auth class.
 You need to register an authentication service before using the Auth class.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `authService` | [`AuthService`](AuthService.md) | the authentication service to be used by the Auth class |
+##### authService
+
+[`AuthService`](AuthService.md)
+
+the authentication service to be used by the Auth class
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[auth/auth.ts:52](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/auth/auth.ts#L52)

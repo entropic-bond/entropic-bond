@@ -1,123 +1,109 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / CloudFunctions
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / CloudFunctions
 
 # Class: CloudFunctions
 
-## Table of contents
-
-### Properties
-
-- [error](CloudFunctions.md#error)
-
-### Accessors
-
-- [instance](CloudFunctions.md#instance)
-
-### Methods
-
-- [getFunction](CloudFunctions.md#getfunction)
-- [getRawFunction](CloudFunctions.md#getrawfunction)
-- [useCloudFunctionsService](CloudFunctions.md#usecloudfunctionsservice)
+Defined in: [cloud-functions/cloud-functions.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L11)
 
 ## Properties
 
 ### error
 
-▪ `Static` **error**: `Object`
+> `static` **error**: `object`
 
-#### Type declaration
+Defined in: [cloud-functions/cloud-functions.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L14)
 
-| Name | Type |
-| :------ | :------ |
-| `shouldBeRegistered` | `string` |
+#### shouldBeRegistered
 
-#### Defined in
-
-[cloud-functions/cloud-functions.ts:14](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L14)
+> **shouldBeRegistered**: `string` = `'You should register a cloud functions service with useCloudFunctionsService static method before using CloudFunctions.'`
 
 ## Accessors
 
 ### instance
 
-• `Static` `get` **instance**(): [`CloudFunctions`](CloudFunctions.md)
+#### Get Signature
 
-#### Returns
+> **get** `static` **instance**(): `CloudFunctions`
 
-[`CloudFunctions`](CloudFunctions.md)
+Defined in: [cloud-functions/cloud-functions.ts:22](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L22)
 
-#### Defined in
+##### Returns
 
-[cloud-functions/cloud-functions.ts:22](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L22)
+`CloudFunctions`
 
 ## Methods
 
-### getFunction
+### getFunction()
 
-▸ **getFunction**<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
+> **getFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-#### Type parameters
+Defined in: [cloud-functions/cloud-functions.ts:31](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L31)
 
-| Name | Type |
-| :------ | :------ |
-| `P` | `P` |
-| `R` | `void` |
+#### Type Parameters
+
+##### P
+
+`P`
+
+##### R
+
+`R` = `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudFunction` | `string` |
+##### cloudFunction
+
+`string`
 
 #### Returns
 
-[`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
+[`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-#### Defined in
+***
 
-[cloud-functions/cloud-functions.ts:31](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L31)
+### getRawFunction()
 
-___
+> **getRawFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-### getRawFunction
+Defined in: [cloud-functions/cloud-functions.ts:27](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L27)
 
-▸ **getRawFunction**<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
+#### Type Parameters
 
-#### Type parameters
+##### P
 
-| Name |
-| :------ |
-| `P` |
-| `R` |
+`P`
+
+##### R
+
+`R`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudFunction` | `string` |
+##### cloudFunction
+
+`string`
 
 #### Returns
 
-[`CloudFunction`](../modules.md#cloudfunction)<`P`, `R`\>
+[`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-#### Defined in
+***
 
-[cloud-functions/cloud-functions.ts:27](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L27)
+### useCloudFunctionsService()
 
-___
+> `static` **useCloudFunctionsService**(`cloudFunctionsService`): `void`
 
-### useCloudFunctionsService
-
-▸ `Static` **useCloudFunctionsService**(`cloudFunctionsService`): `void`
+Defined in: [cloud-functions/cloud-functions.ts:16](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L16)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `cloudFunctionsService` | [`CloudFunctionsService`](../interfaces/CloudFunctionsService.md) |
+##### cloudFunctionsService
+
+[`CloudFunctionsService`](../interfaces/CloudFunctionsService.md)
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[cloud-functions/cloud-functions.ts:16](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-functions/cloud-functions.ts#L16)
