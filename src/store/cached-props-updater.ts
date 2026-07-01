@@ -4,7 +4,7 @@ import { DocumentObject, DataSource } from './data-source'
 import { Query } from './model'
 import { Store } from './store'
 
-type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty, value: unknown )=>void
+export type CachedPropsUpdaterCallback = ( doc: Persistent, prop: PersistentProperty, value: unknown )=>void
 export interface UpdatedResults {
 	[ matchingCollection: string ]: {
 		totalDocumentsToUpdate: number
@@ -12,9 +12,9 @@ export interface UpdatedResults {
 		documentsToUpdate: string[]
 	}
 }
-type AfterDocumentChangeCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
-type BeforeDocumentChangeCallback = ( change: DocumentChange<Persistent>, propsToUpdate?: PersistentProperty[] ) => void
-type BeforeQueryOwnerCollection = ( query: Query<any> ) => Query<any> | void
+export type AfterDocumentChangeCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
+export type BeforeDocumentChangeCallback = ( change: DocumentChange<Persistent>, propsToUpdate?: PersistentProperty[] ) => void
+export type BeforeQueryOwnerCollection = ( query: Query<any> ) => Query<any> | void
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback

@@ -95,9 +95,9 @@ export type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export type Primitive = string | number | bigint | boolean | undefined | symbol
 
-type Decr = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // add to a reasonable amount
+export type Decr = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // add to a reasonable amount
 
-type Concat<T, U> = `${ string & T }${ string & U }`
+export type Concat<T, U> = `${ string & T }${ string & U }`
 
 export type PropPath<T extends object, AllowedTypes=any, MaxDepth extends number = 9, Prefix = ''> = MaxDepth extends number
 	? {

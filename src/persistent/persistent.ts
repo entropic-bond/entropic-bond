@@ -232,7 +232,7 @@ export class Persistent {
 
 	/**
 	 * Query if the property is required
-	 * To mark a property as required, use the @required decorator
+	 * To mark a property as required, use the {@link required} decorator
 	 * @param propName the persistent property name
 	 * @returns true if the property is required
 	 * @see required
@@ -244,10 +244,10 @@ export class Persistent {
 
 	/**
 	 * Query if the property value is valid
-	 * Define the validator function using the @required decorator
+	 * Define the validator function using the {@link required} decorator
 	 * @param propName the persistent property name
 	 * @returns true if the property value is valid using the validator function
-	 * passed to the @required decorator
+	 * passed to the {@link required} decorator
 	 * @see required
 	 */
 	isPropValueValid<T extends this>( propName: ClassPropNames<T> ): boolean {
@@ -560,8 +560,8 @@ export class Persistent {
 //Decorators
 ///////////////////////////////////
 
-type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty, params?: unknown ) => string
-type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
+export type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty, params?: unknown ) => string
+export type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
 
 export interface PersistentProperty {
 	name: string
@@ -624,7 +624,8 @@ export function persistentReference( target: Persistent, property: string ) {
  * @see persistentReference
  * @see CachedPropsConfig
  * @see persistentPureReferenceWithCachedProps
- * @sample
+ * @example
+ * ```ts
  * class UserGroup extends Persistent {
  * 	@persistentReferenceWithCachedProps( ['name', 'email'], 'Customer/Clients', 'User' ) private _friend: User
  * }
@@ -633,6 +634,8 @@ export function persistentReference( target: Persistent, property: string ) {
  * 	@persistentReferenceWithCachedProps( { cachedProps: ['name', 'email'], updater: async ( event, prop ) => {
  * 		// do something when the referenced user is updated
  * 	}}, undefined, [ 'SpecialUser', 'User' ] ) private _friend: User
+ * }
+ * ```
  */
 export function persistentReferenceWithCachedProps<T extends Persistent>( 
 	cachedProps: ClassPropNamesOfType<T, Primitive>[], 
@@ -654,7 +657,7 @@ export function persistentReferenceWithCachedProps<T extends Persistent>(
 
 /**
  * Decorator for a property that is a reference to a persistent object. 
- * In this case, and contrary to the @persistentReference decorator, the reference 
+ * In this case, and contrary to the {@link persistentReference} decorator, the reference 
  * contents is not stored even it has been changed. Only the reference information 
  * is stored.
  * @see persistentReference
@@ -678,7 +681,8 @@ export function persistentReferenceWithCachedProps<T extends Persistent>(
  * @see persistentPureReference
  * @see CachedPropsConfig
  * @see persistentReferenceWithCachedProps
- * @sample
+ * @example
+ * ```ts
  * class UserGroup extends Persistent {
  * 	@persistentPureReferenceWithCachedProps( ['name', 'email'], 'Customer/Clients', 'User' ) private _friend: User
  * }
@@ -688,6 +692,7 @@ export function persistentReferenceWithCachedProps<T extends Persistent>(
  * 		// do something when the referenced user is updated
  * 	}}, undefined, [ 'SpecialUser', 'User' ] ) private _friend: User
  * }
+ * ```
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */

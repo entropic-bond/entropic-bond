@@ -14,7 +14,7 @@ export type CompareFunction<T> = ( a: T, b: T )=>boolean
  * It extends Persistent class therefore EntropicComponent children will have
  * persistence through the Entropic Bond persistence mechanism
  */
-type StrictElement<T> = T extends any ? (keyof T extends never ? never : T) : never
+export type StrictElement<T> = T extends any ? (keyof T extends never ? never : T) : never
 
 export class EntropicComponent extends Persistent {
 

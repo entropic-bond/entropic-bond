@@ -1,6 +1,6 @@
 import { CloudFunction, CloudFunctionsService } from './cloud-functions'
 
-interface FunctionCollection { 
+export interface FunctionCollection { 
 	[key: string]: CloudFunction<any,any>
 }
 
