@@ -6,7 +6,7 @@
 
 # Class: Query\<T\>
 
-Defined in: [store/model.ts:232](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L232)
+Defined in: [store/model.ts:232](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L232)
 
 The Query class is used to define the search conditions. You can chain
 where operations to define the search conditions. The where operations
@@ -25,7 +25,7 @@ Model class.
 
 > **new Query**\<`T`\>(`model`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:233](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L233)
+Defined in: [store/model.ts:233](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L233)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [store/model.ts:233](https://github.com/entropic-bond/entropic-bond/
 
 > **and**\<`P`\>(`property`, `operator`, `value`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:334](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L334)
+Defined in: [store/model.ts:334](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L334)
 
 Matches all documents that the value of the property satisfies the condition
 in the operator parameter and aggregates the results to the previous query
@@ -99,7 +99,7 @@ query.where( 'name', '==', 'John' ).and( 'age', '>', 18 )
 
 > **andDeepProp**(`propertyPath`, `operator`, `value`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:354](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L354)
+Defined in: [store/model.ts:354](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L354)
 
 Matches all documents that the value of the deep property satisfies the condition
 in the operator parameter and aggregates the results to the previous query
@@ -151,7 +151,7 @@ query.whereDeepProp( 'address.street', '==', 'Main Street' ).andDeepProp( 'addre
 
 > **count**(): `Promise`\<`number`\>
 
-Defined in: [store/model.ts:482](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L482)
+Defined in: [store/model.ts:482](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L482)
 
 Returns the number of documents that match the query
 
@@ -173,7 +173,7 @@ const count = await query.where( 'name', '==', 'John' ).count()
 
 > **get**\<`U`\>(`limit?`): `Promise`\<`U`[]\>
 
-Defined in: [store/model.ts:422](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L422)
+Defined in: [store/model.ts:422](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L422)
 
 Executes the query and returns the result
 
@@ -210,7 +210,7 @@ const namedJohn = await query.where( 'name', '==', 'John' ).get()
 
 > **getQueryModel**(): [`Model`](Model.md)\<`T`\>
 
-Defined in: [store/model.ts:490](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L490)
+Defined in: [store/model.ts:490](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L490)
 
 #### Returns
 
@@ -222,7 +222,7 @@ Defined in: [store/model.ts:490](https://github.com/entropic-bond/entropic-bond/
 
 > **getQueryObject**(): [`QueryObject`](../type-aliases/QueryObject.md)\<`T`\>
 
-Defined in: [store/model.ts:486](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L486)
+Defined in: [store/model.ts:486](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L486)
 
 #### Returns
 
@@ -234,7 +234,7 @@ Defined in: [store/model.ts:486](https://github.com/entropic-bond/entropic-bond/
 
 > **instanceOf**\<`U`\>(`classId`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:404](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L404)
+Defined in: [store/model.ts:404](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L404)
 
 Defines a where condition to match documents that are instances of the
 given class
@@ -273,7 +273,7 @@ query.instanceOf( Person ).where( 'age', '>', 18 )
 
 > **limit**(`maxDocs`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:436](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L436)
+Defined in: [store/model.ts:436](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L436)
 
 Limits the number of documents to retrieve
 
@@ -303,7 +303,7 @@ query.where( 'name', '==', 'John' ).limit( 10 )
 
 > **or**\<`P`\>(`property`, `operator`, `value`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:372](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L372)
+Defined in: [store/model.ts:372](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L372)
 
 Matches all documents that the value of the property satisfies the condition
 in the operator parameter and aggregates the results to the previous query
@@ -358,7 +358,7 @@ query.or( 'age', '>', 18 )
 
 > **orDeepProp**(`propertyPath`, `operator`, `value`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:390](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L390)
+Defined in: [store/model.ts:390](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L390)
 
 Matches all documents that the value of the deep property satisfies the condition
 in the operator parameter and aggregates the results to the previous query
@@ -408,7 +408,7 @@ query.orDeepProp( 'address.street', '==', 'Main Street' )
 
 > **orderBy**\<`P`\>(`propertyName`, `order?`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:450](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L450)
+Defined in: [store/model.ts:450](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L450)
 
 Orders the result set by a property.
 
@@ -451,7 +451,7 @@ query.orderBy( 'age', 'desc' )
 
 > **orderByDeepProp**(`propertyPath`, `order?`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:467](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L467)
+Defined in: [store/model.ts:467](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L467)
 
 Orders the result set by a deep property
 
@@ -482,7 +482,7 @@ a chainable query object
 
 > **where**\<`P`\>(`property`, `operator`, `value`, `aggregate?`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:256](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L256)
+Defined in: [store/model.ts:256](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L256)
 
 Matches all documents that the value of the property satisfies the condition
 in the operator parameter. Subsequent `where` calls will be operated to the
@@ -548,7 +548,7 @@ query.where( 'age', '==', 18 ).where( 'name', '==', 'John' )
 
 > **whereDeepProp**(`propertyPath`, `operator`, `value`, `aggregate?`): `Query`\<`T`\>
 
-Defined in: [store/model.ts:297](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/model.ts#L297)
+Defined in: [store/model.ts:297](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L297)
 
 Matches all documents that the value of the deep property satisfies the condition
 in the operator parameter

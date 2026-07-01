@@ -8,7 +8,7 @@
 
 > **camelCase**(`str`): `string`
 
-Defined in: [utils/utils.ts:42](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/utils/utils.ts#L42)
+Defined in: [utils/utils.ts:42](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/utils/utils.ts#L42)
 
 Transforms a string to a camel case format (camelCaseFormat)
 

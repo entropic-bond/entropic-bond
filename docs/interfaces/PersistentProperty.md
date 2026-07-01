@@ -6,7 +6,7 @@
 
 # Interface: PersistentProperty
 
-Defined in: [persistent/persistent.ts:566](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L566)
+Defined in: [persistent/persistent.ts:566](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L566)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [persistent/persistent.ts:566](https://github.com/entropic-bond/entr
 
 > `optional` **cachedProps?**: [`ClassPropNamesOfType`](../type-aliases/ClassPropNamesOfType.md)\<[`Persistent`](../classes/Persistent.md), [`Primitive`](../type-aliases/Primitive.md)\>[]
 
-Defined in: [persistent/persistent.ts:578](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L578)
+Defined in: [persistent/persistent.ts:578](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L578)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [persistent/persistent.ts:578](https://github.com/entropic-bond/entr
 
 > `optional` **fromObjectSpecial?**: (`obj`) => `any`
 
-Defined in: [persistent/persistent.ts:573](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L573)
+Defined in: [persistent/persistent.ts:573](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L573)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [persistent/persistent.ts:573](https://github.com/entropic-bond/entr
 
 > `optional` **isPureReference?**: `boolean`
 
-Defined in: [persistent/persistent.ts:569](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L569)
+Defined in: [persistent/persistent.ts:569](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L569)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [persistent/persistent.ts:569](https://github.com/entropic-bond/entr
 
 > `optional` **isReference?**: `boolean`
 
-Defined in: [persistent/persistent.ts:568](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L568)
+Defined in: [persistent/persistent.ts:568](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L568)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [persistent/persistent.ts:568](https://github.com/entropic-bond/entr
 
 > **name**: `string`
 
-Defined in: [persistent/persistent.ts:567](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L567)
+Defined in: [persistent/persistent.ts:567](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L567)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [persistent/persistent.ts:567](https://github.com/entropic-bond/entr
 
 > **ownerClassName**: () => `string`
 
-Defined in: [persistent/persistent.ts:577](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L577)
+Defined in: [persistent/persistent.ts:577](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L577)
 
 #### Returns
 
@@ -74,9 +74,9 @@ Defined in: [persistent/persistent.ts:577](https://github.com/entropic-bond/entr
 
 ### ownerCollection?
 
-> `optional` **ownerCollection?**: `string` \| `CollectionPathCallback`
+> `optional` **ownerCollection?**: `string` \| [`CollectionPathCallback`](../type-aliases/CollectionPathCallback.md)
 
-Defined in: [persistent/persistent.ts:571](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L571)
+Defined in: [persistent/persistent.ts:571](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L571)
 
 ***
 
@@ -84,15 +84,15 @@ Defined in: [persistent/persistent.ts:571](https://github.com/entropic-bond/entr
 
 > `optional` **searchableArray?**: `boolean`
 
-Defined in: [persistent/persistent.ts:574](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L574)
+Defined in: [persistent/persistent.ts:574](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L574)
 
 ***
 
 ### storeInCollection?
 
-> `optional` **storeInCollection?**: `string` \| `CollectionPathCallback`
+> `optional` **storeInCollection?**: `string` \| [`CollectionPathCallback`](../type-aliases/CollectionPathCallback.md)
 
-Defined in: [persistent/persistent.ts:570](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L570)
+Defined in: [persistent/persistent.ts:570](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L570)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [persistent/persistent.ts:570](https://github.com/entropic-bond/entr
 
 > `optional` **toObjectSpecial?**: (`classObj`) => `any`
 
-Defined in: [persistent/persistent.ts:572](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L572)
+Defined in: [persistent/persistent.ts:572](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L572)
 
 #### Parameters
 
@@ -118,12 +118,12 @@ Defined in: [persistent/persistent.ts:572](https://github.com/entropic-bond/entr
 
 > `optional` **typeName?**: `string` \| `string`[]
 
-Defined in: [persistent/persistent.ts:576](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L576)
+Defined in: [persistent/persistent.ts:576](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L576)
 
 ***
 
 ### validator?
 
-> `optional` **validator?**: `ValidatorFunction`\<`any`, `any`\>
+> `optional` **validator?**: [`ValidatorFunction`](../type-aliases/ValidatorFunction.md)\<`any`, `any`\>
 
-Defined in: [persistent/persistent.ts:575](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L575)
+Defined in: [persistent/persistent.ts:575](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L575)

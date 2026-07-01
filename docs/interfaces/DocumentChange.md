@@ -6,7 +6,7 @@
 
 # Interface: DocumentChange\<T\>
 
-Defined in: [persistent/persistent.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L7)
+Defined in: [persistent/persistent.ts:7](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L7)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [persistent/persistent.ts:7](https://github.com/entropic-bond/entrop
 
 > `optional` **after?**: `T`
 
-Defined in: [persistent/persistent.ts:9](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L9)
+Defined in: [persistent/persistent.ts:9](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L9)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [persistent/persistent.ts:9](https://github.com/entropic-bond/entrop
 
 > `optional` **before?**: `T`
 
-Defined in: [persistent/persistent.ts:8](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L8)
+Defined in: [persistent/persistent.ts:8](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L8)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [persistent/persistent.ts:8](https://github.com/entropic-bond/entrop
 
 > **collectionPath**: `string`
 
-Defined in: [persistent/persistent.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L11)
+Defined in: [persistent/persistent.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L11)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [persistent/persistent.ts:11](https://github.com/entropic-bond/entro
 
 > `optional` **params?**: `object`
 
-Defined in: [persistent/persistent.ts:10](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L10)
+Defined in: [persistent/persistent.ts:10](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L10)
 
 #### Index Signature
 
@@ -56,4 +56,4 @@ Defined in: [persistent/persistent.ts:10](https://github.com/entropic-bond/entro
 
 > **type**: [`DocumentChangeType`](../type-aliases/DocumentChangeType.md)
 
-Defined in: [persistent/persistent.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L12)
+Defined in: [persistent/persistent.ts:12](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L12)

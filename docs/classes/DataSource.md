@@ -6,7 +6,7 @@
 
 # Abstract Class: DataSource
 
-Defined in: [store/data-source.ts:80](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L80)
+Defined in: [store/data-source.ts:80](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L80)
 
 The data source interface.
 It defines the methods that must be implemented by a data source
@@ -34,13 +34,13 @@ A data source is used by the store to retrieve and save data.
 
 #### Get Signature
 
-> **get** **cachedPropsUpdater**(): `CachedPropsUpdater` \| `undefined`
+> **get** **cachedPropsUpdater**(): [`CachedPropsUpdater`](CachedPropsUpdater.md) \| `undefined`
 
-Defined in: [store/data-source.ts:161](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L161)
+Defined in: [store/data-source.ts:161](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L161)
 
 ##### Returns
 
-`CachedPropsUpdater` \| `undefined`
+[`CachedPropsUpdater`](CachedPropsUpdater.md) \| `undefined`
 
 ## Methods
 
@@ -48,7 +48,7 @@ Defined in: [store/data-source.ts:161](https://github.com/entropic-bond/entropic
 
 > `abstract` **count**(`queryObject`, `collectionName`): `Promise`\<`number`\>
 
-Defined in: [store/data-source.ts:147](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L147)
+Defined in: [store/data-source.ts:147](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L147)
 
 Retrieves the number of documents matching the query stored in the query object
 Implement the required logic to retrieve the number of documents that match the
@@ -84,7 +84,7 @@ QueryObject
 
 > `abstract` **delete**(`id`, `collectionName`): `Promise`\<`void`\>
 
-Defined in: [store/data-source.ts:127](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L127)
+Defined in: [store/data-source.ts:127](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L127)
 
 Deletes a document by id
 Implement the required logic to delete a document by id from your concrete
@@ -116,7 +116,7 @@ a promise
 
 > `abstract` **find**(`queryObject`, `collectionName`): `Promise`\<[`DocumentObject`](../type-aliases/DocumentObject.md)[]\>
 
-Defined in: [store/data-source.ts:109](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L109)
+Defined in: [store/data-source.ts:109](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L109)
 
 Retrieves all documents matching the query stored in the query object
 Implement the required logic to retrieve the documents that match the 
@@ -157,7 +157,7 @@ a plain object with the properties of the document class.
 
 > `abstract` **findById**(`id`, `collectionName`): `Promise`\<[`DocumentObject`](../type-aliases/DocumentObject.md)\>
 
-Defined in: [store/data-source.ts:93](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L93)
+Defined in: [store/data-source.ts:93](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L93)
 
 Retrieves a document by id
 Implement the required logic to retrieve a document by id from your concrete
@@ -188,19 +188,19 @@ a plain object with the properties of the document class.
 
 ### installCachedPropsUpdater()
 
-> **installCachedPropsUpdater**(`config?`): `CachedPropsUpdater`
+> **installCachedPropsUpdater**(`config?`): [`CachedPropsUpdater`](CachedPropsUpdater.md)
 
-Defined in: [store/data-source.ts:155](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L155)
+Defined in: [store/data-source.ts:155](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L155)
 
 #### Parameters
 
 ##### config?
 
-`CachedPropsUpdaterConfig`
+[`CachedPropsUpdaterConfig`](../interfaces/CachedPropsUpdaterConfig.md)
 
 #### Returns
 
-`CachedPropsUpdater`
+[`CachedPropsUpdater`](CachedPropsUpdater.md)
 
 ***
 
@@ -208,7 +208,7 @@ Defined in: [store/data-source.ts:155](https://github.com/entropic-bond/entropic
 
 > `abstract` **next**(`limit?`): `Promise`\<[`DocumentObject`](../type-aliases/DocumentObject.md)[]\>
 
-Defined in: [store/data-source.ts:136](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L136)
+Defined in: [store/data-source.ts:136](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L136)
 
 Retrieves the next bunch of documents matching the query stored in the query object
 Implement the required logic to retrieve the next bunch of documents that match the
@@ -234,7 +234,7 @@ a promise resolving to an array representing the next bunch of document objects
 
 > `abstract` **onCollectionChange**(`query`, `collectionName`, `listener`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [store/data-source.ts:149](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L149)
+Defined in: [store/data-source.ts:149](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L149)
 
 #### Parameters
 
@@ -260,7 +260,7 @@ Defined in: [store/data-source.ts:149](https://github.com/entropic-bond/entropic
 
 > `abstract` **onDocumentChange**(`documentPath`, `documentId`, `listener`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [store/data-source.ts:151](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L151)
+Defined in: [store/data-source.ts:151](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L151)
 
 #### Parameters
 
@@ -286,7 +286,7 @@ Defined in: [store/data-source.ts:151](https://github.com/entropic-bond/entropic
 
 > `abstract` **onDocumentTemplateChange**(`collectionTemplate`, `listener`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [store/data-source.ts:153](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L153)
+Defined in: [store/data-source.ts:153](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L153)
 
 #### Parameters
 
@@ -308,7 +308,7 @@ Defined in: [store/data-source.ts:153](https://github.com/entropic-bond/entropic
 
 > `abstract` `protected` **resolveCollectionPaths**(`template`): `Promise`\<`string`[]\>
 
-Defined in: [store/data-source.ts:82](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L82)
+Defined in: [store/data-source.ts:82](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L82)
 
 #### Parameters
 
@@ -326,7 +326,7 @@ Defined in: [store/data-source.ts:82](https://github.com/entropic-bond/entropic-
 
 > `abstract` **save**(`object`): `Promise`\<`void`\>
 
-Defined in: [store/data-source.ts:117](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L117)
+Defined in: [store/data-source.ts:117](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L117)
 
 Saves a document
 Implement the required logic to save the document in your concrete the data source
@@ -351,7 +351,7 @@ a promise
 
 > `static` **extractTemplateParams**(`source`, `template`): `Record`\<`string`, `string`\>
 
-Defined in: [store/data-source.ts:248](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L248)
+Defined in: [store/data-source.ts:248](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L248)
 
 #### Parameters
 
@@ -373,7 +373,7 @@ Defined in: [store/data-source.ts:248](https://github.com/entropic-bond/entropic
 
 > `static` **isArrayOperator**(`operator`): `boolean`
 
-Defined in: [store/data-source.ts:203](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L203)
+Defined in: [store/data-source.ts:203](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L203)
 
 #### Parameters
 
@@ -391,7 +391,7 @@ Defined in: [store/data-source.ts:203](https://github.com/entropic-bond/entropic
 
 > `static` **isStringMatchingTemplate**(`template`, `value`): `boolean`
 
-Defined in: [store/data-source.ts:226](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L226)
+Defined in: [store/data-source.ts:226](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L226)
 
 #### Parameters
 
@@ -413,7 +413,7 @@ Defined in: [store/data-source.ts:226](https://github.com/entropic-bond/entropic
 
 > `static` **toPersistentDocumentChange**\<`T`\>(`change`): [`DocumentChange`](../interfaces/DocumentChange.md)\<`T`\>
 
-Defined in: [store/data-source.ts:207](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L207)
+Defined in: [store/data-source.ts:207](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L207)
 
 #### Type Parameters
 
@@ -437,7 +437,7 @@ Defined in: [store/data-source.ts:207](https://github.com/entropic-bond/entropic
 
 > `static` **toPropertyPathOperations**\<`T`\>(`operations`): [`QueryOperation`](../type-aliases/QueryOperation.md)\<`T`\>[]
 
-Defined in: [store/data-source.ts:177](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L177)
+Defined in: [store/data-source.ts:177](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L177)
 
 Utility method to convert a query object to a property path query object
 
@@ -477,7 +477,7 @@ const propPathQueryObject = DataSource.toPropertyPathQueryObject( queryObject )
 
 > `static` **toPropertyPathValue**(`obj`): \[`string` \| `undefined`, `unknown`\]
 
-Defined in: [store/data-source.ts:215](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L215)
+Defined in: [store/data-source.ts:215](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L215)
 
 #### Parameters
 

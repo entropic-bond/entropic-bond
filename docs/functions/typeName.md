@@ -8,7 +8,7 @@
 
 > **typeName**(`typeNames`): (`target`, `property`) => `void`
 
-Defined in: [persistent/persistent.ts:800](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L800)
+Defined in: [persistent/persistent.ts:805](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L805)
 
 Decorator to define the type name or type names of a persistent property.
 This is useful when the type cannot be inferred automatically by the persistence engine which typically

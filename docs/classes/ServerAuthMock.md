@@ -6,7 +6,7 @@
 
 # Class: ServerAuthMock
 
-Defined in: [server-auth/server-auth-mock.ts:5](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L5)
+Defined in: [server-auth/server-auth-mock.ts:5](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L5)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [server-auth/server-auth-mock.ts:5](https://github.com/entropic-bond
 
 > **new ServerAuthMock**(`userCredentials`): `ServerAuthMock`
 
-Defined in: [server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L6)
+Defined in: [server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L6)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [server-auth/server-auth-mock.ts:6](https://github.com/entropic-bond
 
 > **get** **userCredentials**(): [`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
 
-Defined in: [server-auth/server-auth-mock.ts:40](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L40)
+Defined in: [server-auth/server-auth-mock.ts:40](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L40)
 
 ##### Returns
 
@@ -54,7 +54,7 @@ Defined in: [server-auth/server-auth-mock.ts:40](https://github.com/entropic-bon
 
 > **deleteUser**(`userId`): `Promise`\<`void`\>
 
-Defined in: [server-auth/server-auth-mock.ts:35](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L35)
+Defined in: [server-auth/server-auth-mock.ts:35](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L35)
 
 #### Parameters
 
@@ -76,7 +76,7 @@ Defined in: [server-auth/server-auth-mock.ts:35](https://github.com/entropic-bon
 
 > **getUser**\<`T`\>(`userId`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\> \| `undefined`\>
 
-Defined in: [server-auth/server-auth-mock.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L11)
+Defined in: [server-auth/server-auth-mock.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L11)
 
 #### Type Parameters
 
@@ -104,7 +104,7 @@ Defined in: [server-auth/server-auth-mock.ts:11](https://github.com/entropic-bon
 
 > **setCustomCredentials**\<`T`\>(`userId`, `customCredentials`): `Promise`\<`void`\>
 
-Defined in: [server-auth/server-auth-mock.ts:17](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L17)
+Defined in: [server-auth/server-auth-mock.ts:17](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L17)
 
 #### Type Parameters
 
@@ -136,7 +136,7 @@ Defined in: [server-auth/server-auth-mock.ts:17](https://github.com/entropic-bon
 
 > **updateUser**\<`T`\>(`userId`, `credentials`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [server-auth/server-auth-mock.ts:25](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth-mock.ts#L25)
+Defined in: [server-auth/server-auth-mock.ts:25](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth-mock.ts#L25)
 
 #### Type Parameters
 

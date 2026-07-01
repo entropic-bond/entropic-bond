@@ -6,7 +6,7 @@
 
 # Class: Store
 
-Defined in: [store/store.ts:20](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L20)
+Defined in: [store/store.ts:20](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L20)
 
 The store is the main entry point for the data access layer.
 It provides methods to retrieve models for collections and subcollections.
@@ -32,7 +32,7 @@ const user = await Store.populate( user )
 
 > `static` **error**: `object`
 
-Defined in: [store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L23)
+Defined in: [store/store.ts:23](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L23)
 
 #### shouldBeRegistered
 
@@ -46,7 +46,7 @@ Defined in: [store/store.ts:23](https://github.com/entropic-bond/entropic-bond/b
 
 > **get** `static` **dataSource**(): [`DataSource`](DataSource.md)
 
-Defined in: [store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L38)
+Defined in: [store/store.ts:38](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L38)
 
 The data source currently used by the store
 
@@ -62,7 +62,7 @@ the data source
 
 > `static` **getModel**\<`T`\>(`classId`): [`Model`](Model.md)\<`T`\>
 
-Defined in: [store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L47)
+Defined in: [store/store.ts:47](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L47)
 
 Retrieves a model for a collection
 
@@ -92,7 +92,7 @@ the model for the collection
 
 > `static` **getModelForSubCollection**\<`T`\>(`document`, `subCollection`): [`Model`](Model.md)\<`T`\>
 
-Defined in: [store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L58)
+Defined in: [store/store.ts:58](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L58)
 
 Retrieves a model for a subcollection
 
@@ -128,7 +128,7 @@ the model for the subcollection
 
 > `static` **isPopulated**\<`T`\>(`instance`): `boolean`
 
-Defined in: [store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L100)
+Defined in: [store/store.ts:100](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L100)
 
 Checks if an instance is populated
 
@@ -158,7 +158,7 @@ true if the instance is populated
 
 > `static` **populate**\<`T`\>(`instance`): `Promise`\<`T`\>
 
-Defined in: [store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L69)
+Defined in: [store/store.ts:69](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L69)
 
 Populates property references with actual data from the store.
 It will not retrieve data if the instance is already populated
@@ -189,7 +189,7 @@ the populated instance
 
 > `static` **useDataSource**(`dataSource`): `void`
 
-Defined in: [store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/store.ts#L30)
+Defined in: [store/store.ts:30](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/store.ts#L30)
 
 Registers a data source to be used by the store.
 You need to register a data source before using the store.

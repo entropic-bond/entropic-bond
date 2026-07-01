@@ -8,7 +8,7 @@
 
 > **snakeCase**(`str`, `snakeChar?`): `string`
 
-Defined in: [utils/utils.ts:64](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/utils/utils.ts#L64)
+Defined in: [utils/utils.ts:64](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/utils/utils.ts#L64)
 
 Transforms a string in to a snake case format (snake-case-format)
 

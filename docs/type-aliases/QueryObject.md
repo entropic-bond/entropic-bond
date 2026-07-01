@@ -8,7 +8,7 @@
 
 > **QueryObject**\<`T`\> = `object`
 
-Defined in: [store/data-source.ts:52](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L52)
+Defined in: [store/data-source.ts:52](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L52)
 
 A representation of a full query
 
@@ -54,7 +54,7 @@ the name of the property to be used for sorting
 
 > `optional` **limit?**: `number`
 
-Defined in: [store/data-source.ts:54](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L54)
+Defined in: [store/data-source.ts:54](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L54)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [store/data-source.ts:54](https://github.com/entropic-bond/entropic-
 
 > `optional` **operations?**: [`QueryOperation`](QueryOperation.md)\<`T`\>[]
 
-Defined in: [store/data-source.ts:53](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L53)
+Defined in: [store/data-source.ts:53](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L53)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [store/data-source.ts:53](https://github.com/entropic-bond/entropic-
 
 > `optional` **sort?**: `object`
 
-Defined in: [store/data-source.ts:55](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/data-source.ts#L55)
+Defined in: [store/data-source.ts:55](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/data-source.ts#L55)
 
 #### order
 

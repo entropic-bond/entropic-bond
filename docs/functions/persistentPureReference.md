@@ -8,10 +8,12 @@
 
 > **persistentPureReference**(`target`, `property`, `storeInCollection?`): `void`
 
-Defined in: [persistent/persistent.ts:662](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L662)
+Defined in: [persistent/persistent.ts:665](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L665)
 
 Decorator for a property that is a reference to a persistent object. 
-In this case, and contrary to the
+In this case, and contrary to the [persistentReference](persistentReference.md) decorator, the reference 
+contents is not stored even it has been changed. Only the reference information 
+is stored.
 
 ## Parameters
 
@@ -25,17 +27,11 @@ In this case, and contrary to the
 
 ### storeInCollection?
 
-`string` \| `CollectionPathCallback`
+`string` \| [`CollectionPathCallback`](../type-aliases/CollectionPathCallback.md)
 
 ## Returns
 
 `void`
-
-## Persistent Reference
-
-decorator, the reference 
-contents is not stored even it has been changed. Only the reference information 
-is stored.
 
 ## See
 

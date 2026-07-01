@@ -8,7 +8,7 @@
 
 > **replaceValue**(`text`, `values`): `string`
 
-Defined in: [utils/utils.ts:24](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/utils/utils.ts#L24)
+Defined in: [utils/utils.ts:24](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/utils/utils.ts#L24)
 
 Replaces keys found in a string for its values. The keys should be inserted 
 inside brackets ${ key } as is done in the string template literals substitutions

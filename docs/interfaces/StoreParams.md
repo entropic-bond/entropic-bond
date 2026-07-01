@@ -6,7 +6,7 @@
 
 # Interface: StoreParams
 
-Defined in: [cloud-storage/stored-file.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/stored-file.ts#L12)
+Defined in: [cloud-storage/stored-file.ts:12](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/stored-file.ts#L12)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [cloud-storage/stored-file.ts:12](https://github.com/entropic-bond/e
 
 > `optional` **cloudStorageProvider?**: [`CloudStorage`](../classes/CloudStorage.md)
 
-Defined in: [cloud-storage/stored-file.ts:16](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/stored-file.ts#L16)
+Defined in: [cloud-storage/stored-file.ts:16](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/stored-file.ts#L16)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [cloud-storage/stored-file.ts:16](https://github.com/entropic-bond/e
 
 > `optional` **data?**: [`StorableData`](../type-aliases/StorableData.md)
 
-Defined in: [cloud-storage/stored-file.ts:13](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/stored-file.ts#L13)
+Defined in: [cloud-storage/stored-file.ts:13](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/stored-file.ts#L13)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [cloud-storage/stored-file.ts:13](https://github.com/entropic-bond/e
 
 > `optional` **fileName?**: `string`
 
-Defined in: [cloud-storage/stored-file.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/stored-file.ts#L14)
+Defined in: [cloud-storage/stored-file.ts:14](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/stored-file.ts#L14)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [cloud-storage/stored-file.ts:14](https://github.com/entropic-bond/e
 
 > `optional` **progress?**: [`UploadProgress`](../type-aliases/UploadProgress.md)
 
-Defined in: [cloud-storage/stored-file.ts:15](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/stored-file.ts#L15)
+Defined in: [cloud-storage/stored-file.ts:15](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/stored-file.ts#L15)

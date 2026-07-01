@@ -6,7 +6,7 @@
 
 # Interface: UploadControl
 
-Defined in: [cloud-storage/cloud-storage.ts:9](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L9)
+Defined in: [cloud-storage/cloud-storage.ts:9](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L9)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [cloud-storage/cloud-storage.ts:9](https://github.com/entropic-bond/
 
 > **cancel**: () => `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L12)
+Defined in: [cloud-storage/cloud-storage.ts:12](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L12)
 
 #### Returns
 
@@ -26,7 +26,7 @@ Defined in: [cloud-storage/cloud-storage.ts:12](https://github.com/entropic-bond
 
 > **onProgress**: (`callback`) => `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:13](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L13)
+Defined in: [cloud-storage/cloud-storage.ts:13](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L13)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [cloud-storage/cloud-storage.ts:13](https://github.com/entropic-bond
 
 > **pause**: () => `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L10)
+Defined in: [cloud-storage/cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L10)
 
 #### Returns
 
@@ -56,7 +56,7 @@ Defined in: [cloud-storage/cloud-storage.ts:10](https://github.com/entropic-bond
 
 > **resume**: () => `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L11)
+Defined in: [cloud-storage/cloud-storage.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L11)
 
 #### Returns
 

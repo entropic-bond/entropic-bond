@@ -6,7 +6,7 @@
 
 # Class: AuthMock
 
-Defined in: [auth/auth-mock.ts:5](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L5)
+Defined in: [auth/auth-mock.ts:5](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L5)
 
 The AuthService class is an abstract class that defines the interface of an authentication service.
 You should derive from this class to implement your own authentication service.
@@ -37,7 +37,7 @@ You should derive from this class to implement your own authentication service.
 
 > **get** **fakeRegisteredUsers**(): [`Collection`](../interfaces/Collection.md)\<[`UserCredentials`](../interfaces/UserCredentials.md)\<[`CredentialsCustomData`](../interfaces/CredentialsCustomData.md)\>\>
 
-Defined in: [auth/auth-mock.ts:98](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L98)
+Defined in: [auth/auth-mock.ts:98](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L98)
 
 ##### Returns
 
@@ -49,7 +49,7 @@ Defined in: [auth/auth-mock.ts:98](https://github.com/entropic-bond/entropic-bon
 
 > **fakeRegisteredUser**\<`T`\>(`userCredentials`): `AuthMock`
 
-Defined in: [auth/auth-mock.ts:92](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L92)
+Defined in: [auth/auth-mock.ts:92](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L92)
 
 #### Type Parameters
 
@@ -73,7 +73,7 @@ Defined in: [auth/auth-mock.ts:92](https://github.com/entropic-bond/entropic-bon
 
 > **flush**(): `Promise`\<`void`\>
 
-Defined in: [auth/auth-mock.ts:87](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L87)
+Defined in: [auth/auth-mock.ts:87](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L87)
 
 #### Returns
 
@@ -85,7 +85,7 @@ Defined in: [auth/auth-mock.ts:87](https://github.com/entropic-bond/entropic-bon
 
 > **linkAdditionalProvider**(`provider`): `Promise`\<`unknown`\>
 
-Defined in: [auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L79)
+Defined in: [auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L79)
 
 #### Parameters
 
@@ -107,7 +107,7 @@ Defined in: [auth/auth-mock.ts:79](https://github.com/entropic-bond/entropic-bon
 
 > **login**\<`T`\>(`signData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L30)
+Defined in: [auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L30)
 
 #### Type Parameters
 
@@ -135,7 +135,7 @@ Defined in: [auth/auth-mock.ts:30](https://github.com/entropic-bond/entropic-bon
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L47)
+Defined in: [auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L47)
 
 #### Returns
 
@@ -151,7 +151,7 @@ Defined in: [auth/auth-mock.ts:47](https://github.com/entropic-bond/entropic-bon
 
 > **onAuthStateChange**\<`T`\>(`onChange`): `void`
 
-Defined in: [auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L42)
+Defined in: [auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L42)
 
 #### Type Parameters
 
@@ -179,7 +179,7 @@ Defined in: [auth/auth-mock.ts:42](https://github.com/entropic-bond/entropic-bon
 
 > **refreshToken**(): `Promise`\<`void`\>
 
-Defined in: [auth/auth-mock.ts:75](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L75)
+Defined in: [auth/auth-mock.ts:75](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L75)
 
 #### Returns
 
@@ -195,7 +195,7 @@ Defined in: [auth/auth-mock.ts:75](https://github.com/entropic-bond/entropic-bon
 
 > **resendVerificationEmail**(`email`, `_password`, `_verificationLink`): `Promise`\<`void`\>
 
-Defined in: [auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L66)
+Defined in: [auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L66)
 
 #### Parameters
 
@@ -225,7 +225,7 @@ Defined in: [auth/auth-mock.ts:66](https://github.com/entropic-bond/entropic-bon
 
 > **resetEmailPassword**(`email`): `Promise`\<`void`\>
 
-Defined in: [auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L57)
+Defined in: [auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L57)
 
 #### Parameters
 
@@ -247,7 +247,7 @@ Defined in: [auth/auth-mock.ts:57](https://github.com/entropic-bond/entropic-bon
 
 > **signUp**\<`T`\>(`signData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L7)
+Defined in: [auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L7)
 
 #### Type Parameters
 
@@ -275,7 +275,7 @@ Defined in: [auth/auth-mock.ts:7](https://github.com/entropic-bond/entropic-bond
 
 > **unlinkProvider**(`provider`): `Promise`\<`unknown`\>
 
-Defined in: [auth/auth-mock.ts:83](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth-mock.ts#L83)
+Defined in: [auth/auth-mock.ts:83](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth-mock.ts#L83)
 
 #### Parameters
 

@@ -6,7 +6,7 @@
 
 # Class: ServerAuth
 
-Defined in: [server-auth/server-auth.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L14)
+Defined in: [server-auth/server-auth.ts:14](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L14)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [server-auth/server-auth.ts:14](https://github.com/entropic-bond/ent
 
 > `protected` **new ServerAuth**(): `ServerAuth`
 
-Defined in: [server-auth/server-auth.ts:17](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L17)
+Defined in: [server-auth/server-auth.ts:17](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L17)
 
 #### Returns
 
@@ -34,7 +34,7 @@ Defined in: [server-auth/server-auth.ts:17](https://github.com/entropic-bond/ent
 
 > `static` **error**: `object`
 
-Defined in: [server-auth/server-auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L15)
+Defined in: [server-auth/server-auth.ts:15](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L15)
 
 #### shouldBeRegistered
 
@@ -48,7 +48,7 @@ Defined in: [server-auth/server-auth.ts:15](https://github.com/entropic-bond/ent
 
 > **get** `static` **instance**(): `ServerAuth`
 
-Defined in: [server-auth/server-auth.ts:26](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L26)
+Defined in: [server-auth/server-auth.ts:26](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L26)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [server-auth/server-auth.ts:26](https://github.com/entropic-bond/ent
 
 > **deleteUser**(`userId`): `Promise`\<`void`\>
 
-Defined in: [server-auth/server-auth.ts:43](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L43)
+Defined in: [server-auth/server-auth.ts:43](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L43)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: [server-auth/server-auth.ts:43](https://github.com/entropic-bond/ent
 
 > **getUser**\<`T`\>(`userId`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\> \| `undefined`\>
 
-Defined in: [server-auth/server-auth.ts:31](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L31)
+Defined in: [server-auth/server-auth.ts:31](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L31)
 
 #### Type Parameters
 
@@ -110,7 +110,7 @@ Defined in: [server-auth/server-auth.ts:31](https://github.com/entropic-bond/ent
 
 > **setCustomCredentials**\<`T`\>(`userId`, `customCredentials`): `Promise`\<`void`\>
 
-Defined in: [server-auth/server-auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L39)
+Defined in: [server-auth/server-auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L39)
 
 #### Type Parameters
 
@@ -142,7 +142,7 @@ Defined in: [server-auth/server-auth.ts:39](https://github.com/entropic-bond/ent
 
 > **updateUser**\<`T`\>(`userId`, `credentials`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [server-auth/server-auth.ts:35](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L35)
+Defined in: [server-auth/server-auth.ts:35](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L35)
 
 #### Type Parameters
 
@@ -174,7 +174,7 @@ Defined in: [server-auth/server-auth.ts:35](https://github.com/entropic-bond/ent
 
 > `static` **useServerAuthService**(`authService`): `void`
 
-Defined in: [server-auth/server-auth.ts:19](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/server-auth/server-auth.ts#L19)
+Defined in: [server-auth/server-auth.ts:19](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L19)
 
 #### Parameters
 

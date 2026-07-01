@@ -6,7 +6,7 @@
 
 # Class: Persistent
 
-Defined in: [persistent/persistent.ts:68](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L68)
+Defined in: [persistent/persistent.ts:68](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L68)
 
 A class that provides several methods to serialize and deserialize objects.
 
@@ -21,7 +21,7 @@ A class that provides several methods to serialize and deserialize objects.
 
 > **new Persistent**(`id?`): `Persistent`
 
-Defined in: [persistent/persistent.ts:170](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L170)
+Defined in: [persistent/persistent.ts:170](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L170)
 
 Returns a new instance of Persistent class.
 
@@ -45,7 +45,7 @@ the initial id of this instance. If not provided, a new id will be generated
 
 > **get** **className**(): `string`
 
-Defined in: [persistent/persistent.ts:177](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L177)
+Defined in: [persistent/persistent.ts:177](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L177)
 
 Gets the class name of this instance.
 
@@ -61,7 +61,7 @@ Gets the class name of this instance.
 
 > **get** **id**(): `string`
 
-Defined in: [persistent/persistent.ts:193](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L193)
+Defined in: [persistent/persistent.ts:193](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L193)
 
 Returns the id of this instance.
 
@@ -77,7 +77,7 @@ the id of this instance
 
 > `protected` **afterDeserialize**(): `void`
 
-Defined in: [persistent/persistent.ts:202](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L202)
+Defined in: [persistent/persistent.ts:202](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L202)
 
 This method is called by the persistence engine when the instance has been
 just serialized. It is called after the properties are initialized with 
@@ -93,7 +93,7 @@ serialized data.
 
 > `protected` **beforeSerialize**(): `void`
 
-Defined in: [persistent/persistent.ts:208](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L208)
+Defined in: [persistent/persistent.ts:208](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L208)
 
 This method is called by the persistence engine before the instance is
 serialized.
@@ -108,7 +108,7 @@ serialized.
 
 > **clone**(`instance`): `this`
 
-Defined in: [persistent/persistent.ts:268](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L268)
+Defined in: [persistent/persistent.ts:268](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L268)
 
 Copy the persistent properties of the given instance to this instance. 
 The property `id` will be ignored.
@@ -139,7 +139,7 @@ this instance
 
 > **fromObject**(`obj`): `this`
 
-Defined in: [persistent/persistent.ts:282](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L282)
+Defined in: [persistent/persistent.ts:282](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L282)
 
 Initializes the persistent properties of this instance from the properties 
 of given object.
@@ -169,7 +169,7 @@ this instance
 
 > **getPersistentProperties**(): readonly [`PersistentProperty`](../interfaces/PersistentProperty.md)[]
 
-Defined in: [persistent/persistent.ts:214](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L214)
+Defined in: [persistent/persistent.ts:214](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L214)
 
 Returns an array of the persistent properties of this instance.
 
@@ -185,7 +185,7 @@ an array of the persistent properties of this instance
 
 > **getPropInfo**\<`T`\>(`propName`): [`PersistentProperty`](../interfaces/PersistentProperty.md)
 
-Defined in: [persistent/persistent.ts:227](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L227)
+Defined in: [persistent/persistent.ts:227](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L227)
 
 Get the property information of this instance
 
@@ -215,10 +215,10 @@ the property information
 
 > **isPropValueValid**\<`T`\>(`propName`): `boolean`
 
-Defined in: [persistent/persistent.ts:253](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L253)
+Defined in: [persistent/persistent.ts:253](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L253)
 
 Query if the property value is valid
-Define the validator function using the
+Define the validator function using the [required](../functions/required.md) decorator
 
 #### Type Parameters
 
@@ -239,15 +239,7 @@ the persistent property name
 `boolean`
 
 true if the property value is valid using the validator function
-passed to the
-
-#### Required
-
-decorator
-
-#### Required
-
-decorator
+passed to the [required](../functions/required.md) decorator
 
 #### See
 
@@ -259,10 +251,10 @@ required
 
 > **isRequired**\<`T`\>(`propName`): `boolean`
 
-Defined in: [persistent/persistent.ts:240](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L240)
+Defined in: [persistent/persistent.ts:240](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L240)
 
 Query if the property is required
-To mark a property as required, use the
+To mark a property as required, use the [required](../functions/required.md) decorator
 
 #### Type Parameters
 
@@ -284,10 +276,6 @@ the persistent property name
 
 true if the property is required
 
-#### Required
-
-decorator
-
 #### See
 
 required
@@ -298,7 +286,7 @@ required
 
 > `protected` **setId**(`value`): `void`
 
-Defined in: [persistent/persistent.ts:185](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L185)
+Defined in: [persistent/persistent.ts:185](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L185)
 
 Sets the id of this instance.
 
@@ -320,7 +308,7 @@ the id of this instance
 
 > **toObject**(): [`PersistentObject`](../type-aliases/PersistentObject.md)\<`Persistent`\>
 
-Defined in: [persistent/persistent.ts:311](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L311)
+Defined in: [persistent/persistent.ts:311](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L311)
 
 Returns a plain object representation of this instance.
 Only the properties that are not null or undefined will be copied.
@@ -342,7 +330,7 @@ a plain object representation of this instance
 
 > `static` **annotations**(`className`): `unknown`
 
-Defined in: [persistent/persistent.ts:157](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L157)
+Defined in: [persistent/persistent.ts:157](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L157)
 
 Returns the annotation associated with a registered class
 
@@ -374,7 +362,7 @@ registerFactory
 
 > `static` **classesExtending**(`derivedFrom`): `string`[]
 
-Defined in: [persistent/persistent.ts:125](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L125)
+Defined in: [persistent/persistent.ts:125](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L125)
 
 Returns the names of all registered classes that extend a given class
 
@@ -403,7 +391,7 @@ the names of all registered classes that extend the given class
 
 > `static` **classFactory**(`className`): [`PersistentConstructor`](../type-aliases/PersistentConstructor.md)
 
-Defined in: [persistent/persistent.ts:90](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L90)
+Defined in: [persistent/persistent.ts:90](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L90)
 
 Returns the constructor of a registered class
 
@@ -438,7 +426,7 @@ an error if the class is not registered
 
 > `static` **collectionPath**(`propInstance`, `prop`, `params?`): `string`
 
-Defined in: [persistent/persistent.ts:417](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L417)
+Defined in: [persistent/persistent.ts:417](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L417)
 
 #### Parameters
 
@@ -464,7 +452,7 @@ Defined in: [persistent/persistent.ts:417](https://github.com/entropic-bond/entr
 
 > `static` **createInstance**\<`T`\>(`obj`): `T`
 
-Defined in: [persistent/persistent.ts:485](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L485)
+Defined in: [persistent/persistent.ts:485](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L485)
 
 #### Type Parameters
 
@@ -488,7 +476,7 @@ Defined in: [persistent/persistent.ts:485](https://github.com/entropic-bond/entr
 
 > `static` **createReference**\<`T`\>(`obj`): `T`
 
-Defined in: [persistent/persistent.ts:479](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L479)
+Defined in: [persistent/persistent.ts:479](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L479)
 
 #### Type Parameters
 
@@ -512,7 +500,7 @@ Defined in: [persistent/persistent.ts:479](https://github.com/entropic-bond/entr
 
 > `static` **getSystemRegisteredReferencesWithCachedProps**(): [`PersistentPropertyCollection`](../type-aliases/PersistentPropertyCollection.md)
 
-Defined in: [persistent/persistent.ts:540](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L540)
+Defined in: [persistent/persistent.ts:540](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L540)
 
 Retrieves a collection of references with the properties that are stored in the reference object
 
@@ -528,7 +516,7 @@ the references collection
 
 > `static` **isInstanceOf**(`value`, `className`): `boolean`
 
-Defined in: [persistent/persistent.ts:142](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L142)
+Defined in: [persistent/persistent.ts:142](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L142)
 
 Emulates the `instanceof` operator for a registered class. 
 This is useful when you want to check if an object or named class is an 
@@ -566,7 +554,7 @@ true if the object or named class is an instance of the registered class
 
 > `static` **propInfo**\<`T`\>(`registeredClassName`, `propName`): [`PersistentProperty`](../interfaces/PersistentProperty.md)
 
-Defined in: [persistent/persistent.ts:504](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L504)
+Defined in: [persistent/persistent.ts:504](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L504)
 
 #### Type Parameters
 
@@ -594,7 +582,7 @@ Defined in: [persistent/persistent.ts:504](https://github.com/entropic-bond/entr
 
 > `static` **propType**(`propInfo`): `string`
 
-Defined in: [persistent/persistent.ts:519](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L519)
+Defined in: [persistent/persistent.ts:519](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L519)
 
 Return the type of a persistent property.
 Several strategies are used to determine the type:
@@ -623,7 +611,7 @@ the type of the property or the type of the first element if the property is an 
 
 > `static` **registeredClasses**(): `string`[]
 
-Defined in: [persistent/persistent.ts:102](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L102)
+Defined in: [persistent/persistent.ts:102](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L102)
 
 Returns the names of all registered classes
 
@@ -644,7 +632,7 @@ the names of all registered classes
 
 > `static` **registeredClassesAndLegacyNames**(): `string`[]
 
-Defined in: [persistent/persistent.ts:114](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L114)
+Defined in: [persistent/persistent.ts:114](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L114)
 
 Returns the names of all registered classes, including legacy names
 
@@ -665,7 +653,7 @@ the names of all registered classes, including legacy names
 
 > `static` **registerFactory**(`className`, `factory`, `annotation?`, `isLegacy?`): `void`
 
-Defined in: [persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L76)
+Defined in: [persistent/persistent.ts:76](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L76)
 
 Registers a class to be used by the persistence engine.
 
@@ -703,7 +691,7 @@ an annotation associated with the class
 
 > `static` **searchableArrayNameFor**(`propName`): `string`
 
-Defined in: [persistent/persistent.ts:353](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/persistent/persistent.ts#L353)
+Defined in: [persistent/persistent.ts:353](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L353)
 
 #### Parameters
 

@@ -6,7 +6,7 @@
 
 # Class: Auth
 
-Defined in: [auth/auth.ts:38](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L38)
+Defined in: [auth/auth.ts:38](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L38)
 
 The Auth class is a singleton that provides a unified interface to the authentication service.
 You should register an authentication service by using `Auth.useAuthService` 
@@ -22,7 +22,7 @@ method before using the Auth class.
 
 > `protected` **new Auth**(): `Auth`
 
-Defined in: [auth/auth.ts:41](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L41)
+Defined in: [auth/auth.ts:41](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L41)
 
 #### Returns
 
@@ -38,7 +38,7 @@ Defined in: [auth/auth.ts:41](https://github.com/entropic-bond/entropic-bond/blo
 
 > `static` **error**: `object`
 
-Defined in: [auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L39)
+Defined in: [auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L39)
 
 #### shouldBeRegistered
 
@@ -52,7 +52,7 @@ Defined in: [auth/auth.ts:39](https://github.com/entropic-bond/entropic-bond/blo
 
 > **get** `static` **instance**(): `Auth`
 
-Defined in: [auth/auth.ts:65](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L65)
+Defined in: [auth/auth.ts:65](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L65)
 
 The instance of the Auth class
 
@@ -68,7 +68,7 @@ the authentication service
 
 > **linkAdditionalProvider**(`provider`): `Promise`\<`unknown`\>
 
-Defined in: [auth/auth.ts:162](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L162)
+Defined in: [auth/auth.ts:162](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L162)
 
 Links an additional authentication provider to the authenticated user.
 
@@ -103,7 +103,7 @@ Auth.instance.linkAdditionalProvider({ authProvider: 'google' })
 
 > **login**\<`T`\>(`singData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [auth/auth.ts:93](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L93)
+Defined in: [auth/auth.ts:93](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L93)
 
 Logs in an existing user
 
@@ -146,7 +146,7 @@ Auth.instance.login({ authProvider: 'google'})
 
 > **logout**(): `Promise`\<`void`\>
 
-Defined in: [auth/auth.ts:101](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L101)
+Defined in: [auth/auth.ts:101](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L101)
 
 Logs out the current user
 
@@ -166,7 +166,7 @@ a promise that resolves when the user is logged out
 
 > **onAuthStateChange**\<`T`\>(`onChange`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [auth/auth.ts:142](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L142)
+Defined in: [auth/auth.ts:142](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L142)
 
 Adds a listener to be called when the authentication state changes.
 
@@ -215,7 +215,7 @@ const removeListener = Auth.instance.onAuthStateChange( userCredentials => {
 
 > **refreshToken**(): `Promise`\<`void`\>
 
-Defined in: [auth/auth.ts:122](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L122)
+Defined in: [auth/auth.ts:122](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L122)
 
 #### Returns
 
@@ -231,7 +231,7 @@ Defined in: [auth/auth.ts:122](https://github.com/entropic-bond/entropic-bond/bl
 
 > **removeAuthStateChange**\<`T`\>(`onChange`): `void`
 
-Defined in: [auth/auth.ts:150](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L150)
+Defined in: [auth/auth.ts:150](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L150)
 
 Removes a listener that was added by `onAuthStateChange` method.
 
@@ -259,7 +259,7 @@ the listener to be removed
 
 > **resendVerificationEmail**(`email`, `password`, `verificationLink`): `Promise`\<`void`\>
 
-Defined in: [auth/auth.ts:118](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L118)
+Defined in: [auth/auth.ts:118](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L118)
 
 Resends the email verification to the user.
 
@@ -293,7 +293,7 @@ a promise that resolves when the process is done
 
 > **resetEmailPassword**(`email`): `Promise`\<`void`\>
 
-Defined in: [auth/auth.ts:110](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L110)
+Defined in: [auth/auth.ts:110](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L110)
 
 Resets the password associated with the email.
 
@@ -321,7 +321,7 @@ a promise that resolves when the process is done
 
 > **signUp**\<`T`\>(`singData`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [auth/auth.ts:79](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L79)
+Defined in: [auth/auth.ts:79](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L79)
 
 Signs up a new user
 
@@ -364,7 +364,7 @@ Auth.instance.signUp({ authProvider: 'google'})
 
 > **unlinkProvider**(`provider`): `Promise`\<`unknown`\>
 
-Defined in: [auth/auth.ts:174](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L174)
+Defined in: [auth/auth.ts:174](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L174)
 
 Unlinks an authentication provider from the authenticated user.
 
@@ -399,7 +399,7 @@ Auth.instance.unlinkProvider({ authProvider: 'google' })
 
 > `static` **useAuthService**(`authService`): `void`
 
-Defined in: [auth/auth.ts:54](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/auth.ts#L54)
+Defined in: [auth/auth.ts:54](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L54)
 
 Registers an authentication service to be used by the Auth class.
 You need to register an authentication service before using the Auth class.

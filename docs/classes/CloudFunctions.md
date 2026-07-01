@@ -6,7 +6,7 @@
 
 # Class: CloudFunctions
 
-Defined in: [cloud-functions/cloud-functions.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L11)
+Defined in: [cloud-functions/cloud-functions.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L11)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [cloud-functions/cloud-functions.ts:11](https://github.com/entropic-
 
 > `static` **error**: `object`
 
-Defined in: [cloud-functions/cloud-functions.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L14)
+Defined in: [cloud-functions/cloud-functions.ts:14](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L14)
 
 #### shouldBeRegistered
 
@@ -28,7 +28,7 @@ Defined in: [cloud-functions/cloud-functions.ts:14](https://github.com/entropic-
 
 > **get** `static` **instance**(): `CloudFunctions`
 
-Defined in: [cloud-functions/cloud-functions.ts:22](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L22)
+Defined in: [cloud-functions/cloud-functions.ts:22](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L22)
 
 ##### Returns
 
@@ -40,7 +40,7 @@ Defined in: [cloud-functions/cloud-functions.ts:22](https://github.com/entropic-
 
 > **getFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-Defined in: [cloud-functions/cloud-functions.ts:31](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L31)
+Defined in: [cloud-functions/cloud-functions.ts:31](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L31)
 
 #### Type Parameters
 
@@ -68,7 +68,7 @@ Defined in: [cloud-functions/cloud-functions.ts:31](https://github.com/entropic-
 
 > **getRawFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-Defined in: [cloud-functions/cloud-functions.ts:27](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L27)
+Defined in: [cloud-functions/cloud-functions.ts:27](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L27)
 
 #### Type Parameters
 
@@ -96,7 +96,7 @@ Defined in: [cloud-functions/cloud-functions.ts:27](https://github.com/entropic-
 
 > `static` **useCloudFunctionsService**(`cloudFunctionsService`): `void`
 
-Defined in: [cloud-functions/cloud-functions.ts:16](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L16)
+Defined in: [cloud-functions/cloud-functions.ts:16](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L16)
 
 #### Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: ErrorOnOperation
 
-Defined in: [store/json-data-source.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/json-data-source.ts#L12)
+Defined in: [store/json-data-source.ts:12](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/json-data-source.ts#L12)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [store/json-data-source.ts:12](https://github.com/entropic-bond/entr
 
 > **delete**: `string`
 
-Defined in: [store/json-data-source.ts:16](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/json-data-source.ts#L16)
+Defined in: [store/json-data-source.ts:16](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/json-data-source.ts#L16)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [store/json-data-source.ts:16](https://github.com/entropic-bond/entr
 
 > **find**: `string`
 
-Defined in: [store/json-data-source.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/json-data-source.ts#L14)
+Defined in: [store/json-data-source.ts:14](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/json-data-source.ts#L14)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [store/json-data-source.ts:14](https://github.com/entropic-bond/entr
 
 > **findById**: `string`
 
-Defined in: [store/json-data-source.ts:15](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/json-data-source.ts#L15)
+Defined in: [store/json-data-source.ts:15](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/json-data-source.ts#L15)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [store/json-data-source.ts:15](https://github.com/entropic-bond/entr
 
 > **store**: `string`
 
-Defined in: [store/json-data-source.ts:13](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/store/json-data-source.ts#L13)
+Defined in: [store/json-data-source.ts:13](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/json-data-source.ts#L13)

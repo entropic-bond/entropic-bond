@@ -22,7 +22,7 @@ Typically, you will derive all your business logic entities from the `EntropicCo
 
 ### API
 
-You can find the API documentation [here](docs/modules.md).
+You can find the API documentation in the docs/ directory.
 
 ### Persistence
 
@@ -48,7 +48,7 @@ class MyEntity extends EntropicBond {
 
 #### Storing and querying the persistent entities
 
-The database abstraction is provided by the `Store` object. To learn how to set up a concrete database, [see below](setup_the_database_access).
+The database abstraction is provided by the `Store` object.
 
 The `Store.getModel` method will return an object with methods to access the database.
 
@@ -83,7 +83,7 @@ Currently, there is an official plugin to connect to a **Firebase** _Firestore_ 
 npm i entropic-bond-firebase
 ```
 
-You can develop new plugins following the [plugin developer's](plugin_development) section.
+You can develop new plugins following the plugin developer's section.
 
 You should instantiate the concrete implementation of the `DataSource` and pass it to the `useDataSource` method of the `Store` object.
 

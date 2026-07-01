@@ -6,7 +6,7 @@
 
 # Interface: UserCredentials\<T\>
 
-Defined in: [auth/user-auth-types.ts:5](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L5)
+Defined in: [auth/user-auth-types.ts:5](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L5)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [auth/user-auth-types.ts:5](https://github.com/entropic-bond/entropi
 
 > `optional` **creationDate?**: `number`
 
-Defined in: [auth/user-auth-types.ts:14](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L14)
+Defined in: [auth/user-auth-types.ts:14](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L14)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [auth/user-auth-types.ts:14](https://github.com/entropic-bond/entrop
 
 > `optional` **customData?**: `T`
 
-Defined in: [auth/user-auth-types.ts:12](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L12)
+Defined in: [auth/user-auth-types.ts:12](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L12)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [auth/user-auth-types.ts:12](https://github.com/entropic-bond/entrop
 
 > **email**: `string`
 
-Defined in: [auth/user-auth-types.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L7)
+Defined in: [auth/user-auth-types.ts:7](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L7)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [auth/user-auth-types.ts:7](https://github.com/entropic-bond/entropi
 
 > `optional` **emailVerified?**: `boolean`
 
-Defined in: [auth/user-auth-types.ts:11](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L11)
+Defined in: [auth/user-auth-types.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L11)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [auth/user-auth-types.ts:11](https://github.com/entropic-bond/entrop
 
 > **id**: `string`
 
-Defined in: [auth/user-auth-types.ts:6](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L6)
+Defined in: [auth/user-auth-types.ts:6](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L6)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [auth/user-auth-types.ts:6](https://github.com/entropic-bond/entropi
 
 > `optional` **lastLogin?**: `number`
 
-Defined in: [auth/user-auth-types.ts:13](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L13)
+Defined in: [auth/user-auth-types.ts:13](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L13)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [auth/user-auth-types.ts:13](https://github.com/entropic-bond/entrop
 
 > `optional` **name?**: `string`
 
-Defined in: [auth/user-auth-types.ts:8](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L8)
+Defined in: [auth/user-auth-types.ts:8](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L8)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [auth/user-auth-types.ts:8](https://github.com/entropic-bond/entropi
 
 > `optional` **phoneNumber?**: `string`
 
-Defined in: [auth/user-auth-types.ts:10](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L10)
+Defined in: [auth/user-auth-types.ts:10](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L10)
 
 ***
 
@@ -84,4 +84,4 @@ Defined in: [auth/user-auth-types.ts:10](https://github.com/entropic-bond/entrop
 
 > `optional` **pictureUrl?**: `string`
 
-Defined in: [auth/user-auth-types.ts:9](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/auth/user-auth-types.ts#L9)
+Defined in: [auth/user-auth-types.ts:9](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/user-auth-types.ts#L9)

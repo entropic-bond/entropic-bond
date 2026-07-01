@@ -13,6 +13,7 @@
 - [Auth](classes/Auth.md)
 - [AuthMock](classes/AuthMock.md)
 - [AuthService](classes/AuthService.md)
+- [CachedPropsUpdater](classes/CachedPropsUpdater.md)
 - [CloudFunctions](classes/CloudFunctions.md)
 - [CloudFunctionsMock](classes/CloudFunctionsMock.md)
 - [CloudStorage](classes/CloudStorage.md)
@@ -33,6 +34,7 @@
 ## Interfaces
 
 - [AuthError](interfaces/AuthError.md)
+- [CachedPropsUpdaterConfig](interfaces/CachedPropsUpdaterConfig.md)
 - [CloudFunctionsService](interfaces/CloudFunctionsService.md)
 - [Collection](interfaces/Collection.md)
 - [CredentialsCustomData](interfaces/CredentialsCustomData.md)
@@ -41,19 +43,25 @@
 - [DocumentChangeListenerHandler](interfaces/DocumentChangeListenerHandler.md)
 - [DocumentReference](interfaces/DocumentReference.md)
 - [ErrorOnOperation](interfaces/ErrorOnOperation.md)
+- [FunctionCollection](interfaces/FunctionCollection.md)
 - [JsonRawData](interfaces/JsonRawData.md)
 - [PersistentProperty](interfaces/PersistentProperty.md)
 - [SignData](interfaces/SignData.md)
 - [StoredFileChange](interfaces/StoredFileChange.md)
 - [StoreParams](interfaces/StoreParams.md)
+- [UpdatedResults](interfaces/UpdatedResults.md)
 - [UploadControl](interfaces/UploadControl.md)
 - [UserCredentials](interfaces/UserCredentials.md)
 - [Values](interfaces/Values.md)
 
 ## Type Aliases
 
+- [AfterDocumentChangeCallback](type-aliases/AfterDocumentChangeCallback.md)
 - [AuthErrorCode](type-aliases/AuthErrorCode.md)
 - [AuthProvider](type-aliases/AuthProvider.md)
+- [BeforeDocumentChangeCallback](type-aliases/BeforeDocumentChangeCallback.md)
+- [BeforeQueryOwnerCollection](type-aliases/BeforeQueryOwnerCollection.md)
+- [CachedPropsUpdaterCallback](type-aliases/CachedPropsUpdaterCallback.md)
 - [Callback](type-aliases/Callback.md)
 - [ClassArrayPropNames](type-aliases/ClassArrayPropNames.md)
 - [ClassArrayProps](type-aliases/ClassArrayProps.md)
@@ -63,9 +71,13 @@
 - [ClassPropNamesOfType](type-aliases/ClassPropNamesOfType.md)
 - [ClassProps](type-aliases/ClassProps.md)
 - [CloudFunction](type-aliases/CloudFunction.md)
+- [CloudStorageFactory](type-aliases/CloudStorageFactory.md)
 - [CollectionChangeListener](type-aliases/CollectionChangeListener.md)
+- [CollectionPathCallback](type-aliases/CollectionPathCallback.md)
 - [Collections](type-aliases/Collections.md)
 - [CompareFunction](type-aliases/CompareFunction.md)
+- [Concat](type-aliases/Concat.md)
+- [Decr](type-aliases/Decr.md)
 - [DocumentChangeListener](type-aliases/DocumentChangeListener.md)
 - [DocumentChangeType](type-aliases/DocumentChangeType.md)
 - [DocumentListenerUninstaller](type-aliases/DocumentListenerUninstaller.md)
@@ -91,9 +103,11 @@
 - [SomeClassPropNames](type-aliases/SomeClassPropNames.md)
 - [SomeClassProps](type-aliases/SomeClassProps.md)
 - [StorableData](type-aliases/StorableData.md)
+- [StrictElement](type-aliases/StrictElement.md)
 - [UnderscoredProp](type-aliases/UnderscoredProp.md)
 - [Unsubscriber](type-aliases/Unsubscriber.md)
 - [UploadProgress](type-aliases/UploadProgress.md)
+- [ValidatorFunction](type-aliases/ValidatorFunction.md)
 
 ## Functions
 

@@ -6,7 +6,7 @@
 
 # Class: Observable\<T\>
 
-Defined in: [observable/observable.ts:19](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/observable/observable.ts#L19)
+Defined in: [observable/observable.ts:19](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/observable/observable.ts#L19)
 
 Implements the Observer pattern.
 The Observable class is used to notify a list of subscribers when an event occurs.
@@ -50,7 +50,7 @@ unsubscribe()
 
 > **get** **subscribersCount**(): `number`
 
-Defined in: [observable/observable.ts:62](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/observable/observable.ts#L62)
+Defined in: [observable/observable.ts:62](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/observable/observable.ts#L62)
 
 Returns the number of subscribers.
 
@@ -76,7 +76,7 @@ the number of subscribers
 
 > **notify**(`event?`): `void`
 
-Defined in: [observable/observable.ts:47](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/observable/observable.ts#L47)
+Defined in: [observable/observable.ts:47](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/observable/observable.ts#L47)
 
 Notifies all the subscribers with the event passed as parameter.
 
@@ -98,7 +98,7 @@ the event passed to all subscribers.
 
 > **subscribe**(`callback`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [observable/observable.ts:28](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/observable/observable.ts#L28)
+Defined in: [observable/observable.ts:28](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/observable/observable.ts#L28)
 
 Subscribes a listener callback function. On every notification, 
 the listener callback will be called with an event as a parameter if sent.
@@ -123,7 +123,7 @@ a function to unsubscribe the listener from further notifications
 
 > **unsubscribe**(`callback`): `void`
 
-Defined in: [observable/observable.ts:38](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/observable/observable.ts#L38)
+Defined in: [observable/observable.ts:38](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/observable/observable.ts#L38)
 
 Removes the callback from the notification list.
 

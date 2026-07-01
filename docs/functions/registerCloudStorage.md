@@ -8,7 +8,7 @@
 
 > **registerCloudStorage**(`cloudStorageProviderName`, `factory`): (`constructor`) => `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:55](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-storage/cloud-storage.ts#L55)
+Defined in: [cloud-storage/cloud-storage.ts:55](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L55)
 
 ## Parameters
 
@@ -18,7 +18,7 @@ Defined in: [cloud-storage/cloud-storage.ts:55](https://github.com/entropic-bond
 
 ### factory
 
-`CloudStorageFactory`
+[`CloudStorageFactory`](../type-aliases/CloudStorageFactory.md)
 
 ## Returns
 

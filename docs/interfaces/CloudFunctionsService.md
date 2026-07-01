@@ -6,7 +6,7 @@
 
 # Interface: CloudFunctionsService
 
-Defined in: [cloud-functions/cloud-functions.ts:6](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L6)
+Defined in: [cloud-functions/cloud-functions.ts:6](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L6)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [cloud-functions/cloud-functions.ts:6](https://github.com/entropic-b
 
 > **callFunction**\<`P`, `R`\>(`func`, `params`): `Promise`\<`R`\>
 
-Defined in: [cloud-functions/cloud-functions.ts:8](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L8)
+Defined in: [cloud-functions/cloud-functions.ts:8](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L8)
 
 #### Type Parameters
 
@@ -46,7 +46,7 @@ Defined in: [cloud-functions/cloud-functions.ts:8](https://github.com/entropic-b
 
 > **retrieveFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-Defined in: [cloud-functions/cloud-functions.ts:7](https://github.com/entropic-bond/entropic-bond/blob/dc09b27ce3505d575712f6bd177a18ab8bfa0c33/src/cloud-functions/cloud-functions.ts#L7)
+Defined in: [cloud-functions/cloud-functions.ts:7](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions.ts#L7)
 
 #### Type Parameters
 
