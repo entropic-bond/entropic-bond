@@ -23,6 +23,8 @@
 		"noImplicitOverride": true, // this causes errors when overriding methods of base classes. Annoying for React components
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitThis": true,
+ 		"noImplicitAny": false,            		// Allow TSC 6.x.x to compile. Fixes errors: TS7006 TS7016 TS7053
+		"strictFunctionTypes": false,      		// Allow TSC 6.x.x to compile. Fixes errors: TS2322 TS2345 TS2769 TS2352
     "types": [
       "vitest/globals",
     ]

@@ -10,12 +10,12 @@ class Character extends EntropicComponent {
 		return this._name
 	}
 
-	pushFriend( name: string, isUnique?: CompareFunction<Character> ) {
-		return this.pushAndNotify<Character>( 'friends', name, isUnique )
+	pushFriend( name: string, isUnique?: CompareFunction<string> ) {
+		return this.pushAndNotify( 'friends', name, isUnique )
 	}
 
-	removeFriend( name: string, isEqual: CompareFunction<Character> ) {
-		return this.removeAndNotify<Character>( 'friends', name, isEqual )
+	removeFriend( name: string, isEqual: CompareFunction<string> ) {
+		return this.removeAndNotify( 'friends', name, isEqual )
 	}
 
 	get friends(): readonly string[] {
@@ -141,3 +141,68 @@ describe('Observable Persistent', ()=>{
 		
 	})
 })
+
+class A extends EntropicComponent {
+	addArray1( value: string ): string | undefined {
+		const retVal = this.pushAndNotify( 'array1s', value, ( a, b ) => a !== b )
+
+		//@ts-expect-error
+		this.pushAndNotify( 'nonExistingMember', value, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.pushAndNotify( 'array1s', 1, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.pushAndNotify( 'array1s', true, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.pushAndNotify( 'array1s', {}, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.pushAndNotify( 'array1s', [], ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.pushAndNotify( 'array1s', value, ( a, b ) => a.isNothingHere !== b )
+
+		return retVal
+	}
+	
+	removeArray1( value: string ): string | undefined {
+		const retVal = this.removeAndNotify( 'array1s', value, ( a, b ) => a === b )
+
+		//@ts-expect-error
+		this.removeAndNotify( 'nonExistingMember', value, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.removeAndNotify( 'array1s', 1, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.removeAndNotify( 'array1s', true, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.removeAndNotify( 'array1s', {}, ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.removeAndNotify( 'array1s', [], ( a, b ) => a !== b )
+		//@ts-expect-error
+		this.removeAndNotify( 'array1s', value, ( a, b ) => a.isNothingHere !== b )
+
+		return retVal
+	}
+
+	addArray2( value: number ): number | undefined {
+		//@ts-expect-error
+		return this.pushAndNotify( 'intProp', value, ( a, b ) => a !== b )
+	}
+
+	removeArray2( value: number ): number | undefined {
+		//@ts-expect-error
+		return this.removeAndNotify( 'intProp', value, ( a, b ) => a === b )
+	}
+
+	set intProp( value: number ) {
+		this._intProp = value
+	}
+	
+	get intProp(): number {
+		return this._intProp
+	}
+	
+	get array1s(): Readonly<string[]> {
+		return this._array1s
+	}
+	
+	private _intProp: number = 0
+	private _array1s: string[] = []
+}

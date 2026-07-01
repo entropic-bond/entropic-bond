@@ -1,18 +1,21 @@
-import { Callback, Observable, Unsubscriber } from '../observable/observable';
-import { ClassArrayPropNames, ClassProps, Elements } from '../types/utility-types';
-import { Persistent } from './persistent';
+import { Callback, Observable, Unsubscriber } from '../observable/observable'
+import { ClassArrayPropNames, ClassProps, Elements } from '../types/utility-types'
+import { Persistent } from './persistent'
 
 export type PropChangeEvent<T> = Partial<ClassProps<T>>
 export type PropChangeCallback<T> = Callback<PropChangeEvent<T>>
 type ArrayPropsElem<T> = Elements<T[ClassArrayPropNames<T>]>
-export type CompareFunction<T> = ( a: ArrayPropsElem<T>, b: ArrayPropsElem<T> )=>boolean
+type ArrayElementType<T extends Array<any>> = T[number];
+export type CompareFunction<T> = ( a: T, b: T )=>boolean
 
 /**
  * Derived classes from EntropicComponent will have the ability to notify 
  * property changes by calling one of the provided notification methods.
  * It extends Persistent class therefore EntropicComponent children will have
- * persistance through the Entropic Bond persistence mechanism
+ * persistence through the Entropic Bond persistence mechanism
  */
+type StrictElement<T> = T extends any ? (keyof T extends never ? never : T) : never
+
 export class EntropicComponent extends Persistent {
 
 	/**
@@ -80,20 +83,22 @@ export class EntropicComponent extends Persistent {
 	 * 									already in the array.
 	 * @returns the inserted element or undefined if the element was not inserted.
 	 */
-	protected pushAndNotify<T extends EntropicComponent>( 
-		arrayPropName: ClassArrayPropNames<T>, 
-		element: ArrayPropsElem<T>, 
-		isUnique?: CompareFunction<T> 
-	): ArrayPropsElem<T> | undefined {
+	protected pushAndNotify<T extends keyof this, E>( 
+		this: Record<T, readonly E[]> & EntropicComponent,
+		arrayPropName: T, 
+		element: StrictElement<E>, 
+		isUnique?: CompareFunction<StrictElement<E>> 
+	): E | undefined {
 
-		const pName = '_' + String( arrayPropName );
-		const alreadyIn = isUnique && this[ pName ].find( 
-			( item: ArrayPropsElem<T> ) => !isUnique( item, element ) 
-		)
-		if ( alreadyIn ) return undefined
+		const pName = '_' + String(arrayPropName)
+		const array = this[pName]! as StrictElement<E>[]
 
-		this[ pName ].push( element )
-		this.notify({ [arrayPropName]: this[ arrayPropName as string ] })
+		if (isUnique && array.find(item => !isUnique(item, element))) return undefined
+
+		array.push(element)
+		
+		this.notify({ [arrayPropName]: this[arrayPropName] } as PropChangeEvent<EntropicComponent>)
+		
 		return element
 	}
 
@@ -109,25 +114,25 @@ export class EntropicComponent extends Persistent {
 	 * 									value will be	removed from the array. 
 	 * @returns the removed element or undefined if the element was not removed.
 	 */
-	protected removeAndNotify<T extends EntropicComponent>( 
-		arrayPropName: ClassArrayPropNames<T>, 
-		element: ArrayPropsElem<T>,
-		isEqual: CompareFunction<T>
-	): ArrayPropsElem<T> | undefined {
+	protected removeAndNotify<T extends keyof this, E>( 
+		this: Record<T, readonly E[]> & EntropicComponent,
+		arrayPropName: T, 
+		element: StrictElement<E>, 
+		isEqual: CompareFunction<StrictElement<E>>
+	): E | undefined {
 
-		const pName = '_' + String( arrayPropName );
+		const pName = '_' + String(arrayPropName)
+		const array = this[pName]! as StrictElement<E>[]
+		const originalLength = array.length
 
-		const originalLength = this[ pName ].length
+		const filtered = array.filter(item => !isEqual(item, element))
+		const target = this as unknown as Record<string, unknown>
+		target[pName] = filtered
 
-		this[ pName ] = this[ pName ].filter( 
-			( item: ArrayPropsElem<T> ) => !isEqual( item, element ) 
-		)
+		if (originalLength === filtered.length) return undefined
 
-		if ( originalLength === this[ pName ].length ) {
-			return undefined
-		}
+		this.notify({ [arrayPropName]: this[arrayPropName] } as PropChangeEvent<EntropicComponent>)
 
-		this.notify({ [arrayPropName]: this[ arrayPropName as string ] })
 		return element
 	}
 
