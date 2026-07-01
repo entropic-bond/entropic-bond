@@ -19,7 +19,7 @@ Typically, you will derive all your business logic entities from the `EntropicCo
 
 ### API
 
-You can find the API documentation in the docs/ directory.
+You can find the API documentation in the [docs/](./docs) directory.
 
 ### Persistence
 
@@ -31,7 +31,7 @@ The properties or attributes that you want to be streamed should be preceded by 
 
 ```ts
 @registerPersistentClass( 'MyEntity' )
-class MyEntity extends EntropicBond {
+class MyEntity extends Persistent {
 	@persistent private _persistentProp1: string
 	@persistent private _persistentProp2: boolean
 	@persistent private _persistentProp3: AnotherPersistentObject
@@ -88,10 +88,214 @@ You should instantiate the concrete implementation of the `DataSource` and pass 
 Store.useDataSource( new JsonDataSource() )
 ```
 
+> See the complete example at [samples/01-persistence.ts](./samples/01-persistence.ts)
+
 ### Observability
+
+The observability mechanism allows entities to notify when their properties change. Derive your class from `EntropicComponent` (which extends `Persistent`) and use `changeProp` in setters or `pushAndNotify`/`removeAndNotify` for arrays.
+
+```ts
+import { EntropicComponent } from 'entropic-bond'
+
+class MyEntity extends EntropicComponent {
+  private _name: string = ''
+
+  get name(): string { return this._name }
+  set name(value: string) { this.changeProp('name', value) }
+}
+
+const entity = new MyEntity()
+const unsub = entity.onChange(event => console.log('Changed:', event))
+
+entity.name = 'new value' // triggers the onChange listener
+unsub() // removes the listener
+```
+
+You can also directly use the generic `Observable<T>` class for standalone observer patterns.
+
+```ts
+import { Observable } from 'entropic-bond'
+
+const observable = new Observable<string>()
+const unsubscribe = observable.subscribe(event => console.log(event))
+observable.notify('hello')
+```
+
+> See the complete example at [samples/02-observability.ts](./samples/02-observability.ts)
 
 ### Auth
 
+Authentication is abstracted via `AuthService`. Register a concrete implementation and use the `Auth` singleton.
 
+```ts
+import { Auth, AuthMock } from 'entropic-bond'
 
+Auth.useAuthService(new AuthMock())
 
+async function example() {
+  const user = await Auth.instance.login({ authProvider: 'email', email: 'user@test.com', password: '123456' })
+  console.log(user.id, user.email)
+
+  Auth.instance.onAuthStateChange(credentials => {
+    console.log('Auth state changed:', credentials)
+  })
+}
+```
+
+Plugins exist for production providers (e.g., Firebase Authentication). To create a custom provider, implement the `AuthService` abstract class.
+
+> See the complete example at [samples/03-auth.ts](./samples/03-auth.ts)
+
+### Server Auth
+
+For admin-level user management (list, update, delete users), use `ServerAuth`.
+
+```ts
+import { ServerAuth, ServerAuthMock } from 'entropic-bond'
+
+ServerAuth.useServerAuthService(new ServerAuthMock())
+
+const user = await ServerAuth.instance.getUser('user-id')
+await ServerAuth.instance.updateUser('user-id', { name: 'Updated Name' })
+await ServerAuth.instance.deleteUser('user-id')
+```
+
+> See the complete example at [samples/04-server-auth.ts](./samples/04-server-auth.ts)
+
+### Cloud Storage
+
+File storage is abstracted via `CloudStorage`. Register a provider and use the singleton, or use the `StoredFile` persistent entity.
+
+```ts
+import { CloudStorage, MockCloudStorage, StoredFile } from 'entropic-bond'
+
+CloudStorage.useCloudStorage(new MockCloudStorage())
+
+// Direct usage
+const url = await CloudStorage.defaultCloudStorage.save('my-file', fileData)
+const downloadUrl = await CloudStorage.defaultCloudStorage.getUrl('my-file')
+
+// Or with StoredFile (persistent entity)
+const file = new StoredFile()
+file.setDataToStore(someBlob)
+await file.save()
+console.log(file.url)
+```
+
+> See the complete example at [samples/05-cloud-storage.ts](./samples/05-cloud-storage.ts)
+
+### Cloud Functions
+
+Call serverless functions through an abstract interface.
+
+```ts
+import { CloudFunctions, CloudFunctionsMock } from 'entropic-bond'
+
+const mockService = new CloudFunctionsMock({
+  myFunction: async (params) => `Hello ${params.name}`
+})
+CloudFunctions.useCloudFunctionsService(mockService)
+
+const fn = CloudFunctions.instance.getFunction('myFunction')
+const result = await fn({ name: 'World' })
+```
+
+> See the complete example at [samples/06-cloud-functions.ts](./samples/06-cloud-functions.ts)
+
+### Realtime document listeners
+
+The `Model` supports realtime updates on documents and collections.
+
+```ts
+const model = Store.getModel<MyEntity>('MyEntity')
+
+// Listen to a single document
+const unsubscribe1 = model.onDocumentChange('doc-id', change => {
+  console.log('Before:', change.before, 'After:', change.after)
+})
+
+// Listen to a collection query
+const unsubscribe2 = model.onCollectionChange(
+  model.find().where('name', '==', 'foo'),
+  change => console.log('Collection changed:', change)
+)
+
+// Listen to a wildcard collection template
+const unsubscribe3 = model.onCollectionTemplateChange('{userId}/Posts', change => {
+  console.log('Post changed in', change.collectionPath)
+})
+```
+
+> See the complete example at [samples/07-realtime-listeners.ts](./samples/07-realtime-listeners.ts)
+
+### DataSource plugins
+
+The persistence layer uses a `DataSource` to communicate with the database. Implement the abstract `DataSource` class to support new backends.
+
+```ts
+import { DataSource, Store } from 'entropic-bond'
+
+class MyDatabase extends DataSource {
+  // implement all abstract methods: findById, find, save, delete, etc.
+}
+
+Store.useDataSource(new MyDatabase())
+```
+
+The official Firebase plugin is available as `entropic-bond-firebase`.
+
+```sh
+npm i entropic-bond-firebase
+```
+
+> See the complete example at [samples/10-datasource-plugin.ts](./samples/10-datasource-plugin.ts)
+
+### Cached property references
+
+When a property holds a reference to another persistent entity, you can embed selected primitive fields directly in the reference to avoid extra queries.
+
+```ts
+@registerPersistentClass('Team')
+class Team extends EntropicComponent {
+  @persistent private _name: string
+}
+
+@registerPersistentClass('User')
+class User extends EntropicComponent {
+  @persistentReferenceWithCachedProps(['_name'], 'Team')
+  private _team: Team
+}
+```
+
+The `CachedPropsUpdater` (installed via `DataSource.installCachedPropsUpdater()`) will propagate changes to cached props across all referencing documents.
+
+> See the complete example at [samples/08-cached-props.ts](./samples/08-cached-props.ts)
+
+### Utility functions
+
+```ts
+import { camelCase, snakeCase, replaceValue, getDeepValue } from 'entropic-bond'
+
+camelCase('hello-world')        // 'helloWorld'
+snakeCase('helloWorld')         // 'hello-world'
+replaceValue('Hi ${name}', { name: 'John' }) // 'Hi John'
+```
+
+> See the complete example at [samples/09-utils.ts](./samples/09-utils.ts)
+
+### Samples
+
+Complete, runnable examples are available in the [`samples/`](./samples) directory:
+
+| Section | Sample |
+|---------|--------|
+| Persistence | [01-persistence.ts](./samples/01-persistence.ts) |
+| Observability | [02-observability.ts](./samples/02-observability.ts) |
+| Auth | [03-auth.ts](./samples/03-auth.ts) |
+| Server Auth | [04-server-auth.ts](./samples/04-server-auth.ts) |
+| Cloud Storage | [05-cloud-storage.ts](./samples/05-cloud-storage.ts) |
+| Cloud Functions | [06-cloud-functions.ts](./samples/06-cloud-functions.ts) |
+| Realtime listeners | [07-realtime-listeners.ts](./samples/07-realtime-listeners.ts) |
+| Cached property references | [08-cached-props.ts](./samples/08-cached-props.ts) |
+| Utility functions | [09-utils.ts](./samples/09-utils.ts) |
+| DataSource plugins | [10-datasource-plugin.ts](./samples/10-datasource-plugin.ts) |
