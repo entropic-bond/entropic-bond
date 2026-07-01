@@ -1,3 +1,11 @@
+## [1.59.5](https://github.com/entropic-bond/entropic-bond/compare/v1.59.4...v1.59.5) (2026-07-01)
+
+
+### Bug Fixes
+
+* improved pushAndNotify and removeAndNotify generic typing ([dc09b27](https://github.com/entropic-bond/entropic-bond/commit/dc09b27ce3505d575712f6bd177a18ab8bfa0c33))
+* typedoc warnings - export missing types, fix [@param](https://github.com/param) tags, update doc comments ([5b92003](https://github.com/entropic-bond/entropic-bond/commit/5b92003cf624a21df268e7f51faeb1d1321734eb))
+
 ## [1.59.4](https://github.com/entropic-bond/entropic-bond/compare/v1.59.3...v1.59.4) (2026-06-30)
 
 
