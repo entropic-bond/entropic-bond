@@ -70,6 +70,41 @@ export interface DocumentChangeListenerHandler {
 
 export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[] ) => void
 
+interface Error {
+	name: string
+	message: string
+}
+
+declare const Error: {
+	new( message?: string ): Error
+}
+
+/**
+ * Thrown when a transaction cannot commit because a document read inside the
+ * transaction was modified by another writer (or because the transaction
+ * precondition failed).
+ * @param storedDoc the current stored document when available
+ */
+export class TransactionConflictError extends Error {
+	constructor( public storedDoc?: DocumentObject | Persistent ) {
+		super( 'Transaction conflict: the document was modified by another writer.' )
+		this.name = 'TransactionConflictError'
+	}
+}
+
+/**
+ * The handle passed to a transaction. It only exposes findById/save/delete: there is
+ * no set — a full document write is a save with the complete serialized object.
+ * @param findById retrieves a document by id, pinning its version for the transaction
+ * @param save merges the given fields into the document
+ * @param delete removes the document
+ */
+export interface TransactionHandle {
+	findById( id: string, collectionName: string ): Promise<DocumentObject | undefined>
+	save( id: string, collectionName: string, doc: Partial<DocumentObject> ): Promise<void>
+	delete( id: string, collectionName: string ): Promise<void>
+}
+
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -125,6 +160,18 @@ export abstract class DataSource {
 	 * @returns a promise
 	 */
 	abstract delete( id: string, collectionName: string ): Promise<void>
+
+	/**
+	 * Runs a compare-and-set transaction. The callback receives a transaction
+	 * handle with findById/save/delete. The promise resolves with the callback's
+	 * result or rejects with a {@link TransactionConflictError} when a document
+	 * read inside the transaction was modified by another writer before commit.
+	 * @param fn the transaction callback
+	 * @returns a promise resolving with the callback's result
+	 */
+	abstract runTransaction<Result>(
+		fn: ( handle: TransactionHandle ) => Promise<Result>
+	): Promise<Result>
 
 	/**
 	 * Retrieves the next bunch of documents matching the query stored in the query object

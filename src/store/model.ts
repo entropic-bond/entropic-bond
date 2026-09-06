@@ -1,7 +1,20 @@
 import { Unsubscriber } from '../observable/observable'
-import { DocumentChange, Persistent, PersistentObject } from '../persistent/persistent'
+import { Collections, DocumentChange, Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListener, CollectionChangeListener } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListener, CollectionChangeListener, TransactionConflictError } from './data-source'
+
+/**
+ * The handle passed to a Model.runTransaction callback. All operations work with
+ * Persistent instances of the model's collection, never with raw document objects.
+ * @param findById retrieves an instance by id, pinning its version for the transaction
+ * @param save merges the serialized instance (and its referenced documents) into the collection
+ * @param delete removes the instance's document
+ */
+export interface ModelTransactionHandle<T extends Persistent> {
+	findById( id: string ): Promise<T | undefined>
+	save( instance: T ): Promise<void>
+	delete( instance: T ): Promise<void>
+}
 
 /**
  * Provides abstraction to the database access. You should gain access to a Model
@@ -85,6 +98,48 @@ export class Model<T extends Persistent>{
 			this._stream.delete( id, this.collectionName ) 
 			.then( () => resolve() )
 			.catch( error => reject( error ) )
+		})
+	}
+
+	/**
+	 * Runs a compare-and-set transaction proxied to the underlying data source.
+	 * The callback receives a handle whose findById/save/delete work with Persistent
+	 * instances. The promise resolves with the callback's result or rejects with
+	 * a {@link TransactionConflictError} when a document read inside the
+	 * transaction was modified by another writer before commit.
+	 * @param fn the transaction callback
+	 * @returns a promise resolving with the callback's result
+	 * @see DataSource.runTransaction
+	 * @see ModelTransactionHandle
+	 */
+	runTransaction<A extends T>( fn: ( handle: ModelTransactionHandle<T> ) => Promise<A> ): Promise<A> {
+		return this._stream.runTransaction( handle => fn({
+			findById: async ( id: string ): Promise<T | undefined> => {
+				const doc = await handle.findById( id, this.collectionName )
+				return doc ? Persistent.createInstance( doc as PersistentObject<T> ) as T : undefined
+			},
+			save: async ( instance: T ): Promise<void> => {
+				const obj = instance.toObject() as PersistentObject<T> & { __rootCollections: Collections }
+				if ( this.collectionName !== obj.__className ) {
+					obj.__rootCollections[ this.collectionName ] = obj.__rootCollections[ obj.__className ]
+					delete obj.__rootCollections[ obj.__className ]
+				}
+				await Promise.all(
+					Object.entries( obj.__rootCollections ).map(
+						([ collectionName, docs ]) => Promise.all(
+							( docs ?? [] ).map( doc => handle.save( doc.id, collectionName, doc ) )
+						)
+					)
+				)
+			},
+			delete: async ( instance: T ): Promise<void> => {
+				await handle.delete( instance.id, this.collectionName )
+			}
+		})).catch( error => {
+			if ( error instanceof TransactionConflictError && error.storedDoc && !( error.storedDoc instanceof Persistent ) ) {
+				error.storedDoc = Persistent.createInstance( error.storedDoc as PersistentObject<T> ) as T
+			}
+			throw error
 		})
 	}
 

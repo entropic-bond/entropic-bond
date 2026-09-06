@@ -1,7 +1,7 @@
 import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation, QueryOrder } from "./data-source"
+import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation, QueryOrder, TransactionConflictError, TransactionHandle } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -70,6 +70,7 @@ export class JsonDataSource extends DataSource {
 			collection?.forEach( document => {
 				const oldValue = this._jsonRawData[ collectionName ]![ document.id ]
 				this._jsonRawData[ collectionName ]![ document.id ] = document
+				this.bumpVersion( collectionName, document.id )
 				this.notifyChange( collectionName, document, oldValue )
 			})
 		})
@@ -101,7 +102,57 @@ export class JsonDataSource extends DataSource {
 		if ( this._simulateError?.delete ) throw new Error( this._simulateError.delete )
 
 		delete this._jsonRawData[ collectionName ]![ id ]
+		this.bumpVersion( collectionName, id )
 		return this.resolveWithDelay()
+	}
+
+	override runTransaction<Result>( fn: ( handle: TransactionHandle ) => Promise<Result> ): Promise<Result> {
+		const reads: { collectionName: string, id: string, version: number }[] = []
+		const writes: {
+			type: 'save' | 'delete'
+			collectionName: string
+			id: string
+			doc?: Partial<DocumentObject>
+		}[] = []
+
+		const handle: TransactionHandle = {
+			findById: ( id, collectionName ) => {
+				reads.push({ collectionName, id, version: this.versionOf( collectionName, id ) })
+				return this.resolveWithDelay( this._jsonRawData[ collectionName ]?.[ id ] )
+			},
+			save: ( id, collectionName, doc ) => {
+				writes.push({ type: 'save', collectionName, id, doc })
+				return this.resolveWithDelay()
+			},
+			delete: ( id, collectionName ) => {
+				writes.push({ type: 'delete', collectionName, id })
+				return this.resolveWithDelay()
+			}
+		}
+
+		return fn( handle ).then( result => {
+			const conflictedRead = reads.find( read => read.version !== this.versionOf( read.collectionName, read.id ) )
+			if ( conflictedRead ) {
+				throw new TransactionConflictError( this._jsonRawData[ conflictedRead.collectionName ]?.[ conflictedRead.id ] )
+			}
+
+			writes.forEach( write => {
+				if ( write.type === 'delete' ) {
+					delete this._jsonRawData[ write.collectionName ]![ write.id ]
+					this.bumpVersion( write.collectionName, write.id )
+				}
+				else {
+					if ( !this._jsonRawData[ write.collectionName ] ) this._jsonRawData[ write.collectionName ] = {}
+					const oldValue = this._jsonRawData[ write.collectionName ]![ write.id ]
+					const newValue = { ...( oldValue ?? {} ), ...write.doc } as DocumentObject
+					this._jsonRawData[ write.collectionName ]![ write.id ] = newValue
+					this.bumpVersion( write.collectionName, write.id )
+					this.notifyChange( write.collectionName, newValue, oldValue )
+				}
+			})
+
+			return result
+		})
 	}
 
 	next( limit?: number ): Promise< DocumentObject[] > {
@@ -338,7 +389,17 @@ export class JsonDataSource extends DataSource {
 		return Object.keys( this._jsonRawData ).filter( collectionName => DataSource.isStringMatchingTemplate( template, collectionName ) )
 	}
 
+	private versionOf( collectionName: string, id: string ): number {
+		return this._versions[ collectionName ]?.[ id ] ?? 0
+	}
+
+	private bumpVersion( collectionName: string, id: string ) {
+		if ( !this._versions[ collectionName ] ) this._versions[ collectionName ] = {}
+		this._versions[ collectionName ]![ id ] = ( this._versions[ collectionName ]![ id ] ?? 0 ) + 1
+	}
+
 	private _jsonRawData: JsonRawData = {}
+	private _versions: Collection<Collection<number>> = {}
 	private _lastMatchingDocs: DocumentObject[] = []
 	private _lastLimit: number = 0
 	private _cursor: number = 0
