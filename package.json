@@ -36,7 +36,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "vite build",
+    "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "watch": "vite build --watch",
     "docs": "typedoc --options typedoc.json",
     "postinstall": "node scripts/setup-typedoc-ts6.cjs",
