@@ -1,3 +1,10 @@
+## [1.60.2](https://github.com/entropic-bond/entropic-bond/compare/v1.60.1...v1.60.2) (2026-09-07)
+
+
+### Bug Fixes
+
+* npm install issue as a package ([1282866](https://github.com/entropic-bond/entropic-bond/commit/1282866586b7dfed2b186f548c799bd91d2ed44a))
+
 ## [1.60.1](https://github.com/entropic-bond/entropic-bond/compare/v1.60.0...v1.60.1) (2026-09-07)
 
 
