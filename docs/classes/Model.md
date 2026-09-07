@@ -6,7 +6,7 @@
 
 # Class: Model\<T\>
 
-Defined in: [store/model.ts:10](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L10)
+Defined in: [store/model.ts:23](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L23)
 
 Provides abstraction to the database access. You should gain access to a Model
 object through the Store.getModel method instead of its constructor.
@@ -23,7 +23,7 @@ object through the Store.getModel method instead of its constructor.
 
 > **new Model**\<`T`\>(`stream`, `persistentClass`, `subCollection?`): `Model`\<`T`\>
 
-Defined in: [store/model.ts:16](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L16)
+Defined in: [store/model.ts:29](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L29)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Defined in: [store/model.ts:16](https://github.com/entropic-bond/entropic-bond/b
 
 > `readonly` **collectionName**: `string`
 
-Defined in: [store/model.ts:222](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L222)
+Defined in: [store/model.ts:277](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L277)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [store/model.ts:222](https://github.com/entropic-bond/entropic-bond/
 
 > `static` **error**: `object`
 
-Defined in: [store/model.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L11)
+Defined in: [store/model.ts:24](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L24)
 
 #### invalidQueryOrder
 
@@ -73,7 +73,7 @@ Defined in: [store/model.ts:11](https://github.com/entropic-bond/entropic-bond/b
 
 > **count**(`queryObject`): `Promise`\<`number`\>
 
-Defined in: [store/model.ts:125](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L125)
+Defined in: [store/model.ts:180](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L180)
 
 Get the amount of documents matching the query
 
@@ -97,7 +97,7 @@ a promise resolving to the amount of matched documents
 
 > **delete**(`id`): `Promise`\<`void`\>
 
-Defined in: [store/model.ts:83](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L83)
+Defined in: [store/model.ts:96](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L96)
 
 Removes an element from the database by id
 
@@ -121,7 +121,7 @@ a promise
 
 > **find**\<`U`\>(): [`Query`](Query.md)\<`U`\>
 
-Defined in: [store/model.ts:95](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L95)
+Defined in: [store/model.ts:150](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L150)
 
 Call find to retrieve a Query object used to define the search conditions
 
@@ -143,7 +143,7 @@ a Query object
 
 > **findById**\<`D`\>(`id`, `instance?`): `Promise`\<`D` \| `undefined`\>
 
-Defined in: [store/model.ts:40](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L40)
+Defined in: [store/model.ts:53](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L53)
 
 Finds an stored object in the database by its id. The field id is provided
 by the Persistent parent class and it is automatically managed. Therefore,
@@ -181,7 +181,7 @@ a promise resolving to an instance with the found data
 
 > **next**\<`U`\>(`limit?`): `Promise`\<`U`[]\>
 
-Defined in: [store/model.ts:135](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L135)
+Defined in: [store/model.ts:190](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L190)
 
 Get the next bunch of documents matching the last query
 
@@ -212,7 +212,7 @@ a promise resolving to a collection of matched documents
 
 > **onCollectionChange**(`query`, `listener`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [store/model.ts:147](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L147)
+Defined in: [store/model.ts:202](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L202)
 
 #### Parameters
 
@@ -234,7 +234,7 @@ Defined in: [store/model.ts:147](https://github.com/entropic-bond/entropic-bond/
 
 > **onCollectionTemplateChange**(`collectionTemplate`, `listener`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [store/model.ts:157](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L157)
+Defined in: [store/model.ts:212](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L212)
 
 #### Parameters
 
@@ -256,7 +256,7 @@ Defined in: [store/model.ts:157](https://github.com/entropic-bond/entropic-bond/
 
 > **onDocumentChange**(`documentId`, `listener`): [`Unsubscriber`](../type-aliases/Unsubscriber.md)
 
-Defined in: [store/model.ts:139](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L139)
+Defined in: [store/model.ts:194](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L194)
 
 #### Parameters
 
@@ -278,7 +278,7 @@ Defined in: [store/model.ts:139](https://github.com/entropic-bond/entropic-bond/
 
 > **query**\<`U`\>(`queryObject?`, `objectType?`): `Promise`\<`U`[]\>
 
-Defined in: [store/model.ts:106](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L106)
+Defined in: [store/model.ts:161](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L161)
 
 Define the search conditions. You pass query operations and how the query
 results are returned to the QueryObject
@@ -311,11 +311,50 @@ a promise resolving to a collection of matched documents
 
 ***
 
+### runTransaction()
+
+> **runTransaction**\<`A`\>(`fn`): `Promise`\<`A`\>
+
+Defined in: [store/model.ts:115](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L115)
+
+Runs a compare-and-set transaction proxied to the underlying data source.
+The callback receives a handle whose findById/save/delete work with Persistent
+instances. The promise resolves with the callback's result or rejects with
+a [TransactionConflictError](TransactionConflictError.md) when a document read inside the
+transaction was modified by another writer before commit.
+
+#### Type Parameters
+
+##### A
+
+`A` *extends* [`Persistent`](Persistent.md)
+
+#### Parameters
+
+##### fn
+
+(`handle`) => `Promise`\<`A`\>
+
+the transaction callback
+
+#### Returns
+
+`Promise`\<`A`\>
+
+a promise resolving with the callback's result
+
+#### See
+
+ - DataSource.runTransaction
+ - ModelTransactionHandle
+
+***
+
 ### save()
 
 > **save**(`instance`): `Promise`\<`void`\>
 
-Defined in: [store/model.ts:63](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/model.ts#L63)
+Defined in: [store/model.ts:76](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/model.ts#L76)
 
 Stores an object in the database
 

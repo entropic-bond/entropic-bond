@@ -30,6 +30,7 @@
 - [ServerAuthService](classes/ServerAuthService.md)
 - [Store](classes/Store.md)
 - [StoredFile](classes/StoredFile.md)
+- [TransactionConflictError](classes/TransactionConflictError.md)
 
 ## Interfaces
 
@@ -45,10 +46,12 @@
 - [ErrorOnOperation](interfaces/ErrorOnOperation.md)
 - [FunctionCollection](interfaces/FunctionCollection.md)
 - [JsonRawData](interfaces/JsonRawData.md)
+- [ModelTransactionHandle](interfaces/ModelTransactionHandle.md)
 - [PersistentProperty](interfaces/PersistentProperty.md)
 - [SignData](interfaces/SignData.md)
 - [StoredFileChange](interfaces/StoredFileChange.md)
 - [StoreParams](interfaces/StoreParams.md)
+- [TransactionHandle](interfaces/TransactionHandle.md)
 - [UpdatedResults](interfaces/UpdatedResults.md)
 - [UploadControl](interfaces/UploadControl.md)
 - [UserCredentials](interfaces/UserCredentials.md)

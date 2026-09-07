@@ -8,7 +8,7 @@
 
 > **persistentPureReference**(`target`, `property`, `storeInCollection?`): `void`
 
-Defined in: [persistent/persistent.ts:665](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L665)
+Defined in: [persistent/persistent.ts:665](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/persistent/persistent.ts#L665)
 
 Decorator for a property that is a reference to a persistent object. 
 In this case, and contrary to the [persistentReference](persistentReference.md) decorator, the reference 

@@ -39,6 +39,7 @@
     "build": "vite build",
     "watch": "vite build --watch",
     "docs": "typedoc --options typedoc.json",
+    "postinstall": "node scripts/setup-typedoc-ts6.cjs",
     "prepare": "npm run build"
   },
   "repository": {
@@ -66,9 +67,9 @@
     "semantic-release": "^25.0.9",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.13.0",
-    "typescript": "^6.0.x",
+    "typescript": "^7.0.x",
+    "typescript6": "npm:@typescript/typescript6@^6.0.2",
     "vite": "^8.2.2",
-    "vite-plugin-dts": "^5.1.0",
     "vitest": "^5.0.0"
   },
   "dependencies": {

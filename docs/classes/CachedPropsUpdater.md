@@ -6,7 +6,7 @@
 
 # Class: CachedPropsUpdater
 
-Defined in: [store/cached-props-updater.ts:27](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L27)
+Defined in: [store/cached-props-updater.ts:27](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L27)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [store/cached-props-updater.ts:27](https://github.com/entropic-bond/
 
 > **new CachedPropsUpdater**(`config?`): `CachedPropsUpdater`
 
-Defined in: [store/cached-props-updater.ts:28](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L28)
+Defined in: [store/cached-props-updater.ts:28](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L28)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [store/cached-props-updater.ts:28](https://github.com/entropic-bond/
 
 > **set** **afterDocumentChange**(`callback`): `void`
 
-Defined in: [store/cached-props-updater.ts:71](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L71)
+Defined in: [store/cached-props-updater.ts:71](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L71)
 
 Set a callback to be executed after updating each document that has a cached prop to update. 
 The callback receives the document that was updated and the prop that triggered the update as parameters.
@@ -59,7 +59,7 @@ The callback to be executed after updating each document that has a cached prop 
 
 > **set** **afterUpdateDocument**(`callback`): `void`
 
-Defined in: [store/cached-props-updater.ts:89](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L89)
+Defined in: [store/cached-props-updater.ts:89](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L89)
 
 Set a callback to be executed after updating each document that has a cached prop to update.
 The callback receives the document that was updated and the prop that triggered the update as parameters.
@@ -84,7 +84,7 @@ The callback to be executed after updating each document that has a cached prop 
 
 > **set** **beforeDocumentChange**(`callback`): `void`
 
-Defined in: [store/cached-props-updater.ts:62](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L62)
+Defined in: [store/cached-props-updater.ts:62](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L62)
 
 Set a callback to be executed before updating each document that has a cached prop to update. 
 The callback receives the document to update and the prop that triggered the update as parameters.
@@ -109,7 +109,7 @@ The callback to be executed before updating each document that has a cached prop
 
 > **set** **beforeQueryOwnerCollection**(`subscriber`): `void`
 
-Defined in: [store/cached-props-updater.ts:93](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L93)
+Defined in: [store/cached-props-updater.ts:93](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L93)
 
 ##### Parameters
 
@@ -129,7 +129,7 @@ Defined in: [store/cached-props-updater.ts:93](https://github.com/entropic-bond/
 
 > **set** **beforeUpdateDocument**(`callback`): `void`
 
-Defined in: [store/cached-props-updater.ts:80](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L80)
+Defined in: [store/cached-props-updater.ts:80](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L80)
 
 Set a callback to be executed before updating each document that has a cached prop to update.
 The callback receives the document to update and the prop that triggered the update as parameters.
@@ -154,7 +154,7 @@ The callback to be executed before updating each document that has a cached prop
 
 > **get** **collectionsToWatch**(): `Readonly`\<[`Collection`](../interfaces/Collection.md)\<[`PersistentProperty`](../interfaces/PersistentProperty.md)[]\>\>
 
-Defined in: [store/cached-props-updater.ts:101](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L101)
+Defined in: [store/cached-props-updater.ts:101](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L101)
 
 ##### Returns
 
@@ -168,7 +168,7 @@ Defined in: [store/cached-props-updater.ts:101](https://github.com/entropic-bond
 
 > **set** **resolveCollectionPaths**(`func`): `void`
 
-Defined in: [store/cached-props-updater.ts:97](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L97)
+Defined in: [store/cached-props-updater.ts:97](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L97)
 
 ##### Parameters
 
@@ -186,7 +186,7 @@ Defined in: [store/cached-props-updater.ts:97](https://github.com/entropic-bond/
 
 > **updateProps**(`documentPath`, `event`): `Promise`\<`void`\>
 
-Defined in: [store/cached-props-updater.ts:105](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/store/cached-props-updater.ts#L105)
+Defined in: [store/cached-props-updater.ts:105](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/store/cached-props-updater.ts#L105)
 
 #### Parameters
 

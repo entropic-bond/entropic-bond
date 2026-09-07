@@ -6,7 +6,7 @@
 
 # Class: CloudFunctionsMock
 
-Defined in: [cloud-functions/cloud-functions-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions-mock.ts#L7)
+Defined in: [cloud-functions/cloud-functions-mock.ts:7](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-functions/cloud-functions-mock.ts#L7)
 
 ## Implements
 
@@ -18,7 +18,7 @@ Defined in: [cloud-functions/cloud-functions-mock.ts:7](https://github.com/entro
 
 > **new CloudFunctionsMock**(`registeredFunctions`): `CloudFunctionsMock`
 
-Defined in: [cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions-mock.ts#L8)
+Defined in: [cloud-functions/cloud-functions-mock.ts:8](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-functions/cloud-functions-mock.ts#L8)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [cloud-functions/cloud-functions-mock.ts:8](https://github.com/entro
 
 > **callFunction**\<`P`, `R`\>(`func`, `params`): `Promise`\<`R`\>
 
-Defined in: [cloud-functions/cloud-functions-mock.ts:18](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions-mock.ts#L18)
+Defined in: [cloud-functions/cloud-functions-mock.ts:18](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-functions/cloud-functions-mock.ts#L18)
 
 #### Type Parameters
 
@@ -72,7 +72,7 @@ Defined in: [cloud-functions/cloud-functions-mock.ts:18](https://github.com/entr
 
 > **retrieveFunction**\<`P`, `R`\>(`cloudFunction`): [`CloudFunction`](../type-aliases/CloudFunction.md)\<`P`, `R`\>
 
-Defined in: [cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-functions/cloud-functions-mock.ts#L12)
+Defined in: [cloud-functions/cloud-functions-mock.ts:12](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-functions/cloud-functions-mock.ts#L12)
 
 #### Type Parameters
 

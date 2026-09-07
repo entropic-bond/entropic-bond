@@ -8,7 +8,7 @@
 
 > **persistentPureReferenceWithCachedProps**\<`T`\>(`cachedProps`, `propTypeName`, `storeInCollection?`, `targetCollection?`): (`target`, `property`) => `void`
 
-Defined in: [persistent/persistent.ts:699](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/persistent.ts#L699)
+Defined in: [persistent/persistent.ts:699](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/persistent/persistent.ts#L699)
 
 Decorator to declare a persistent property as a pure reference (see @persistentPureReference) that stores
 the values of the properties listed in cachedProps as values in the reference object. This is useful

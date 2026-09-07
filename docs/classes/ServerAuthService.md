@@ -6,7 +6,7 @@
 
 # Abstract Class: ServerAuthService
 
-Defined in: [server-auth/server-auth.ts:7](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L7)
+Defined in: [server-auth/server-auth.ts:7](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/server-auth/server-auth.ts#L7)
 
 ## Extended by
 
@@ -29,7 +29,7 @@ Defined in: [server-auth/server-auth.ts:7](https://github.com/entropic-bond/entr
 
 > `abstract` **deleteUser**(`userId`): `Promise`\<`void`\>
 
-Defined in: [server-auth/server-auth.ts:11](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L11)
+Defined in: [server-auth/server-auth.ts:11](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/server-auth/server-auth.ts#L11)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [server-auth/server-auth.ts:11](https://github.com/entropic-bond/ent
 
 > `abstract` **getUser**\<`T`\>(`userId`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\> \| `undefined`\>
 
-Defined in: [server-auth/server-auth.ts:9](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L9)
+Defined in: [server-auth/server-auth.ts:9](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/server-auth/server-auth.ts#L9)
 
 #### Type Parameters
 
@@ -71,7 +71,7 @@ Defined in: [server-auth/server-auth.ts:9](https://github.com/entropic-bond/entr
 
 > `abstract` **setCustomCredentials**\<`T`\>(`userId`, `customCredentials`): `Promise`\<`void`\>
 
-Defined in: [server-auth/server-auth.ts:8](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L8)
+Defined in: [server-auth/server-auth.ts:8](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/server-auth/server-auth.ts#L8)
 
 #### Type Parameters
 
@@ -99,7 +99,7 @@ Defined in: [server-auth/server-auth.ts:8](https://github.com/entropic-bond/entr
 
 > `abstract` **updateUser**\<`T`\>(`userId`, `credentials`): `Promise`\<[`UserCredentials`](../interfaces/UserCredentials.md)\<`T`\>\>
 
-Defined in: [server-auth/server-auth.ts:10](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/server-auth/server-auth.ts#L10)
+Defined in: [server-auth/server-auth.ts:10](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/server-auth/server-auth.ts#L10)
 
 #### Type Parameters
 

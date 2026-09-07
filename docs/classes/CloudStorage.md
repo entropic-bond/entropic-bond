@@ -6,7 +6,7 @@
 
 # Abstract Class: CloudStorage
 
-Defined in: [cloud-storage/cloud-storage.ts:18](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L18)
+Defined in: [cloud-storage/cloud-storage.ts:18](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L18)
 
 ## Extended by
 
@@ -28,7 +28,7 @@ Defined in: [cloud-storage/cloud-storage.ts:18](https://github.com/entropic-bond
 
 > `static` **\_defaultCloudStorage**: `CloudStorage`
 
-Defined in: [cloud-storage/cloud-storage.ts:51](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L51)
+Defined in: [cloud-storage/cloud-storage.ts:51](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L51)
 
 ## Accessors
 
@@ -38,7 +38,7 @@ Defined in: [cloud-storage/cloud-storage.ts:51](https://github.com/entropic-bond
 
 > **get** **className**(): `string`
 
-Defined in: [cloud-storage/cloud-storage.ts:37](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L37)
+Defined in: [cloud-storage/cloud-storage.ts:37](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L37)
 
 ##### Returns
 
@@ -52,7 +52,7 @@ Defined in: [cloud-storage/cloud-storage.ts:37](https://github.com/entropic-bond
 
 > **get** `static` **defaultCloudStorage**(): `CloudStorage`
 
-Defined in: [cloud-storage/cloud-storage.ts:45](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L45)
+Defined in: [cloud-storage/cloud-storage.ts:45](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L45)
 
 ##### Returns
 
@@ -64,7 +64,7 @@ Defined in: [cloud-storage/cloud-storage.ts:45](https://github.com/entropic-bond
 
 > `abstract` **delete**(`reference`): `Promise`\<`void`\>
 
-Defined in: [cloud-storage/cloud-storage.ts:22](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L22)
+Defined in: [cloud-storage/cloud-storage.ts:22](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L22)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: [cloud-storage/cloud-storage.ts:22](https://github.com/entropic-bond
 
 > `abstract` **getUrl**(`reference`): `Promise`\<`string`\>
 
-Defined in: [cloud-storage/cloud-storage.ts:20](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L20)
+Defined in: [cloud-storage/cloud-storage.ts:20](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L20)
 
 #### Parameters
 
@@ -100,7 +100,7 @@ Defined in: [cloud-storage/cloud-storage.ts:20](https://github.com/entropic-bond
 
 > `abstract` **save**(`id`, `data`, `progress?`): `Promise`\<`string`\>
 
-Defined in: [cloud-storage/cloud-storage.ts:19](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L19)
+Defined in: [cloud-storage/cloud-storage.ts:19](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L19)
 
 #### Parameters
 
@@ -126,7 +126,7 @@ Defined in: [cloud-storage/cloud-storage.ts:19](https://github.com/entropic-bond
 
 > `abstract` **uploadControl**(): [`UploadControl`](../interfaces/UploadControl.md)
 
-Defined in: [cloud-storage/cloud-storage.ts:21](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L21)
+Defined in: [cloud-storage/cloud-storage.ts:21](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L21)
 
 #### Returns
 
@@ -138,7 +138,7 @@ Defined in: [cloud-storage/cloud-storage.ts:21](https://github.com/entropic-bond
 
 > `static` **createInstance**(`providerName`): `CloudStorage`
 
-Defined in: [cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L28)
+Defined in: [cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L28)
 
 #### Parameters
 
@@ -156,7 +156,7 @@ Defined in: [cloud-storage/cloud-storage.ts:28](https://github.com/entropic-bond
 
 > `static` **registerCloudStorage**(`cloudStorageProviderName`, `factory`): `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L24)
+Defined in: [cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L24)
 
 #### Parameters
 
@@ -178,7 +178,7 @@ Defined in: [cloud-storage/cloud-storage.ts:24](https://github.com/entropic-bond
 
 > `static` **useCloudStorage**(`provider`): `void`
 
-Defined in: [cloud-storage/cloud-storage.ts:41](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L41)
+Defined in: [cloud-storage/cloud-storage.ts:41](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L41)
 
 #### Parameters
 

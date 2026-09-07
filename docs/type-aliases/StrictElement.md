@@ -8,7 +8,7 @@
 
 > **StrictElement**\<`T`\> = `T` *extends* `any` ? keyof `T` *extends* `never` ? `never` : `T` : `never`
 
-Defined in: [persistent/entropic-component.ts:17](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/persistent/entropic-component.ts#L17)
+Defined in: [persistent/entropic-component.ts:17](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/persistent/entropic-component.ts#L17)
 
 Derived classes from EntropicComponent will have the ability to notify 
 property changes by calling one of the provided notification methods.

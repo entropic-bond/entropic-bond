@@ -6,7 +6,7 @@
 
 # Interface: AuthError
 
-Defined in: [auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L22)
+Defined in: [auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/auth/auth.ts#L22)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [auth/auth.ts:22](https://github.com/entropic-bond/entropic-bond/blo
 
 > **code**: [`AuthErrorCode`](../type-aliases/AuthErrorCode.md)
 
-Defined in: [auth/auth.ts:23](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L23)
+Defined in: [auth/auth.ts:23](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/auth/auth.ts#L23)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [auth/auth.ts:23](https://github.com/entropic-bond/entropic-bond/blo
 
 > **message**: `string`
 
-Defined in: [auth/auth.ts:24](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/auth/auth.ts#L24)
+Defined in: [auth/auth.ts:24](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/auth/auth.ts#L24)

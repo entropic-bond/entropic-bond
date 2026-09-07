@@ -8,7 +8,7 @@
 
 > **CloudStorageFactory** = () => [`CloudStorage`](../classes/CloudStorage.md)
 
-Defined in: [cloud-storage/cloud-storage.ts:3](https://github.com/entropic-bond/entropic-bond/blob/4d716a2f7964001188c69f59fec8baa07c622216/src/cloud-storage/cloud-storage.ts#L3)
+Defined in: [cloud-storage/cloud-storage.ts:3](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L3)
 
 ## Returns
 
