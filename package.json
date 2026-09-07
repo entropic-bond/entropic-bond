@@ -38,8 +38,7 @@
     "test": "vitest",
     "build": "vite build && tsc -p tsconfig-build.json --emitDeclarationOnly",
     "watch": "vite build --watch",
-    "docs": "typedoc --options typedoc.json",
-    "postinstall": "node scripts/setup-typedoc-ts6.cjs",
+    "docs": "node scripts/setup-typedoc-ts6.cjs && typedoc --options typedoc.json",
     "prepare": "npm run build"
   },
   "repository": {
