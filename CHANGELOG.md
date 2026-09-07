@@ -1,3 +1,10 @@
+# [1.60.0](https://github.com/entropic-bond/entropic-bond/compare/v1.59.5...v1.60.0) (2026-09-07)
+
+
+### Features
+
+* transactional writes with optimistic concurrency via runTransaction ([343d82a](https://github.com/entropic-bond/entropic-bond/commit/343d82a33fda5c953791b6f282d59fab0ff4b82e)), closes [#2](https://github.com/entropic-bond/entropic-bond/issues/2)
+
 ## [1.59.5](https://github.com/entropic-bond/entropic-bond/compare/v1.59.4...v1.59.5) (2026-07-01)
 
 
