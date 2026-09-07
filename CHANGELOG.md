@@ -1,3 +1,11 @@
+## [1.60.1](https://github.com/entropic-bond/entropic-bond/compare/v1.60.0...v1.60.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* bump new version ([f72d5a0](https://github.com/entropic-bond/entropic-bond/commit/f72d5a04ef76a6083514714976a24ab416030e8e))
+* correct typo in build script configuration ([f86dd7b](https://github.com/entropic-bond/entropic-bond/commit/f86dd7b8d0ef6f81535e6b3f855322b64dd2f2fd))
+
 # [1.60.0](https://github.com/entropic-bond/entropic-bond/compare/v1.59.5...v1.60.0) (2026-09-07)
 
 
