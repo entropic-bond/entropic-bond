@@ -100,7 +100,7 @@ describe( 'Auth Mock', ()=>{
 		})
 
 		expect( userCredentials.email ).toEqual( 'test@test.com' )
-		expect( authChangeSpy ).toHaveBeenCalledWith( undefined )
+		expect( authChangeSpy ).toHaveBeenCalledWith( userCredentials )
 	})
 
 	it( 'should logout', async ()=>{
