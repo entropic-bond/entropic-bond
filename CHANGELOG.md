@@ -5,6 +5,20 @@
 
 * align JsonDataSource removal semantics with FirebaseDatasource ([480ca11](https://github.com/entropic-bond/entropic-bond/commit/480ca11e357c8d62b0a3174d14a8a0c246ee879a)), closes [#12](https://github.com/entropic-bond/entropic-bond/issues/12)
 * include runTransaction in skills ([5b4a68b](https://github.com/entropic-bond/entropic-bond/commit/5b4a68b2beff49df24674775bd6adb36320db60c))
+* remove corrupted merge ([8f111ea](https://github.com/entropic-bond/entropic-bond/commit/8f111eae60659474d46bc394001a9f2701d7ce03))
+
+
+### Features
+
+* add CachingDataSource for client-side document caching ([80144da](https://github.com/entropic-bond/entropic-bond/commit/80144daa54b7ffe3da3246765e1b90934b64e1ad))
+
+# [1.61.0](https://github.com/entropic-bond/entropic-bond/compare/v1.60.2...v1.61.0) (2026-09-11)
+
+
+### Bug Fixes
+
+* align JsonDataSource removal semantics with FirebaseDatasource ([480ca11](https://github.com/entropic-bond/entropic-bond/commit/480ca11e357c8d62b0a3174d14a8a0c246ee879a)), closes [#12](https://github.com/entropic-bond/entropic-bond/issues/12)
+* include runTransaction in skills ([5b4a68b](https://github.com/entropic-bond/entropic-bond/commit/5b4a68b2beff49df24674775bd6adb36320db60c))
 
 
 ### Features
