@@ -1,3 +1,11 @@
+## [1.61.1](https://github.com/entropic-bond/entropic-bond/compare/v1.61.0...v1.61.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* align JsonDataSource removal semantics with FirebaseDatasource ([480ca11](https://github.com/entropic-bond/entropic-bond/commit/480ca11e357c8d62b0a3174d14a8a0c246ee879a)), closes [#12](https://github.com/entropic-bond/entropic-bond/issues/12)
+* remove corrupted merge ([8f111ea](https://github.com/entropic-bond/entropic-bond/commit/8f111eae60659474d46bc394001a9f2701d7ce03))
+
 # [1.61.0](https://github.com/entropic-bond/entropic-bond/compare/v1.60.2...v1.61.0) (2026-09-11)
 
 
