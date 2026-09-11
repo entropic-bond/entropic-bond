@@ -68,7 +68,7 @@ export interface DocumentChangeListenerHandler {
 	props: PersistentProperty[]
 }
 
-export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[] ) => void
+export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[], snapshot?: T[] ) => void
 
 interface Error {
 	name: string

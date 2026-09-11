@@ -203,9 +203,12 @@ export class Model<T extends Persistent>{
 		return this._stream.onCollectionChange( 
 			this.preprocessQueryObject( query.getQueryObject() ), 
 			this.collectionName, 
-			changes => listener( changes.map(
-				( change: DocumentChange<PersistentObject<T>> ) => DataSource.toPersistentDocumentChange( change ) 
-			))
+			( changes, snapshot ) => listener( 
+				changes.map(
+					( change: DocumentChange<PersistentObject<T>> ) => DataSource.toPersistentDocumentChange( change ) 
+				),
+				snapshot?.map( doc => Persistent.createInstance( doc as PersistentObject<T> ) as T )
+			)
 		)
 	}
 

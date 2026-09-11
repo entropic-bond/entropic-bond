@@ -119,7 +119,7 @@ describe( 'Json DataSource', ()=>{
 	describe( 'Collection listeners', ()=>{
 		let model: Model<TestCollection>
 
-		beforeAll(()=>{
+		beforeEach(()=>{
 			datasource = new JsonDataSource({
 				TestCollection: { a: new TestCollection( 'a' ).toObject(), b: new TestCollection( 'b' ).toObject(), c: new TestCollection( 'c' ).toObject() } as any
 			})
@@ -132,7 +132,15 @@ describe( 'Json DataSource', ()=>{
 			const uninstall = model.onCollectionChange( model.find(), listener )
 
 			model.save( new TestCollection( 'd' ))
-			expect( listener ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ])
+			expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ],
+				[
+					expect.objectContaining({ id: 'a' }),
+					expect.objectContaining({ id: 'b' }),
+					expect.objectContaining({ id: 'c' }),
+					expect.objectContaining({ id: 'd' }),
+				]
+			)
 			uninstall()
 		})
 
@@ -141,7 +149,15 @@ describe( 'Json DataSource', ()=>{
 			const uninstall = model.onCollectionChange( model.find(), listener )
 
 			model.save( new TestCollection( 'd' ))
-			expect( listener ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ])
+			expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ],
+				[
+					expect.objectContaining({ id: 'a' }),
+					expect.objectContaining({ id: 'b' }),
+					expect.objectContaining({ id: 'c' }),
+					expect.objectContaining({ id: 'd' }),
+				]
+			)
 
 			uninstall()
 			listener.mockClear()
@@ -157,8 +173,24 @@ describe( 'Json DataSource', ()=>{
 			const uninstall2 = model.onCollectionChange( model.find(), listener2 )
 
 			model.save( new TestCollection( 'f' ))
-			expect( listener1 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'f' }) }) ])
-			expect( listener2 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'f' }) }) ])
+			expect( listener1 ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ after: expect.objectContaining({ id: 'f' }) }) ],
+				[
+					expect.objectContaining({ id: 'a' }),
+					expect.objectContaining({ id: 'b' }),
+					expect.objectContaining({ id: 'c' }),
+					expect.objectContaining({ id: 'f' }),
+				]
+			)
+			expect( listener2 ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ after: expect.objectContaining({ id: 'f' }) }) ],
+				[
+					expect.objectContaining({ id: 'a' }),
+					expect.objectContaining({ id: 'b' }),
+					expect.objectContaining({ id: 'c' }),
+					expect.objectContaining({ id: 'f' }),
+				]
+			)
 
 			uninstall1()
 			uninstall2()
@@ -172,7 +204,15 @@ describe( 'Json DataSource', ()=>{
 			const uninstall2 = model2.onCollectionChange( model2.find(), listener2 )
 
 			model.save( new TestCollection( 'g' ))
-			expect( listener1 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'g' }) }) ])
+			expect( listener1 ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ after: expect.objectContaining({ id: 'g' }) }) ],
+				[
+					expect.objectContaining({ id: 'a' }),
+					expect.objectContaining({ id: 'b' }),
+					expect.objectContaining({ id: 'c' }),
+					expect.objectContaining({ id: 'g' }),
+				]
+			)
 			expect( listener2 ).not.toHaveBeenCalled()
 
 			listener1.mockClear()
@@ -180,7 +220,10 @@ describe( 'Json DataSource', ()=>{
 
 			model2.save( new TestCollection2( 'h' ))
 			expect( listener1 ).not.toHaveBeenCalled()
-			expect( listener2 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'h' }) }) ])
+			expect( listener2 ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ after: expect.objectContaining({ id: 'h' }) }) ],
+				[ expect.objectContaining({ id: 'h' }) ]
+			)
 
 			uninstall1()
 			uninstall2()
