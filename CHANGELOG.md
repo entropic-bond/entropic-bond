@@ -1,3 +1,10 @@
+## [1.60.3](https://github.com/entropic-bond/entropic-bond/compare/v1.60.2...v1.60.3) (2026-09-07)
+
+
+### Bug Fixes
+
+* include runTransaction in skills ([5b4a68b](https://github.com/entropic-bond/entropic-bond/commit/5b4a68b2beff49df24674775bd6adb36320db60c))
+
 ## [1.60.2](https://github.com/entropic-bond/entropic-bond/compare/v1.60.1...v1.60.2) (2026-09-07)
 
 
