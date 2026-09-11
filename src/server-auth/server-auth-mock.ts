@@ -1,9 +1,9 @@
-import { UserCredentials } from '../auth/user-auth-types'
+import { CredentialsCustomData, UserCredentials } from '../auth/user-auth-types'
 import { Collection } from '../types/utility-types'
 import { ServerAuthService, CustomCredentials } from './server-auth'
 
 export class ServerAuthMock extends ServerAuthService {
-	constructor( userCredentials: Collection<UserCredentials<{}>> ) {
+	constructor( userCredentials: Collection<UserCredentials<CredentialsCustomData>> ) {
 		super()
 		this._userCredentials = userCredentials
 	}
@@ -41,5 +41,5 @@ export class ServerAuthMock extends ServerAuthService {
 		return this._userCredentials
 	}
 
-	private _userCredentials: Collection<UserCredentials<{}>>
+	private _userCredentials: Collection<UserCredentials<CredentialsCustomData>>
 }

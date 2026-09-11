@@ -1,5 +1,7 @@
-import { Persistent, PersistentObject, Collections } from '../persistent/persistent'
+import { Persistent, PersistentObject, Collections, DocumentChange, PersistentProperty } from '../persistent/persistent'
 import { ClassPropNames } from '../types/utility-types'
+import { Unsubscriber } from '../observable/observable'
+import { CachedPropsUpdater, CachedPropsUpdaterConfig } from './cached-props-updater'
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -11,19 +13,25 @@ export type DocumentObject = PersistentObject<Persistent>
  * @param <= less than or equal
  * @param > greater than
  * @param >= greater than or equal
+ * @param contains array contains
+ * @param containsAny array contains any
+ * @param in in
+ * @param !in not in
  */
-export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>='
+export type QueryOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | 'contains' | 'containsAny'// | 'in' | '!in'
 
 /**
  * A representation of a query operation
  * @param property the name of the property to be used in the query
  * @param operator the operator to be used in the query
  * @param value the value to be used in the query
+ * @param aggregate if true, the query results will be aggregated using an `or` operator
  */
 export type QueryOperation<T> = {
 	property: ClassPropNames<T>
 	operator: QueryOperator
 	value: Partial<T[ClassPropNames<T>]> | {[key:string]: unknown}
+	aggregate?: boolean
 }
 
 /**
@@ -50,6 +58,53 @@ export type QueryObject<T> = {
 	}
 }
 
+export type DocumentListenerUninstaller = () => void
+
+export type DocumentChangeListener<T extends Persistent | DocumentObject> = ( change: DocumentChange<T> ) => void
+export interface DocumentChangeListenerHandler {
+	uninstall: DocumentListenerUninstaller
+	nativeHandler: unknown
+	collectionPath: string
+	props: PersistentProperty[]
+}
+
+export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[] ) => void
+
+interface Error {
+	name: string
+	message: string
+}
+
+declare const Error: {
+	new( message?: string ): Error
+}
+
+/**
+ * Thrown when a transaction cannot commit because a document read inside the
+ * transaction was modified by another writer (or because the transaction
+ * precondition failed).
+ * @param storedDoc the current stored document when available
+ */
+export class TransactionConflictError extends Error {
+	constructor( public storedDoc?: DocumentObject | Persistent ) {
+		super( 'Transaction conflict: the document was modified by another writer.' )
+		this.name = 'TransactionConflictError'
+	}
+}
+
+/**
+ * The handle passed to a transaction. It only exposes findById/save/delete: there is
+ * no set — a full document write is a save with the complete serialized object.
+ * @param findById retrieves a document by id, pinning its version for the transaction
+ * @param save merges the given fields into the document
+ * @param delete removes the document
+ */
+export interface TransactionHandle {
+	findById( id: string, collectionName: string ): Promise<DocumentObject | undefined>
+	save( id: string, collectionName: string, doc: Partial<DocumentObject> ): Promise<void>
+	delete( id: string, collectionName: string ): Promise<void>
+}
+
 /**
  * The data source interface.
  * It defines the methods that must be implemented by a data source
@@ -58,6 +113,8 @@ export type QueryObject<T> = {
  * A data source is used by the store to retrieve and save data.
  */
 export abstract class DataSource {
+
+	protected abstract resolveCollectionPaths( template: string ): Promise<string[]>
 
 	/**
 	 * Retrieves a document by id
@@ -105,6 +162,18 @@ export abstract class DataSource {
 	abstract delete( id: string, collectionName: string ): Promise<void>
 
 	/**
+	 * Runs a compare-and-set transaction. The callback receives a transaction
+	 * handle with findById/save/delete. The promise resolves with the callback's
+	 * result or rejects with a {@link TransactionConflictError} when a document
+	 * read inside the transaction was modified by another writer before commit.
+	 * @param fn the transaction callback
+	 * @returns a promise resolving with the callback's result
+	 */
+	abstract runTransaction<Result>(
+		fn: ( handle: TransactionHandle ) => Promise<Result>
+	): Promise<Result>
+
+	/**
 	 * Retrieves the next bunch of documents matching the query stored in the query object
 	 * Implement the required logic to retrieve the next bunch of documents that match the
 	 * requirements in the query object from your concrete the data source
@@ -124,10 +193,26 @@ export abstract class DataSource {
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
+	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber
+
+	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
+
+	abstract onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
+
+	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): CachedPropsUpdater {
+		this._cachedPropsUpdater = new CachedPropsUpdater( config )
+		this._cachedPropsUpdater.resolveCollectionPaths = this.resolveCollectionPaths.bind( this )
+		return this._cachedPropsUpdater
+	}
+
+	get cachedPropsUpdater(): CachedPropsUpdater | undefined {
+		return this._cachedPropsUpdater
+	}
+
 	/**
 	 * Utility method to convert a query object to a property path query object
 	 * 
-	 * @param queryObject the query object to be converted
+	 * @param operations the query object to be converted
 	 * @returns a property path query object
 	 * @example
 	 * const queryObject = {
@@ -138,26 +223,105 @@ export abstract class DataSource {
 	 */
 	static toPropertyPathOperations<T extends Persistent>( operations: QueryOperation<T>[] ): QueryOperation<T>[] {
 		if ( !operations ) return []
+
 		return operations.map( operation => {
+
+			if ( DataSource.isArrayOperator( operation.operator ) && operation.value[0] instanceof Persistent ) {
+				return {
+					property: Persistent.searchableArrayNameFor( operation.property as string ),
+					operator: operation.operator,
+					value: ( operation.value as unknown as Persistent[] ).map( v => v.id ) as any,
+					aggregate: operation.aggregate
+				} as QueryOperation<T>
+			}
+
 			const [ path, value ] = this.toPropertyPathValue( operation.value )
 			const propPath = `${ String( operation.property ) }${ path? '.'+path : '' }` 
+
 			return { 
 				property: propPath, 
 				operator:	operation.operator,
-				value
+				value,
+				aggregate: operation.aggregate
 			} as QueryOperation<T>
 		})
 	}
 
-	private static toPropertyPathValue( obj: {} ): [ string | undefined, unknown ] {
-		if ( typeof obj === 'object' ) {
-			const propName = Object.keys( obj )[0]!
-			const [ propPath, value ] = this.toPropertyPathValue( obj[ propName ] )
-			return [ `${ propName }${ propPath? '.'+propPath : '' }`, value ]
+	static isArrayOperator( operator: QueryOperator ): boolean {
+		return operator === 'containsAny' || operator === 'contains' //|| operator === 'in' || operator === '!in'  
+	}
+	
+	static toPersistentDocumentChange<T extends Persistent>( change: DocumentChange<PersistentObject<T>> ): DocumentChange<T> {
+		return {
+			...change,
+			before: change.before && Persistent.createInstance( change.before ),
+			after: change.after && Persistent.createInstance( change.after )
 		}
+	}
+
+	static toPropertyPathValue( obj: Record<string, unknown> ): [ string | undefined, unknown ] {
+		if ( typeof obj === 'object' && !Array.isArray( obj ) ) {
+			const propName = Object.keys( obj )[0]!
+			const [ propPath, value ] = this.toPropertyPathValue( obj[ propName ] as Record<string, unknown> )
+			return [ `${ propName }${ propPath? '.'+propPath : '' }`, value ]
+		}	
 		else {
 			return [ undefined, obj ]
+		}	
+	}
+	
+	static isStringMatchingTemplate( template: string, value: string ): boolean {
+		const templateSegments = template.split( '/' )
+		const valueSegments = value.split( '/' )
+
+		if ( valueSegments.length > templateSegments.length ) return false
+
+		for ( let i = 0; i < valueSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const v = valueSegments[i]!
+			const isParam = ( t.startsWith( '{' ) && t.endsWith( '}' ) ) || ( t.startsWith( '${' ) && t.endsWith( '}' ) )
+			if ( !isParam && t !== v ) return false
 		}
 
+		for ( let i = valueSegments.length; i < templateSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const isParam = ( t.startsWith( '{' ) && t.endsWith( '}' ) ) || ( t.startsWith( '${' ) && t.endsWith( '}' ) )
+			if ( !isParam ) return false
+		}
+
+		return true
 	}
+
+	static extractTemplateParams( source: string, template: string ): Record<string, string> {
+		const templateSegments = template.split( '/' )
+		const sourceSegments = source.split( '/' )
+		const params: Record<string, string> = {}
+
+		if ( sourceSegments.length > templateSegments.length ) return params
+
+		for ( let i = 0; i < sourceSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const s = sourceSegments[i]!
+			
+			if ( t.startsWith( '{' ) && t.endsWith( '}' ) ) {
+				params[ t.slice( 1, -1 ) ] = s
+			}
+			else if ( t.startsWith( '${' ) && t.endsWith( '}' ) ) {
+				params[ t.slice( 2, -1 ) ] = s
+			}
+			else if ( t !== s ) {
+				return {}
+			}
+		}
+
+		for ( let i = sourceSegments.length; i < templateSegments.length; i++ ) {
+			const t = templateSegments[i]!
+			const isParam = ( t.startsWith( '{' ) && t.endsWith( '}' ) ) || ( t.startsWith( '${' ) && t.endsWith( '}' ) )
+			if ( !isParam ) return {}
+		}
+
+		return params
+	}
+
+	private _cachedPropsUpdater: CachedPropsUpdater | undefined = undefined
 }

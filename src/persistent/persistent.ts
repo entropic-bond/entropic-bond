@@ -1,12 +1,22 @@
-import { v4 as uuid } from "uuid"
-import { ClassPropNames, SomeClassProps } from '../types/utility-types'
+import { v4 as uuid } from 'uuid'
+import { ClassPropNames, ClassPropNamesOfType, Primitive, SomeClassProps, UnderscoredProp } from '../types/utility-types'
 
 export type PersistentConstructor = new () => Persistent
+
+export type DocumentChangeType = 'create' | 'update' | 'delete'
+export interface DocumentChange<T extends Persistent | PersistentObject<Persistent>> {
+	before?: T
+	after?: T
+	params?: { [key: string]: any }
+	collectionPath: string
+	type: DocumentChangeType
+}
 
 interface FactoryMap {
 	[ id: string ]: {
 		factory: PersistentConstructor
 		annotation: unknown
+		isLegacy?: boolean
 	}
 }
 
@@ -48,6 +58,10 @@ export interface DocumentReference {
 	}
 }
 
+export type PersistentPropertyCollection = {
+	[className: string]: PersistentProperty[]
+}
+
 /**
  * A class that provides several methods to serialize and deserialize objects.
  */
@@ -59,8 +73,8 @@ export class Persistent {
 	 * @param factory the constructor of the registered class
 	 * @param annotation an annotation associated with the class
 	 */
-	static registerFactory( className: string, factory: PersistentConstructor, annotation?: unknown ) {
-		this._factoryMap[ className ] = { factory, annotation }
+	static registerFactory( className: string, factory: PersistentConstructor, annotation?: unknown, isLegacy: boolean = false ) {
+		this._factoryMap[ className ] = { factory, annotation, isLegacy }
 	}
 
 	/**
@@ -86,20 +100,51 @@ export class Persistent {
 	 * @see classFactory
 	 */
 	static registeredClasses() {
+		return Object.entries( this._factoryMap )
+			.filter(([ , obj ]) => !obj.isLegacy )
+			.map(([ className ]) => className )
+	}
+
+	/**
+	 * Returns the names of all registered classes, including legacy names
+	 * @returns the names of all registered classes, including legacy names
+	 * @see registerFactory
+	 * @see classFactory
+	 */
+	static registeredClassesAndLegacyNames() {
 		return Object.keys( this._factoryMap )
 	}
 
 	/**
 	 * Returns the names of all registered classes that extend a given class
-	 * @param derivedFrom the class to be extended
+	 * @param derivedFrom the parent class to be queried
 	 * @returns the names of all registered classes that extend the given class
 	 * @see registerFactory
 	 * @see classFactory
 	 */
 	static classesExtending( derivedFrom: PersistentConstructor | Function ) {
 		return Object.entries( this._factoryMap )
-			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom )
+			.filter(([ , obj ]) => new ( obj.factory ) instanceof derivedFrom && !obj.isLegacy )
 			.map(([ className ]) => className )
+	}
+
+	/**
+	 * Emulates the `instanceof` operator for a registered class. 
+	 * This is useful when you want to check if an object or named class is an 
+	 * instance of a registered class without having to import the class.
+	 * @param value the object or named class to be checked
+	 * @param className the name of the class to be checked against
+	 * @returns true if the object or named class is an instance of the registered class
+	 * @see registerFactory
+	 * @see classFactory
+	 * @see classesExtending
+	 */
+	static isInstanceOf( value: Persistent | PersistentObject<Persistent> | string, className: string ): boolean {
+		const testClass = Persistent.classFactory( className )
+		if ( value instanceof Persistent ) return value instanceof testClass
+
+		const instance = Persistent.createInstance( value )	
+		return instance instanceof testClass
 	}
 
 	/**
@@ -120,7 +165,7 @@ export class Persistent {
 
 	/**
 	 * Returns a new instance of Persistent class.
-	 * @param className the initial id of this instance. If not provided, a new id will be generated
+	 * @param id the initial id of this instance. If not provided, a new id will be generated
 	 */
 	constructor( id: string = uuid() ) {
 		this._id = id
@@ -175,6 +220,43 @@ export class Persistent {
 	}
 
 	/**
+	 * Get the property information of this instance
+	 * @param propName the persistent property name
+	 * @returns the property information
+	 */
+	getPropInfo<T extends this>( propName: ClassPropNames<T> ): PersistentProperty {
+		const propInfo = this.getPersistentProperties().find( prop => prop.name === propName as string )
+		if ( !propInfo ) throw new Error( `Property "${ propName as string }" has not been registered.` )
+		return propInfo
+	}
+
+	/**
+	 * Query if the property is required
+	 * To mark a property as required, use the {@link required} decorator
+	 * @param propName the persistent property name
+	 * @returns true if the property is required
+	 * @see required
+	 */
+	isRequired<T extends this>( propName: ClassPropNames<T> ): boolean {
+		const validator = this.getPropInfo( propName ).validator
+		return validator !== undefined && validator !== null
+	}
+
+	/**
+	 * Query if the property value is valid
+	 * Define the validator function using the {@link required} decorator
+	 * @param propName the persistent property name
+	 * @returns true if the property value is valid using the validator function
+	 * passed to the {@link required} decorator
+	 * @see required
+	 */
+	isPropValueValid<T extends this>( propName: ClassPropNames<T> ): boolean {
+		const propInfo = this.getPropInfo( propName )
+		if ( !propInfo.validator ) return true
+		return propInfo.validator( this[ propInfo.name ], propInfo, this )
+	}
+
+	/**
 	 * Copy the persistent properties of the given instance to this instance. 
 	 * The property `id` will be ignored.
 	 * Only the properties that are not null or undefined will be copied.
@@ -197,14 +279,14 @@ export class Persistent {
 	 * @see clone
 	 * @see toObject
 	 */
-	fromObject( obj: PersistentObject<this> ): this {
+	fromObject( obj: Partial<PersistentObject<this>> | Record<string, unknown> ): this {
 		this.fromObj( obj )
 		this.afterDeserialize()
 
 		return this
 	}
 
-	private fromObj( obj: PersistentObject<this> ) {
+	private fromObj( obj: Partial<PersistentObject<this>> | Record<string, unknown> ) {
 		if ( !this._persistentProperties ) return this
 
 		this._persistentProperties.forEach( prop => {
@@ -242,7 +324,7 @@ export class Persistent {
 		this.beforeSerialize()
 
 		const obj: PersistentObject<this> = {} as any
-		if ( !this.className ) throw new Error( 'You should register this class prior to streaming it.' )
+		if ( !this.className ) throw new Error( `You should register \`${ this.constructor.name || this.toString() || 'this' }\` class prior to streaming it.` )
 
 		this._persistentProperties.forEach( prop => {
 			const propValue = this[ prop.name ]
@@ -257,12 +339,19 @@ export class Persistent {
 					obj[ propName ] = this.toDeepObj( propValue, rootCollections )
 				}
 
+				if ( prop.searchableArray ) {
+					obj[ Persistent.searchableArrayNameFor( propName ) ] = propValue.map(( value: PersistentObject<Persistent> ) => value.id )
+				}
 			}
 		})
 
 		obj[ '__className' ] = this.className
 
 		return obj
+	}
+
+	static searchableArrayNameFor( propName: string ) {
+		return `__${ propName }_searchable`
 	}
 
 	private fromDeepObject( value: unknown ) {
@@ -325,42 +414,42 @@ export class Persistent {
 		return value
 	}
 
+	static collectionPath( propInstance: Persistent, prop: PersistentProperty, params?: unknown ): string {
+		let storeInCollection: string
+
+		if ( typeof prop.storeInCollection === 'function' ) {
+			storeInCollection = prop.storeInCollection( propInstance, prop, params )
+		}
+		else {
+			storeInCollection = prop.storeInCollection ?? propInstance.className
+		}
+		return storeInCollection
+	}
+
 	private toReferenceObj( prop: PersistentProperty, rootCollections: Collections ) {
 		const propValue: Persistent | Persistent[] = this[ prop.name ]
-		
-		const collectionPath = ( value: Persistent ) => {
-			let storeInCollection: string
-
-			if ( typeof prop.storeInCollection === 'function' ) {
-				storeInCollection = prop.storeInCollection( value, prop )
-			}
-			else {
-				storeInCollection = prop.storeInCollection || value.className
-			}
-			return storeInCollection
-		}
 		
 		if ( Array.isArray( propValue ) ) {
 
 			return propValue.map( item => {
 				if ( !prop.isPureReference ) {
-					this.pushDocument( rootCollections, collectionPath( item ), item )
+					this.pushDocument( rootCollections, Persistent.collectionPath( item, prop ), item )
 				}
-				return this.buildRefObject( item, collectionPath( item ), prop.forcedPersistentProps )
+				return this.buildRefObject( item, Persistent.collectionPath( item, prop ), prop.cachedProps )
 			})
 
 		}
 		else {
 			if ( !prop.isPureReference ) {
-				this.pushDocument( rootCollections, collectionPath( propValue ), propValue )
+				this.pushDocument( rootCollections, Persistent.collectionPath( propValue, prop ), propValue )
 			}
-			return this.buildRefObject( propValue, collectionPath( propValue ), prop.forcedPersistentProps )
+			return this.buildRefObject( propValue, Persistent.collectionPath( propValue, prop ), prop.cachedProps )
 
 		}
 	}
 
-	private buildRefObject( value: Persistent, storeInCollection: string, forcedPersistentProps?: ClassPropNames<Persistent>[] ): DocumentReference {
-		const forcedObject = forcedPersistentProps?.reduce( ( obj, propName ) => {
+	private buildRefObject( value: Persistent, storeInCollection: string, cachedProps?: ClassPropNames<Persistent>[] ): DocumentReference {
+		const forcedObject = cachedProps?.reduce( ( obj, propName ) => {
 			if ( value[ propName ] !== undefined ) obj[ propName ] = value[ propName ]
 			return obj
 		}, {})
@@ -387,6 +476,12 @@ export class Persistent {
 		return prop.name.slice(1)
 	}
 
+	static createReference<T extends Persistent>( obj: PersistentObject<T> | string ): T {
+		const instance = Persistent.createInstance( obj )
+		instance['__documentReference'] = obj['__documentReference'] || { storedInCollection: instance.className }
+		return instance
+	}
+
 	static createInstance<T extends Persistent>( obj: PersistentObject<T> | string ): T {
 		if ( typeof obj === 'string' ) {
 			return new ( Persistent.classFactory( obj ) ) as T
@@ -406,6 +501,56 @@ export class Persistent {
 		}
 	}
 
+	static propInfo<T extends Persistent>( registeredClassName: string, propName: ClassPropNames<T> ): PersistentProperty {
+		const inst = Persistent.createInstance( registeredClassName )
+		return inst.getPropInfo( propName )
+	}
+
+	/**
+	 * Return the type of a persistent property.
+	 * Several strategies are used to determine the type:
+	 * - If the typeName is defined in the property info a decorator, it is used
+	 * - If the property value is an array, the type of the first element is used
+	 * - If the property value is a Persistent instance, its class name is used
+	 * - Otherwise, the typeof operator is used to determine the type
+	 * @param propInfo the persistent property info to retrieve the type
+	 * @returns the type of the property or the type of the first element if the property is an array or undefined if cannot be determined
+	 */
+	static propType( propInfo: PersistentProperty ): string {
+		if ( propInfo.typeName ) return Array.isArray( propInfo.typeName ) ? 'undefined[]' : propInfo.typeName ?? 'undefined'
+
+		const ownerInstance = Persistent.createInstance( propInfo.ownerClassName() )
+		const propValue = ownerInstance[ propInfo.name ]
+		if ( Array.isArray( propValue ) ) {
+			if ( propValue.length === 0 ) return 'undefined[]'
+			const firstElem = propValue[0]
+			if ( firstElem instanceof Persistent ) return firstElem.className + '[]'
+			else return typeof firstElem + '[]'
+		}
+		else {
+			if ( propValue instanceof Persistent ) return propValue.className
+			else return typeof propValue
+		}
+	}
+
+	/**
+	 * Retrieves a collection of references with the properties that are stored in the reference object
+	 * @returns the references collection
+	 */
+	static getSystemRegisteredReferencesWithCachedProps(): PersistentPropertyCollection {
+		const systemRegisteredClasses = Persistent.registeredClasses()
+		const referencesWithStoredProps = systemRegisteredClasses.reduce(( referencesWithStoredProps, className ) => {
+			const inst = Persistent.createInstance( className )
+			const propsWithStoredValue = inst.getPersistentProperties().filter( 
+				propInfo => propInfo.cachedProps
+			)
+			if ( propsWithStoredValue.length > 0 ) referencesWithStoredProps[className] = propsWithStoredValue
+			return referencesWithStoredProps
+		}, {} as PersistentPropertyCollection )
+		
+		return referencesWithStoredProps
+	}
+
 	@persistent private _id: string
 	private _persistentProperties: PersistentProperty[] | undefined
 	private static _factoryMap: FactoryMap = {}
@@ -415,17 +560,22 @@ export class Persistent {
 //Decorators
 ///////////////////////////////////
 
-type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty ) => string
+export type CollectionPathCallback = ( value: Persistent, prop: PersistentProperty, params?: unknown ) => string
+export type ValidatorFunction<T extends Persistent, P extends ClassPropNames<T>> = ( value: T[P], property: PersistentProperty, persistentInstance: T ) => boolean
 
-interface PersistentProperty {
+export interface PersistentProperty {
 	name: string
 	isReference?: boolean
 	isPureReference?: boolean
 	storeInCollection?: string | CollectionPathCallback
-	subCollection?: string
-	forcedPersistentProps?: ClassPropNames<Persistent>[]
+	ownerCollection?: string | CollectionPathCallback
 	toObjectSpecial?: ( classObj: any ) => any
 	fromObjectSpecial?: ( obj: any ) => any
+	searchableArray?: boolean
+	validator?: ValidatorFunction<any, any>
+	typeName?: string | string[],
+	ownerClassName: () => string
+	cachedProps?: ClassPropNamesOfType<Persistent,Primitive>[]
 }
 
 /**
@@ -462,17 +612,44 @@ export function persistentReference( target: Persistent, property: string ) {
 
 /**
  * Decorator to declare a persistent reference (see @persistentReference) that stores
- * the values in forcedPersistentProps as values in the reference object. This is useful
+ * the values in cachedProps as values in the reference object. This is useful
  * when you are not able to wait for population of referenced properties.
- * @param forcedPersistentProps the properties whose values should be stored in the reference object
- * @param storedInCollection indicates the path of the collection where this reference is stored
+ * @param cachedProps Pass an array of properties whose values should be stored in the reference object or an object
+ * with the cachedProps configuration.
+ * @param propTypeName the accepted type name or type names of the property
+ * @param storeInCollection indicates the path of the collection where this reference is stored
+ * @param targetCollection indicates the path of the target collection. The storedCollection param refers to the collection
+ * where this reference is stored whereas the targetCollection param refers to the collection where the object containing the 
+ * property is stored.
+ * @see persistentReference
+ * @see CachedPropsConfig
+ * @see persistentPureReferenceWithCachedProps
+ * @example
+ * ```ts
+ * class UserGroup extends Persistent {
+ * 	@persistentReferenceWithCachedProps( ['name', 'email'], 'Customer/Clients', 'User' ) private _friend: User
+ * }
+ * 
+ * class SpecialUserGroup extends Persistent {
+ * 	@persistentReferenceWithCachedProps( { cachedProps: ['name', 'email'], updater: async ( event, prop ) => {
+ * 		// do something when the referenced user is updated
+ * 	}}, undefined, [ 'SpecialUser', 'User' ] ) private _friend: User
+ * }
+ * ```
  */
- export function persistentReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentReferenceWithCachedProps<T extends Persistent>( 
+	cachedProps: ClassPropNamesOfType<T, Primitive>[], 
+	propTypeName: string | string[], 
+	storeInCollection?: string | CollectionPathCallback,
+	targetCollection?: string | CollectionPathCallback,
+) {
 	return function( target: Persistent, property: string ) {
 		const persistentProps: Partial<PersistentProperty> = { 
 			isReference: true, 
-			forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[],
-			storeInCollection: storeInCollection
+			storeInCollection: storeInCollection,
+			typeName: propTypeName,
+			cachedProps: cachedProps as ClassPropNamesOfType<Persistent, Primitive>[],
+			ownerCollection: targetCollection ?? target.className
 		}
 		return persistentParser( persistentProps )( target, property )
 	}
@@ -480,7 +657,7 @@ export function persistentReference( target: Persistent, property: string ) {
 
 /**
  * Decorator for a property that is a reference to a persistent object. 
- * In this case, and contrary to the @persistentReference decorator, the reference 
+ * In this case, and contrary to the {@link persistentReference} decorator, the reference 
  * contents is not stored even it has been changed. Only the reference information 
  * is stored.
  * @see persistentReference
@@ -491,22 +668,49 @@ export function persistentReference( target: Persistent, property: string ) {
 
 /**
  * Decorator to declare a persistent property as a pure reference (see @persistentPureReference) that stores
- * the values of the properties listed in forcedPersistentProps as values in the reference object. This is useful
+ * the values of the properties listed in cachedProps as values in the reference object. This is useful
  * when you only need a few properties to be available without needing to populate the referenced property.
- * @param forcedPersistentProps the properties whose values should be stored in the reference object
- * @param storedInCollection indicates the path of the collection where this reference is stored
- * @see persistentReferenceWithPersistentProps
+ * @param cachedProps Pass an array of properties whose values should be stored in the reference object or an object
+ * with the cachedProps configuration.
+ * @param propTypeName the accepted type name or type names of the property
+ * @param storeInCollection indicates the path of the collection where this reference is stored
+ * @param targetCollection indicates the path of the target collection. The storedCollection param refers to the collection
+ * where this reference is stored whereas the targetCollection param refers to the collection where the object containing the 
+ * property is stored.
+ * @see persistentReferenceWithCachedProps
  * @see persistentPureReference
- * @sample
- * class User extends Persistent {
- * 	@persistentPureReferenceWithPersistentProps( ['name', 'email'] ) private _friend: User
+ * @see CachedPropsConfig
+ * @see persistentReferenceWithCachedProps
+ * @example
+ * ```ts
+ * class UserGroup extends Persistent {
+ * 	@persistentPureReferenceWithCachedProps( ['name', 'email'], 'Customer/Clients', 'User' ) private _friend: User
  * }
+ * 
+ * class SpecialUserGroup extends Persistent {
+ * 	@persistentPureReferenceWithCachedProps( { cachedProps: ['name', 'email'], updater: async ( event, prop ) => {
+ * 		// do something when the referenced user is updated
+ * 	}}, undefined, [ 'SpecialUser', 'User' ] ) private _friend: User
+ * }
+ * ```
  * // the reference object will contain the properties name and email of the referenced user
  * // without having to populate the _friend property
  */
- export function persistentPureReferenceWithPersistentProps<T extends Persistent>( forcedPersistentProps: ClassPropNames<T>[], storeInCollection?: string | CollectionPathCallback ) {
+export function persistentPureReferenceWithCachedProps<T extends Persistent>( 
+	cachedProps: ClassPropNamesOfType<T, Primitive>[], 
+	propTypeName: string | string[],
+	storeInCollection?: string | CollectionPathCallback, 
+	targetCollection?: string | CollectionPathCallback
+) {
 	return function( target: Persistent, property: string ) {
-		return persistentParser({ isReference: true, isPureReference: true, forcedPersistentProps: forcedPersistentProps as ClassPropNames<Persistent>[], storeInCollection })( target, property )
+		return persistentParser({ 
+			isReference: true, 
+			isPureReference: true, 
+			storeInCollection: storeInCollection,
+			ownerCollection: targetCollection,
+			typeName: propTypeName,
+			cachedProps: cachedProps as ClassPropNamesOfType<Persistent, Primitive>[]
+		})( target, property )
 	}
 }
 
@@ -522,10 +726,17 @@ export function persistentParser( options?: Partial<PersistentProperty> ) {
 			else target[ '_persistentProperties' ] = []
 		}
 
-		target[ '_persistentProperties' ]?.push( {
-			name: property,
-			...options
-		} )
+		const propInfo = target[ '_persistentProperties' ]!.find( prop => prop.name === property )
+		if ( propInfo ) {
+			Object.assign( propInfo, options )
+		}
+		else {
+			target[ '_persistentProperties' ]!.push({
+				name: property,
+				ownerClassName: () => target.className,
+				...options
+			})
+		}
 	}
 }
 
@@ -549,7 +760,57 @@ export function registerPersistentClass( className: string, annotation?: unknown
  */
 export function registerLegacyClassName( legacyName: string ) {
 	return ( constructor: PersistentConstructor ) => {
-		Persistent.registerFactory( legacyName, constructor )
+		Persistent.registerFactory( legacyName, constructor, undefined, true )
 	}
 }
 
+/**
+ * Decorator to make a `Persistent` array property searchable by the 
+ * persistence engine.
+ * When a property is marked as searchable, the persistence engine will
+ * generate internally a new property with the same name but with the suffix `_searchable`
+ * and prefixed with the `_` character. This new property will contain an array
+ * with the `id` of the persistent elements in the original array.
+ */ 
+export function searchableArray( target: Persistent, property: string ) {
+	return persistentParser({ searchableArray: true })( target, property )
+}
+
+/**
+ * Decorator to mark the property as required.
+ * @see requiredWithValidator
+ */
+export function required( target: Persistent, property: string ) {
+	return persistentParser({ validator: ( value: any ) => value !== undefined && value !== null })( target, property )
+}
+
+/**
+ * Decorator to mark the property as required.
+ * @param validator a function that returns true if the property value is valid. 
+ * By default, the property is valid if it is not undefined and not null.
+ * @see required
+ */
+export function requiredWithValidator<T extends Persistent, P extends ClassPropNames<T>>( validator: ValidatorFunction<T, P> = ( value: T[P] ) => value !== undefined && value !== null ) {
+	return function( target: T, property: UnderscoredProp<P> ) {
+		return persistentParser({ validator: validator })( target, property )
+	}
+}
+
+/**
+ * Decorator to define the type name or type names of a persistent property.
+ * This is useful when the type cannot be inferred automatically by the persistence engine which typically
+ * happens when the property is initialized as null or undefined.
+ * @param typeNames the type name or the acceptable type names (in case of inheritance) of the property
+ */
+export function typeName( typeNames: string | string[] | PersistentConstructor ) {
+	let typeName: string | string[]
+	if ( typeof typeNames === 'function' ) {
+		typeName = new typeNames().className
+	}
+	else {
+		typeName = typeNames
+	}
+	return function( target: Persistent, property: string ) {
+		return persistentParser({ typeName })( target, property )
+	}
+}

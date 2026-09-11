@@ -8,7 +8,7 @@ interface CustomCredentials {
 }
 
 describe( 'Auth Mock', ()=>{
-	let authChangeSpy = jest.fn()
+	let authChangeSpy = vi.fn()
 	let mockAuthService: AuthMock
 	const fakeUseCredentials = {
 		email: 'fakeUser@test.com',
@@ -100,7 +100,7 @@ describe( 'Auth Mock', ()=>{
 		})
 
 		expect( userCredentials.email ).toEqual( 'test@test.com' )
-		expect( authChangeSpy ).toHaveBeenCalledWith( undefined )
+		expect( authChangeSpy ).toHaveBeenCalledWith( userCredentials )
 	})
 
 	it( 'should logout', async ()=>{

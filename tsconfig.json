@@ -4,8 +4,9 @@
     "target": "ES2020", 
     "module": "ESNext", 
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "sourceMap": true,
+    "inlineSources": true,
     "outDir": "lib",
     "rootDir": "src/",
 		"resolveJsonModule": true,
@@ -20,11 +21,13 @@
 		"strictPropertyInitialization": true, // should be enabled progressively to end having all code base compliant with this rule
 		"noUncheckedIndexedAccess": true, // this causes errors when accessing arrays elements without checking if they exist
 		"noImplicitOverride": true, // this causes errors when overriding methods of base classes. Annoying for React components
-		// "noImplicitAny": true, // this causes errors when accessing properties of objects with index signatures
-		// "noPropertyAccessFromIndexSignature": true, // annoying when accessing properties of objects with index signatures
-		// "strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitThis": true,
+ 		"noImplicitAny": false,            		// Allow TSC 6.x.x to compile. Fixes errors: TS7006 TS7016 TS7053
+		"strictFunctionTypes": false,      		// Allow TSC 6.x.x to compile. Fixes errors: TS2322 TS2345 TS2769 TS2352
+    "types": [
+      "vitest/globals",
+    ]
 	},
-  "include": ["./src"]
+  "include": ["src"]
 }

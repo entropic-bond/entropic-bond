@@ -1,41 +1,33 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / StoredFileChange
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / StoredFileChange
 
 # Interface: StoredFileChange
 
-## Table of contents
-
-### Properties
-
-- [event](StoredFileChange.md#event)
-- [pendingData](StoredFileChange.md#pendingdata)
-- [storedFile](StoredFileChange.md#storedfile)
+Defined in: [cloud-storage/stored-file.ts:6](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/stored-file.ts#L6)
 
 ## Properties
 
 ### event
 
-• **event**: [`StoredFileEvent`](../enums/StoredFileEvent.md)
+> **event**: [`StoredFileEvent`](../enumerations/StoredFileEvent.md)
 
-#### Defined in
+Defined in: [cloud-storage/stored-file.ts:7](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/stored-file.ts#L7)
 
-[cloud-storage/stored-file.ts:7](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/stored-file.ts#L7)
+***
 
-___
+### pendingData?
 
-### pendingData
+> `optional` **pendingData?**: [`StorableData`](../type-aliases/StorableData.md)
 
-• `Optional` **pendingData**: [`StorableData`](../modules.md#storabledata)
+Defined in: [cloud-storage/stored-file.ts:8](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/stored-file.ts#L8)
 
-#### Defined in
-
-[cloud-storage/stored-file.ts:8](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/stored-file.ts#L8)
-
-___
+***
 
 ### storedFile
 
-• **storedFile**: [`StoredFile`](../classes/StoredFile.md)
+> **storedFile**: [`StoredFile`](../classes/StoredFile.md)
 
-#### Defined in
-
-[cloud-storage/stored-file.ts:9](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/stored-file.ts#L9)
+Defined in: [cloud-storage/stored-file.ts:9](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/stored-file.ts#L9)

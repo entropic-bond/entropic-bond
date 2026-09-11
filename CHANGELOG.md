@@ -1,3 +1,913 @@
+## [1.60.2](https://github.com/entropic-bond/entropic-bond/compare/v1.60.1...v1.60.2) (2026-09-07)
+
+
+### Bug Fixes
+
+* npm install issue as a package ([1282866](https://github.com/entropic-bond/entropic-bond/commit/1282866586b7dfed2b186f548c799bd91d2ed44a))
+
+## [1.60.1](https://github.com/entropic-bond/entropic-bond/compare/v1.60.0...v1.60.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* bump new version ([f72d5a0](https://github.com/entropic-bond/entropic-bond/commit/f72d5a04ef76a6083514714976a24ab416030e8e))
+* correct typo in build script configuration ([f86dd7b](https://github.com/entropic-bond/entropic-bond/commit/f86dd7b8d0ef6f81535e6b3f855322b64dd2f2fd))
+
+# [1.60.0](https://github.com/entropic-bond/entropic-bond/compare/v1.59.5...v1.60.0) (2026-09-07)
+
+
+### Features
+
+* transactional writes with optimistic concurrency via runTransaction ([343d82a](https://github.com/entropic-bond/entropic-bond/commit/343d82a33fda5c953791b6f282d59fab0ff4b82e)), closes [#2](https://github.com/entropic-bond/entropic-bond/issues/2)
+
+## [1.59.5](https://github.com/entropic-bond/entropic-bond/compare/v1.59.4...v1.59.5) (2026-07-01)
+
+
+### Bug Fixes
+
+* improved pushAndNotify and removeAndNotify generic typing ([dc09b27](https://github.com/entropic-bond/entropic-bond/commit/dc09b27ce3505d575712f6bd177a18ab8bfa0c33))
+* typedoc warnings - export missing types, fix [@param](https://github.com/param) tags, update doc comments ([5b92003](https://github.com/entropic-bond/entropic-bond/commit/5b92003cf624a21df268e7f51faeb1d1321734eb))
+
+## [1.59.4](https://github.com/entropic-bond/entropic-bond/compare/v1.59.3...v1.59.4) (2026-06-30)
+
+
+### Bug Fixes
+
+* bump tsc 6.x.x ([9157e20](https://github.com/entropic-bond/entropic-bond/commit/9157e20ef834c15d63a904e2e93f677a83c15a74))
+
+
+### Performance Improvements
+
+* reduce resolveDelay from 50ms to 10ms in json-data-source.spec ([55e6c0b](https://github.com/entropic-bond/entropic-bond/commit/55e6c0bcdfbab1eef23c0654d907cd9b83424dd0))
+
+## [1.59.3](https://github.com/entropic-bond/entropic-bond/compare/v1.59.2...v1.59.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* npm updates ([6c2fb14](https://github.com/entropic-bond/entropic-bond/commit/6c2fb14b917051d3a490e73a6f5df0e60c24daaf))
+
+## [1.59.2](https://github.com/entropic-bond/entropic-bond/compare/v1.59.1...v1.59.2) (2026-05-11)
+
+
+### Bug Fixes
+
+* sourcemaps ([64c4ed7](https://github.com/entropic-bond/entropic-bond/commit/64c4ed7abf3c86e1db1f5d48cbd4fe344fd45c89))
+
+## [1.59.1](https://github.com/entropic-bond/entropic-bond/compare/v1.59.0...v1.59.1) (2026-05-10)
+
+
+### Bug Fixes
+
+* add value ([b93ac8e](https://github.com/entropic-bond/entropic-bond/commit/b93ac8e0da8837e381a5fa2859915c6529a19db2))
+* add value in callbacks ([438b834](https://github.com/entropic-bond/entropic-bond/commit/438b834b8b10b42f1b70e4d17a24f44316bede0d))
+
+# [1.59.0](https://github.com/entropic-bond/entropic-bond/compare/v1.58.0...v1.59.0) (2026-05-05)
+
+
+### Features
+
+* isInstanceOf ([1138f3e](https://github.com/entropic-bond/entropic-bond/commit/1138f3e59978eca51cf948ccbfb820867f6c6085))
+
+# [1.58.0](https://github.com/entropic-bond/entropic-bond/compare/v1.57.1...v1.58.0) (2026-03-12)
+
+
+### Features
+
+* onDocumentTemplateChange ([7d648b7](https://github.com/entropic-bond/entropic-bond/commit/7d648b79c41db476ee5bd66c30f578ca51f1b6ff))
+
+## [1.57.1](https://github.com/entropic-bond/entropic-bond/compare/v1.57.0...v1.57.1) (2026-03-11)
+
+
+### Bug Fixes
+
+* updateProps method now returns a Promise and handles missing propsToUpdate case ([9652fa7](https://github.com/entropic-bond/entropic-bond/commit/9652fa73f3d0cba9250668bc7025e9bc52cce16b))
+
+# [1.57.0](https://github.com/entropic-bond/entropic-bond/compare/v1.56.5...v1.57.0) (2026-03-11)
+
+
+### Features
+
+* simplify CachedPropsUpdater and remove unused document change listener logic ([6d101df](https://github.com/entropic-bond/entropic-bond/commit/6d101df02618bdb523e4aa4208b31d24c782103c))
+
+## [1.56.5](https://github.com/entropic-bond/entropic-bond/compare/v1.56.4...v1.56.5) (2026-03-10)
+
+
+### Bug Fixes
+
+* add beforeDocumentChange callback to CachedPropsUpdater configuration ([d1b5a9f](https://github.com/entropic-bond/entropic-bond/commit/d1b5a9fd9eb18002a5b4e704b9d639b666adcc2c))
+
+## [1.56.4](https://github.com/entropic-bond/entropic-bond/compare/v1.56.3...v1.56.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* rename onAllPropsUpdated to afterDocumentChange and update related callbacks ([0ec273a](https://github.com/entropic-bond/entropic-bond/commit/0ec273a463778bb61b18352f01a1798eb7bb3e65))
+
+## [1.56.3](https://github.com/entropic-bond/entropic-bond/compare/v1.56.2...v1.56.3) (2026-03-09)
+
+
+### Bug Fixes
+
+* prevent duplicate properties in collectionsToWatch and add props to DocumentChangeListenerHandler ([dcf2644](https://github.com/entropic-bond/entropic-bond/commit/dcf26445f97f2ed5950e471f77e49e1c09a4dac0))
+
+## [1.56.2](https://github.com/entropic-bond/entropic-bond/compare/v1.56.1...v1.56.2) (2026-03-09)
+
+
+### Bug Fixes
+
+* add enable/disable change listener methods in CachedPropsUpdater ([65f0788](https://github.com/entropic-bond/entropic-bond/commit/65f0788a8dda10e73b482fe857aacfc2011eb395))
+
+## [1.56.1](https://github.com/entropic-bond/entropic-bond/compare/v1.56.0...v1.56.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* add documentsToUpdate to UpdatedResults in CachedPropsUpdater ([60e7ecf](https://github.com/entropic-bond/entropic-bond/commit/60e7ecfee4aaae78622eb06bb72e978ea9e45645))
+* test ([0a24b03](https://github.com/entropic-bond/entropic-bond/commit/0a24b035a8c942656f1b1e868771c3bfa8675f00))
+
+# [1.56.0](https://github.com/entropic-bond/entropic-bond/compare/v1.55.6...v1.56.0) (2026-02-26)
+
+
+### Features
+
+* beforeQueryOwnerCollection in update cached props ([534490b](https://github.com/entropic-bond/entropic-bond/commit/534490b6414f9988011b9427ab0bdefb077726fe))
+
+## [1.55.6](https://github.com/entropic-bond/entropic-bond/compare/v1.55.5...v1.55.6) (2026-02-25)
+
+
+### Bug Fixes
+
+* allPropsUpdated paramenter ([3a1de27](https://github.com/entropic-bond/entropic-bond/commit/3a1de2711b8ee6ecfeb7fc37d595cf369fad11b9))
+
+## [1.55.5](https://github.com/entropic-bond/entropic-bond/compare/v1.55.4...v1.55.5) (2026-01-28)
+
+
+### Bug Fixes
+
+* rename function ([0896338](https://github.com/entropic-bond/entropic-bond/commit/08963381210fb2daf46eef0247a1a4875eb7aab1))
+
+## [1.55.4](https://github.com/entropic-bond/entropic-bond/compare/v1.55.3...v1.55.4) (2026-01-27)
+
+
+### Bug Fixes
+
+* remove promise from subscribeToDocumentChangeListener ([2d6a362](https://github.com/entropic-bond/entropic-bond/commit/2d6a362eb35337e3222a0bfb1dddee6312949acf))
+
+## [1.55.3](https://github.com/entropic-bond/entropic-bond/compare/v1.55.2...v1.55.3) (2026-01-25)
+
+
+### Bug Fixes
+
+* test-user ([6bc7237](https://github.com/entropic-bond/entropic-bond/commit/6bc723743f6eb0394bf80a670f8b60e75f901c6a))
+
+## [1.55.2](https://github.com/entropic-bond/entropic-bond/compare/v1.55.1...v1.55.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* update cached props updater methods to use Promises for async operations ([9ca5b96](https://github.com/entropic-bond/entropic-bond/commit/9ca5b9687897bd62f255133d3ef5021921b2abc0))
+
+## [1.55.1](https://github.com/entropic-bond/entropic-bond/compare/v1.55.0...v1.55.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* manage cached props with template collections ([e26a495](https://github.com/entropic-bond/entropic-bond/commit/e26a495d23b0cfe9cfb802822b727370a4c87a64))
+
+# [1.55.0](https://github.com/entropic-bond/entropic-bond/compare/v1.54.2...v1.55.0) (2026-01-21)
+
+
+### Features
+
+* cached props updater optimized ([2b0701b](https://github.com/entropic-bond/entropic-bond/commit/2b0701b84be001babd5fcf2e99fdf0fd93081080))
+
+## [1.54.2](https://github.com/entropic-bond/entropic-bond/compare/v1.54.1...v1.54.2) (2026-01-13)
+
+
+### Bug Fixes
+
+* update collectionPath and CollectionPathCallback to accept optional params ([d93e18b](https://github.com/entropic-bond/entropic-bond/commit/d93e18bca342b248a4141f6286e2542f5892602c))
+
+## [1.54.1](https://github.com/entropic-bond/entropic-bond/compare/v1.54.0...v1.54.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* trigger release after tag conflict ([70e5214](https://github.com/entropic-bond/entropic-bond/commit/70e521448ba43fe55d7e115a5ea9aacb80c0d41c))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* semantic ([05762e4](https://github.com/entropic-bond/entropic-bond/commit/05762e40bb9e29b4442c70944ff7674a5dc690f6))
+* semantic release ([a8f0324](https://github.com/entropic-bond/entropic-bond/commit/a8f03247c650ad623cc6ce2cccef58fc55ff5802))
+* trigger release after tag conflict ([369f3c2](https://github.com/entropic-bond/entropic-bond/commit/369f3c2ac6c674cb3118da00245155101c6d9e0e))
+* trigger release after tag conflict ([529f261](https://github.com/entropic-bond/entropic-bond/commit/529f2616a615a72da836497a44b9743f28992a5d))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([e9366da](https://github.com/entropic-bond/entropic-bond/commit/e9366da11c81180079f3c04f83e4e621d9937874))
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* semantic ([05762e4](https://github.com/entropic-bond/entropic-bond/commit/05762e40bb9e29b4442c70944ff7674a5dc690f6))
+* semantic release ([a8f0324](https://github.com/entropic-bond/entropic-bond/commit/a8f03247c650ad623cc6ce2cccef58fc55ff5802))
+* trigger release after tag conflict ([529f261](https://github.com/entropic-bond/entropic-bond/commit/529f2616a615a72da836497a44b9743f28992a5d))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([e9366da](https://github.com/entropic-bond/entropic-bond/commit/e9366da11c81180079f3c04f83e4e621d9937874))
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* semantic release ([a8f0324](https://github.com/entropic-bond/entropic-bond/commit/a8f03247c650ad623cc6ce2cccef58fc55ff5802))
+* trigger release after tag conflict ([529f261](https://github.com/entropic-bond/entropic-bond/commit/529f2616a615a72da836497a44b9743f28992a5d))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([e9366da](https://github.com/entropic-bond/entropic-bond/commit/e9366da11c81180079f3c04f83e4e621d9937874))
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* trigger release after tag conflict ([529f261](https://github.com/entropic-bond/entropic-bond/commit/529f2616a615a72da836497a44b9743f28992a5d))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([e9366da](https://github.com/entropic-bond/entropic-bond/commit/e9366da11c81180079f3c04f83e4e621d9937874))
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([e9366da](https://github.com/entropic-bond/entropic-bond/commit/e9366da11c81180079f3c04f83e4e621d9937874))
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([0843b34](https://github.com/entropic-bond/entropic-bond/commit/0843b345c32fede7b5c0dee277e07705bf491d66))
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+# [1.54.0](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.54.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+
+### Features
+
+* trigger release after tag conflict ([ff8d787](https://github.com/entropic-bond/entropic-bond/commit/ff8d7879d48bfd906cbd35df9a52be9b295e9e3d))
+
+## [1.53.24](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.53.24) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+* trigger release after tag conflict ([10230c7](https://github.com/entropic-bond/entropic-bond/commit/10230c7cb8bd5517f45b502f7b59f9f698976866))
+
+## [1.53.24](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.53.24) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+* renamin collectionPath props ([e74003e](https://github.com/entropic-bond/entropic-bond/commit/e74003e95bcb14b0b5e86b52b203e5529c9216bd))
+
+## [1.53.24](https://github.com/entropic-bond/entropic-bond/compare/v1.53.23...v1.53.24) (2026-01-12)
+
+
+### Bug Fixes
+
+* notify when document acquires query requeriments ([f026c2d](https://github.com/entropic-bond/entropic-bond/commit/f026c2d387066e24e94524f2f6859a5e963ef8ca))
+
+## [1.53.23](https://github.com/entropic-bond/entropic-bond/compare/v1.53.22...v1.53.23) (2025-12-21)
+
+
+### Bug Fixes
+
+* notify collection changes when document looses scope of query ([d19a6cf](https://github.com/entropic-bond/entropic-bond/commit/d19a6cf43cae3f337ed58dd46df071e987f26b39))
+
+## [1.53.22](https://github.com/entropic-bond/entropic-bond/compare/v1.53.21...v1.53.22) (2025-12-20)
+
+
+### Bug Fixes
+
+* json data source collection and document change events ([cc6d5ca](https://github.com/entropic-bond/entropic-bond/commit/cc6d5ca1061ce8b9591e09d6e62bd14e6bc3194e))
+
+## [1.53.21](https://github.com/entropic-bond/entropic-bond/compare/v1.53.20...v1.53.21) (2025-12-18)
+
+
+### Bug Fixes
+
+* onCollectionChange needs query preprocessing ([14c809a](https://github.com/entropic-bond/entropic-bond/commit/14c809a326ff952fbe2f02b20b80625fbf6361be))
+
+## [1.53.20](https://github.com/entropic-bond/entropic-bond/compare/v1.53.19...v1.53.20) (2025-12-17)
+
+
+### Bug Fixes
+
+* conversion of change to persistent class ([bc4bafa](https://github.com/entropic-bond/entropic-bond/commit/bc4bafa14b3edd422203110b04e4fd3f1667da7b))
+
+## [1.53.19](https://github.com/entropic-bond/entropic-bond/compare/v1.53.18...v1.53.19) (2025-12-17)
+
+
+### Bug Fixes
+
+* CollectionChangeListener to include change info ([f45457c](https://github.com/entropic-bond/entropic-bond/commit/f45457ca557983631750f17cfa34138b0e617ec6))
+
+## [1.53.18](https://github.com/entropic-bond/entropic-bond/compare/v1.53.17...v1.53.18) (2025-12-16)
+
+
+### Bug Fixes
+
+* CollectionChangeListener ([6a407de](https://github.com/entropic-bond/entropic-bond/commit/6a407de55d7c57f3a3b96fb377e7cd78869b3370))
+
+## [1.53.17](https://github.com/entropic-bond/entropic-bond/compare/v1.53.16...v1.53.17) (2025-12-16)
+
+
+### Bug Fixes
+
+* typo ([79c6f0f](https://github.com/entropic-bond/entropic-bond/commit/79c6f0f3581a7c7d9de728ce9e50d86aba6f3a83))
+
+## [1.53.16](https://github.com/entropic-bond/entropic-bond/compare/v1.53.15...v1.53.16) (2025-12-16)
+
+
+### Bug Fixes
+
+* typo ([6de822a](https://github.com/entropic-bond/entropic-bond/commit/6de822aae49a2a7e995d688f3a13f3a85dcc609b))
+
+## [1.53.15](https://github.com/entropic-bond/entropic-bond/compare/v1.53.14...v1.53.15) (2025-12-10)
+
+
+### Bug Fixes
+
+* npm upgrade ([ae5cd5c](https://github.com/entropic-bond/entropic-bond/commit/ae5cd5c4db4e464348d7df36f357e22bbebe2403))
+
+## [1.53.14](https://github.com/entropic-bond/entropic-bond/compare/v1.53.13...v1.53.14) (2025-06-23)
+
+
+### Bug Fixes
+
+* remove legacy names from system classes results ([4adb173](https://github.com/entropic-bond/entropic-bond/commit/4adb173a735d172ca41889329646993a82b157b0))
+
+## [1.53.13](https://github.com/entropic-bond/entropic-bond/compare/v1.53.12...v1.53.13) (2025-06-11)
+
+
+### Bug Fixes
+
+* better error message ([792ebe9](https://github.com/entropic-bond/entropic-bond/commit/792ebe9bfafe323a60a36b3521444a06ded309f7))
+* show constructor name ([6b78fa9](https://github.com/entropic-bond/entropic-bond/commit/6b78fa9f515ad3748397486af675c4610ac2afd9))
+
+## [1.53.12](https://github.com/entropic-bond/entropic-bond/compare/v1.53.11...v1.53.12) (2025-03-04)
+
+
+### Bug Fixes
+
+* trigger release for previous commit ([1cd3f21](https://github.com/entropic-bond/entropic-bond/commit/1cd3f211c420b725c77e40b38f493dcd7f1213f1))
+
+## [1.53.11](https://github.com/entropic-bond/entropic-bond/compare/v1.53.10...v1.53.11) (2025-02-27)
+
+
+### Bug Fixes
+
+* onDocumentChange to accept persistent ([7cb44e8](https://github.com/entropic-bond/entropic-bond/commit/7cb44e83d8a4613990a3c52ded4f22d7ef86ec79))
+
+## [1.53.10](https://github.com/entropic-bond/entropic-bond/compare/v1.53.9...v1.53.10) (2025-02-26)
+
+
+### Bug Fixes
+
+* npm update ([b3309aa](https://github.com/entropic-bond/entropic-bond/commit/b3309aa40f2bdc88d7b056e2a3a85d46f435b815))
+
+## [1.53.9](https://github.com/entropic-bond/entropic-bond/compare/v1.53.8...v1.53.9) (2024-09-25)
+
+
+### Bug Fixes
+
+* move DocumentChange definition to Persistent ([01318d9](https://github.com/entropic-bond/entropic-bond/commit/01318d939814b0feb78ec34293c57e2969110d17))
+
+## [1.53.8](https://github.com/entropic-bond/entropic-bond/compare/v1.53.7...v1.53.8) (2024-09-25)
+
+
+### Bug Fixes
+
+* remove unneeded parameter in onDocumentChange ([d394813](https://github.com/entropic-bond/entropic-bond/commit/d394813f901a9ceb76705ed9875b016ad686e39d))
+
+## [1.53.7](https://github.com/entropic-bond/entropic-bond/compare/v1.53.6...v1.53.7) (2024-09-25)
+
+
+### Bug Fixes
+
+* DataSource to deal with DocumentObjects instead of Persistent ([70fc553](https://github.com/entropic-bond/entropic-bond/commit/70fc5531fee14dd40aac5f7b79f0040bf9789779))
+
+## [1.53.6](https://github.com/entropic-bond/entropic-bond/compare/v1.53.5...v1.53.6) (2024-09-24)
+
+
+### Bug Fixes
+
+* fire change event implementation ([01b775b](https://github.com/entropic-bond/entropic-bond/commit/01b775b0e41dfc48080adceae7d52a8325315ecc))
+
+## [1.53.5](https://github.com/entropic-bond/entropic-bond/compare/v1.53.4...v1.53.5) (2024-09-24)
+
+
+### Bug Fixes
+
+* revert notifyUserChanges ([27d3c63](https://github.com/entropic-bond/entropic-bond/commit/27d3c631c86375621d67d51d82bb811452259648))
+
+## [1.53.4](https://github.com/entropic-bond/entropic-bond/compare/v1.53.3...v1.53.4) (2024-09-23)
+
+
+### Bug Fixes
+
+* notify user changes ([11dc3c1](https://github.com/entropic-bond/entropic-bond/commit/11dc3c102cdb0b6560eed0e6e4c37f13ba7096af))
+
+## [1.53.3](https://github.com/entropic-bond/entropic-bond/compare/v1.53.2...v1.53.3) (2024-09-23)
+
+
+### Bug Fixes
+
+* cached props updater function params ([ae1627e](https://github.com/entropic-bond/entropic-bond/commit/ae1627ed390bcc12a0161e2f1bb5618f7dde418f))
+
+## [1.53.2](https://github.com/entropic-bond/entropic-bond/compare/v1.53.1...v1.53.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* introduce cachedPropsConfig ([d4eb9f6](https://github.com/entropic-bond/entropic-bond/commit/d4eb9f6082d6c28f522689a99c9fb5bf9b8f8d19))
+
+## [1.53.1](https://github.com/entropic-bond/entropic-bond/compare/v1.53.0...v1.53.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* add params to DocumentChange interface ([49fa6ce](https://github.com/entropic-bond/entropic-bond/commit/49fa6ce3a88062c3c3ca0a0d95c750b83fbc4588))
+
+# [1.53.0](https://github.com/entropic-bond/entropic-bond/compare/v1.52.0...v1.53.0) (2024-09-17)
+
+
+### Bug Fixes
+
+* npm update ([5f1e281](https://github.com/entropic-bond/entropic-bond/commit/5f1e28198395e00fc4193656f929bcda5b1ab3b3))
+
+
+### Features
+
+* update npm ([7f93780](https://github.com/entropic-bond/entropic-bond/commit/7f937808808476d8c8d18d5a2a40c61de6258672))
+
+# [1.52.0](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.52.0) (2024-09-17)
+
+
+### Bug Fixes
+
+* force update semver ([35114af](https://github.com/entropic-bond/entropic-bond/commit/35114afb2103a5254444ba7324a4c8380aa75616))
+* npm update ([d9842b9](https://github.com/entropic-bond/entropic-bond/commit/d9842b9d5691b98d964f712fdde1a06eea9fd0aa))
+* PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
+* version ([bec4359](https://github.com/entropic-bond/entropic-bond/commit/bec4359605bb4de2cecb697256bb6b70f78c077b))
+
+
+### Features
+
+* introduce typeName in PersistentProperty ([a8c3d7d](https://github.com/entropic-bond/entropic-bond/commit/a8c3d7d5b1d30d1acb5d3ea72e8c153b3624e341))
+
+## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-09-17)
+
+
+### Bug Fixes
+
+* force update semver ([35114af](https://github.com/entropic-bond/entropic-bond/commit/35114afb2103a5254444ba7324a4c8380aa75616))
+* npm update ([d9842b9](https://github.com/entropic-bond/entropic-bond/commit/d9842b9d5691b98d964f712fdde1a06eea9fd0aa))
+* PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
+* version ([bec4359](https://github.com/entropic-bond/entropic-bond/commit/bec4359605bb4de2cecb697256bb6b70f78c077b))
+
+## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-09-17)
+
+
+### Bug Fixes
+
+* npm update ([d9842b9](https://github.com/entropic-bond/entropic-bond/commit/d9842b9d5691b98d964f712fdde1a06eea9fd0aa))
+* PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
+* version ([bec4359](https://github.com/entropic-bond/entropic-bond/commit/bec4359605bb4de2cecb697256bb6b70f78c077b))
+
+## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-09-17)
+
+
+### Bug Fixes
+
+* npm update ([d9842b9](https://github.com/entropic-bond/entropic-bond/commit/d9842b9d5691b98d964f712fdde1a06eea9fd0aa))
+* PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
+
+## [1.51.11](https://github.com/entropic-bond/entropic-bond/compare/v1.51.10...v1.51.11) (2024-09-17)
+
+
+### Bug Fixes
+
+* PersistentProperty to have typeName ([924f29e](https://github.com/entropic-bond/entropic-bond/commit/924f29e61682c4f0b9a9a3933ea0beaed729381f))
+
+## [1.51.10](https://github.com/entropic-bond/entropic-bond/compare/v1.51.9...v1.51.10) (2024-04-28)
+
+
+### Bug Fixes
+
+* force cached props to be primitives ([2f97b35](https://github.com/entropic-bond/entropic-bond/commit/2f97b35380869cdbd96e34805dbeee37a11c6e89))
+
+## [1.51.9](https://github.com/entropic-bond/entropic-bond/compare/v1.51.8...v1.51.9) (2024-04-25)
+
+
+### Bug Fixes
+
+* make onDocumentChange public and static ([f122cda](https://github.com/entropic-bond/entropic-bond/commit/f122cda659db809b0667506d72eeb335abd7cadc))
+
+## [1.51.8](https://github.com/entropic-bond/entropic-bond/compare/v1.51.7...v1.51.8) (2024-04-23)
+
+
+### Bug Fixes
+
+* simplify data structures ([8f1d3e7](https://github.com/entropic-bond/entropic-bond/commit/8f1d3e781d9bdeea1ba6058a798aa01229e7d1a9))
+
+## [1.51.7](https://github.com/entropic-bond/entropic-bond/compare/v1.51.6...v1.51.7) (2024-04-23)
+
+
+### Bug Fixes
+
+* refactor listener handlers ([7d8829b](https://github.com/entropic-bond/entropic-bond/commit/7d8829bc34e3bb08465f887ec70005a0a16efa49))
+
+## [1.51.6](https://github.com/entropic-bond/entropic-bond/compare/v1.51.5...v1.51.6) (2024-04-21)
+
+
+### Bug Fixes
+
+* minimal code reorganization ([1375dde](https://github.com/entropic-bond/entropic-bond/commit/1375dded2c50b6b646cfa5418b0f02a862f1484e))
+
+## [1.51.5](https://github.com/entropic-bond/entropic-bond/compare/v1.51.4...v1.51.5) (2024-04-18)
+
+
+### Bug Fixes
+
+* injectable documentChangeListener ([72c8078](https://github.com/entropic-bond/entropic-bond/commit/72c8078765968824ca72912933aa58f9bc42522c))
+
+## [1.51.4](https://github.com/entropic-bond/entropic-bond/compare/v1.51.3...v1.51.4) (2024-04-18)
+
+
+### Bug Fixes
+
+* add collectionPath info in DocumentChangeListenerHandler ([beb2cea](https://github.com/entropic-bond/entropic-bond/commit/beb2cea57ad83ae4dacb07fdeef3753fe3043996))
+
+## [1.51.3](https://github.com/entropic-bond/entropic-bond/compare/v1.51.2...v1.51.3) (2024-04-18)
+
+
+### Bug Fixes
+
+* renaming ([9feb266](https://github.com/entropic-bond/entropic-bond/commit/9feb2663cb97238af39cfd667935d2ccdd7c6707))
+
+## [1.51.2](https://github.com/entropic-bond/entropic-bond/compare/v1.51.1...v1.51.2) (2024-04-17)
+
+
+### Bug Fixes
+
+* native handler to be unknown type ([b01bd8f](https://github.com/entropic-bond/entropic-bond/commit/b01bd8fd4dc773b81f40b8a9e2d75c38161720a8))
+
+## [1.51.1](https://github.com/entropic-bond/entropic-bond/compare/v1.51.0...v1.51.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* expose listener handlers ([6473e2e](https://github.com/entropic-bond/entropic-bond/commit/6473e2e558e429b4fe1f12b56f3313908dd61ecc))
+
+# [1.51.0](https://github.com/entropic-bond/entropic-bond/compare/v1.50.5...v1.51.0) (2024-04-16)
+
+
+### Bug Fixes
+
+* update ts 5.4.5 ([61c6b1d](https://github.com/entropic-bond/entropic-bond/commit/61c6b1db2a8a63a8589db22c461d416f09dd19a9))
+
+
+### Features
+
+* update references with persistent props ([cd1fd62](https://github.com/entropic-bond/entropic-bond/commit/cd1fd6267f98514309bfe91d1daab3b92b542bd8))
+
+## [1.50.5](https://github.com/entropic-bond/entropic-bond/compare/v1.50.4...v1.50.5) (2024-04-08)
+
+
+### Bug Fixes
+
+* export PersistentProperty ([1ecf341](https://github.com/entropic-bond/entropic-bond/commit/1ecf341daf6a25ba696c1b65738e28004dc78efd))
+* npm-upgrade ([c48e451](https://github.com/entropic-bond/entropic-bond/commit/c48e4515a060778702e1bb48ecc2ab64654e17b6))
+
+## [1.50.4](https://github.com/entropic-bond/entropic-bond/compare/v1.50.3...v1.50.4) (2024-02-10)
+
+
+### Bug Fixes
+
+* source map ([f67c956](https://github.com/entropic-bond/entropic-bond/commit/f67c956d4c1af083726706ceabadc20bfc201e15))
+
+## [1.50.3](https://github.com/entropic-bond/entropic-bond/compare/v1.50.2...v1.50.3) (2024-02-08)
+
+
+### Bug Fixes
+
+* Add "types" field to package.json ([cabfdce](https://github.com/entropic-bond/entropic-bond/commit/cabfdce9cc3822b2dbf0ccb0b459a4ffab256b45))
+
+## [1.50.2](https://github.com/entropic-bond/entropic-bond/compare/v1.50.1...v1.50.2) (2024-02-08)
+
+
+### Bug Fixes
+
+* move types entry to exports ([ba8d89b](https://github.com/entropic-bond/entropic-bond/commit/ba8d89b564f5ac78ea3c0291949126895b285086))
+
+## [1.50.1](https://github.com/entropic-bond/entropic-bond/compare/v1.50.0...v1.50.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* out files ([455fd0a](https://github.com/entropic-bond/entropic-bond/commit/455fd0aa305d1d814c726012ade890f6064c1bbf))
+
+# [1.50.0](https://github.com/entropic-bond/entropic-bond/compare/v1.49.0...v1.50.0) (2024-02-07)
+
+
+### Bug Fixes
+
+* outdir ([fa27208](https://github.com/entropic-bond/entropic-bond/commit/fa2720865002d25ca284ad079343a786e393c8af))
+
+
+### Features
+
+* esm and cjs ([9b79d7d](https://github.com/entropic-bond/entropic-bond/commit/9b79d7dbdf6747ed616d729151d4dc9f56127e00))
+
+# [1.49.0](https://github.com/entropic-bond/entropic-bond/compare/v1.48.1...v1.49.0) (2024-02-01)
+
+
+### Features
+
+* refresh token ([d3cabc7](https://github.com/entropic-bond/entropic-bond/commit/d3cabc75d904a886b986f2f4bfe2879294a77ace))
+
+## [1.48.1](https://github.com/entropic-bond/entropic-bond/compare/v1.48.0...v1.48.1) (2023-11-21)
+
+
+### Bug Fixes
+
+* typed validator function ([91a6c0a](https://github.com/entropic-bond/entropic-bond/commit/91a6c0a7dc38540861df2966fe069b49a47c4f64))
+
+# [1.48.0](https://github.com/entropic-bond/entropic-bond/compare/v1.47.0...v1.48.0) (2023-11-21)
+
+
+### Features
+
+* Add requiredWithValidator decorator to persistent ([bef5054](https://github.com/entropic-bond/entropic-bond/commit/bef5054dbdab307568f51e1c8030e3cc5ff38400))
+
+# [1.47.0](https://github.com/entropic-bond/entropic-bond/compare/v1.46.2...v1.47.0) (2023-10-28)
+
+
+### Features
+
+* and and andDeepProp ([60dfe42](https://github.com/entropic-bond/entropic-bond/commit/60dfe4295288b9bd12116d0bb02a55e4627d8c1b))
+
+## [1.46.2](https://github.com/entropic-bond/entropic-bond/compare/v1.46.1...v1.46.2) (2023-09-30)
+
+
+### Bug Fixes
+
+* export Query class ([139cca0](https://github.com/entropic-bond/entropic-bond/commit/139cca0c316508c19f8766027824d33eacc455c7))
+
+## [1.46.1](https://github.com/entropic-bond/entropic-bond/compare/v1.46.0...v1.46.1) (2023-09-25)
+
+
+### Bug Fixes
+
+* npm upgrade ([0206584](https://github.com/entropic-bond/entropic-bond/commit/02065849ad8487e27dbb50bc9a8e0d32f70f63d6))
+
+# [1.46.0](https://github.com/entropic-bond/entropic-bond/compare/v1.45.1...v1.46.0) (2023-09-25)
+
+
+### Features
+
+* required prop ([5570518](https://github.com/entropic-bond/entropic-bond/commit/55705186318544e032e2fdfea30ff15b0a9534b8))
+
+## [1.45.1](https://github.com/entropic-bond/entropic-bond/compare/v1.45.0...v1.45.1) (2023-08-24)
+
+
+### Bug Fixes
+
+* simulateDelay in MockCloudStorage ([61f5422](https://github.com/entropic-bond/entropic-bond/commit/61f5422ab268a1e6fc1361c4baf96d6392bc91c8))
+
+# [1.45.0](https://github.com/entropic-bond/entropic-bond/compare/v1.44.7...v1.45.0) (2023-08-17)
+
+
+### Features
+
+* mimeType ([c1a2a0f](https://github.com/entropic-bond/entropic-bond/commit/c1a2a0f7cd0414e483829d3465bba4fcaf080cc8))
+
+## [1.44.7](https://github.com/entropic-bond/entropic-bond/compare/v1.44.6...v1.44.7) (2023-06-26)
+
+
+### Bug Fixes
+
+* bug affecting preprocessQueryObject ([91349b8](https://github.com/entropic-bond/entropic-bond/commit/91349b8e7f449aa8a3d81bdc693c625e285fc318))
+
+## [1.44.6](https://github.com/entropic-bond/entropic-bond/compare/v1.44.5...v1.44.6) (2023-06-25)
+
+
+### Bug Fixes
+
+* contains operator ([7011f7a](https://github.com/entropic-bond/entropic-bond/commit/7011f7a741ac9a18570ba1e325589e0883842d35))
+
+## [1.44.5](https://github.com/entropic-bond/entropic-bond/compare/v1.44.4...v1.44.5) (2023-06-25)
+
+
+### Bug Fixes
+
+* don't process arrays in property path determination ([c32c6fd](https://github.com/entropic-bond/entropic-bond/commit/c32c6fd2f77e822d33477d7066e191b9ee783412))
+
+## [1.44.4](https://github.com/entropic-bond/entropic-bond/compare/v1.44.3...v1.44.4) (2023-06-25)
+
+
+### Bug Fixes
+
+* preprocessQueryObject ([6a7b5be](https://github.com/entropic-bond/entropic-bond/commit/6a7b5bea6685019d22d786b7bcce7c9f3bdb9c2f))
+
+## [1.44.3](https://github.com/entropic-bond/entropic-bond/compare/v1.44.2...v1.44.3) (2023-06-23)
+
+
+### Bug Fixes
+
+* convert values from searchable array to strings ([83c1d94](https://github.com/entropic-bond/entropic-bond/commit/83c1d94b51a5c0a884331c59bed8052d59aa03e6))
+
+## [1.44.2](https://github.com/entropic-bond/entropic-bond/compare/v1.44.1...v1.44.2) (2023-06-23)
+
+
+### Bug Fixes
+
+* rename array operators ([e1f2365](https://github.com/entropic-bond/entropic-bond/commit/e1f2365755d8f5e27f856cbf1dc5889d6ed9d8e6))
+
+## [1.44.1](https://github.com/entropic-bond/entropic-bond/compare/v1.44.0...v1.44.1) (2023-06-23)
+
+
+### Bug Fixes
+
+* propInfo ([faa4a98](https://github.com/entropic-bond/entropic-bond/commit/faa4a98f5c47bdbb0904d3dd92a0df0b60fc511c))
+
+# [1.44.0](https://github.com/entropic-bond/entropic-bond/compare/v1.43.1...v1.44.0) (2023-06-23)
+
+
+### Features
+
+* searchableArray decorator ([db6f45a](https://github.com/entropic-bond/entropic-bond/commit/db6f45a7a7185561128a452907d013fad8abb109))
+
+## [1.43.1](https://github.com/entropic-bond/entropic-bond/compare/v1.43.0...v1.43.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* missing operation.aggregate chain ([c073705](https://github.com/entropic-bond/entropic-bond/commit/c073705c510f33b02afae9b94dfd3769e051fd4f))
+
+# [1.43.0](https://github.com/entropic-bond/entropic-bond/compare/v1.42.4...v1.43.0) (2023-06-20)
+
+
+### Features
+
+* or query ([887cef2](https://github.com/entropic-bond/entropic-bond/commit/887cef23369fe8f71f7764876eb2754b4c09cc1f))
+
+## [1.42.4](https://github.com/entropic-bond/entropic-bond/compare/v1.42.3...v1.42.4) (2023-05-28)
+
+
+### Bug Fixes
+
+* add password to sendVerificationEmail ([f403c38](https://github.com/entropic-bond/entropic-bond/commit/f403c3844ba13662913e37fb8b8a8fe30432d17d))
+
+## [1.42.3](https://github.com/entropic-bond/entropic-bond/compare/v1.42.2...v1.42.3) (2023-05-25)
+
+
+### Bug Fixes
+
+* typo ([671f529](https://github.com/entropic-bond/entropic-bond/commit/671f529f7cc9f06f88a7149898809b9c83540e63))
+* typo in auth mock ([1536dd3](https://github.com/entropic-bond/entropic-bond/commit/1536dd3930ed3b010ce542837d0f2c68f7340927))
+
+## [1.42.2](https://github.com/entropic-bond/entropic-bond/compare/v1.42.1...v1.42.2) (2023-05-25)
+
+
+### Bug Fixes
+
+* missed verification link param ([a17afa3](https://github.com/entropic-bond/entropic-bond/commit/a17afa319021febf408b77d141551ac26ae4fea0))
+
+## [1.42.1](https://github.com/entropic-bond/entropic-bond/compare/v1.42.0...v1.42.1) (2023-05-25)
+
+
+### Bug Fixes
+
+* update npm ([062d0f8](https://github.com/entropic-bond/entropic-bond/commit/062d0f8cb69b9153e271fc965fbe8e34e0901ef6))
+
+# [1.42.0](https://github.com/entropic-bond/entropic-bond/compare/v1.41.4...v1.42.0) (2023-05-25)
+
+
+### Bug Fixes
+
+* implement AuthMock resendEmailVerification ([e5440c5](https://github.com/entropic-bond/entropic-bond/commit/e5440c596d63cc6cdcdf834c000fa7f6214f10b5))
+
+
+### Features
+
+* resend verification email ([1281357](https://github.com/entropic-bond/entropic-bond/commit/1281357cefd545cd97117424068ebb7f8dbadae4))
+
+## [1.41.4](https://github.com/entropic-bond/entropic-bond/compare/v1.41.3...v1.41.4) (2023-04-18)
+
+
+### Bug Fixes
+
+* create reference ([2d104f6](https://github.com/entropic-bond/entropic-bond/commit/2d104f68165a7af998f6bfb116d4e224420d02b4))
+
+## [1.41.3](https://github.com/entropic-bond/entropic-bond/compare/v1.41.2...v1.41.3) (2023-04-10)
+
+
+### Bug Fixes
+
+* fromObject to accept arbitrary objects ([17ef567](https://github.com/entropic-bond/entropic-bond/commit/17ef5678c31d719f029ee5d130199148ccec03c1))
+
+## [1.41.2](https://github.com/entropic-bond/entropic-bond/compare/v1.41.1...v1.41.2) (2023-04-09)
+
+
+### Bug Fixes
+
+* callback parameter to be only of type T ([f17fc4a](https://github.com/entropic-bond/entropic-bond/commit/f17fc4a066714526ada3cbf74262c1909ecb7ce7))
+
+## [1.41.1](https://github.com/entropic-bond/entropic-bond/compare/v1.41.0...v1.41.1) (2023-04-09)
+
+
+### Bug Fixes
+
+* onAuthStateChange to accept undefined ([1d537c2](https://github.com/entropic-bond/entropic-bond/commit/1d537c200f6ece25ceaffdf76c29611f1a324cdd))
+
+# [1.41.0](https://github.com/entropic-bond/entropic-bond/compare/v1.40.8...v1.41.0) (2023-04-09)
+
+
+### Features
+
+* strictNullCheck compliant ([7797aa1](https://github.com/entropic-bond/entropic-bond/commit/7797aa167190405fc551a71e200a34e5ec08fde0))
+
+## [1.40.8](https://github.com/entropic-bond/entropic-bond/compare/v1.40.7...v1.40.8) (2023-04-06)
+
+
+### Bug Fixes
+
+* before and after serializer hooks for inner persistent objects ([08392a0](https://github.com/entropic-bond/entropic-bond/commit/08392a08563b221c680b3eb05bf20d8f8dc43ffd))
+
 ## [1.40.7](https://github.com/entropic-bond/entropic-bond/compare/v1.40.6...v1.40.7) (2023-04-06)
 
 

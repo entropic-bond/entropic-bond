@@ -1,13 +1,19 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / Collection
+[**entropic-bond**](../README.md)
 
-# Interface: Collection<T\>
+***
 
-## Type parameters
+[entropic-bond](../globals.md) / Collection
 
-| Name |
-| :------ |
-| `T` |
+# Interface: Collection\<T\>
+
+Defined in: [types/utility-types.ts:66](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/types/utility-types.ts#L66)
+
+## Type Parameters
+
+### T
+
+`T`
 
 ## Indexable
 
-▪ [key: `string` \| `symbol`]: `T`
+> \[`key`: `string` \| `symbol`\]: `T`

@@ -1,0 +1,25 @@
+import { resolve } from 'path'
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+		globals: true,
+		exclude: ['**/node_modules', '**/dist', '.idea', '.git', '.cache','**/lib', '**/out'],
+	},
+	build: {
+		lib: {
+			entry: resolve( import.meta.dirname, 'src/index.ts' ),
+			name: 'entropic-bond',
+			fileName: 'entropic-bond'
+		},
+		sourcemap: true,
+		outDir: "lib",
+		rollupOptions: {
+			output: {
+				sourcemapPathTransform: (relativeSourcePath) => {
+					return relativeSourcePath.replace(/^..\/src\//, '');
+				}
+			}
+		}
+	}
+})

@@ -1,18 +1,20 @@
 import { Observable } from '../observable/observable'
-import { AuthProvider, SignData, UserCredentials } from "./user-auth-types"
+import { AuthProvider, CredentialsCustomData, SignData, UserCredentials } from "./user-auth-types"
 
 /**
  * The AuthService class is an abstract class that defines the interface of an authentication service.
  * You should derive from this class to implement your own authentication service.
  */
 export abstract class AuthService {
-	abstract signUp<T extends {}>( signData: SignData ): Promise<UserCredentials<T>>
-	abstract login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>>
+	abstract signUp<T extends CredentialsCustomData>( signData: SignData ): Promise<UserCredentials<T>>
+	abstract login<T extends CredentialsCustomData>( signData: SignData ): Promise<UserCredentials<T>>
 	abstract logout(): Promise<void>
 	abstract resetEmailPassword( email: string ): Promise<void>
+	abstract refreshToken(): Promise<void>
 	abstract linkAdditionalProvider( provider: AuthProvider ): Promise<unknown>
 	abstract unlinkProvider( provider: AuthProvider ): Promise<unknown>
-	abstract onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T>) => void ): void
+	abstract onAuthStateChange<T extends CredentialsCustomData>( onChange: ( userCredentials: UserCredentials<T> | undefined ) => void ): void
+	abstract resendVerificationEmail( email: string, password: string, verificationLink: string ): Promise<void>
 }
 
 export type AuthErrorCode = 'wrongPassword' | 'popupClosedByUser' | 'userNotFound' | 'invalidEmail' | 'missingPassword' | 'missingEmail'
@@ -25,7 +27,7 @@ export interface AuthError {
 /**
  * Types the callback to accept a user credentials object
  */
-export type ResovedCallback<T extends {}> = ( credentials: UserCredentials<T> ) => void
+export type ResovedCallback<T extends CredentialsCustomData> = ( credentials: UserCredentials<T> ) => void
 export type RejectedCallback = ( reason: AuthError ) => void
 
 /**
@@ -74,7 +76,7 @@ export class Auth extends AuthService {
 	 * // Sign up a new user with a Google account
 	 * Auth.instance.signUp({ authProvider: 'google'})
 	 */
-	signUp<T extends {}>( singData: SignData ): Promise<UserCredentials<T>> {
+	signUp<T extends CredentialsCustomData>( singData: SignData ): Promise<UserCredentials<T>> {
 		return Auth._authService.signUp( singData )
 	}
 
@@ -88,7 +90,7 @@ export class Auth extends AuthService {
 	 * // Log in an existing user with a Google account
 	 * Auth.instance.login({ authProvider: 'google'})
 	 */
-	login<T extends {}>( singData: SignData ): Promise<UserCredentials<T>> {
+	login<T extends CredentialsCustomData>( singData: SignData ): Promise<UserCredentials<T>> {
 		return Auth._authService.login( singData )
 	}
 	
@@ -110,6 +112,18 @@ export class Auth extends AuthService {
 	}
 
 	/**
+	 * Resends the email verification to the user.
+	 * @returns a promise that resolves when the process is done
+	 */
+	override resendVerificationEmail( email: string, password: string, verificationLink: string ): Promise<void> {
+		return Auth._authService.resendVerificationEmail( email, password, verificationLink )
+	}
+
+	override refreshToken(): Promise<void> {
+		return Auth._authService.refreshToken()
+	}
+
+	/**
 	 * Adds a listener to be called when the authentication state changes.
 	 * @param onChange the listener to be called when the authentication state changes.
 	 * The listener is called with the user credentials as a parameter.
@@ -125,7 +139,7 @@ export class Auth extends AuthService {
 	 * 	}
 	 * })
 	 */
-	onAuthStateChange<T extends {}>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
+	onAuthStateChange<T extends CredentialsCustomData>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
 		return this._onAuthStateChange.subscribe( onChange )
 	}
 
@@ -133,7 +147,7 @@ export class Auth extends AuthService {
 	 * Removes a listener that was added by `onAuthStateChange` method.
 	 * @param onChange the listener to be removed
 	 */
-	removeAuthStateChange<T extends {}>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
+	removeAuthStateChange<T extends CredentialsCustomData>( onChange: ( userCredentials: UserCredentials<T> )=>void ) {
 		this._onAuthStateChange.unsubscribe( onChange )
 	}
 
@@ -161,11 +175,11 @@ export class Auth extends AuthService {
 		return Auth._authService.unlinkProvider( provider )
 	}
 
-	private authStateChanged( userCredentials: UserCredentials<{}> ) {
+	private authStateChanged( userCredentials: UserCredentials<CredentialsCustomData> | undefined ) {
 		this._onAuthStateChange.notify( userCredentials )
 	}
 
 	private static _instance: Auth | undefined = undefined
 	private static _authService: AuthService
-	private _onAuthStateChange: Observable<UserCredentials<{}>> = new Observable<UserCredentials<{}>>()
+	private _onAuthStateChange: Observable<UserCredentials<CredentialsCustomData>> = new Observable<UserCredentials<CredentialsCustomData>>()
 }

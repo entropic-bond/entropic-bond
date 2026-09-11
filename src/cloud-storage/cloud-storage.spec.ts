@@ -5,13 +5,14 @@ import { Store } from '../store/store'
 import { CloudStorage } from './cloud-storage'
 import { MockCloudStorage } from './mock-cloud-storage'
 import { StoredFile, StoredFileEvent } from './stored-file'
+import { vi, Mock } from 'vitest'
 
 function MockFile(this: any,  data: any[], filename: string ) {
 	this.data = data as any[]
 	this.name = filename
 }
 
-global.File = MockFile as any
+globalThis.File = MockFile as any
 
 @registerPersistentClass( 'Test' )
 class Test extends Persistent {
@@ -91,7 +92,7 @@ describe( 'Cloud Storage', ()=>{
 	
 
 	it( 'should overwrite file on subsequent writes', async ()=>{
-		const deleteSpy = jest.spyOn( file, 'delete' )
+		const deleteSpy = vi.spyOn( file, 'delete' )
 
 		await file.save({ data: 'first write' as any })
 		expect( deleteSpy ).not.toHaveBeenCalled()
@@ -111,10 +112,10 @@ describe( 'Cloud Storage', ()=>{
 	})
 
 	describe( 'Notify on change', ()=>{
-		let spy: jest.Mock
+		let spy: Mock
 
 		beforeEach(()=>{
-			spy = jest.fn()
+			spy = vi.fn()
 			file.onChange( spy )
 		})
 
@@ -182,7 +183,7 @@ describe( 'Cloud Storage', ()=>{
 		})
 
 		it( 'should replace file on save after load', async ()=>{
-			const deleteSpy = jest.spyOn( testObj.file, 'delete' )
+			const deleteSpy = vi.spyOn( testObj.file, 'delete' )
 
 			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )

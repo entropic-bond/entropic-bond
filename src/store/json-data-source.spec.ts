@@ -1,22 +1,38 @@
-import { DocumentObject, JsonDataSource, Model, Store } from '..'
+import { DataSource, DocumentObject, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from '..'
 import { TestUser } from './mocks/test-user'
+
+@registerPersistentClass( 'TestCollection' )
+class TestCollection extends Persistent {
+	set prop( value: string ) {
+		this._prop = value
+	}
+	
+	get prop(): string {
+		return this._prop
+	}
+	
+	@persistent private _prop: string = this.id
+}
+
+@registerPersistentClass( 'TestCollection2' )
+class TestCollection2 extends Persistent {}
 
 describe( 'Json DataSource', ()=>{
 	let datasource: JsonDataSource
-	const resolveDelay = 50
+	const resolveDelay = 10
 
 	describe( 'Delayed promise resolution', ()=>{
 	
 		beforeEach(()=>{
 			datasource = new JsonDataSource({
-				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } } as any
+				TestCollection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } } as any
 			}).simulateDelay( resolveDelay )
 			Store.useDataSource( datasource )
 		})
 	
 		it( 'should fail if no wait to resolve', async ()=>{
 			let result: DocumentObject | undefined = undefined
-			datasource.findById( 'a', 'collection' ).then( data => result = data )
+			datasource.findById( 'a', 'TestCollection' ).then( data => result = data )
 			expect( result ).not.toBeDefined()
 			await datasource.wait()
 			expect( result ).toBeDefined()
@@ -24,31 +40,35 @@ describe( 'Json DataSource', ()=>{
 		
 		it( 'should wait promises to resolve', async ()=>{
 			let result: DocumentObject | undefined = undefined
-			datasource.findById( 'a', 'collection' ).then( data => result = data )
+			datasource.findById( 'a', 'TestCollection' ).then( data => result = data )
 			await datasource.wait()
 			expect( result ).toBeDefined()
 		})
 
 		it( 'should accumulate promises', async ()=>{
-			datasource.findById( 'a', 'collection' )
-			datasource.findById( 'b', 'collection' )
-			datasource.findById( 'c', 'collection' )
+			datasource.findById( 'a', 'TestCollection' )
+			datasource.findById( 'b', 'TestCollection' )
+			datasource.findById( 'c', 'Collection' )
 			const promises = await datasource.wait()
 			expect( promises ).toHaveLength( 3 )
 		})
 
-		it( 'should remove resolved promises', ( done )=>{
-			datasource.findById( 'b', 'collection' )
-			datasource.findById( 'a', 'collection' )
-			setTimeout(
-				async ()=>{
-					datasource.findById( 'c', 'collection' )
-					const promises = await datasource.wait()
-					expect( promises ).toHaveLength( 1 )
-					done()
-				},
-				resolveDelay * 3
-			)
+		it( 'should remove resolved promises', async ()=>{
+			let promises: any
+
+			datasource.findById( 'b', 'TestCollection' )
+			datasource.findById( 'a', 'TestCollection' )
+			await new Promise<void>( resolve => {
+				setTimeout(
+					async ()=>{
+						datasource.findById( 'c', 'Collection' )
+						promises = await datasource.wait()
+						resolve()
+					},
+					resolveDelay * 3
+				)
+			})
+			expect( promises ).toHaveLength( 1 )
 		})
 
 		it( 'should work with save', async ()=>{
@@ -74,27 +94,273 @@ describe( 'Json DataSource', ()=>{
 		let model: Model<TestUser>
 
 		beforeAll(()=>{
-			datasource = new JsonDataSource({
-				collection: { a: { id: 'a' }, b: { id: 'b' }, c: { id: 'c' } } as any
-			}).simulateError( 'Simulated error' )
+			datasource = new JsonDataSource({}).simulateError( 'Simulated error' )
 			Store.useDataSource( datasource )
 			model = Store.getModel<TestUser>( 'TestUser' )
 		})
 
-		it( 'should simulate error on findById', ()=>{
-			expect(	model.findById( 'a' )	).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on findById', async ()=>{
+			await expect(	model.findById( 'a' )	).rejects.toThrow( 'Simulated error' )
 		})
 
-		it( 'should simulate error on find', ()=>{
-			expect(	model.find().get() ).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on find', async ()=>{
+			await expect(	model.find().get() ).rejects.toThrow( 'Simulated error' )
 		})
 
-		it( 'should simulate error on save', ()=>{
-			expect(	model.save( new TestUser('id') ) ).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on save', async ()=>{
+			await expect(	model.save( new TestUser('id') ) ).rejects.toThrow( 'Simulated error' )
 		})
 		
-		it( 'should simulate error on delete', ()=>{
-			expect(	model.delete( 'b' ) ).rejects.toThrow( 'Simulated error' )
+		it( 'should simulate error on delete', async ()=>{
+			await expect(	model.delete( 'b' ) ).rejects.toThrow( 'Simulated error' )
+		})
+	})
+
+	describe( 'Collection listeners', ()=>{
+		let model: Model<TestCollection>
+
+		beforeAll(()=>{
+			datasource = new JsonDataSource({
+				TestCollection: { a: new TestCollection( 'a' ).toObject(), b: new TestCollection( 'b' ).toObject(), c: new TestCollection( 'c' ).toObject() } as any
+			})
+			Store.useDataSource( datasource )
+			model = Store.getModel<TestCollection>( 'TestCollection' )
+		})
+
+		it( 'should install a listener', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onCollectionChange( model.find(), listener )
+
+			model.save( new TestCollection( 'd' ))
+			expect( listener ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ])
+			uninstall()
+		})
+
+		it( 'should remove listener', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onCollectionChange( model.find(), listener )
+
+			model.save( new TestCollection( 'd' ))
+			expect( listener ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ])
+
+			uninstall()
+			listener.mockClear()
+
+			model.save( new TestCollection('e'))
+			expect( listener ).not.toHaveBeenCalled()
+		})
+
+		it( 'should install several listeners for the same collection', ()=>{
+			const listener1 = vi.fn()
+			const listener2 = vi.fn()
+			const uninstall1 = model.onCollectionChange( model.find(), listener1 )
+			const uninstall2 = model.onCollectionChange( model.find(), listener2 )
+
+			model.save( new TestCollection( 'f' ))
+			expect( listener1 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'f' }) }) ])
+			expect( listener2 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'f' }) }) ])
+
+			uninstall1()
+			uninstall2()
+		})
+
+		it( 'should install several listeners for different collections', ()=>{
+			const listener1 = vi.fn()
+			const listener2 = vi.fn()
+			const uninstall1 = model.onCollectionChange( model.find(), listener1 )
+			const model2 = Store.getModel<TestCollection2>( 'TestCollection2' )
+			const uninstall2 = model2.onCollectionChange( model2.find(), listener2 )
+
+			model.save( new TestCollection( 'g' ))
+			expect( listener1 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'g' }) }) ])
+			expect( listener2 ).not.toHaveBeenCalled()
+
+			listener1.mockClear()
+			listener2.mockClear()
+
+			model2.save( new TestCollection2( 'h' ))
+			expect( listener1 ).not.toHaveBeenCalled()
+			expect( listener2 ).toHaveBeenCalledWith([ expect.objectContaining({ after: expect.objectContaining({ id: 'h' }) }) ])
+
+			uninstall1()
+			uninstall2()
+		})
+
+		it( 'should notify when document loose query requirements', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onCollectionChange( model.find().where( 'prop', '>', 'a' ), listener )
+			const doc = new TestCollection('b')
+			doc.prop = 'a'
+			model.save( doc )
+
+			expect( listener ).toHaveBeenCalled()
+			uninstall()
+		})
+
+		it( 'should notify when document acquires query requirements', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onCollectionChange( model.find().where( 'prop', '>', 'a' ), listener )
+			const doc = new TestCollection('a')
+			doc.prop = 'b'
+			model.save( doc )
+
+			expect( listener ).toHaveBeenCalled()
+			uninstall()
+		})
+	})
+
+	describe( 'Document listeners', ()=>{
+		let model: Model<TestCollection>
+
+		beforeAll(()=>{
+			datasource = new JsonDataSource({
+				TestCollection: { a: new TestCollection( 'a' ).toObject(), b: new TestCollection( 'b' ).toObject(), c: new TestCollection( 'c' ).toObject() } as any
+			})
+			Store.useDataSource( datasource )
+			model = Store.getModel<TestCollection>( 'TestCollection' )
+		})
+
+		it( 'should install a listener', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onDocumentChange( 'a', listener )
+
+			model.save( new TestCollection( 'a' ))
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'a' }) }) )
+			uninstall()
+		})
+
+		it( 'should remove listener', ()=>{
+			const listener = vi.fn()
+			const uninstall = model.onDocumentChange( 'b', listener )
+
+			model.save( new TestCollection( 'b' ))
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'b' }) }) )
+
+			uninstall()
+			listener.mockClear()
+
+			model.save( new TestCollection('b'))
+			expect( listener ).not.toHaveBeenCalled()
+		})
+
+		it( 'should install several listeners for the same document', ()=>{
+			const listener1 = vi.fn()
+			const listener2 = vi.fn()
+			const uninstall1 = model.onDocumentChange( 'c', listener1 )
+			const uninstall2 = model.onDocumentChange( 'c', listener2 )
+
+			model.save( new TestCollection( 'c' ))
+			expect( listener1 ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'c' }) }) )
+			expect( listener2 ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'c' }) }) )
+
+			uninstall1()
+			uninstall2()
+		})
+
+		it( 'should install several listeners for different documents', ()=>{
+			const listener1 = vi.fn()
+			const listener2 = vi.fn()
+			const uninstall1 = model.onDocumentChange( 'a', listener1 )
+			const uninstall2 = model.onDocumentChange( 'b', listener2 )
+
+			model.save( new TestCollection( 'a' ))
+			expect( listener1 ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'a' }) }) )
+			expect( listener2 ).not.toHaveBeenCalled()
+
+			listener1.mockClear()
+			listener2.mockClear()
+
+			model.save( new TestCollection( 'b' ))
+			expect( listener1 ).not.toHaveBeenCalled()
+			expect( listener2 ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'b' }) }) )
+
+			uninstall1()
+			uninstall2()
+		})
+	})
+
+	describe( 'Document template listeners', ()=>{
+		beforeAll(()=>{
+			datasource = new JsonDataSource()
+			Store.useDataSource( datasource )
+		})
+
+		it( 'should support collection templates with partial matches and notify all matched documents', ()=>{
+			datasource.setDataStore({
+				'Customer/1/Audit': { 'a': { id: 'a', val: 1 } },
+				'Customer/2/Audit': { 'a': { id: 'a', val: 2 } },
+			} as any )
+			const listener = vi.fn()
+			const uninstall = datasource.onDocumentTemplateChange( 'Customer/{customerId}/Audit', listener )
+			
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 11 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 11 }),
+				params: { customerId: '1' },
+				collectionPath: 'Customer/1/Audit'
+			}) )
+
+			listener.mockClear()
+			datasource.save({ 'Customer/2/Audit': [{ id: 'a', val: 22 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 22 }),
+				params: { customerId: '2' },
+				collectionPath: 'Customer/2/Audit'
+			}) )
+
+			uninstall()
+		})
+
+		it( 'should support collection templates and notify all matched documents', ()=>{
+			datasource.setDataStore({
+				'Customer/1/Audit': { 'a': { id: 'a', val: 1 } },
+				'Customer/2/Audit': { 'a': { id: 'a', val: 2 } },
+			} as any )
+			const listener = vi.fn()
+			const uninstall = datasource.onDocumentTemplateChange( '{rootCollection}/{customerId}/{subCollection}', listener )
+
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 11 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 11 }),
+				params: { rootCollection: 'Customer', customerId: '1', subCollection: 'Audit' },
+				collectionPath: 'Customer/1/Audit'
+			}) )
+
+			listener.mockClear()
+			datasource.save({ 'Customer/2/Audit': [{ id: 'a', val: 22 } as any ] })
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({ 
+				after: expect.objectContaining({ id: 'a', val: 22 }),
+				params: { rootCollection: 'Customer', customerId: '2', subCollection: 'Audit' },
+				collectionPath: 'Customer/2/Audit'
+			}) )
+
+			uninstall()
+		})
+	})
+
+	describe( 'Helper methods', ()=>{
+		describe( 'isStringMatchingTemplate', ()=>{
+			it( 'should match simple templates', ()=>{
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/2/Audit' )).toBe( true )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/faad-dfaa-00f0/Audit' )).toBe( true )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/2/Au' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Cus/2/Audit' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer/Audit' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Customer' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( 'Customer/{customerId}/Audit', 'Audit' )).toBe( false )
+				expect( DataSource.isStringMatchingTemplate( '{rootCollection}/{customerId}/{subCollection}', 'Audit' )).toBe( true )
+			})
+		})
+
+		describe( 'extractTemplateParams', ()=>{
+			it( 'should extract params from simple templates', ()=>{
+				expect( DataSource.extractTemplateParams( 'Customer/2/Audit', 'Customer/{customerId}/Audit' )).toEqual( { customerId: '2' } )
+				expect( DataSource.extractTemplateParams( 'Customer/faad-dfaa-00f0/Audit', 'Customer/{customerId}/Audit' )).toEqual( { customerId: 'faad-dfaa-00f0' } )
+				expect( DataSource.extractTemplateParams( 'Customer/2/Order/5', 'Customer/{customerId}/Order/{orderId}' )).toEqual( { customerId: '2', orderId: '5' } )
+				expect( DataSource.extractTemplateParams( 'Customer/2/Order/5/Item/9', 'Customer/{customerId}/Order/{orderId}/Item/{itemId}' )).toEqual( { customerId: '2', orderId: '5', itemId: '9' } )
+				expect( DataSource.extractTemplateParams( 'Audit', '{rootCollection}/{customerId}/{subCollection}' )).toEqual( { rootCollection: 'Audit' } )
+				expect( DataSource.extractTemplateParams( 'Customer/2/Audit', '{rootCollection}/{customerId}/{subCollection}' )).toEqual( { rootCollection: 'Customer', customerId: '2', subCollection: 'Audit' } )
+			})
 		})
 	})
 })

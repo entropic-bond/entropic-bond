@@ -1,5 +1,7 @@
-import { Collections, Persistent, PersistentObject } from '../persistent/persistent';
-import { DataSource, DocumentObject, QueryObject, QueryOperation } from "./data-source";
+import { Unsubscriber } from '../observable/observable'
+import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
+import { Collection } from '../types/utility-types'
+import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation, QueryOrder, TransactionConflictError, TransactionHandle } from "./data-source"
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -24,19 +26,20 @@ type QueryProcessors = {
  * It is useful for testing purposes.
  * The data in the JSON object is not persisted.
  */
-export class JsonDataSource implements DataSource {
+export class JsonDataSource extends DataSource {
 
 	/**
 	 * @param jsonRawData the JSON object to be used as data store
 	 */
 	constructor( jsonRawData?: JsonRawData ) {
+		super()
 		if ( jsonRawData ) this._jsonRawData = jsonRawData;
 	}
 
 	/**
 	 * Set the JSON object to initialize the data store. Use to set the it after 
 	 * the constructor has been called.
-	 * @param jsonRawData the JSON object to be used as data store
+	 * @param rawDataStore the JSON object to be used as data store
 	 */
 	setDataStore( rawDataStore: JsonRawData ) {
 		this._jsonRawData = rawDataStore;
@@ -65,7 +68,10 @@ export class JsonDataSource implements DataSource {
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			if ( !this._jsonRawData[ collectionName ] ) this._jsonRawData[ collectionName ] = {}
 			collection?.forEach( document => {
+				const oldValue = this._jsonRawData[ collectionName ]![ document.id ]
 				this._jsonRawData[ collectionName ]![ document.id ] = document
+				this.bumpVersion( collectionName, document.id )
+				this.notifyChange( collectionName, document, oldValue )
 			})
 		})
 
@@ -96,7 +102,57 @@ export class JsonDataSource implements DataSource {
 		if ( this._simulateError?.delete ) throw new Error( this._simulateError.delete )
 
 		delete this._jsonRawData[ collectionName ]![ id ]
+		this.bumpVersion( collectionName, id )
 		return this.resolveWithDelay()
+	}
+
+	override runTransaction<Result>( fn: ( handle: TransactionHandle ) => Promise<Result> ): Promise<Result> {
+		const reads: { collectionName: string, id: string, version: number }[] = []
+		const writes: {
+			type: 'save' | 'delete'
+			collectionName: string
+			id: string
+			doc?: Partial<DocumentObject>
+		}[] = []
+
+		const handle: TransactionHandle = {
+			findById: ( id, collectionName ) => {
+				reads.push({ collectionName, id, version: this.versionOf( collectionName, id ) })
+				return this.resolveWithDelay( this._jsonRawData[ collectionName ]?.[ id ] )
+			},
+			save: ( id, collectionName, doc ) => {
+				writes.push({ type: 'save', collectionName, id, doc })
+				return this.resolveWithDelay()
+			},
+			delete: ( id, collectionName ) => {
+				writes.push({ type: 'delete', collectionName, id })
+				return this.resolveWithDelay()
+			}
+		}
+
+		return fn( handle ).then( result => {
+			const conflictedRead = reads.find( read => read.version !== this.versionOf( read.collectionName, read.id ) )
+			if ( conflictedRead ) {
+				throw new TransactionConflictError( this._jsonRawData[ conflictedRead.collectionName ]?.[ conflictedRead.id ] )
+			}
+
+			writes.forEach( write => {
+				if ( write.type === 'delete' ) {
+					delete this._jsonRawData[ write.collectionName ]![ write.id ]
+					this.bumpVersion( write.collectionName, write.id )
+				}
+				else {
+					if ( !this._jsonRawData[ write.collectionName ] ) this._jsonRawData[ write.collectionName ] = {}
+					const oldValue = this._jsonRawData[ write.collectionName ]![ write.id ]
+					const newValue = { ...( oldValue ?? {} ), ...write.doc } as DocumentObject
+					this._jsonRawData[ write.collectionName ]![ write.id ] = newValue
+					this.bumpVersion( write.collectionName, write.id )
+					this.notifyChange( write.collectionName, newValue, oldValue )
+				}
+			})
+
+			return result
+		})
 	}
 
 	next( limit?: number ): Promise< DocumentObject[] > {
@@ -111,6 +167,70 @@ export class JsonDataSource implements DataSource {
 			Object.keys( this._jsonRawData[ collectionName ] ?? {} ).length
 		)
 	}
+
+	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
+		let listeners = this._collectionListeners[ collectionName ]
+		if ( !listeners ) {
+			this._collectionListeners[ collectionName ] = {}
+			listeners = this._collectionListeners[ collectionName ]
+		}
+		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
+			if ( !change.after ) return
+			const testDocs = [ change.after ]
+			if ( change.before ) testDocs.push( change.before )
+			const docs = this.retrieveQueryDocs(testDocs, query.operations!)
+			const uniqueDocs = docs.filter((doc, index, self) => index === self.findIndex(d => d.id === doc.id))
+			if ( uniqueDocs.length > 0 ) listener( uniqueDocs.map( doc => ({ 
+				before: change.before,
+				after: doc,
+			
+				type: change.type,
+				params: change.params,
+			} as DocumentChange<DocumentObject> )) )
+		}
+		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+		listeners[ uid ] = finalListener
+		return ()=> delete listeners[ uid ]
+	}
+
+	override onDocumentChange( collectionName: string, documentId: string, listener: DocumentChangeListener< DocumentObject > ): Unsubscriber {
+		let listeners = this._documentListeners[ collectionName ] 
+		if ( !listeners ) {
+			this._documentListeners[ collectionName ] = {}
+			listeners = this._documentListeners[ collectionName ]
+		}
+		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
+			if ( change.after && change.after.id === documentId ) listener( change )
+		}
+
+		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+		listeners[ uid ] = finalListener
+		return ()=> delete listeners[ uid ]
+	}
+
+	override onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener< DocumentObject > ): Unsubscriber {
+		const allCollections = this.collectionsMatchingTemplate( collectionTemplate )
+		const unsubscribers: Unsubscriber[] = []
+
+		allCollections.forEach( collectionName => {
+			let listeners = this._documentListeners[ collectionName ] 
+			if ( !listeners ) {
+				this._documentListeners[ collectionName ] = {}
+				listeners = this._documentListeners[ collectionName ]
+			}
+			const finalListener = ( change: DocumentChange<DocumentObject> ) => {
+				change.params = DataSource.extractTemplateParams( collectionName, collectionTemplate )
+				listener( change )
+			}
+
+			const uid = Math.random().toString( 36 ).substring( 2, 9 )
+			listeners[ uid ] = finalListener
+			unsubscribers.push( () => delete listeners![ uid ] )
+		})
+
+		return () => unsubscribers.forEach( unsubscriber => unsubscriber() )
+	}
+
 
 	/**
 	 * @returns the raw data store data as a JSON object
@@ -153,6 +273,19 @@ export class JsonDataSource implements DataSource {
 		return this
 	}
 
+	private notifyChange( collectionPath: string, document: DocumentObject, oldValue: DocumentObject | undefined ) {
+		const event: DocumentChange<DocumentObject> = {
+			before: oldValue,
+			after: document,
+			collectionPath,
+			params: {},
+			type: (oldValue? 'update' : 'create') as DocumentChangeType
+		}
+
+		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
+		Object.values( this._collectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
+	}
+
 	private decCursor( amount: number ) {
 		this._cursor -= amount 
 		if ( this._cursor < 0 ) {
@@ -162,39 +295,48 @@ export class JsonDataSource implements DataSource {
 		return false
 	}
 
-	private queryProcessor<T, P extends keyof QueryProcessors>(
-		docs: DocumentObject[], 
-		processMethod: P, 
-		value: QueryObject<T>[P] 
-	) {
+	private queryProcessor<T, P extends keyof QueryProcessors>( docs: DocumentObject[], processMethod: P, value: QueryObject<T>[P] ) {
 
 		const processors: QueryProcessors = {
 
-			limit: ( limit: number ) => docs,//.slice( 0, limit ),
+			limit: ( limit: number ) => docs, //.slice( 0, limit ),
 
-			operations: ( operations: QueryOperation<T>[] ) => docs.filter(
-				doc => this.isQueryMatched( doc, operations )
-			),
+			operations: ( operations: QueryOperation<T>[] ) => this.retrieveQueryDocs( docs, operations ),
 
-			sort: ({ order, propertyName }) => docs.sort( ( a, b ) => {
-				if ( order === 'asc' ) {
-					return this.deepValue( a, propertyName ) > this.deepValue( b, propertyName )? 1 : -1 
-				}
-				else {
-					return this.deepValue( a, propertyName ) < this.deepValue( b, propertyName )? 1 : -1
-				}
-			})
+		sort: ({ order, propertyName }:{ order: QueryOrder, propertyName: string }) => docs.sort( ( a, b ) => {
+			const aVal = this.deepValue( a, propertyName )
+			const bVal = this.deepValue( b, propertyName )
+			if ( order === 'asc' ) {
+				return aVal > bVal? 1 : -1 
+			}
+			else {
+				return aVal < bVal? 1 : -1
+			}
+		})
 		}
 
 		return processors[ processMethod ]( value )
 	}
 
-	private deepValue( obj: {}, propertyPath: string /*like person.name.firstName*/) {
+	private retrieveQueryDocs<T>( docs: DocumentObject[], queryOperations: QueryOperation<T>[] ): DocumentObject[] {
+		return queryOperations.reduce(( prevDocs, queryOperation, i ) => {
+			if ( queryOperation.aggregate ) {
+				const aggregate = docs.filter( doc => this.isQueryMatched( doc, queryOperation ) )
+				if ( i === 0 ) return aggregate
+				else return prevDocs.concat( aggregate )
+			}
+			else {
+				return prevDocs.filter( doc => this.isQueryMatched( doc, queryOperation ) )
+			}
+		}, docs )
+	}
+
+	private deepValue( obj: DocumentObject, propertyPath: string /*like person.name.firstName*/) {
 		const propChain = propertyPath.split( '.' )
 		return propChain.reduce(( value, prop ) => value[ prop ], obj )
 	}
 
-	private isQueryMatched<T>( doc: DocumentObject, queryOperations: QueryOperation<T>[] ) {
+	private isQueryMatched<T>( doc: DocumentObject, queryOperation: QueryOperation<T> ) {
 		const queryOperator = {
 			'==': <U>(a: U, b: U) => a === b,
 			'!=': <U>(a: U, b: U) => a !== b,
@@ -202,26 +344,25 @@ export class JsonDataSource implements DataSource {
 			'<=': <U>(a: U, b: U) => a <= b,
 			'>': <U>(a: U, b: U) => a > b,
 			'>=': <U>(a: U, b: U) => a >= b,
+			'containsAny': <U>(a: U[], b: U[]) => a?.some( v => b?.includes( v ) ),
+			'contains': <U>(a: U[], b: U) => a?.includes( b ),
 		}
 
-		const isMatch = queryOperations.reduce( ( prevVal, val ) => {
-			const { property, value, operator } = val as QueryOperation<unknown>
-	
-			const [ document, v ] = this.retrieveValuesToCompare( doc[property], value )
+		const { property, value, operator } = queryOperation
+		const [ propValue, v ] = this.retrieveValuesToCompare( doc, property as string, value )
 
-			return prevVal && queryOperator[ operator ]( document, v )
-		}, true)
-
-		return isMatch
+		return queryOperator[ operator ]( propValue, v )
 	}
 
-	private retrieveValuesToCompare( document: DocumentObject, value: unknown ): [ unknown, unknown ] {
-		if ( typeof value === 'object' ) {
+	private retrieveValuesToCompare( doc: DocumentObject, propertyName: string, value: unknown ): [ any, any ] {
+		const propertyValue = doc[ propertyName ]
+
+		if ( propertyValue && typeof value === 'object' && !Array.isArray( value )) {
 			const propName = Object.keys( value! )[0]!
-			var [ doc, val ] = this.retrieveValuesToCompare( document && document[ propName ], value?.[ propName ] )
+			var [ propVal, val ] = this.retrieveValuesToCompare( propertyValue, propName, value?.[ propName ] )
 		}
 
-		return [ doc || document, val || value ]
+		return [ propVal || propertyValue, val || value ]
 	}
 
 	private resolveWithDelay<T>( data?: T ): Promise<T> {
@@ -240,11 +381,31 @@ export class JsonDataSource implements DataSource {
 		return promise
 	}
 
+	protected resolveCollectionPaths( template: string ): Promise<string[]> {
+		return Promise.resolve( this.collectionsMatchingTemplate( template ))
+	}
+
+	private collectionsMatchingTemplate( template: string ): string[] {
+		return Object.keys( this._jsonRawData ).filter( collectionName => DataSource.isStringMatchingTemplate( template, collectionName ) )
+	}
+
+	private versionOf( collectionName: string, id: string ): number {
+		return this._versions[ collectionName ]?.[ id ] ?? 0
+	}
+
+	private bumpVersion( collectionName: string, id: string ) {
+		if ( !this._versions[ collectionName ] ) this._versions[ collectionName ] = {}
+		this._versions[ collectionName ]![ id ] = ( this._versions[ collectionName ]![ id ] ?? 0 ) + 1
+	}
+
 	private _jsonRawData: JsonRawData = {}
+	private _versions: Collection<Collection<number>> = {}
 	private _lastMatchingDocs: DocumentObject[] = []
 	private _lastLimit: number = 0
 	private _cursor: number = 0
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
+	private _documentListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
+	private _collectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 }

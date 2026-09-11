@@ -1,90 +1,63 @@
-[entropic-bond](../README.md) / [Exports](../modules.md) / UploadControl
+[**entropic-bond**](../README.md)
+
+***
+
+[entropic-bond](../globals.md) / UploadControl
 
 # Interface: UploadControl
 
-## Table of contents
-
-### Properties
-
-- [cancel](UploadControl.md#cancel)
-- [onProgress](UploadControl.md#onprogress)
-- [pause](UploadControl.md#pause)
-- [resume](UploadControl.md#resume)
+Defined in: [cloud-storage/cloud-storage.ts:9](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L9)
 
 ## Properties
 
 ### cancel
 
-• **cancel**: () => `void`
+> **cancel**: () => `void`
 
-#### Type declaration
+Defined in: [cloud-storage/cloud-storage.ts:12](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L12)
 
-▸ (): `void`
-
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:12](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L12)
-
-___
+***
 
 ### onProgress
 
-• **onProgress**: (`callback`: [`UploadProgress`](../modules.md#uploadprogress)) => `void`
+> **onProgress**: (`callback`) => `void`
 
-#### Type declaration
+Defined in: [cloud-storage/cloud-storage.ts:13](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L13)
 
-▸ (`callback`): `void`
+#### Parameters
 
-##### Parameters
+##### callback
 
-| Name | Type |
-| :------ | :------ |
-| `callback` | [`UploadProgress`](../modules.md#uploadprogress) |
+[`UploadProgress`](../type-aliases/UploadProgress.md)
 
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:13](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L13)
-
-___
+***
 
 ### pause
 
-• **pause**: () => `void`
+> **pause**: () => `void`
 
-#### Type declaration
+Defined in: [cloud-storage/cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L10)
 
-▸ (): `void`
-
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:10](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L10)
-
-___
+***
 
 ### resume
 
-• **resume**: () => `void`
+> **resume**: () => `void`
 
-#### Type declaration
+Defined in: [cloud-storage/cloud-storage.ts:11](https://github.com/entropic-bond/entropic-bond/blob/29400710ffe30b175eeb7acf439ceed3b4724e16/src/cloud-storage/cloud-storage.ts#L11)
 
-▸ (): `void`
-
-##### Returns
+#### Returns
 
 `void`
-
-#### Defined in
-
-[cloud-storage/cloud-storage.ts:11](https://github.com/entropic-bond/entropic-bond/blob/c9dd385/src/cloud-storage/cloud-storage.ts#L11)

@@ -51,7 +51,7 @@ describe( 'Cloud functions', ()=>{
 	it( 'should execute cloud function without params', async ()=>{
 		const testWithoutReturn = CloudFunctions.instance.getFunction<string>( 'testWithoutReturn' )
 
-		expect( testWithoutReturn( '' ) ).resolves.toBeUndefined()
+		await expect( testWithoutReturn( '' ) ).resolves.toBeUndefined()
 	})
 
 	it( 'should execute cloud function with void return', async ()=>{

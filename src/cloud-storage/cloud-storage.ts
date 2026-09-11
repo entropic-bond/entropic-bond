@@ -1,6 +1,6 @@
 export type UploadProgress = ( uploadedBytes: number, fileSize: number ) => void
 
-type CloudStorageFactory = ()=>CloudStorage
+export type CloudStorageFactory = ()=>CloudStorage
 
 interface CloudStorageFactoryMap { 
 	[ cloudStorageProviderName: string ] : CloudStorageFactory 

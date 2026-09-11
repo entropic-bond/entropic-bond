@@ -4,6 +4,9 @@ import { Model } from './model'
 import { Store } from './store'
 import testData from './mocks/mock-data.json'
 import { DataSource } from './data-source'
+import { Persistent } from '../persistent/persistent'
+import { Unsubscriber } from '../observable/observable'
+import { Mock } from 'vitest'
 
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
@@ -11,7 +14,7 @@ describe( 'Model', ()=>{
 	const rawData = ()=> ( Store.dataSource as JsonDataSource ).rawData 
 
 	beforeEach( async ()=> {
-		Store.useDataSource( new JsonDataSource( JSON.parse( JSON.stringify( testData ) ) ) )
+		Store.useDataSource( new JsonDataSource( structuredClone( testData ) ) )
 		
 		testUser = new TestUser()
 		testUser.name = {
@@ -41,11 +44,9 @@ describe( 'Model', ()=>{
 		expect( user?.name?.firstName ).toEqual( 'userFirstName1' )
 	})
 
-	it( 'should not throw if a document id doesn\'t exists', ( done )=>{
-		expect( ()=>{
-			model.findById( 'nonExistingId' )
-				.then( done )
-				.catch( done )
+	it( 'should not throw if a document id doesn\'t exists', ()=>{
+		expect( async ()=>{
+			await model.findById( 'nonExistingId' )
 		}).not.toThrow()
 	})
 	
@@ -106,16 +107,6 @@ describe( 'Model', ()=>{
 
 			expect( admins[0] ).toBeInstanceOf( TestUser )
 			expect( admins ).toHaveLength( 2 )
-		})
-
-		it( 'should find admins with age less than 56', async ()=>{
-			const admins = await model.find()
-				.where( 'admin', '==', true )
-				.where( 'age', '<', 50 )
-				.get()
-
-			expect( admins ).toHaveLength( 1 )
-			expect( admins[0]?.age ).toBeLessThan( 50 )
 		})
 
 		it( 'should query by subproperties', async ()=>{
@@ -264,10 +255,10 @@ describe( 'Model', ()=>{
 			
 			expect( loadedUser?.manyRefs ).toHaveLength( 2 )
 			expect( loadedUser?.manyRefs[0] ).toBeInstanceOf( SubClass )
-			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]?.id )
+			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]!.id )
 			expect( loadedUser?.manyRefs[0]?.year ).toBeUndefined()
 			expect( loadedUser?.manyRefs[1] ).toBeInstanceOf( SubClass )
-			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]?.id )
+			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]!.id )
 			expect( loadedUser?.manyRefs[1]?.year ).toBeUndefined()
 		})
 
@@ -282,13 +273,13 @@ describe( 'Model', ()=>{
 		it( 'should save a reference when declared @persistentAt', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser?.derived?.id ).toEqual( testUser.derived?.id )
+			expect( loadedUser?.derived?.id ).toEqual( testUser.derived!.id )
 			expect( loadedUser?.derived?.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser?.derived! )
 
 			expect( loadedUser?.derived?.salary ).toBe( 1350 )
-			expect( loadedUser?.derived?.id ).toBe( testUser.derived?.id )
+			expect( loadedUser?.derived?.id ).toBe( testUser.derived!.id )
 		})
 
 		it( 'should populate from special collection when declared with @persistentRefAt', async ()=>{
@@ -302,16 +293,16 @@ describe( 'Model', ()=>{
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser?.manyDerived[0]?.id ).toEqual( testUser.manyDerived[0]?.id )
+			expect( loadedUser?.manyDerived[0]?.id ).toEqual( testUser.manyDerived[0]!.id )
 			expect( loadedUser?.manyDerived[0]?.salary ).toBeUndefined()
 			expect( loadedUser?.manyDerived[1]?.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser?.manyDerived! )
 
 			expect( loadedUser?.manyDerived[0]?.salary ).toBe( 990 )
-			expect( loadedUser?.manyDerived[0]?.id ).toBe( testUser.manyDerived[0]?.id )
+			expect( loadedUser?.manyDerived[0]?.id ).toBe( testUser.manyDerived[0]!.id )
 			expect( loadedUser?.manyDerived[1]?.salary ).toBe( 1990 )
-			expect( loadedUser?.manyDerived[1]?.id ).toBe( testUser.manyDerived[1]?.id )
+			expect( loadedUser?.manyDerived[1]?.id ).toBe( testUser.manyDerived[1]!.id )
 		})
 
 		it( 'should not overwrite not filled ref in collection', async ()=>{
@@ -463,26 +454,139 @@ describe( 'Model', ()=>{
 		it( 'should count the documents in the collection', async ()=>{
 			expect( await model.find().count() ).toBe( 6 )
 		})
+	})
+
+	describe( 'Compound queries', ()=>{
+		it( 'should find documents using `AND` compound query', async ()=>{
+			const admins = await model.find()
+				.where( 'admin', '==', true )
+				.where( 'age', '<', 50 )
+				.get()
+
+			expect( admins ).toHaveLength( 1 )
+			expect( admins[0]?.age ).toBeLessThan( 50 )
+		})
+
+		it( 'should find using `OR` query', async ()=>{
+			const docs = await model.find().or( 'age', '==', 23 ).or( 'age', '==', 41 ).get()
+
+			expect( docs ).toHaveLength( 2 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user5', age: 41 })
+			]))
+		})
+
+		it( 'should find combining `OR` query and `where` query', async ()=>{
+			const docs = await model.find().where( 'age', '>', 50 ).or( 'age', '==', 23 ).or( 'age', '==', 41 ).get()
+
+			expect( docs ).toHaveLength( 3 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user5', age: 41 }),
+				expect.objectContaining({ id: 'user3', age: 56 })
+			]))
+		})
+
+		it( 'should find combining `OR` query and `where` query in a range', async ()=>{
+			const docs = await model.find().where( 'age', '<', 22 ).or( 'age', '>', 50 ).get()
+
+			expect( docs ).toHaveLength( 2 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 })
+			]))
+		})
+
+		it( 'should throw if a `where` query is used after an `or` query', ()=>{
+			expect( 
+				()=> model.find().or( 'age', '==', 23 ).where( 'age', '>', 50 )
+			).toThrow( Model.error.invalidQueryOrder )
+		})
+
+		it( 'should evaluate mixing operands', async ()=>{
+			const docs = await model.find().where( 'age', '>', 39 ).and( 'age', '<', 57 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs ).toHaveLength( 5 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 }),
+				expect.objectContaining({ id: 'user5', age: 41 }),
+				expect.objectContaining({ id: 'user6', age: 40 })
+			]))
+
+			const docs1 = await model.find().where( 'age', '==', 41 ).and( 'age', '==', 56 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs1 ).toHaveLength( 2 )
+			expect( docs1 ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 })
+			]))
+
+			const docs2 = await model.find().where( 'age', '==', 41 ).or( 'age', '==', 56 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs2 ).toHaveLength( 4 )
+			expect( docs2 ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 }),
+				expect.objectContaining({ id: 'user5', age: 41 })
+			]))
+		})
+	})
+
+	describe( 'Searchable array property', ()=>{
+		it( 'should save searchable array property', async ()=>{
+			const user = new TestUser( 'user7' )
+			user.colleagues = [ new TestUser( 'cUser1' ), new TestUser( 'cUser2' ) ]
+			await model.save( user )
+
+			const loadedUser = await model.findById( 'user7' )
+			expect( loadedUser?.colleagues ).toHaveLength( 2 )
+			expect( loadedUser![ Persistent.searchableArrayNameFor( 'colleagues' )] ).toBeUndefined()
+			const rawUserSearchableContent = rawData()[ 'TestUser' ]!['user7']![Persistent.searchableArrayNameFor( 'colleagues' )]
+			expect( rawUserSearchableContent ).toEqual([ 'cUser1', 'cUser2' ])
+		})
+
+		it( 'should find documents using `containsAny` operator', async ()=>{
+			const colleague1 = new TestUser( 'colleague1' )
+			const colleague2 = new TestUser( 'colleague2' )
+			const docs = await model.find().where( 'colleagues', 'containsAny', [ colleague1, colleague2 ]).get()
+
+			expect( docs ).toHaveLength( 3 )
+			expect( docs ).toEqual([
+				expect.objectContaining({ id: 'user2' }),
+				expect.objectContaining({ id: 'user4' }),
+				expect.objectContaining({ id: 'user6' })
+			])
+		})
+
+		it( 'should find documents using `contains` operator', async ()=>{
+			const colleague2 = new TestUser( 'colleague2' )
+			const docs = await model.find().where( 'colleagues', 'contains', colleague2 ).get()
+
+			expect( docs ).toHaveLength( 2 )
+			expect( docs ).toEqual([
+				expect.objectContaining({ id: 'user4' }),
+				expect.objectContaining({ id: 'user6' })
+			])
+		})
+	})
+
+	describe( 'Data Cursors', ()=>{
+		beforeEach( async ()=>{
+			await model.find().get( 2 )
+		})
+
+		it( 'should get next result set', async ()=>{
+			const docs = await model.next()
+			expect( docs ).toHaveLength( 2 )
+			expect( docs[0]?.id ).toEqual( 'user3' )
+		})
 		
-
-		describe( 'Data Cursors', ()=>{
-			beforeEach( async ()=>{
-				await model.find().get( 2 )
-			})
-
-			it( 'should get next result set', async ()=>{
-				const docs = await model.next()
-				expect( docs ).toHaveLength( 2 )
-				expect( docs[0]?.id ).toEqual( 'user3' )
-			})
-			
-			it( 'should not go beyond the end of result set', async ()=>{
-				await model.next()
-				await model.next()
-				const docs = await model.next()
-				expect( docs ).toHaveLength( 0 )
-			})
-			
+		it( 'should not go beyond the end of result set', async ()=>{
+			await model.next()
+			await model.next()
+			const docs = await model.next()
+			expect( docs ).toHaveLength( 0 )
 		})
 	})
 
@@ -548,6 +652,132 @@ describe( 'Model', ()=>{
 		})
 		
 	})
+
+	// describe( 'Data source listeners', ()=>{
+	// 	let listenerHandlers: DocumentChangeListenerHandler[]
+
+	// 	beforeEach(()=>{
+	// 		listenerHandlers = Store.dataSource.installCachedPropsUpdaters()
+	// 	})
+
+	// 	afterEach(()=>{
+	// 		listenerHandlers.forEach( handler => handler.uninstall() )
+	// 	})
+
+	// 	it( 'should update when a document is changed', async ()=>{
+	// 		const userModel = Store.getModel<TestUser>( 'TestUser' )
+	// 		const user1 = ( await userModel.findById( 'user1' ) )!
+	// 		user1.age = 99
+	// 		user1.admin = false
+	// 		await userModel.save( user1 )
+
+	// 		const referenceModel = Store.getModel<UsesUserAsPersistentProp>( 'UsesUserAsPersistentProp' )
+	// 		const reference = ( await referenceModel.findById( 'usesUserAsPersistentProp1' ) )!
+	// 		expect( reference.user?.age ).toBe( 99 )
+	// 		expect( reference.user?.admin ).toBeFalsy()
+	// 	})
+
+	// })
+
+
+	describe( 'Collection and document listeners', ()=>{
+		let unsubscribeDocumentListener: Unsubscriber
+		let unsubscribeCollectionListener: Unsubscriber
+		let documentListener: Mock
+		let collectionListener: Mock
+
+		beforeEach(()=>{
+			documentListener = vi.fn()
+			collectionListener = vi.fn()
+
+			unsubscribeDocumentListener = model.onDocumentChange( 'user1', documentListener)
+
+			const query = model.find().where( 'age', '==', 23 )
+			unsubscribeCollectionListener = model.onCollectionChange( query, collectionListener)
+		})
+
+		afterEach(()=>{
+			unsubscribeDocumentListener()
+			unsubscribeCollectionListener()
+		})
+
+		it( 'should call document listener when assigned document changes', async ()=>{
+			model.save( new TestUser( 'user1' ) )
+			expect( documentListener ).toBeCalledTimes( 1 )
+			expect( documentListener ).toBeCalledWith({ 
+				after: expect.objectContaining({ id: 'user1' }),
+				before: expect.objectContaining({ id: 'user1' }),
+				collectionPath: 'TestUser',
+				params: {},
+				type: 'update'
+			})
+		})
+
+		it( 'should not call document listener when other document changes', async ()=>{
+			model.save( new TestUser( 'user234' ) )
+			expect( documentListener ).not.toBeCalled()
+		})
+
+		it( 'should call collection listener when a document in the query changes', async ()=>{
+			const modUser = await model.findById( 'user1' )
+			modUser!.skills = []
+			model.save( modUser! )
+
+			expect( collectionListener ).toBeCalledTimes( 1 )
+			expect( collectionListener ).toBeCalledWith([{  
+				after: expect.objectContaining({ id: 'user1' }),
+				before: expect.anything(),
+				params: {},
+				type: 'update'
+			}])
+		})
+
+		it( 'should not call collection listener when a document out of the query changes', async ()=>{
+			const modUser = await model.findById( 'user2' )
+			modUser!.skills = []
+			model.save( modUser! )
+
+			expect( collectionListener ).not.toBeCalled()
+		})
+
+		it( 'should call collection listener when query is an array contains operation', async ()=>{
+			const model = Store.getModel<TestUser>( 'TestUser' )
+			const user3 = ( await model.findById( 'user3' ))!
+			const query = model.find().where( 'colleagues', 'contains', user3 )
+			const collectionListenerForArrayContains = vi.fn()
+			const unsubscribe = model.onCollectionChange( query, collectionListenerForArrayContains )
+
+			const user2 = ( await model.findById( 'user2' ) )!
+			user2.age = 57
+			model.save( user2 )
+
+			expect( collectionListenerForArrayContains ).toBeCalledTimes( 1 )
+			expect( collectionListenerForArrayContains ).toBeCalledWith([{
+				after: expect.objectContaining({ id: 'user2' }),
+				before: expect.anything(),
+				params: {},
+				type: 'update'
+			}])
+
+			unsubscribe()
+		})
+
+		it( 'should not call collection listener when query is an array contains operation and mod is not within the query', async ()=>{
+			const model = Store.getModel<TestUser>( 'TestUser' )
+			const user3 = ( await model.findById( 'user3' ))!
+			const query = model.find().where( 'colleagues', 'contains', user3 )
+			const collectionListenerForArrayContains = vi.fn()
+			const unsubscribe = model.onCollectionChange( query, collectionListenerForArrayContains )
+
+			const user1 = ( await model.findById( 'user1' ) )!
+			user1.age = 57
+			model.save( user1 )
+
+			expect( collectionListenerForArrayContains ).toBeCalledTimes( 0 )
+			unsubscribe()
+		})
+	})
+
 
 	it('should pass Type tests', ()=>{
 		//@ts-expect-error

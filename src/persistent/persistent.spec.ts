@@ -1,10 +1,12 @@
-import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithPersistentProps, persistentReferenceWithPersistentProps, registerLegacyClassName } from './persistent'
+import { Persistent, persistent, persistentReference, persistentReferenceAt, registerPersistentClass, persistentPureReferenceWithCachedProps, persistentReferenceWithCachedProps, registerLegacyClassName, searchableArray, required, requiredWithValidator, typeName } from './persistent'
 
 interface InnerObject {
 	nonPersistedReferences: PersistentClass[]
 }
-const beforeSerialize = jest.fn()
-const afterDeserialize = jest.fn()
+const beforeSerialize = vi.fn()
+const afterDeserialize = vi.fn()
+
+const collectionResolver = (a,b,c)=> `ArbitraryCollectionName/${ a.className }`
 
 @registerLegacyClassName( 'LegacyClassName' )
 @registerPersistentClass( 'PersistentClass' )
@@ -15,11 +17,16 @@ class PersistentClass extends Persistent {
 	get persistentProp() { return this._persistentProp }
 	set personPureRef( value: Person | undefined ) { this._personPureRef = value }
 	get personPureRef() { return this._personPureRef }
+	set persistentArray( value: PersistentClass[] | undefined ) { this._persistentArray = value }
+	get persistentArray() { return this._persistentArray }
 	@persistent _persistentProp: number | undefined
-	@persistent _persistentArray: PersistentClass[] | undefined
-	@persistentPureReferenceWithPersistentProps<Person>([ 'name', 'salary' ]) _personPureRef: Person | undefined
+	@persistent @searchableArray _persistentArray: PersistentClass[] | undefined
+	@persistentPureReferenceWithCachedProps<Person>([ 'name', 'salary' ], 'Person' ) _personPureRef: Person | undefined
 	_nonPersistentProp: number | undefined
 }
+
+// @ts-expect-error
+persistentPureReferenceWithCachedProps<PersistentClass>([ 'persistentArray' ])
 
 class NotRegistered extends Persistent {}
 
@@ -105,9 +112,19 @@ class Person extends Persistent {
 		return this._persistentObject
 	}
 
-	@persistent private _name?: string
+	set referenceWithStoredValues( value: PersistentClass | undefined ) {
+		this._referenceWithStoredValues = value
+	}
+	
+	get referenceWithStoredValues(): PersistentClass | undefined {
+		return this._referenceWithStoredValues
+	}
+	
+	@required @persistent private _name?: string
 	@persistent private _salary?: number
-	@persistent private _skills: string[] | undefined
+	@requiredWithValidator(
+		( val, propInfo, instace ) => !!val && val.length > 0 && propInfo.name === 'skills' && instace.id === 'person9'
+	) @persistent private _skills: string[] | undefined
 	@persistent private _anObjectProperty: PersistentClass = new PersistentClass()
 	@persistent private _arrayOfPersistent: PersistentClass[] | undefined
 	@persistent _notRegistered: NotRegistered | undefined
@@ -119,7 +136,7 @@ class Person extends Persistent {
 	@persistentReferenceAt(( value, prop ) => `ArbitraryCollectionName/${ value.className }/${ prop.name }` ) _docAtArbitraryCollectionRefFunc: PersistentClass | undefined
 	@persistentReference private _arrayOfRefs: PersistentClass[] = []
 	@persistent private _persistentObject: InnerObject | undefined
-	@persistentReferenceWithPersistentProps<PersistentClass>([ 'persistentProp' ], value => `ArbitraryCollectionName/${ value.className }` ) _referenceWithStoredValues: PersistentClass | undefined
+	@persistentReferenceWithCachedProps<PersistentClass>([ 'persistentProp' ], 'PersistentClass', collectionResolver ) _referenceWithStoredValues: PersistentClass | undefined
 	private _doNotPersist: number | undefined
 }
 
@@ -160,6 +177,64 @@ class ConcreteClass extends AbstractClass {
 	pp(){}
 }
 
+@registerPersistentClass( 'InitializedMemberClass' )
+class InitializedMemberClass extends Persistent {
+	set stringMember( value: string ) {
+		this._stringMember = value
+	}
+	
+	get stringMember(): string {
+		return this._stringMember
+	}
+
+	set numberMember( value: number ) {
+		this._numberMember = value
+	}
+	
+	get numberMember(): number {
+		return this._numberMember
+	}
+
+	set persistentMember( value: Person ) {
+		this._persistentMember = value
+	}
+	
+	get persistentMember(): Person {
+		return this._persistentMember
+	}
+
+	set arrayBooleanMember( value: boolean[] ) {
+		this._arrayBooleanMember = value
+	}
+	
+	get arrayBooleanMember(): boolean[] {
+		return this._arrayBooleanMember
+	}
+
+	set arrayPersistentMember( value: Person[] ) {
+		this._arrayPersistentMember = value
+	}
+	
+	get arrayPersistentMember(): Person[] {
+		return this._arrayPersistentMember
+	}
+
+	set decoratedMember( value: PersistentClass | undefined ) {
+		this._decoratedMember = value
+	}
+	
+	get decoratedMember(): PersistentClass | undefined {
+		return this._decoratedMember
+	}
+	
+	@persistent private _arrayPersistentMember: Person[] = [ new Person() ]
+	@persistent private _arrayBooleanMember: boolean[] = [false, true]
+	@persistent private _persistentMember: Person = new Person()
+	@persistent private _numberMember: number = 0 
+	@persistent private _stringMember: string = ''
+	@persistent @typeName( PersistentClass ) private _decoratedMember: PersistentClass | undefined
+}
+
 describe( 'Persistent', ()=>{
 	let person: Person
 	let newPerson: Person
@@ -195,17 +270,18 @@ describe( 'Persistent', ()=>{
 		// we are testing a decorator that manipulates the class definition. 
 		// Therefore we need to access the decorator created private properties
 		// in order to test the behaviour of the decorator
-		expect( a[ '_persistentProperties' ] ).toEqual( expect.arrayContaining( [ {
+		expect( a[ '_persistentProperties' ] ).toEqual( expect.arrayContaining([
+			{ name: '_name', validator: expect.any( Function ), ownerClassName: expect.any( Function ) },
+			{ name: '_skills', validator: expect.any( Function ), ownerClassName: expect.any( Function ) },
+		]))
+		expect( b[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ expect.objectContaining({
 			name: '_name'
-		} ] ) )
-		expect( b[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ {
-			name: '_name'
-		} ] ) )
-		expect( a[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining( [ {
+		})]))
+		expect( a[ '_persistentProperties' ] ).not.toEqual( expect.arrayContaining([ expect.objectContaining({
 			name: '_persistentProp'
-		} ] ) )
+		})]))
 		expect( b[ '_persistentProperties' ] ).toEqual( expect.arrayContaining( [ {
-			name: '_persistentProp'
+			name: '_persistentProp', ownerClassName: expect.any( Function )
 		} ] ) )
 	})
 
@@ -227,6 +303,20 @@ describe( 'Persistent', ()=>{
 
 		person.fromObject( obj )
 		expect( person.salary ).toBe( 2500 )
+	})
+
+	it( 'should fill properties from arbitrary object', ()=>{
+		person.name = 'meganito'
+		person.salary = 32
+		person.fromObject({
+			name: 'fulanito changed',
+			salary: 4839,
+			foo: 'bar'
+		})
+
+		expect( person.name ).toBe( 'fulanito changed' )
+		expect( person.salary ).toBe( 4839 )
+		expect( (person as any).foo ).not.toBeDefined()
 	})
 
 	it( 'should persist number with value of 0', ()=>{
@@ -358,7 +448,7 @@ describe( 'Persistent', ()=>{
 
 			expect(()=>{
 				person.toObject()
-			}).toThrow( 'You should register this class prior to streaming it.' )
+			}).toThrow( 'You should register `NotRegistered` class prior to streaming it.' )
 		})
 
 		it( 'should throw if class not registered on reading from stream', ()=>{
@@ -390,17 +480,33 @@ describe( 'Persistent', ()=>{
 
 		it( 'should return registered properties', ()=>{
 			expect( new PersistentClass().getPersistentProperties() ).toEqual([
-				{ name: 'id' }, 
-				{ name: 'persistentProp' }, 
-				{ name: 'persistentArray' },
-				{ name: 'personPureRef', isReference: true, isPureReference: true, forcedPersistentProps: [ 'name', 'salary' ] }
+				{ name: 'id', ownerClassName: expect.any( Function ), ownerCollection: undefined }, 
+				{ name: 'persistentProp', ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'persistentArray', searchableArray: true, ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'personPureRef', isReference: true, isPureReference: true, cachedProps: [ 'name', 'salary' ], storeInCollection: undefined, typeName: 'Person', ownerClassName: expect.any( Function ), ownerCollection: undefined }
 			])
 
 			expect( new Person( 'person6' ).getPersistentProperties() ).toEqual( expect.arrayContaining([
-				{ name: 'name' },
-				{ name: 'document', isReference: true },
-				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName' }
+				{ name: 'name', validator: expect.any( Function ), ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'document', isReference: true, ownerClassName: expect.any( Function ), ownerCollection: undefined },
+				{ name: 'docAtArbitraryCollection', isReference: true, storeInCollection: 'ArbitraryCollectionName', ownerClassName: expect.any( Function ), ownerCollection: undefined }
 			]))
+		})
+
+		it( 'should report property owner class name', ()=>{
+			expect( Persistent.propInfo<Person>( 'Person', 'name' ).ownerClassName() ).toEqual( 'Person' )
+		})
+
+		it( 'should report property type', ()=>{
+			expect( Persistent.propType( Persistent.propInfo<Person>( 'Person', 'name' ) ) ).toEqual( 'undefined' )
+			expect( Persistent.propType( Persistent.propInfo<Person>( 'Person', 'document' ) ) ).toEqual( 'undefined' )
+			expect( Persistent.propType( Persistent.propInfo<Person>( 'Person', 'referenceWithStoredValues' ) ) ).toEqual( 'PersistentClass' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'stringMember' ) ) ).toEqual( 'string' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'numberMember' ) ) ).toEqual( 'number' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'persistentMember' ) ) ).toEqual( 'Person' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'arrayBooleanMember' ) ) ).toEqual( 'boolean[]' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'arrayPersistentMember' ) ) ).toEqual( 'Person[]' )
+			expect( Persistent.propType( Persistent.propInfo<InitializedMemberClass>( 'InitializedMemberClass', 'decoratedMember' ) ) ).toEqual( 'PersistentClass' )
 		})
 		
 	})
@@ -543,7 +649,7 @@ describe( 'Persistent', ()=>{
 		})
 		
 
-		it( 'should store values of persistentReferenceWithPersistentProps', ()=>{
+		it( 'should store values of persistentReferenceWithCachedProps', ()=>{
 			const obj = person.toObject()
 
 			expect( obj.__rootCollections?.Person?.[0]?.id ).toEqual( person.id )
@@ -565,7 +671,7 @@ describe( 'Persistent', ()=>{
 			})
 		})
 
-		it( 'should not store values of persistentReferenceWithPersistentProps if value is undefined', ()=>{
+		it( 'should not store values of persistentReferenceWithCachedProps if value is undefined', ()=>{
 			person._referenceWithStoredValues!.persistentProp = undefined as any
 			const obj = person.toObject()
 
@@ -666,6 +772,44 @@ describe( 'Persistent', ()=>{
 			})
 		})
 
+		it( 'should check if a property is required', ()=>{
+			const person = new Person( 'person8' )
+			expect( person.isRequired( 'name' ) ).toBe( true )
+			expect( person.isRequired( 'salary' ) ).toBe( false )
+		})
+
+		it( 'should validate non required properties', ()=>{
+			const person = new Person( 'person9' )
+			expect( person.isPropValueValid('salary') ).toBeTruthy()
+		})
+
+		it( 'should validate a required properties', ()=>{
+			const person = new Person( 'person9' )
+			person.name = 'A test name'
+			expect( person.isPropValueValid('name') ).toBeTruthy()
+		})
+
+		it( 'should fail validation of an empty required properties', ()=>{
+			const person = new Person( 'person9' )
+			expect( person.isPropValueValid('name') ).toBeFalsy()
+		})
+
+		it( 'should fail validation of an empty required with validator properties', ()=>{
+			const person = new Person( 'person9' )
+			expect( person.isPropValueValid('skills') ).toBeFalsy()
+		})
+
+		it( 'should fail validation of an non passing validator properties', ()=>{
+			const person = new Person( 'person9' )
+			person.skills = []
+			expect( person.isPropValueValid('skills') ).toBeFalsy()
+		})
+
+		it( 'should pass validation of a filled required with validator properties', ()=>{
+			const person = new Person( 'person9' )
+			person.skills = [ 'a skill' ]
+			expect( person.isPropValueValid('skills') ).toBeTruthy()
+		})
 	})
 
 	describe( 'Persistent Class collection retrieval', ()=>{
@@ -674,13 +818,13 @@ describe( 'Persistent', ()=>{
 			expect( Persistent.registeredClasses() ).toHaveLength( 7 )
 			expect( Persistent.registeredClasses() ).toContain( 'Person' )
 			expect( Persistent.registeredClasses() ).toContain( 'PersistentClass' )
-			expect( Persistent.registeredClasses() ).toContain( 'LegacyClassName' )
+			expect( Persistent.registeredClasses() ).not.toContain( 'LegacyClassName' )
 		})
 		
 		it( 'should retrieve classes by type', ()=>{
-			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 5 )
+			expect( Persistent.classesExtending( PersistentClass ) ).toHaveLength( 4 )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'PersistentClass' )
-			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'LegacyClassName' )
+			expect( Persistent.classesExtending( PersistentClass ) ).not.toContain( 'LegacyClassName' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations' )
 			expect( Persistent.classesExtending( PersistentClass ) ).toContain( 'WithAnnotations3' )
 		})
@@ -690,6 +834,62 @@ describe( 'Persistent', ()=>{
 			expect( Persistent.classesExtending( AbstractClass ) ).toContain( 'ConcreteClass' )
 		})
 		
+		it( 'should retrieve property info', ()=>{
+			expect( Persistent.propInfo<Person>( 'Person', 'name' ) ).toEqual({
+				name: 'name', validator: expect.any( Function ), ownerClassName: expect.any( Function )
+			})
+		})
+
+		describe( 'isInstanceOf', ()=>{
+			it( 'should work for instances', ()=>{
+				const personInstance = new Person( 'personX' )
+				expect( Persistent.isInstanceOf( personInstance, 'Person' ) ).toBeTruthy()
+				expect( Persistent.isInstanceOf( personInstance, 'PersistentClass' ) ).toBeFalsy()
+			})
+
+			it( 'should work for objects with __className', ()=>{
+				const obj = { __className: 'Person', id: 'personY' }
+				expect( Persistent.isInstanceOf( obj, 'Person' ) ).toBeTruthy()
+			})
+
+			it( 'should work for class names as strings', ()=>{
+				expect( Persistent.isInstanceOf( 'Person', 'Person' ) ).toBeTruthy()
+			})
+
+			it( 'should work for legacy names', ()=>{
+				const legacyObj = { __className: 'LegacyClassName', id: 'legacyX' }
+				expect( Persistent.isInstanceOf( legacyObj, 'PersistentClass' ) ).toBeTruthy()
+			})
+
+			describe( 'derived classes', ()=>{
+				class Employee extends Person {}
+
+				beforeAll( ()=>{
+					registerPersistentClass( 'Employee' )( Employee )
+				})
+
+				it( 'should work for derived instances', ()=>{
+					const emp = new Employee( 'emp1' )
+					expect( Persistent.isInstanceOf( emp, 'Employee' ) ).toBeTruthy()
+					expect( Persistent.isInstanceOf( emp, 'Person' ) ).toBeTruthy()
+					expect( Persistent.isInstanceOf( emp, 'PersistentClass' ) ).toBeFalsy()
+				})
+
+				it( 'should work for derived objects with __className', ()=>{
+					const empObj = { __className: 'Employee', id: 'emp2' }
+					expect( Persistent.isInstanceOf( empObj, 'Person' ) ).toBeTruthy()
+				})
+
+				it( 'should work for derived class names as strings', ()=>{
+					expect( Persistent.isInstanceOf( 'Employee', 'Person' ) ).toBeTruthy()
+				})
+
+				it( 'should fail when checking base instance against derived class', ()=>{
+					const person = new Person( 'personZ' )
+					expect( Persistent.isInstanceOf( person, 'Employee' ) ).toBeFalsy()
+				})
+			})
+		})
 	})
 
 	describe( 'Persistent instantation', ()=>{
@@ -712,6 +912,20 @@ describe( 'Persistent', ()=>{
 			expect( instance.toObject().__className ).toBe( 'PersistentClass' )
 		})
 
+		it( 'should create a reference from a plain object', ()=>{
+			const instance = Persistent.createReference({ __className: 'PersistentClass', id: 'testPersistent', __documentReference:{ storedInCollection: 'PersistentClass' } } )
+			expect( instance ).toBeInstanceOf( PersistentClass )
+			expect( instance.id ).toEqual( 'testPersistent' )
+			expect( instance['__documentReference'] ).toEqual({ storedInCollection: 'PersistentClass' })
+		})
+
+		it( 'should create a reference from a plain object without explicit __documentReference object', ()=>{
+			const instance = Persistent.createReference({ __className: 'PersistentClass', id: 'testPersistent' } )
+			expect( instance ).toBeInstanceOf( PersistentClass )
+			expect( instance.id ).toEqual( 'testPersistent' )
+			expect( instance['__documentReference'] ).toEqual({ storedInCollection: 'PersistentClass' })
+		})
+
 	})
 
 	describe( 'Before and after serialize hooks', ()=>{
@@ -729,6 +943,38 @@ describe( 'Persistent', ()=>{
 			const obj = person.toObject()
 			Persistent.createInstance<Person>( obj )
 			expect( afterDeserialize ).toHaveBeenCalledTimes( 2 )
+		})
+	})
+
+	describe( 'Make array field searchable by property', ()=>{
+		it( 'should create a searchable array field', ()=>{
+			const instance = new PersistentClass( 'testPersistent' )
+			instance.persistentArray = [
+				new PersistentClass( 'testPersistent0' ),
+				new PersistentClass( 'testPersistent1' ),
+				new PersistentClass( 'testPersistent2' ),
+			]
+			const obj = instance.toObject()
+
+			expect( obj[Persistent.searchableArrayNameFor( 'persistentArray' )] ).toEqual([
+				'testPersistent0',
+				'testPersistent1',
+				'testPersistent2',
+			])
+		})
+	})
+
+	describe( 'Cached props in references', ()=>{
+		it( 'should retrieve cached props', ()=>{
+			const props = Persistent.getSystemRegisteredReferencesWithCachedProps()
+			expect( props ).toEqual({
+				PersistentClass: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				Person: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
+				Employee: [	expect.objectContaining({ cachedProps: [ 'persistentProp' ] }) ],
+				WithAnnotations: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				WithAnnotations2: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+				WithAnnotations3: [	expect.objectContaining({ cachedProps: [ 'name', 'salary' ] }) ],
+			})
 		})
 	})
 })

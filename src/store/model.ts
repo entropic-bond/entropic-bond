@@ -1,13 +1,30 @@
-import { Persistent, PersistentObject } from '../persistent/persistent'
+import { Unsubscriber } from '../observable/observable'
+import { Collections, DocumentChange, Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
-import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation } from './data-source'
+import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListener, CollectionChangeListener, TransactionConflictError } from './data-source'
+
+/**
+ * The handle passed to a Model.runTransaction callback. All operations work with
+ * Persistent instances of the model's collection, never with raw document objects.
+ * @param findById retrieves an instance by id, pinning its version for the transaction
+ * @param save merges the serialized instance (and its referenced documents) into the collection
+ * @param delete removes the instance's document
+ */
+export interface ModelTransactionHandle<T extends Persistent> {
+	findById( id: string ): Promise<T | undefined>
+	save( instance: T ): Promise<void>
+	delete( instance: T ): Promise<void>
+}
 
 /**
  * Provides abstraction to the database access. You should gain access to a Model
  * object through the Store.getModel method instead of its constructor.
  */
 export class Model<T extends Persistent>{
-	static error = { persistentNeedForSubCollection: 'The document parameter for a sub-collection should be a Persistent instace'	}
+	static error = { 
+		persistentNeedForSubCollection: 'The document parameter for a sub-collection should be a Persistent instace',
+		invalidQueryOrder: 'Cannot add where calls after or calls'
+	}
 
 	constructor( stream: DataSource, persistentClass: Persistent | string, subCollection?: string ) {
 		if ( subCollection ) {
@@ -85,6 +102,48 @@ export class Model<T extends Persistent>{
 	}
 
 	/**
+	 * Runs a compare-and-set transaction proxied to the underlying data source.
+	 * The callback receives a handle whose findById/save/delete work with Persistent
+	 * instances. The promise resolves with the callback's result or rejects with
+	 * a {@link TransactionConflictError} when a document read inside the
+	 * transaction was modified by another writer before commit.
+	 * @param fn the transaction callback
+	 * @returns a promise resolving with the callback's result
+	 * @see DataSource.runTransaction
+	 * @see ModelTransactionHandle
+	 */
+	runTransaction<A extends T>( fn: ( handle: ModelTransactionHandle<T> ) => Promise<A> ): Promise<A> {
+		return this._stream.runTransaction( handle => fn({
+			findById: async ( id: string ): Promise<T | undefined> => {
+				const doc = await handle.findById( id, this.collectionName )
+				return doc ? Persistent.createInstance( doc as PersistentObject<T> ) as T : undefined
+			},
+			save: async ( instance: T ): Promise<void> => {
+				const obj = instance.toObject() as PersistentObject<T> & { __rootCollections: Collections }
+				if ( this.collectionName !== obj.__className ) {
+					obj.__rootCollections[ this.collectionName ] = obj.__rootCollections[ obj.__className ]
+					delete obj.__rootCollections[ obj.__className ]
+				}
+				await Promise.all(
+					Object.entries( obj.__rootCollections ).map(
+						([ collectionName, docs ]) => Promise.all(
+							( docs ?? [] ).map( doc => handle.save( doc.id, collectionName, doc ) )
+						)
+					)
+				)
+			},
+			delete: async ( instance: T ): Promise<void> => {
+				await handle.delete( instance.id, this.collectionName )
+			}
+		})).catch( error => {
+			if ( error instanceof TransactionConflictError && error.storedDoc && !( error.storedDoc instanceof Persistent ) ) {
+				error.storedDoc = Persistent.createInstance( error.storedDoc as PersistentObject<T> ) as T
+			}
+			throw error
+		})
+	}
+
+	/**
 	 * Call find to retrieve a Query object used to define the search conditions
 	 * @returns a Query object
 	 */
@@ -96,9 +155,10 @@ export class Model<T extends Persistent>{
 	 * Define the search conditions. You pass query operations and how the query
 	 * results are returned to the QueryObject
 	 * @param queryObject the QueryObject with the search constrains
+	 * @param objectType Deprecated! - restricts the search to a specific instances of the class type
 	 * @returns a promise resolving to a collection of matched documents
 	 */
-	query<U extends T>( queryObject: QueryObject<U> = {}, objectType?: U | string ): Promise<U[]> {
+	query<U extends T>( queryObject: QueryObject<U> = {}, /** @deprecated */ objectType?: U | string ): Promise<U[]> {
 		if ( objectType ) {
 			const className = objectType instanceof Persistent ? objectType.className : objectType
 			if ( !queryObject.operations ) queryObject.operations = []
@@ -108,7 +168,7 @@ export class Model<T extends Persistent>{
 		}
 
 		return this.mapToInstance( 
-			() => this._stream.find( queryObject as unknown as QueryObject<DocumentObject>, this.collectionName ) 
+			() => this._stream.find( this.preprocessQueryObject( queryObject ), this.collectionName ) 
 		)
 	}
 
@@ -131,6 +191,31 @@ export class Model<T extends Persistent>{
 		return this.mapToInstance( () => this._stream.next( limit ) )
 	}
 
+	onDocumentChange( documentId: string, listener: DocumentChangeListener<T> ): Unsubscriber {
+		return this._stream.onDocumentChange( 
+			this.collectionName, 
+			documentId, 
+			( change: DocumentChange<PersistentObject<T>> ) => listener( DataSource.toPersistentDocumentChange( change ) ) 
+		)
+	}
+
+	onCollectionChange( query: Query<T>, listener: CollectionChangeListener<T> ): Unsubscriber {
+		return this._stream.onCollectionChange( 
+			this.preprocessQueryObject( query.getQueryObject() ), 
+			this.collectionName, 
+			changes => listener( changes.map(
+				( change: DocumentChange<PersistentObject<T>> ) => DataSource.toPersistentDocumentChange( change ) 
+			))
+		)
+	}
+
+	onCollectionTemplateChange( collectionTemplate: string, listener: DocumentChangeListener<T> ): Unsubscriber {
+		return this._stream.onDocumentTemplateChange(
+			collectionTemplate,
+			( change: DocumentChange<PersistentObject<T>> ) => listener( DataSource.toPersistentDocumentChange( change ) )
+		)
+	}
+
 	// /**
 	//  * Get the previous bunch of documents matching the last query
 	//  * @param limit the max amount of documents to retrieve. If not set, uses the
@@ -151,6 +236,44 @@ export class Model<T extends Persistent>{
 		})
 	}
 
+	/**
+	 * Normalizes the query object to match the data source requirements.
+	 * Call this method before you do any query operation on the concrete data source
+	 * @param queryObject the query object containing the query operations
+	 * @param operatorConversor a function that converts the query operators to the
+	 * operators supported by the concrete data source
+	 * @returns the normalized query object
+	 */
+	private preprocessQueryObject<U>( queryObject: QueryObject<U> ): QueryObject<DocumentObject> {
+		if ( Object.values( queryObject ).length === 0 ) return queryObject as unknown as QueryObject<DocumentObject>
+
+		const operations = queryObject.operations?.map( operation => {
+			const value = operation.value[0] ?? operation.value
+
+			if ( DataSource.isArrayOperator( operation.operator ) && value instanceof Persistent ) {
+				return {
+					property: Persistent.searchableArrayNameFor( operation.property as string ),
+					operator: operation.operator,
+					value: Array.isArray( operation.value )? operation.value.map( v => v.id ) : value.id,
+					aggregate: operation.aggregate
+				}
+			}
+			else {
+				return {
+					property: operation.property,
+					operator: operation.operator,
+					value: operation.value instanceof Persistent ? { id: operation.value.id } : operation.value,
+					aggregate: operation.aggregate
+				}
+			}
+		}) ?? []
+
+		return {
+			...queryObject,
+			operations
+		} as QueryObject<DocumentObject>
+	}
+
 	readonly collectionName: string
 	private _stream: DataSource
 }
@@ -161,30 +284,38 @@ export class Model<T extends Persistent>{
  * are stored in a QueryObject that is passed to the query method of the
  * Model class.
  */
-class Query<T extends Persistent> {
+export class Query<T extends Persistent> {
 	constructor( model: Model<T> ) {
 		this.model = model	
 	}
 
 	/**
-	 * Defines a where condition
+	 * Matches all documents that the value of the property satisfies the condition
+	 * in the operator parameter. Subsequent `where` calls will be operated to the
+	 * previous ones using the AND operator
 	 * @param property the property to be compared
 	 * @param operator the operator to be used in the comparison. The available
 	 * operators are: ==, !=, >, >=, < and <=
 	 * @param value the value to be compared
+	 * @param aggregate if true, the query will use the logical or operator and 
+	 * aggregate the results to the previous query
 	 * @returns this Query object to make chained calls possible
 	 * @example
 	 * query.where( 'name', '==', 'John' )
 	 * query.where( 'age', '>', 18 )
 	 * query.where( 'age', '==', 18 ).where( 'name', '==', 'John' )
+	 * @see whereDeepProp
+	 * @see or
+	 * @see orDeepProp
 	 */
-	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
-		let val = value instanceof Persistent? { id: value.id } : value
+	where<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent, aggregate?: boolean ) {
+		if ( this.queryObject.operations?.at(-1)?.aggregate && !aggregate ) throw new Error( Model.error.invalidQueryOrder )
 
 		this.queryObject.operations?.push({
 			property,
 			operator,
-			value: val
+			value: value as any,
+			aggregate
 		})
 
 		return this
@@ -205,7 +336,8 @@ class Query<T extends Persistent> {
 	// }
 
 	/**
-	 * Defines a where condition for a deep property
+	 * Matches all documents that the value of the deep property satisfies the condition
+	 * in the operator parameter
 	 * @param propertyPath the path to the property to be compared
 	 * @param operator the operator to be used in the comparison. The available
 	 * operators are: ==, !=, >, >=, < and <=
@@ -213,9 +345,14 @@ class Query<T extends Persistent> {
 	 * @returns this Query object to make chained calls possible
 	 * @example
 	 * query.whereDeepProp( 'address.street', '==', 'Main Street' )
+	 * @see where
+	 * @see or
+	 * @see orDeepProp
 	 */
-	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
-		const props = propertyPath.split( '.' )
+	whereDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath>, aggregate?: boolean ) {
+		if ( this.queryObject.operations?.at(-1)?.aggregate && !aggregate ) throw new Error( Model.error.invalidQueryOrder )
+
+		const props = ( propertyPath as string ).split( '.' )
 		let obj = {}
 		let result = props.length > 1? obj : value  // TODO: review
 
@@ -227,10 +364,86 @@ class Query<T extends Persistent> {
 		this.queryObject.operations?.push({
 			property: props[0],
 			operator,
-			value: result
+			value: result,
+			aggregate
 		} as QueryOperation<T>)
 
 		return this
+	}
+
+	/**
+	 * Matches all documents that the value of the property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param property the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.where( 'name', '==', 'John' ).and( 'age', '>', 18 )
+	 * @see andDeepProp
+	 * @see where
+	 * @see whereDeepProp
+	 * @see or
+	 * @see orDeepProp
+	 */
+	and<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+		return this.where( property, operator, value )
+	}
+
+	/**
+	 * Matches all documents that the value of the deep property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param propertyPath the path to the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @param value the value to be compared
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.whereDeepProp( 'address.street', '==', 'Main Street' ).andDeepProp( 'address.city', '==', 'New York' )
+	 * @see and
+	 * @see where
+	 * @see whereDeepProp
+	 * @see or
+	 * @see orDeepProp
+	 */
+	andDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
+		return this.whereDeepProp( propertyPath, operator, value )
+	}
+
+	/**
+	 * Matches all documents that the value of the property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param property the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.or( 'name', '==', 'John' )
+	 * query.or( 'age', '>', 18 )
+	 * @see orDeepProp
+	 * @see where
+	 * @see whereDeepProp
+	 */ 
+	or<P extends ClassPropNames<T>>( property: P, operator: QueryOperator, value: Partial<T[P]> | Persistent ) {
+		return this.where( property, operator, value, true )
+	}
+
+	/**
+	 * Matches all documents that the value of the deep property satisfies the condition
+	 * in the operator parameter and aggregates the results to the previous query
+	 * @param propertyPath the path to the property to be compared
+	 * @param operator the operator to be used in the comparison. The available
+	 * operators are: ==, !=, >, >=, < and <=
+	 * @param value the value to be compared
+	 * @returns this Query object to make chained calls possible
+	 * @example
+	 * query.orDeepProp( 'address.street', '==', 'Main Street' )
+	 * @see or
+	 * @see where
+	 * @see whereDeepProp
+	 */
+	orDeepProp( propertyPath: PropPath<T>, operator: QueryOperator, value: PropPathType<T, typeof propertyPath> ) {
+		return this.whereDeepProp( propertyPath, operator, value, true )
 	}
 
 	/**
@@ -323,6 +536,14 @@ class Query<T extends Persistent> {
 	 */
 	count() {
 		return this.model.count( this.queryObject )
+	}
+
+	getQueryObject(): QueryObject<T> {
+		return this.queryObject
+	}
+
+	getQueryModel() {
+		return this.model
 	}
 
 	private queryObject: QueryObject<T> = { operations: [] } as QueryObject<T>
