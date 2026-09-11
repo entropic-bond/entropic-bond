@@ -1,3 +1,15 @@
+# [1.61.0](https://github.com/entropic-bond/entropic-bond/compare/v1.60.3...v1.61.0) (2026-09-11)
+
+
+### Bug Fixes
+
+* align JsonDataSource removal semantics with FirebaseDatasource ([155bb84](https://github.com/entropic-bond/entropic-bond/commit/155bb84b364ff6f3ab71b1716e359b154ed38893)), closes [#12](https://github.com/entropic-bond/entropic-bond/issues/12)
+
+
+### Features
+
+* add CachingDataSource for client-side document caching ([80144da](https://github.com/entropic-bond/entropic-bond/commit/80144daa54b7ffe3da3246765e1b90934b64e1ad))
+
 ## [1.60.3](https://github.com/entropic-bond/entropic-bond/compare/v1.60.2...v1.60.3) (2026-09-07)
 
 
