@@ -2,6 +2,7 @@ import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, Persistent, PersistentObject } from '../persistent/persistent'
 import { ClassPropNames, PropPath, PropPathType } from '../types/utility-types'
 import { DataSource, QueryOperator, QueryObject, QueryOrder, DocumentObject, QueryOperation, DocumentChangeListener, CollectionChangeListener, TransactionConflictError } from './data-source'
+import type { QueryCursor } from './query-cursor'
 
 /**
  * The handle passed to a Model.runTransaction callback. All operations work with
@@ -167,9 +168,10 @@ export class Model<T extends Persistent>{
 			)
 		}
 
-		return this.mapToInstance( 
-			() => this._stream.find( this.preprocessQueryObject( queryObject ), this.collectionName ) 
-		)
+		return this.mapToInstance( async () => {
+			this._cursor = await this._stream.find( this.preprocessQueryObject( queryObject ), this.collectionName )
+			return this._cursor.next()
+		})
 	}
 
 	/**
@@ -188,7 +190,7 @@ export class Model<T extends Persistent>{
 	 * @returns a promise resolving to a collection of matched documents
 	 */
 	next<U extends T>( limit?: number ): Promise<U[]> {
-		return this.mapToInstance( () => this._stream.next( limit ) )
+		return this.mapToInstance( () => this._cursor?.next( limit ) ?? Promise.resolve([]) )
 	}
 
 	onDocumentChange( documentId: string, listener: DocumentChangeListener<T> ): Unsubscriber {
@@ -279,6 +281,7 @@ export class Model<T extends Persistent>{
 
 	readonly collectionName: string
 	private _stream: DataSource
+	private _cursor: QueryCursor | undefined
 }
 
 /**

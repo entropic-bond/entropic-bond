@@ -2,6 +2,7 @@ import { Persistent, PersistentObject, Collections, DocumentChange, PersistentPr
 import { ClassPropNames } from '../types/utility-types'
 import { Unsubscriber } from '../observable/observable'
 import { CachedPropsUpdater, CachedPropsUpdaterConfig } from './cached-props-updater'
+import type { QueryCursor } from './query-cursor'
 
 export type DocumentObject = PersistentObject<Persistent>
 
@@ -133,15 +134,16 @@ export abstract class DataSource {
 	 * requirements in the query object from your concrete the data source
 	 * @param queryObject the query object containing the query operations
 	 * @param collectionName the name of the collection where the documents are stored
-	 * @returns a promise resolving to an array of document objects. The document object is
-	 * a plain object with the properties of the document class.
+	 * @returns a promise resolving to a {@link QueryCursor}. The cursor owns the
+	 * query's result set, page size and position, so pagination is local to the
+	 * query instead of shared across the data source.
 	 * @see QueryObject
 	 * @see QueryOperation
 	 * @see QueryOperator
 	 * @see QueryOrder
 	 * @see DocumentObject
 	 */
-	abstract find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] >
+	abstract find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< QueryCursor >
 
 	/**
 	 * Saves a document
@@ -174,17 +176,8 @@ export abstract class DataSource {
 	): Promise<Result>
 
 	/**
-	 * Retrieves the next bunch of documents matching the query stored in the query object
-	 * Implement the required logic to retrieve the next bunch of documents that match the
-	 * requirements in the query object from your concrete the data source
-	 * @param limit the maximum number of items to be retrieved
-	 * @returns a promise resolving to an array representing the next bunch of document objects
-	 */
-	abstract next( limit?: number ): Promise< DocumentObject[] >
-
-	/**
 	 * Retrieves the number of documents matching the query stored in the query object
-	 * Implement the required logic to retrieve the number of documents that match the
+	 * Implement the required logic to retrieve the number of documents that match the 
 	 * requirements in the query object from your concrete the data source
 	 * @param queryObject the query object containing the query operations
 	 * @param collectionName the name of the collection where the documents are stored
