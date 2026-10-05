@@ -1,3 +1,18 @@
+# [2.0.0](https://github.com/entropic-bond/entropic-bond/compare/v1.61.1...v2.0.0) (2026-10-05)
+
+
+### Bug Fixes
+
+* make pagination cursor local to each query ([#16](https://github.com/entropic-bond/entropic-bond/issues/16)) ([e7fd331](https://github.com/entropic-bond/entropic-bond/commit/e7fd3310c05a7829245e0f9cf161d57c3c2819d8))
+
+
+### BREAKING CHANGES
+
+* DataSource.find() now returns Promise<QueryCursor> and
+the DataSource.next() method was removed. Custom data source adapters must
+return a QueryCursor from find(); callers advance pagination through
+cursor.next().
+
 ## [1.61.1](https://github.com/entropic-bond/entropic-bond/compare/v1.61.0...v1.61.1) (2026-09-11)
 
 
