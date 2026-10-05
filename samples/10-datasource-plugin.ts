@@ -1,5 +1,5 @@
 import {
-  DataSource, Store, DocumentObject, QueryObject,
+  DataSource, Store, DocumentObject, QueryObject, QueryCursor,
   Unsubscriber, DocumentChangeListener, CollectionChangeListener
 } from '../src'
 
@@ -14,10 +14,9 @@ class InMemoryDataSource extends DataSource {
     return doc
   }
 
-  override async find(queryObject: QueryObject<DocumentObject>, collectionName: string): Promise<DocumentObject[]> {
+  override async find(queryObject: QueryObject<DocumentObject>, collectionName: string): Promise<QueryCursor> {
     const collection = this.store.get(collectionName)
-    if (!collection) return []
-    return Array.from(collection.values())
+    return new QueryCursor(collection ? Array.from(collection.values()) : [])
   }
 
   override async save(object: import('../src').Collections): Promise<void> {
@@ -35,10 +34,6 @@ class InMemoryDataSource extends DataSource {
 
   override async delete(id: string, collectionName: string): Promise<void> {
     this.store.get(collectionName)?.delete(id)
-  }
-
-  override async next(limit?: number): Promise<DocumentObject[]> {
-    return []
   }
 
   override async count(queryObject: QueryObject<DocumentObject>, collectionName: string): Promise<number> {

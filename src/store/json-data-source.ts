@@ -2,6 +2,7 @@ import { Unsubscriber } from '../observable/observable'
 import { Collections, DocumentChange, DocumentChangeType, Persistent, PersistentObject } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
 import { CollectionChangeListener, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperation, QueryOrder, TransactionConflictError, TransactionHandle } from "./data-source"
+import { QueryCursor } from './query-cursor'
 
 export interface JsonRawData {
 	[ collection: string ]: {
@@ -78,24 +79,21 @@ export class JsonDataSource extends DataSource {
 		return this.resolveWithDelay()
 	}
 
-	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
+	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< QueryCursor > {
 		if ( this._simulateError?.find ) throw new Error( this._simulateError.find )
 
 		const rawDataArray = Object.values( this._jsonRawData[ collectionName ] || {} )
-		if ( !queryObject ) return this.resolveWithDelay( rawDataArray )
-		
-		this._lastLimit = queryObject.limit || 0
-		this._cursor = 0
+		if ( !queryObject ) return this.resolveWithDelay( this.createCursor( rawDataArray, 0 ) )
 
-		this._lastMatchingDocs = Object.entries( queryObject ).reduce(
+		const matchingDocs = Object.entries( queryObject ).reduce(
 			( prevDocs, [ processMethod, value ]) => {
 
 				return this.queryProcessor( prevDocs, processMethod as any, value )
 
-			}, Object.values( rawDataArray )
+			}, rawDataArray
 		)
 
-		return this.resolveWithDelay( this._lastMatchingDocs.slice( 0, queryObject.limit ) )
+		return this.resolveWithDelay( this.createCursor( matchingDocs, queryObject.limit || 0 ) )
 	}
 
 	delete( id: string, collectionName: string ): Promise<void> {
@@ -157,13 +155,6 @@ export class JsonDataSource extends DataSource {
 
 			return result
 		})
-	}
-
-	next( limit?: number ): Promise< DocumentObject[] > {
-		if ( limit ) this._lastLimit = limit
-		this.incCursor( this._lastLimit )
-
-		return this.resolveWithDelay( this._lastMatchingDocs.slice( this._cursor, this._cursor + this._lastLimit ) )
 	}
 
 	count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number> {
@@ -254,11 +245,8 @@ export class JsonDataSource extends DataSource {
 		return Promise.all([ ...this._pendingPromises ])
 	}
 
-	private incCursor( amount: number ) {
-		this._cursor += amount 
-		if ( this._cursor > this._lastMatchingDocs.length ) {
-			this._cursor = this._lastMatchingDocs.length
-		}
+	private createCursor( docs: DocumentObject[], limit: number ): QueryCursor {
+		return new QueryCursor( docs, limit, this.resolveWithDelay.bind( this ) )
 	}
 
 	simulateError( error: string | ErrorOnOperation | undefined ): this {
@@ -291,15 +279,6 @@ export class JsonDataSource extends DataSource {
 
 		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 		Object.values( this._collectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
-	}
-
-	private decCursor( amount: number ) {
-		this._cursor -= amount 
-		if ( this._cursor < 0 ) {
-			this._cursor = 0
-			return true
-		}
-		return false
 	}
 
 	private queryProcessor<T, P extends keyof QueryProcessors>( docs: DocumentObject[], processMethod: P, value: QueryObject<T>[P] ) {
@@ -423,9 +402,6 @@ export class JsonDataSource extends DataSource {
 
 	private _jsonRawData: JsonRawData = {}
 	private _versions: Collection<Collection<number>> = {}
-	private _lastMatchingDocs: DocumentObject[] = []
-	private _lastLimit: number = 0
-	private _cursor: number = 0
 	private _simulateDelay: number = 0
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined

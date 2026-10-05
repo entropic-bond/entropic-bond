@@ -590,6 +590,54 @@ describe( 'Model', ()=>{
 		})
 	})
 
+	describe( 'Per-query pagination cursors [REQ-1..REQ-4]', ()=>{
+		it( 'continues a model\'s own query with next [REQ-1]', async ()=>{
+			await model.find().get( 2 )
+
+			const docs = await model.next()
+
+			expect( docs.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+		})
+
+		it( 'interleaved pagination on two models of one collection keeps each result set [REQ-2]', async ()=>{
+			const otherModel = Store.getModel<TestUser>( 'TestUser' )
+			await model.find().get( 2 )
+			await otherModel.find().get( 3 )
+
+			const firstPage = await model.next()
+			const secondPage = await otherModel.next()
+
+			expect( firstPage.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+			expect( secondPage.map( doc => doc.id )).toEqual([ 'user4', 'user5', 'user6' ])
+		})
+
+		it( 'interleaved pagination across collections does not mix result sets [REQ-3]', async ()=>{
+			const user = await model.findById( 'user1' )
+			const subCollectionModel = Store.getModelForSubCollection<SubClass>( user!, 'SubClass' )
+			await model.find().get( 2 )
+			await subCollectionModel.find().get( 1 )
+
+			const docs = await model.next()
+
+			expect( docs.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+		})
+
+		it( 're-running a query resets pagination for that model only [REQ-4]', async ()=>{
+			const otherModel = Store.getModel<TestUser>( 'TestUser' )
+			await model.find().get( 2 )
+			await otherModel.find().get( 2 )
+			await model.find().get()
+
+			const docs = await otherModel.next()
+
+			expect( docs.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+		})
+
+		it( 'returns no documents when next is called before any query', async ()=>{
+			expect( await model.next() ).toEqual([])
+		})
+	})
+
 	describe( 'Utility methods', ()=>{
 		
 		it( 'should transform query object operations to property path', ()=>{
