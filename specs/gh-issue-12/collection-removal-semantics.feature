@@ -32,7 +32,7 @@ Feature: Align JsonDataSource collection-change removal semantics with FirebaseD
     When the document "d1" is deleted from the collection
     Then the listener is notified with exactly one change
     And that change has type "delete"
-    And that change carries "d1"
+    And that change carries the last known "d1" in its before payload with no after payload
 
   Scenario: Provide the full current query result as a snapshot to collection listeners [REQ-5]
     Given a collection listener subscribed to the query "score > 10"
