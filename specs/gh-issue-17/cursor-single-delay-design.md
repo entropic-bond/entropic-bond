@@ -150,3 +150,81 @@ Audited against `cursor-single-delay.feature` and the modified sources
   nothing rises to **Strong**.
 
 Re-verified after audit: full suite green.
+
+## Master CI failure after #22 (run 37515782440)
+
+### Root cause
+
+`src/store/model.spec.ts` → `[REQ-5]` failed on the first master run
+containing #22 together with #18/#21 ("emit initial collection snapshot on
+subscribe"). It is a **test/spec interaction defect, not an ordering
+regression**: the single-delay guarantee itself holds.
+
+- #18/#21 made `JsonDataSource.onCollectionChange` deliver the current
+  matching snapshot **synchronously at subscribe time**
+  (`specs/gh-issue-18/collection-initial-snapshot.feature` [REQ-1]).
+- The [REQ-5] test subscribes *before* starting the read, so the listener
+  fires once at subscribe (`readResolved === false` → `read-after-change`)
+  and again on the save at 150 ms (`readResolved === true` →
+  `read-before-change`). Actual observations:
+  `['read-after-change', 'read-before-change']` vs expected
+  `['read-before-change']` — deterministic, reproduced locally on every run.
+- The second (save-triggered) observation proves the guarantee under test:
+  the read (~100 ms) resolved before the change notification (150 ms).
+
+Why it only surfaced on master:
+
+- PR #22's branch was cut from master @ 2.0.0 (`5af1a33`) — it does **not**
+  contain #18/#21 (`3298cae`) or #20 (`177e938`), verified with
+  `git merge-base --is-ancestor`. Running `[REQ-5]` on `7f0fe88` (PR #22
+  head) passes: 1 passed / 78 skipped.
+- `.github/workflows/release.yml` only triggers on `push` to `master`, so
+  PR branches never run CI. The incompatible combination first existed on
+  master after the squash merge.
+
+### Fix
+
+1. **Spec** — [REQ-5] scenario states the exact conditions: the listener is
+   installed first (subscribe-time delivery precedes the read, issue #18),
+   and the `Then` refers to the *save notification* only.
+2. **Test** — the listener callback records observations only after
+   subscription returns (the subscribe-time delivery is synchronous), and
+   asserts the subscribe-time delivery happened. The assertion
+   `toEqual([ 'read-before-change' ])` keeps its full strength: if the read
+   had not resolved before the save, the recorded observation would be
+   `read-after-change` and the test would fail.
+3. **CI** — run the workflow on `pull_request` too, gating
+   `semantic-release` to `push` on `master`, so this class of
+   branch-interaction break is caught before merge (root of the escape:
+   no PR CI at all).
+
+No production code changes: both #17 and #18 contracts are correct as
+specified; only the test expectation was wrong.
+
+## Audit note (code-auditor — master CI failure fix)
+
+Audited against `cursor-single-delay.feature` and the modified non-test
+sources (`.github/workflows/release.yml`) read from disk; production code
+(`src/**/*.ts` non-spec) is untouched by this fix.
+
+- **Overview**: the fix relocates no behaviour — it aligns the [REQ-5] test
+  with the already-specified subscribe contract of issue #18 (initial
+  snapshot delivered synchronously on subscribe) and closes the CI escape
+  (workflow never ran on pull requests).
+- **Files**: `src/store/model.spec.ts` [REQ-5], `specs/gh-issue-17/
+  cursor-single-delay.feature` [REQ-5], `.github/workflows/release.yml`.
+- **Problem**: none blocking. The `if:` guard on `semantic-release`
+  (`event_name == 'push' && ref == 'refs/heads/master'`) is doubly safe:
+  `pull_request` runs also have `refs/pull/N/merge` as ref.
+- **Less valuable improvements, not applied**:
+  - split `release` into a separate job after `build` so PR-triggered runs
+    never hold a write-capable token (**Worth exploring**, needs workflow
+    restructure and secret-handling review).
+  - add a `concurrency` group to cancel superseded PR runs (**Speculative**).
+  - the subscribe-gate pattern in the test (`subscribing` flag) could be a
+    helper if more specs need it; used once, not worth extracting
+    (**Speculative**).
+- **Recommendation strength**: nothing rises to **Strong**; no refactor
+  applied.
+
+Re-verified after audit: full suite green (297/297, three runs).

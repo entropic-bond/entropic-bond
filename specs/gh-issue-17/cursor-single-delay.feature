@@ -39,9 +39,11 @@ Feature: Single-delay cursor reads
     Given the data source simulates a delay of 100 ms
     And a model for the document collection
     And a collection change listener installed on the model
+    # installing the listener delivers the current snapshot synchronously, before the read starts (issue #18)
     When the model reads the query
     And 150 ms later a document is saved
-    Then the listener observes the read already resolved
+    Then the save notification observes the read already resolved
+    # r=100: the read resolves at ~100 ms, before the save at 150 ms; the subscribe-time delivery precedes the read and is not the change notification under test
 
   Scenario: Interleaved cursors keep their own result sets while delayed. Issue: #17 [REQ-6]
     Given the data source simulates a delay of 10 ms
