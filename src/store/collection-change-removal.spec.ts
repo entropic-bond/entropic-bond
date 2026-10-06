@@ -35,6 +35,7 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 	it( 'REQ-1: reports a document that stops matching the query as a delete', ()=>{
 		const listener = vi.fn()
 		datasource.onCollectionChange( queryScoreGt10, collection, listener )
+		listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 		datasource.save({ [ collection ]: [{ id: 'd1', score: 5, __className: collection }] } as any )
 
@@ -50,6 +51,7 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 	it( 'REQ-2: reports a deleted matching document as a delete to the collection listener', ()=>{
 		const listener = vi.fn()
 		datasource.onCollectionChange( queryScoreGt10, collection, listener )
+		listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 		datasource.delete( 'd1', collection )
 
@@ -65,6 +67,7 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 	it( 'REQ-3: does not notify the collection listener when a non-matching document is deleted', ()=>{
 		const listener = vi.fn()
 		datasource.onCollectionChange( queryScoreGt10, collection, listener )
+		listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 		datasource.delete( 'd3', collection )
 
@@ -88,6 +91,7 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 	it( 'notifies collection listeners when a document is deleted inside a transaction', async ()=>{
 		const listener = vi.fn()
 		datasource.onCollectionChange( queryScoreGt10, collection, listener )
+		listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 		await datasource.runTransaction( async handle => {
 			await handle.delete( 'd1', collection )
@@ -104,6 +108,7 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 	it( 'REQ-5: provides the full current query result as a snapshot to collection listeners', ()=>{
 		const listener = vi.fn()
 		datasource.onCollectionChange( queryScoreGt10, collection, listener )
+		listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 		datasource.save({ [ collection ]: [{ id: 'd1', score: 5, __className: collection }] } as any )
 
@@ -118,6 +123,7 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 		const model = Store.getModel<RemovalTestItem>( collection )
 		const listener = vi.fn()
 		model.onCollectionChange( model.find().where( 'score', '>', 25 ), listener )
+		listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 		const item = new RemovalTestItem( 'd2' )
 		item.score = 40

@@ -131,6 +131,21 @@ describe( 'Json DataSource', ()=>{
 			const listener = vi.fn()
 			const uninstall = model.onCollectionChange( model.find(), listener )
 
+			expect( listener ).toHaveBeenCalledTimes( 1 )
+			expect( listener ).toHaveBeenCalledWith(
+				[
+					expect.objectContaining({ type: 'create', after: expect.objectContaining({ id: 'a' }) }),
+					expect.objectContaining({ type: 'create', after: expect.objectContaining({ id: 'b' }) }),
+					expect.objectContaining({ type: 'create', after: expect.objectContaining({ id: 'c' }) }),
+				],
+				[
+					expect.objectContaining({ id: 'a' }),
+					expect.objectContaining({ id: 'b' }),
+					expect.objectContaining({ id: 'c' }),
+				]
+			)
+			listener.mockClear()
+
 			model.save( new TestCollection( 'd' ))
 			expect( listener ).toHaveBeenCalledWith(
 				[ expect.objectContaining({ after: expect.objectContaining({ id: 'd' }) }) ],
@@ -147,6 +162,8 @@ describe( 'Json DataSource', ()=>{
 		it( 'should remove listener', ()=>{
 			const listener = vi.fn()
 			const uninstall = model.onCollectionChange( model.find(), listener )
+
+			listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 			model.save( new TestCollection( 'd' ))
 			expect( listener ).toHaveBeenCalledWith(
@@ -171,6 +188,10 @@ describe( 'Json DataSource', ()=>{
 			const listener2 = vi.fn()
 			const uninstall1 = model.onCollectionChange( model.find(), listener1 )
 			const uninstall2 = model.onCollectionChange( model.find(), listener2 )
+			expect( listener1 ).toHaveBeenCalledTimes( 1 )
+			expect( listener2 ).toHaveBeenCalledTimes( 1 )
+			listener1.mockClear()
+			listener2.mockClear()
 
 			model.save( new TestCollection( 'f' ))
 			expect( listener1 ).toHaveBeenCalledWith(
@@ -213,7 +234,8 @@ describe( 'Json DataSource', ()=>{
 					expect.objectContaining({ id: 'g' }),
 				]
 			)
-			expect( listener2 ).not.toHaveBeenCalled()
+			expect( listener2 ).toHaveBeenCalledTimes( 1 )
+			expect( listener2 ).toHaveBeenCalledWith( [], [] )
 
 			listener1.mockClear()
 			listener2.mockClear()
@@ -234,9 +256,13 @@ describe( 'Json DataSource', ()=>{
 			const uninstall = model.onCollectionChange( model.find().where( 'prop', '>', 'a' ), listener )
 			const doc = new TestCollection('b')
 			doc.prop = 'a'
+			listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 			model.save( doc )
 
-			expect( listener ).toHaveBeenCalled()
+			expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ type: 'delete', after: expect.objectContaining({ id: 'b' }) }) ],
+				expect.any( Array )
+			)
 			uninstall()
 		})
 
@@ -245,9 +271,13 @@ describe( 'Json DataSource', ()=>{
 			const uninstall = model.onCollectionChange( model.find().where( 'prop', '>', 'a' ), listener )
 			const doc = new TestCollection('a')
 			doc.prop = 'b'
+			listener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 			model.save( doc )
 
-			expect( listener ).toHaveBeenCalled()
+			expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ type: 'update', after: expect.objectContaining({ id: 'a' }) }) ],
+				expect.any( Array )
+			)
 			uninstall()
 		})
 	})
