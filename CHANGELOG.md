@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/entropic-bond/entropic-bond/compare/v2.0.3...v2.0.4) (2026-10-06)
+
+
+### Bug Fixes
+
+* bound CachedPropsUpdater owner fan-out memory and concurrency ([#24](https://github.com/entropic-bond/entropic-bond/issues/24)) ([ece898f](https://github.com/entropic-bond/entropic-bond/commit/ece898f98d156b16615e5c1a2b017e4377b0a88b)), closes [#19](https://github.com/entropic-bond/entropic-bond/issues/19) [#19](https://github.com/entropic-bond/entropic-bond/issues/19)
+
 ## [2.0.3](https://github.com/entropic-bond/entropic-bond/compare/v2.0.2...v2.0.3) (2026-10-06)
 
 
