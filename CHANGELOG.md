@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/entropic-bond/entropic-bond/compare/v2.0.2...v2.0.3) (2026-10-06)
+
+
+### Bug Fixes
+
+* resolve cursor reads with a single simulated delay ([#22](https://github.com/entropic-bond/entropic-bond/issues/22)) ([a3b3681](https://github.com/entropic-bond/entropic-bond/commit/a3b36812dea117e001fc9fd91cae21c46adb17c3)), closes [#15](https://github.com/entropic-bond/entropic-bond/issues/15) [#17](https://github.com/entropic-bond/entropic-bond/issues/17)
+
 ## [2.0.2](https://github.com/entropic-bond/entropic-bond/compare/v2.0.1...v2.0.2) (2026-10-06)
 
 
