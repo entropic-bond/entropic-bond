@@ -170,9 +170,8 @@ export class JsonDataSource extends DataSource {
 			listeners = this._collectionListeners[ collectionName ]
 		}
 		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
-			if ( !change.after ) return
 			const beforeMatches = change.before? this.matchesQuery( change.before, query ) : false
-			const afterMatches = this.matchesQuery( change.after, query )
+			const afterMatches = change.after? this.matchesQuery( change.after, query ) : false
 			if ( !beforeMatches && !afterMatches ) return
 
 			const type: DocumentChangeType = change.type === 'delete' || ( beforeMatches && !afterMatches )
@@ -207,7 +206,8 @@ export class JsonDataSource extends DataSource {
 			listeners = this._documentListeners[ collectionName ]
 		}
 		const finalListener = ( change: DocumentChange<DocumentObject> ) => {
-			if ( change.after && change.after.id === documentId ) listener( change )
+			const changedId = change.type === 'delete'? change.before?.id : change.after?.id
+			if ( changedId === documentId ) listener( change )
 		}
 
 		const uid = Math.random().toString( 36 ).substring( 2, 9 )
@@ -278,12 +278,13 @@ export class JsonDataSource extends DataSource {
 	}
 
 	private notifyChange( collectionPath: string, document: DocumentObject, oldValue: DocumentObject | undefined, type?: DocumentChangeType ) {
+		const changeType = type ?? ( oldValue? 'update' : 'create' ) as DocumentChangeType
 		const event: DocumentChange<DocumentObject> = {
 			before: oldValue,
-			after: document,
+			after: changeType === 'delete'? undefined : document,
 			collectionPath,
 			params: {},
-			type: type ?? ( oldValue? 'update' : 'create' ) as DocumentChangeType
+			type: changeType
 		}
 
 		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )

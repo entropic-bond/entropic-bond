@@ -84,7 +84,8 @@ describe( 'JsonDataSource collection removal semantics', ()=>{
 		const change = listener.mock.calls[ 0 ]![ 0 ]
 		expect( change ).toEqual( expect.objectContaining({
 			type: 'delete',
-			after: expect.objectContaining({ id: 'd1' }),
+			after: undefined,
+			before: expect.objectContaining({ id: 'd1' }),
 		}))
 	})
 
