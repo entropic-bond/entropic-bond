@@ -134,9 +134,12 @@ export abstract class DataSource {
 	 * requirements in the query object from your concrete the data source
 	 * @param queryObject the query object containing the query operations
 	 * @param collectionName the name of the collection where the documents are stored
-	 * @returns a promise resolving to a {@link QueryCursor}. The cursor owns the
-	 * query's result set, page size and position, so pagination is local to the
-	 * query instead of shared across the data source.
+	 * @returns a promise resolving to a {@link QueryCursor} as soon as it is
+	 * built. The cursor owns the query's result set, page size and position, so
+	 * pagination is local to the query instead of shared across the data source.
+	 * Resolving the cursor performs no data retrieval: each page fetched through
+	 * {@link QueryCursor.next} is the read that incurs the data source's async
+	 * behaviour (one simulated delay per page in JsonDataSource).
 	 * @see QueryObject
 	 * @see QueryOperation
 	 * @see QueryOperator
