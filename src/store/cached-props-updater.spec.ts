@@ -1,8 +1,10 @@
-import { persistent, Persistent, PersistentProperty, persistentPureReferenceWithCachedProps, registerPersistentClass } from '../persistent/persistent'
+import { persistent, Persistent, PersistentProperty, persistentPureReferenceWithCachedProps, registerPersistentClass, DocumentChange } from '../persistent/persistent'
 import { Store } from './store'
 import { Model } from './model'
 import { JsonDataSource } from './json-data-source'
-import { CachedPropsUpdater, UpdatedResults } from './cached-props-updater'
+import { CachedPropsUpdater, CachedPropsUpdaterConfig, UpdatedResults } from './cached-props-updater'
+import { DocumentObject } from './data-source'
+import { QueryCursor } from './query-cursor'
 
 interface AllPropsUpdatedCallbackResult {
 	updatedResult: UpdatedResults
@@ -293,6 +295,296 @@ describe( 'Persistent with cached props reference', ()=>{
 			expect( beforeSpy ).toHaveBeenCalledWith( expect.objectContaining({ after: expect.objectContaining({ id: 'a2' }) }), expect.arrayContaining([ expect.objectContaining({ name: 'propInRootForRootCollection' }) ]) )
 		})
 
+	})
+
+})
+
+describe( 'Cached props fan-out resource safety. Issue: #19 [REQ-1][REQ-2][REQ-3][REQ-4][REQ-5][REQ-6]', ()=>{
+	let datasource: JsonDataSource
+	let updater: CachedPropsUpdater
+
+	beforeEach(()=>{
+		datasource = new JsonDataSource({})
+		Store.useDataSource( datasource )
+	})
+
+	afterEach(()=>{
+		vi.restoreAllMocks()
+	})
+
+	function seedOwners( ownerCount: number ) {
+		const parents: Record<string, DocumentObject> = {}
+		for ( let i = 0; i < ownerCount; i++ ) {
+			parents[ `p${ i }` ] = {
+				id: `p${ i }`,
+				__className: 'Parent',
+				propInRootForRootCollection: { id: 'a2', __className: 'Child', name: 'a2', __documentReference: { storedInCollection: 'Child' } }
+			} as unknown as DocumentObject
+		}
+
+		datasource.setDataStore({
+			Parent: parents,
+			Child: { a2: { id: 'a2', __className: 'Child', name: 'a2' } } as any
+		} as any)
+	}
+
+	function setupUpdater( config?: CachedPropsUpdaterConfig ) {
+		updater = datasource.installCachedPropsUpdater( config )
+		datasource.onDocumentTemplateChange( '{rootCollection}/{rootDocumentId}/{subCollection}/{subDocumentId}', event => {
+			const { rootCollection, subCollection } = event.params!
+			const documentPath = subCollection? `${ rootCollection }/{customerId}/${ subCollection }` : rootCollection
+			updater.updateProps( documentPath, event )
+		})
+		return updater
+	}
+
+	function sourceEvent( before: DocumentObject, after: DocumentObject ): DocumentChange<DocumentObject> {
+		return { before, after, type: 'update', params: {}, collectionPath: 'Child' }
+	}
+
+	function nameChangedEvent() {
+		return sourceEvent(
+			{ id: 'a2', __className: 'Child', name: 'a2' } as DocumentObject,
+			{ id: 'a2', __className: 'Child', name: 'a2-updated' } as DocumentObject
+		)
+	}
+
+	function countUpdatedParents() {
+		return Object.values( datasource.rawData.Parent ?? {} )
+			.filter(( doc: any ) => doc.propInRootForRootCollection?.name === 'a2-updated' )
+			.length
+	}
+
+	function instrumentSaves( delayMs: number ) {
+		const originalSave = datasource.save.bind( datasource )
+		let inFlight = 0
+		const stats = { maxInFlight: 0, calls: 0 }
+		vi.spyOn( datasource, 'save' ).mockImplementation( async collections => {
+			stats.calls++
+			inFlight++
+			stats.maxInFlight = Math.max( stats.maxInFlight, inFlight )
+			try {
+				if ( delayMs > 0 ) await new Promise( resolve => setTimeout( resolve, delayMs ) )
+				await originalSave( collections )
+			}
+			finally {
+				inFlight--
+			}
+		})
+		return stats
+	}
+
+	it( 'Leave the owner collection untouched when no cached prop changed. Issue: #19 [REQ-1]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater()
+		const findSpy = vi.spyOn( datasource, 'find' )
+		const report = new Promise<UpdatedResults>( resolve => {
+			updater.afterDocumentChange = results => resolve( results! )
+		})
+
+		const child = ( await Store.getModel<Child>( 'Child' ).findById( 'a2' ) )!
+		await Store.getModel<Child>( 'Child' ).save( child )
+
+		const updatedResult = await report
+		expect( findSpy ).not.toHaveBeenCalled()
+		expect( updatedResult ).toEqual( {} )
+	})
+
+	it( 'Keep saves in flight within chunkSize times concurrency. Issue: #19 [REQ-2]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 2 })
+		const findSpy = vi.spyOn( datasource, 'find' )
+		const stats = instrumentSaves( 10 )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		// chunkSize x concurrency = 5 x 2 = 10
+		expect( findSpy.mock.calls[0]![0].limit ).toBe( 5 )
+		expect( stats.maxInFlight ).toBeLessThanOrEqual( 10 )
+		expect( stats.maxInFlight ).toBeGreaterThan( 5 )
+		expect( stats.calls ).toBe( 40 )
+		expect( countUpdatedParents() ).toBe( 40 )
+	})
+
+	it( 'Resolve only after every save has settled. Issue: #19 [REQ-3]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater()
+		instrumentSaves( 5 )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( countUpdatedParents() ).toBe( 40 )
+	})
+
+	it( 'Report updated documents only after they completed. Issue: #19 [REQ-4]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater()
+		instrumentSaves( 5 )
+		let reported: UpdatedResults | undefined
+		let updatedAtReportTime = -1
+		updater.afterDocumentChange = results => {
+			reported = results
+			updatedAtReportTime = countUpdatedParents()
+		}
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( updatedAtReportTime ).toBe( 40 )
+		expect( reported?.Parent?.totalDocumentsToUpdate ).toBe( 40 )
+		expect( reported?.Parent?.updatedDocuments ).toHaveLength( 40 )
+		expect( reported?.Parent?.documentsToUpdate ).toHaveLength( 40 )
+		expect( [ ...reported!.Parent!.updatedDocuments ].sort() ).toEqual(
+			Array.from({ length: 40 }, ( _, i ) => `p${ i }` ).sort()
+		)
+	})
+
+	it( 'Reject the returned promise when an owner save fails. Issue: #19 [REQ-5]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater()
+		const reportSpy = vi.fn()
+		updater.afterDocumentChange = reportSpy
+		vi.spyOn( datasource, 'save' ).mockImplementation(() => Promise.reject( new Error( 'owner save failed' ) ))
+
+		const unhandled: unknown[] = []
+		const onUnhandled = ( reason: unknown ) => unhandled.push( reason )
+		const nodeProcess = ( globalThis as any ).process
+		nodeProcess.on( 'unhandledRejection', onUnhandled )
+		try {
+			await expect( updater.updateProps( 'Child', nameChangedEvent() ) ).rejects.toThrow( 'owner save failed' )
+			await new Promise( resolve => setTimeout( resolve, 50 ) )
+			expect( unhandled ).toEqual( [] )
+			expect( reportSpy ).not.toHaveBeenCalled()
+		}
+		finally {
+			nodeProcess.off( 'unhandledRejection', onUnhandled )
+		}
+	})
+
+	it( 'Ignore an event for a document the updater is writing. Issue: #19 [REQ-6]', async ()=>{
+		seedOwners( 3 )
+		datasource.simulateDelay( 200 )
+		setupUpdater()
+		const findSpy = vi.spyOn( datasource, 'find' )
+		const saveSpy = vi.spyOn( datasource, 'save' )
+		const reports: UpdatedResults[] = []
+		updater.afterDocumentChange = results => reports.push( results! )
+
+		const fanOut = updater.updateProps( 'Child', nameChangedEvent() )
+
+		await vi.waitFor(()=> expect( saveSpy ).toHaveBeenCalled() )
+		const inFlightEvent = sourceEvent(
+			{ id: 'p0', __className: 'Child', name: 'a2' } as DocumentObject,
+			{ id: 'p0', __className: 'Child', name: 'a2-updated' } as DocumentObject
+		)
+		await updater.updateProps( 'Child', inFlightEvent )
+		expect( findSpy ).toHaveBeenCalledTimes( 1 )
+		expect( reports ).toHaveLength( 0 )
+
+		await fanOut
+		expect( reports ).toHaveLength( 1 )
+
+		await updater.updateProps( 'Child', inFlightEvent )
+		expect( findSpy ).toHaveBeenCalledTimes( 2 )
+	})
+
+	it( 'Process the document again once the failed write has settled. Issue: #19 [REQ-6]', async ()=>{
+		seedOwners( 3 )
+		setupUpdater()
+		const findSpy = vi.spyOn( datasource, 'find' )
+		const originalSave = datasource.save.bind( datasource )
+		let saveCalls = 0
+		vi.spyOn( datasource, 'save' ).mockImplementation( collections => {
+			saveCalls++
+			return saveCalls === 1
+				? Promise.reject( new Error( 'owner save failed' ) )
+				: originalSave( collections )
+		})
+
+		await expect( updater.updateProps( 'Child', nameChangedEvent() ) ).rejects.toThrow( 'owner save failed' )
+
+		await updater.updateProps( 'Child', sourceEvent(
+			{ id: 'p0', __className: 'Child', name: 'a2' } as DocumentObject,
+			{ id: 'p0', __className: 'Child', name: 'a2-updated' } as DocumentObject
+		))
+		expect( findSpy ).toHaveBeenCalledTimes( 2 )
+	})
+
+	it( 'Does not request another page when the first page holds every match', async ()=>{
+		seedOwners( 3 )
+		setupUpdater()
+		const nextSpy = vi.spyOn( QueryCursor.prototype, 'next' )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( nextSpy ).toHaveBeenCalledTimes( 1 )
+		expect( countUpdatedParents() ).toBe( 3 )
+	})
+
+	it( 'Reject only after the failing page saves have settled. Issue: #19 [REQ-7]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 1 })
+		const originalSave = datasource.save.bind( datasource )
+		let calls = 0
+		let settled = 0
+		vi.spyOn( datasource, 'save' ).mockImplementation( collections => {
+			calls++
+			if ( calls === 1 ) {
+				return Promise.reject( new Error( 'first owner save failed' ) ).finally(()=> settled++ )
+			}
+			return new Promise< void >( resolve => setTimeout( resolve, 50 ) )
+				.then(()=> originalSave( collections ) )
+				.finally(()=> settled++ )
+		})
+
+		await expect( updater.updateProps( 'Child', nameChangedEvent() ) ).rejects.toThrow( 'first owner save failed' )
+
+		// chunkSize = 5: the whole failing page settled before updateProps rejected
+		expect( settled ).toBe( 5 )
+		// and the failing page aborted the run before the next page was pulled
+		expect( calls ).toBe( 5 )
+	})
+
+	it( 'Stop pulling pages when an owner page read fails. Issue: #19 [REQ-8]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 2 })
+		const realNext = QueryCursor.prototype.next
+		let nextCalls = 0
+		vi.spyOn( QueryCursor.prototype, 'next' ).mockImplementation( function( this: QueryCursor, limit?: number ) {
+			nextCalls++
+			return nextCalls === 2
+				? Promise.reject( new Error( 'owner page read failed' ) )
+				: realNext.call( this, limit )
+		})
+		const saveSpy = vi.spyOn( datasource, 'save' )
+
+		await expect( updater.updateProps( 'Child', nameChangedEvent() ) ).rejects.toThrow( 'owner page read failed' )
+
+		// next #1 = first page, #2 = the failing read; no page is read after it
+		expect( nextCalls ).toBeLessThanOrEqual( 3 )
+		expect( saveSpy.mock.calls.length ).toBeLessThan( 40 )
+	})
+
+	it( 'Honour a total cap set before the owner query runs', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 2 })
+		updater.beforeQueryOwnerCollection = query => query.limit( 2 )
+		const saveSpy = vi.spyOn( datasource, 'save' )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( saveSpy ).toHaveBeenCalledTimes( 2 )
+		expect( countUpdatedParents() ).toBe( 2 )
+	})
+
+	it( 'Sanitize chunkSize and concurrency to at least one', async ()=>{
+		seedOwners( 5 )
+		setupUpdater({ chunkSize: 0, concurrency: 0 })
+		const saveSpy = vi.spyOn( datasource, 'save' )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( saveSpy ).toHaveBeenCalledTimes( 5 )
+		expect( countUpdatedParents() ).toBe( 5 )
 	})
 
 })
