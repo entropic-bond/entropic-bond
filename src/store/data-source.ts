@@ -69,6 +69,14 @@ export interface DocumentChangeListenerHandler {
 	props: PersistentProperty[]
 }
 
+/**
+ * A listener notified with the changes of a collection query and the full current
+ * matching result set.
+ * The data source invokes the listener immediately on subscribe with the current
+ * matching snapshot: each matching document is reported as a 'create' change and
+ * the full result set is passed as the second argument. Later invocations report
+ * the deltas produced by later writes, always carrying the up-to-date snapshot.
+ */
 export type CollectionChangeListener<T extends Persistent | DocumentObject> = ( changes: DocumentChange<T>[], snapshot?: T[] ) => void
 
 interface Error {
@@ -186,6 +194,18 @@ export abstract class DataSource {
 	 */
 	abstract count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number>
 
+	/**
+	 * Subscribes to the changes of the documents matching the query.
+	 * On subscribe the listener receives the current matching result immediately:
+	 * every matching document is reported as a 'create' change and the full result
+	 * set is passed as the second argument, so subscribing once is enough to seed a
+	 * live view. Later invocations report the changes produced by later writes,
+	 * always carrying the up-to-date snapshot.
+	 * @param query the query object with the matching constraints
+	 * @param collectionName the name of the collection to watch
+	 * @param listener the listener to be notified on subscribe and on every change
+	 * @returns a function that unsubscribes the listener
+	 */
 	abstract onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber

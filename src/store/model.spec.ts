@@ -742,6 +742,7 @@ describe( 'Model', ()=>{
 
 			const query = model.find().where( 'age', '==', 23 )
 			unsubscribeCollectionListener = model.onCollectionChange( query, collectionListener)
+			collectionListener.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 		})
 
 		afterEach(()=>{
@@ -797,6 +798,7 @@ describe( 'Model', ()=>{
 			const query = model.find().where( 'colleagues', 'contains', user3 )
 			const collectionListenerForArrayContains = vi.fn()
 			const unsubscribe = model.onCollectionChange( query, collectionListenerForArrayContains )
+			collectionListenerForArrayContains.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 			const user2 = ( await model.findById( 'user2' ) )!
 			user2.age = 57
@@ -825,6 +827,7 @@ describe( 'Model', ()=>{
 			const query = model.find().where( 'colleagues', 'contains', user3 )
 			const collectionListenerForArrayContains = vi.fn()
 			const unsubscribe = model.onCollectionChange( query, collectionListenerForArrayContains )
+			collectionListenerForArrayContains.mockClear() // the initial snapshot emitted on subscribe (issue #18)
 
 			const user1 = ( await model.findById( 'user1' ) )!
 			user1.age = 57

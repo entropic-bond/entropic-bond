@@ -188,6 +188,15 @@ export class JsonDataSource extends DataSource {
 		}
 		const uid = Math.random().toString( 36 ).substring( 2, 9 )
 		listeners[ uid ] = finalListener
+
+		const snapshot = this.querySync( query, collectionName )
+		listener( snapshot.map( doc => ({
+			before: undefined,
+			after: doc,
+			params: {},
+			type: 'create',
+		} as DocumentChange<DocumentObject>) ), snapshot )
+
 		return ()=> delete listeners[ uid ]
 	}
 
