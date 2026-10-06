@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/entropic-bond/entropic-bond/compare/v2.0.0...v2.0.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* emit initial collection snapshot on subscribe ([#18](https://github.com/entropic-bond/entropic-bond/issues/18)) ([#21](https://github.com/entropic-bond/entropic-bond/issues/21)) ([3298cae](https://github.com/entropic-bond/entropic-bond/commit/3298cae594f0f375444c4282829703c9a10e1cd7))
+
 # [2.0.0](https://github.com/entropic-bond/entropic-bond/compare/v1.61.1...v2.0.0) (2026-10-05)
 
 
