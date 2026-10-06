@@ -691,9 +691,19 @@ describe( 'Model', ()=>{
 		it( 'should resolve a read started before a change notification before it [REQ-5]', async ()=>{
 			const observations: string[] = []
 			let readResolved = false
+			let subscribing = true
+			let initialDelivered = false
 			model.onCollectionChange( model.find(), ()=> {
+				// the listener is notified with the current snapshot synchronously on
+				// subscribe (issue #18), before the read starts; only notifications
+				// after subscribe are change notifications under test
+				if ( subscribing ) {
+					initialDelivered = true
+					return
+				}
 				observations.push( readResolved ? 'read-before-change' : 'read-after-change' )
 			})
+			subscribing = false
 
 			const read = model.find().get().then( docs => {
 				readResolved = true
@@ -703,6 +713,7 @@ describe( 'Model', ()=>{
 			await new Promise( resolve => setTimeout( resolve, delay * 1.5 ) )  // notified at 150 ms (#r=100)
 			model.save( new TestUser( 'user99' ) )
 
+			expect( initialDelivered ).toBe( true )  // the exact condition that broke this test on master
 			expect( observations ).toEqual([ 'read-before-change' ])
 			await read
 		})
