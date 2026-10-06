@@ -32,7 +32,9 @@ export class QueryCursor {
 	}
 
 	/**
-	 * Retrieves the next page of documents and advances the cursor.
+	 * Retrieves the next page of documents and advances the cursor. Every call
+	 * resolves through the injected resolver, so each page read incurs exactly
+	 * one data source async step (one simulated delay per page in JsonDataSource).
 	 * @param limit the max amount of documents to retrieve. When set it replaces
 	 * the cursor's current page size
 	 * @returns a promise resolving to the next page of documents

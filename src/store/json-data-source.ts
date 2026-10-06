@@ -82,8 +82,10 @@ export class JsonDataSource extends DataSource {
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< QueryCursor > {
 		if ( this._simulateError?.find ) throw new Error( this._simulateError.find )
 
+		// The cursor is pure local state: handing it over costs no I/O. The
+		// simulated delay belongs to each page read, performed by cursor.next().
 		const rawDataArray = Object.values( this._jsonRawData[ collectionName ] || {} )
-		if ( !queryObject ) return this.resolveWithDelay( this.createCursor( rawDataArray, 0 ) )
+		if ( !queryObject ) return Promise.resolve( this.createCursor( rawDataArray, 0 ) )
 
 		const matchingDocs = Object.entries( queryObject ).reduce(
 			( prevDocs, [ processMethod, value ]) => {
@@ -93,7 +95,7 @@ export class JsonDataSource extends DataSource {
 			}, rawDataArray
 		)
 
-		return this.resolveWithDelay( this.createCursor( matchingDocs, queryObject.limit || 0 ) )
+		return Promise.resolve( this.createCursor( matchingDocs, queryObject.limit || 0 ) )
 	}
 
 	delete( id: string, collectionName: string ): Promise<void> {

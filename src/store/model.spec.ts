@@ -638,6 +638,90 @@ describe( 'Model', ()=>{
 		})
 	})
 
+	describe( 'Single-delay cursor reads [REQ-1..REQ-6]', ()=>{
+		const delay = 100
+		let delayedSource: JsonDataSource
+
+		beforeEach(()=>{
+			delayedSource = new JsonDataSource( structuredClone( testData ) ).simulateDelay( delay )
+			Store.useDataSource( delayedSource )
+			model = Store.getModel<TestUser>( 'TestUser' )
+		})
+
+		const elapsedMs = async ( read: () => Promise<unknown> ): Promise< number > => {
+			const start = performance.now()
+			await read()
+			return performance.now() - start
+		}
+
+		it( 'should resolve a query read after a single simulated delay, not two [REQ-1]', async ()=>{
+			const elapsed = await elapsedMs( () => model.find().get() )
+
+			expect( elapsed ).toBeGreaterThanOrEqual( delay * 0.9 )  // one simulated delay (#r=100)
+			expect( elapsed ).toBeLessThan( delay * 1.8 )            // two simulated delays would be 200 ms
+		})
+
+		it( 'should resolve the following page read after a single simulated delay [REQ-2]', async ()=>{
+			await model.find().get( 2 )
+
+			const elapsed = await elapsedMs( () => model.next() )
+
+			expect( elapsed ).toBeGreaterThanOrEqual( delay * 0.9 )  // one simulated delay (#r=100)
+			expect( elapsed ).toBeLessThan( delay * 1.8 )            // two simulated delays would be 200 ms
+		})
+
+		it( 'should deliver the cursor without consuming a simulated delay [REQ-3]', async ()=>{
+			const elapsed = await elapsedMs( () => delayedSource.find( { limit: 2 } as any, 'TestUser' ) )
+
+			expect( elapsed ).toBeLessThan( delay * 0.5 )  // no simulated delay (#r=100)
+		})
+
+		it( 'should resolve a direct cursor page read after one simulated delay [REQ-4]', async ()=>{
+			const cursor = await delayedSource.find( { limit: 2 } as any, 'TestUser' )
+
+			const elapsed = await elapsedMs( async ()=> {
+				const page = await cursor.next()
+				expect( page.map( doc => doc.id )).toEqual([ 'user1', 'user2' ])
+			})
+
+			expect( elapsed ).toBeGreaterThanOrEqual( delay * 0.9 )  // one simulated delay (#r=100)
+			expect( elapsed ).toBeLessThan( delay * 1.8 )            // two simulated delays would be 200 ms
+		})
+
+		it( 'should resolve a read started before a change notification before it [REQ-5]', async ()=>{
+			const observations: string[] = []
+			let readResolved = false
+			model.onCollectionChange( model.find(), ()=> {
+				observations.push( readResolved ? 'read-before-change' : 'read-after-change' )
+			})
+
+			const read = model.find().get().then( docs => {
+				readResolved = true
+				return docs
+			})
+
+			await new Promise( resolve => setTimeout( resolve, delay * 1.5 ) )  // notified at 150 ms (#r=100)
+			model.save( new TestUser( 'user99' ) )
+
+			expect( observations ).toEqual([ 'read-before-change' ])
+			await read
+		})
+
+		it( 'should keep interleaved cursors isolated while delayed [REQ-6]', async ()=>{
+			delayedSource.simulateDelay( 10 )  // #r=10
+			const firstModel = Store.getModel<TestUser>( 'TestUser' )
+			const secondModel = Store.getModel<TestUser>( 'TestUser' )
+
+			await firstModel.find().get( 2 )
+			await secondModel.find().get( 3 )
+			const firstPage = await firstModel.next()
+			const secondPage = await secondModel.next()
+
+			expect( firstPage.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+			expect( secondPage.map( doc => doc.id )).toEqual([ 'user4', 'user5', 'user6' ])
+		})
+	})
+
 	describe( 'Utility methods', ()=>{
 		
 		it( 'should transform query object operations to property path', ()=>{
