@@ -13,9 +13,11 @@ resource usage:
   Each worker fully settles one chunk before pulling the next, so in-flight saves
   are bounded by `chunkSize × concurrency` (defaults 25 × 4 = 100).
 - **Real awaiting**: the broken `Promise.all([ result.map(...) ])` nesting is gone.
-  `updateProps()` resolves only after every save settles; the first failure aborts
-  further page pulls, in-flight work is drained (`Promise.allSettled`), then the
-  error propagates — no unhandled rejections.
+  `updateProps()` resolves only after every save settles. On failure no new page is
+  pulled; the failing page's saves are drained with a per-page `Promise.allSettled`,
+  the workers are drained with an outer `Promise.allSettled`, then the first error
+  propagates — no unhandled rejections, and a page-read failure aborts the other
+  workers too.
 - **Reporting**: `afterDocumentChange` fires after all saves completed and reports
   only ids whose save resolved.
 - **Re-entrancy guard**: document ids written by the fan-out stay disabled only
@@ -41,10 +43,10 @@ sequenceDiagram
     Q-->>CPU: page 1 (chunkSize hydrated docs)
     par concurrency workers [REQ-2]
       CPU->>Q: cursor.next( chunkSize )
-      CPU->>MS: Promise.all( chunk saves )
+      CPU->>MS: Promise.allSettled( chunk saves ) [REQ-7]
       MS->>DS: save( doc )  (in-flight ≤ chunkSize × concurrency)
     end
-    CPU->>CPU: drain workers (abort on first failure) [REQ-5]
+    CPU->>CPU: drain workers (abort on first save or read failure) [REQ-5][REQ-7][REQ-8]
     CPU-->>Host: afterDocumentChange( completed ids only ) [REQ-4]
     Note over Host,CPU: updateProps() resolves here — after all saves settled [REQ-3]
   end
@@ -80,7 +82,7 @@ value cannot disable the pool or produce an unbounded `get()`. A limit set by
 
 ## Plan
 
-1. Feature file: `specs/gh-issue-19/cached-props-fanout.feature` ([REQ-1..6]).
+1. Feature file: `specs/gh-issue-19/cached-props-fanout.feature` ([REQ-1..8]).
 2. Tests (TDD, red first) appended to `src/store/cached-props-updater.spec.ts`
    in a new describe block named after the feature.
 3. Rewrite `onDocumentChange` in `src/store/cached-props-updater.ts`:
@@ -89,12 +91,18 @@ value cannot disable the pool or produce an unbounded `get()`. A limit set by
 4. Fix guard lifecycle with `try/finally`.
 5. Full suite green, then audit.
 
+Follow-up (audit changes requested, PR #24): per-page `Promise.allSettled` so the
+failing page's saves are drained before rejecting (`[REQ-7]`), abort on a page-read
+failure (`[REQ-8]`), and a `@throws` contract on `updateProps`.
+
 ## Changes
 
 - `src/store/cached-props-updater.ts` — restructured `onDocumentChange`, new
-  `hasCachedPropsChanges()`, `fanOutToCollection()`, `pullNextPage()`,
-  `updateOwnerDocument()` private helpers; `chunkSize`/`concurrency` config.
-- `src/store/cached-props-updater.spec.ts` — new describe block, [REQ-1..6].
+  `hasCachedPropsChanges()`, `fanOutToCollection()`, `takePage()`,
+  `updateOwnerDocument()` private helpers; `chunkSize`/`concurrency` config;
+  per-page `Promise.allSettled` drain and read-failure abort.
+- `src/store/cached-props-updater.spec.ts` — new describe block, [REQ-1..8] plus
+  supplementary cap/sanitization/page-fetch tests.
 - `specs/gh-issue-19/cached-props-fanout.feature` — requirements.
 - No public API break: `updateProps()`, callbacks and `UpdatedResults` keep
   their shape; `totalDocumentsToUpdate` is now computed at completion instead
@@ -110,9 +118,13 @@ value cannot disable the pool or produce an unbounded `get()`. A limit set by
   through the existing `QueryCursor` (position advances synchronously, so
   concurrent `next()` calls are safe); memory holds at most
   `concurrency × chunkSize` hydrated documents.
-- **`Promise.allSettled` drain on failure.** `updateProps()` never resolves
-  early: on the first failed save no new page is pulled, in-flight saves are
-  awaited, then the first error is rethrown — every rejection is handled.
+- **Per-page `Promise.allSettled` drain, outer worker drain.** `updateProps()` never
+  resolves early and never rejects while work is still in flight: a failing save is
+  detected after every save of its page settled (`[REQ-7]`), no new page is pulled,
+  the workers settle, then the first error is rethrown — every rejection is handled.
+- **Read failures abort the fan-out too.** `takePage()` is guarded so a cursor read
+  rejection sets `aborted` before rethrowing, stopping the other workers from pulling
+  more pages (`[REQ-8]`).
 - **Re-entrancy (issue defect 4).** What this package can do:
   1. in-process guard, now `finally`-safe and meaningful because saves are
      actually awaited (`[REQ-6]`);
@@ -164,7 +176,7 @@ concurrency and error draining into every `updateProps` caller.
 | --- | --- |
 | Resource policy interleaved with the fan-out loop | Policy local to `fanOutToCollection` (`takePage`, `worker`, `updateOwnerDocument`) |
 | Query executed before deciding there was work | `changedProps` filter first; no work ⇒ no query |
-| `Promise.all([ a.map(…) ])` silently non-awaiting | `Promise.allSettled` drain + rethrow of the first failure |
+| `Promise.all([ a.map(…) ])` silently non-awaiting | Per-page `Promise.allSettled` drain, worker drain and rethrow of the first failure |
 | Guard left permanently disabled after a rejected save | `try/finally` re-enables the id |
 
 ### Benefits
@@ -190,7 +202,7 @@ flowchart LR
     B2 -->|no| B3[report empty, zero reads]
     B2 -->|yes| B4[query.get chunkSize]
     B4 --> B5[concurrency workers, one page each]
-    B5 --> B6[drain all settled]
+    B5 --> B6[allSettled each page, drain workers]
     B6 --> B7[fire report with completed ids]
   end
 ```
@@ -216,4 +228,30 @@ flowchart LR
   **Speculative.**
 
 No **Strong** recommendation remains; no further refactor was applied after the audit.
+
+### Follow-up — independent audit of PR #24 (`eb-24-code-audit`)
+
+An independent audit returned **CHANGES REQUESTED** with two failure-path gaps, approved for
+fixing:
+
+- **F1 (medium, `[REQ-7]`).** The per-page `Promise.all` short-circuited on the first rejected
+  save, so `updateProps()` rejected while the failing page's siblings were still in flight.
+  Fixed: the page now settles through `Promise.allSettled`, then `aborted = true` and the first
+  rejection reason is thrown — the page is fully drained before the promise rejects.
+- **F2 (low, `[REQ-8]`).** A `takePage()` cursor-read failure did not set `aborted`, so other
+  workers kept pulling every remaining page. Fixed: `await takePage()` is guarded by
+  `try/catch`, sets `aborted = true` and rethrows.
+- **F4.** `updateProps` now carries a `@throws` JSDoc contract for save, read and callback
+  failures. (The `BREAKING CHANGE:` footer suggestion was not applied — the contract change is
+  documented, and this is a patch release decision owned by the maintainer.)
+- **F5.** Added the red tests for F1 (`[REQ-7]`, `settled === chunkSize` at rejection and no
+  further page pulled) and F2 (`[REQ-8]`, no page read after the failure), plus supplementary
+  tests for the `beforeQueryOwnerCollection` total cap and for `chunkSize`/`concurrency`
+  sanitization. Both `[REQ-7]`/`[REQ-8]` tests were verified red on the pre-fix implementation
+  (`settled = 1`; `nextCalls = 10`).
+- **F3** (refcounted/keyed guard), the `PageStream` extract, and the `wait()`/sample wording
+  notes were not applied — out of the approved item list.
+
+Re-verified after the follow-up: `src/store/cached-props-updater.spec.ts` 19/19 green, full suite
+and build green.
 

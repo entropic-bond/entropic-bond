@@ -50,3 +50,15 @@ Feature: Cached props fan-out resource safety
     #cached prop; a genuinely shared deduplication mechanism is not possible
     #inside this package and the remaining deployment-level limitation is
     #documented in cached-props-fanout-design.md.
+
+  Scenario: Reject only after the failing page saves have settled. Issue: #19 [REQ-7]
+    Given an owner save that fails while its page siblings settle slowly
+    When the updater processes an event that changes a cached prop
+    Then the returned promise rejects only after every save of the failing page settled
+    And no further page is pulled
+
+  Scenario: Stop pulling pages when an owner page read fails. Issue: #19 [REQ-8]
+    Given an owner page read that fails mid-stream
+    When the updater processes an event that changes a cached prop
+    Then no page is read after the failure
+    And the returned promise rejects with the read error

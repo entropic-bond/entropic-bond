@@ -520,4 +520,71 @@ describe( 'Cached props fan-out resource safety. Issue: #19 [REQ-1][REQ-2][REQ-3
 		expect( countUpdatedParents() ).toBe( 3 )
 	})
 
+	it( 'Reject only after the failing page saves have settled. Issue: #19 [REQ-7]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 1 })
+		const originalSave = datasource.save.bind( datasource )
+		let calls = 0
+		let settled = 0
+		vi.spyOn( datasource, 'save' ).mockImplementation( collections => {
+			calls++
+			if ( calls === 1 ) {
+				return Promise.reject( new Error( 'first owner save failed' ) ).finally(()=> settled++ )
+			}
+			return new Promise< void >( resolve => setTimeout( resolve, 50 ) )
+				.then(()=> originalSave( collections ) )
+				.finally(()=> settled++ )
+		})
+
+		await expect( updater.updateProps( 'Child', nameChangedEvent() ) ).rejects.toThrow( 'first owner save failed' )
+
+		// chunkSize = 5: the whole failing page settled before updateProps rejected
+		expect( settled ).toBe( 5 )
+		// and the failing page aborted the run before the next page was pulled
+		expect( calls ).toBe( 5 )
+	})
+
+	it( 'Stop pulling pages when an owner page read fails. Issue: #19 [REQ-8]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 2 })
+		const realNext = QueryCursor.prototype.next
+		let nextCalls = 0
+		vi.spyOn( QueryCursor.prototype, 'next' ).mockImplementation( function( this: QueryCursor, limit?: number ) {
+			nextCalls++
+			return nextCalls === 2
+				? Promise.reject( new Error( 'owner page read failed' ) )
+				: realNext.call( this, limit )
+		})
+		const saveSpy = vi.spyOn( datasource, 'save' )
+
+		await expect( updater.updateProps( 'Child', nameChangedEvent() ) ).rejects.toThrow( 'owner page read failed' )
+
+		// next #1 = first page, #2 = the failing read; no page is read after it
+		expect( nextCalls ).toBeLessThanOrEqual( 3 )
+		expect( saveSpy.mock.calls.length ).toBeLessThan( 40 )
+	})
+
+	it( 'Honour a total cap set before the owner query runs', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 2 })
+		updater.beforeQueryOwnerCollection = query => query.limit( 2 )
+		const saveSpy = vi.spyOn( datasource, 'save' )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( saveSpy ).toHaveBeenCalledTimes( 2 )
+		expect( countUpdatedParents() ).toBe( 2 )
+	})
+
+	it( 'Sanitize chunkSize and concurrency to at least one', async ()=>{
+		seedOwners( 5 )
+		setupUpdater({ chunkSize: 0, concurrency: 0 })
+		const saveSpy = vi.spyOn( datasource, 'save' )
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( saveSpy ).toHaveBeenCalledTimes( 5 )
+		expect( countUpdatedParents() ).toBe( 5 )
+	})
+
 })

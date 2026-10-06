@@ -111,6 +111,16 @@ export class CachedPropsUpdater {
 		return this._collectionsToWatch
 	}
 
+	/**
+	 * Fans out the update of every owner document whose cached props are affected
+	 * by the given document change.
+	 *
+	 * Resolves after every dispatched save settled. Rejects with the first error
+	 * when an owner save, an owner page read or a callback fails; no page is pulled
+	 * after a failure and the failing page's in-flight saves are drained before the
+	 * promise rejects.
+	 * @throws When an owner save, an owner page read or a callback fails.
+	 */
 	updateProps( documentPath: string, event: DocumentChange<DocumentObject> ): Promise<void> {
 		const propsToUpdate = this._collectionsToWatch[ documentPath ]
 		if ( !propsToUpdate ) return Promise.resolve()
@@ -194,16 +204,22 @@ export class CachedPropsUpdater {
 		let aborted = false
 		const worker = async () => {
 			while ( !aborted ) {
-				const page = await takePage()
-				if ( aborted || page.length === 0 ) return
-
-				result.documentsToUpdate.push( ...page.map( document => document[ 'name' ] ?? document.id ) )
+				let page: Persistent[]
 				try {
-					await Promise.all( page.map( document => this.updateOwnerDocument( ownerModel, document, prop, change, result ) ) )
+					page = await takePage()
 				}
 				catch ( error ) {
 					aborted = true
 					throw error
+				}
+				if ( aborted || page.length === 0 ) return
+
+				result.documentsToUpdate.push( ...page.map( document => document[ 'name' ] ?? document.id ) )
+				const pageOutcomes = await Promise.allSettled( page.map( document => this.updateOwnerDocument( ownerModel, document, prop, change, result ) ) )
+				const pageFailure = pageOutcomes.find( outcome => outcome.status === 'rejected' )
+				if ( pageFailure ) {
+					aborted = true
+					throw ( pageFailure as PromiseRejectedResult ).reason
 				}
 			}
 		}
