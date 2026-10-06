@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/entropic-bond/entropic-bond/compare/v2.0.1...v2.0.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* report onDocumentChange deletions with no after payload ([#20](https://github.com/entropic-bond/entropic-bond/issues/20)) ([177e938](https://github.com/entropic-bond/entropic-bond/commit/177e938c7864db6deb32d71dc229411673f1d9df)), closes [#issue-12](https://github.com/entropic-bond/entropic-bond/issues/issue-12) [#13](https://github.com/entropic-bond/entropic-bond/issues/13)
+
 ## [2.0.1](https://github.com/entropic-bond/entropic-bond/compare/v2.0.0...v2.0.1) (2026-10-06)
 
 
