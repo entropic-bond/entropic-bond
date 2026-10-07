@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/entropic-bond/entropic-bond/compare/v2.0.4...v2.0.5) (2026-10-07)
+
+
+### Bug Fixes
+
+* prevent lost updates in cached-props owner fan-out ([0098e94](https://github.com/entropic-bond/entropic-bond/commit/0098e94ae99b49d8ab5be17fa7f8d828a25abc0f))
+
 ## [2.0.4](https://github.com/entropic-bond/entropic-bond/compare/v2.0.3...v2.0.4) (2026-10-06)
 
 
