@@ -1,4 +1,4 @@
-import { persistent, Persistent, PersistentProperty, persistentPureReferenceWithCachedProps, registerPersistentClass, DocumentChange } from '../persistent/persistent'
+import { persistent, Persistent, PersistentProperty, persistentPureReferenceWithCachedProps, registerPersistentClass, searchableArray, DocumentChange } from '../persistent/persistent'
 import { Store } from './store'
 import { Model } from './model'
 import { JsonDataSource } from './json-data-source'
@@ -329,7 +329,10 @@ describe( 'Cached props fan-out resource safety. Issue: #19 [REQ-1][REQ-2][REQ-3
 	}
 
 	function setupUpdater( config?: CachedPropsUpdaterConfig ) {
-		updater = datasource.installCachedPropsUpdater( config )
+		// These resource-safety specs instrument the legacy whole-document save,
+		// so they pin it explicitly; the transactional owner path (the default)
+		// is covered by the Issue #25 suite below.
+		updater = datasource.installCachedPropsUpdater({ transactional: false, ...config })
 		datasource.onDocumentTemplateChange( '{rootCollection}/{rootDocumentId}/{subCollection}/{subDocumentId}', event => {
 			const { rootCollection, subCollection } = event.params!
 			const documentPath = subCollection? `${ rootCollection }/{customerId}/${ subCollection }` : rootCollection
@@ -587,4 +590,90 @@ describe( 'Cached props fan-out resource safety. Issue: #19 [REQ-1][REQ-2][REQ-3
 		expect( countUpdatedParents() ).toBe( 5 )
 	})
 
+	it( 'Update every owner document with transactional saves [REQ-2]', async ()=>{
+		seedOwners( 40 )
+		setupUpdater({ chunkSize: 5, concurrency: 2, transactional: true })
+
+		await updater.updateProps( 'Child', nameChangedEvent() )
+
+		expect( countUpdatedParents() ).toBe( 40 )
+	})
+
+})
+@registerPersistentClass('ArrayParent')
+class ArrayParent extends Persistent {
+	set refs( value: Child[] ) {
+		this._refs = value
+	}
+
+	get refs(): Child[] {
+		return this._refs
+	}
+
+	@searchableArray @persistentPureReferenceWithCachedProps<Child>( ['name'], 'Child' ) private _refs: Child[] = []
+}
+
+describe( 'Transactional owner updates prevent lost updates [REQ-1][REQ-2]', ()=>{
+	let datasource: JsonDataSource
+	let updater: CachedPropsUpdater
+
+	beforeEach(()=>{
+		datasource = new JsonDataSource({})
+		Store.useDataSource( datasource )
+		datasource.setDataStore({
+			ArrayParent: {
+				p: {
+					id: 'p',
+					__className: 'ArrayParent',
+					refs: [
+						{ id: 'a', __className: 'Child', name: 'a', __documentReference: { storedInCollection: 'Child' } },
+						{ id: 'b', __className: 'Child', name: 'b', __documentReference: { storedInCollection: 'Child' } }
+					],
+					__refs_searchable: [ 'a', 'b' ]
+				}
+			} as any,
+			Child: {
+				a: { id: 'a', __className: 'Child', name: 'a' },
+				b: { id: 'b', __className: 'Child', name: 'b' }
+			} as any
+		})
+	})
+
+	afterEach(()=>{
+		vi.restoreAllMocks()
+	})
+
+	const childEvent = ( id: string, from: string, to: string ): DocumentChange<DocumentObject> => ({
+		before: { id, __className: 'Child', name: from } as DocumentObject,
+		after: { id, __className: 'Child', name: to } as DocumentObject,
+		type: 'update',
+		params: {},
+		collectionPath: 'Child'
+	})
+
+	const storedRefNames = ()=> ( datasource.rawData[ 'ArrayParent' ]?.[ 'p' ] as any )?.refs?.map(( ref: any )=> ref.name )
+
+	async function renameBothConcurrently( config?: CachedPropsUpdaterConfig ) {
+		datasource.simulateDelay( 10 )
+		updater = datasource.installCachedPropsUpdater( config )
+		await Promise.all([
+			updater.updateProps( 'Child', childEvent( 'a', 'a', 'a-updated' ) ),
+			updater.updateProps( 'Child', childEvent( 'b', 'b', 'b-updated' ) ),
+		])
+		await datasource.wait()
+	}
+
+	it( 'Lose one of two concurrent owner renames with the legacy batch save [REQ-1]', async ()=>{
+		await renameBothConcurrently({ transactional: false })
+
+		// one write clobbers the other: only one rename survives
+		const names = storedRefNames()
+		expect( names.filter(( name: string )=> name === 'a-updated' || name === 'b-updated' ) ).toHaveLength( 1 )
+	})
+
+	it( 'Keep both concurrent owner renames with transactional updates by default [REQ-2]', async ()=>{
+		await renameBothConcurrently()
+
+		expect( storedRefNames() ).toEqual( [ 'a-updated', 'b-updated' ] )
+	})
 })

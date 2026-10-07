@@ -1,6 +1,6 @@
 import { PersistentProperty, Persistent, DocumentChange } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
-import { DocumentObject, DataSource } from './data-source'
+import { DocumentObject, DataSource, TransactionConflictError } from './data-source'
 import { Model, Query } from './model'
 import { Store } from './store'
 
@@ -24,6 +24,16 @@ export interface CachedPropsUpdaterConfig {
 	beforeQueryOwnerCollection?: BeforeQueryOwnerCollection
 	chunkSize?: number
 	concurrency?: number
+	/**
+	 * When true (the default), each owner document is re-read and written inside a
+	 * compare-and-set transaction, so a concurrent write to the same owner
+	 * document is never silently overwritten. Retries on conflict up to
+	 * `transactionRetries` times. Set to false to opt back into the legacy
+	 * batch save (whole-document set from the hydrated copy).
+	 */
+	transactional?: boolean
+	/** Max conflict retries per owner document when `transactional` is enabled. Defaults to 5. */
+	transactionRetries?: number
 }
 
 export class CachedPropsUpdater {
@@ -31,6 +41,8 @@ export class CachedPropsUpdater {
 	static readonly DEFAULT_CHUNK_SIZE = 25
 	/** Number of chunks processed in parallel; in-flight saves never exceed chunkSize x concurrency. */
 	static readonly DEFAULT_CONCURRENCY = 4
+	/** Max conflict retries per owner document when transactional updates are enabled. */
+	static readonly DEFAULT_TRANSACTION_RETRIES = 5
 
 	constructor( config?: CachedPropsUpdaterConfig ) {
 		if ( config ) {
@@ -41,6 +53,8 @@ export class CachedPropsUpdater {
 			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
 			this._chunkSize = CachedPropsUpdater.sanitizeCount( config.chunkSize, CachedPropsUpdater.DEFAULT_CHUNK_SIZE )
 			this._concurrency = CachedPropsUpdater.sanitizeCount( config.concurrency, CachedPropsUpdater.DEFAULT_CONCURRENCY )
+			this._transactional = config.transactional ?? true
+			this._transactionRetries = CachedPropsUpdater.sanitizeRetries( config.transactionRetries, CachedPropsUpdater.DEFAULT_TRANSACTION_RETRIES )
 		}
 		this.installUpdaters()
 	}	
@@ -234,23 +248,74 @@ export class CachedPropsUpdater {
 	}
 
 	private async updateOwnerDocument( ownerModel: Model<any>, document: any, prop: PersistentProperty, change: DocumentChange<Persistent>, result: UpdatedResults[ string ] ) {
-		if ( prop.searchableArray ) {
-			const index = ( document[ prop.name ] as Persistent[] ).findIndex( obj => obj.id === change.before!.id )
-			document[ prop.name ][ index ] = change.after
-		}
-		else {
-			document[ `_${ prop.name }` ] = change.after
+		const after = change.after!
+		const applyUpdate = ( target: any ) => {
+			if ( prop.searchableArray ) {
+				const array = target[ prop.name ] as Persistent[]
+				const index = array.findIndex( obj => obj.id === change.before!.id )
+				if ( index >= 0 ) array[ index ] = after
+				else array.push( after )
+			}
+			else {
+				target[ `_${ prop.name }` ] = after
+			}
+
+			this._beforeUpdateDocument?.( target, prop, after )
+			return target
 		}
 
-		this._beforeUpdateDocument?.( document, prop, change.after )
+		if ( this._transactional ) {
+			let updated: any
+			const savedId = await this.runTransactionalUpdate( ownerModel, document.id, target => { updated = applyUpdate( target ) } )
+			if ( savedId === undefined ) return
+
+			result.updatedDocuments.push( savedId )
+			this._afterUpdateDocument?.( updated, prop, after )
+			return
+		}
+
+		applyUpdate( document )
 		this.disableChangeListener( document )
 		try {
 			await ownerModel.save( document )
 			result.updatedDocuments.push( document.id )
-			this._afterUpdateDocument?.( document, prop, change.after )
+			this._afterUpdateDocument?.( document, prop, after )
 		}
 		finally {
 			this.enableChangeListener( document )
+		}
+	}
+
+	/**
+	 * Re-reads the owner document inside a compare-and-set transaction, applies
+	 * the cached-prop mutation to the fresh instance and commits it. Retries on
+	 * conflict so two fan-outs racing on the same owner document both survive.
+	 * @returns the saved document id, or undefined when the document vanished
+	 */
+	private async runTransactionalUpdate( ownerModel: Model<any>, id: string, applyUpdate: ( target: any ) => void ): Promise<string | undefined> {
+		this.disableChangeListener({ id })
+		try {
+			for ( let attempt = 0; ; attempt++ ) {
+				try {
+					let savedId: string | undefined
+					await ownerModel.runTransaction( async handle => {
+						const target = await handle.findById( id )
+						if ( !target ) return
+
+						applyUpdate( target )
+						await handle.save( target )
+						savedId = target.id
+					})
+					return savedId
+				}
+				catch ( error ) {
+					if ( error instanceof TransactionConflictError && attempt < this._transactionRetries ) continue
+					throw error
+				}
+			}
+		}
+		finally {
+			this.enableChangeListener({ id })
 		}
 	}
 
@@ -265,11 +330,17 @@ export class CachedPropsUpdater {
 			: fallback
 	}
 
-	private disableChangeListener( document: DocumentObject ) {
+	private static sanitizeRetries( value: number | undefined, fallback: number ): number {
+		return value !== undefined && Number.isFinite( value )
+			? Math.max( 0, Math.floor( value ) )
+			: fallback
+	}
+
+	private disableChangeListener( document: { id?: string } ) {
 		this._disabledChangeListeners.add( document.id! )
 	}
 
-	private enableChangeListener( document: DocumentObject ) {
+	private enableChangeListener( document: { id?: string } ) {
 		this._disabledChangeListeners.delete( document.id! )
 	}
 
@@ -295,4 +366,6 @@ export class CachedPropsUpdater {
 	private _collectionsToWatch: Collection<PersistentProperty[]> = {}
 	private _chunkSize = CachedPropsUpdater.DEFAULT_CHUNK_SIZE
 	private _concurrency = CachedPropsUpdater.DEFAULT_CONCURRENCY
+	private _transactional = true
+	private _transactionRetries = CachedPropsUpdater.DEFAULT_TRANSACTION_RETRIES
 }
