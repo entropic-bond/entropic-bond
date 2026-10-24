@@ -1,3 +1,10 @@
+## [2.0.6](https://github.com/entropic-bond/entropic-bond/compare/v2.0.5...v2.0.6) (2026-10-24)
+
+
+### Bug Fixes
+
+* make installCachedPropsUpdater own the cached-props lifecycle ([#14](https://github.com/entropic-bond/entropic-bond/issues/14)) ([#25](https://github.com/entropic-bond/entropic-bond/issues/25)) ([e4fdd4d](https://github.com/entropic-bond/entropic-bond/commit/e4fdd4d03b724b12b00d7dbd9483db9aa3232ddf))
+
 ## [2.0.5](https://github.com/entropic-bond/entropic-bond/compare/v2.0.4...v2.0.5) (2026-10-07)
 
 
