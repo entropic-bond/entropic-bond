@@ -1,3 +1,10 @@
+## [2.0.7](https://github.com/entropic-bond/entropic-bond/compare/v2.0.6...v2.0.7) (2026-10-24)
+
+
+### Bug Fixes
+
+* bump npm update ([75f8393](https://github.com/entropic-bond/entropic-bond/commit/75f8393464ec97826636261754f877a9fad859d5))
+
 ## [2.0.6](https://github.com/entropic-bond/entropic-bond/compare/v2.0.5...v2.0.6) (2026-10-24)
 
 
