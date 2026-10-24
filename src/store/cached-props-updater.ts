@@ -1,5 +1,6 @@
 import { PersistentProperty, Persistent, DocumentChange } from '../persistent/persistent'
 import { Collection } from '../types/utility-types'
+import { Unsubscriber } from '../observable/observable'
 import { DocumentObject, DataSource, TransactionConflictError } from './data-source'
 import { Model, Query } from './model'
 import { Store } from './store'
@@ -15,6 +16,13 @@ export interface UpdatedResults {
 export type AfterDocumentChangeCallback = ( updatedResults?: UpdatedResults, propsToUpdate?: PersistentProperty[] ) => void
 export type BeforeDocumentChangeCallback = ( change: DocumentChange<Persistent>, propsToUpdate?: PersistentProperty[] ) => void
 export type BeforeQueryOwnerCollection = ( query: Query<any> ) => Query<any> | void
+/**
+ * Notified when an install-driven refresh fails. The refresh itself is already
+ * contained: it never rejects and the subscription is kept.
+ * @param error the error that made the refresh fail
+ * @param change the document change that triggered the refresh
+ */
+export type OnRefreshFailureCallback = ( error: unknown, change: DocumentChange<DocumentObject> ) => void
 
 export interface CachedPropsUpdaterConfig {
 	beforeUpdateDocument?: CachedPropsUpdaterCallback
@@ -22,6 +30,11 @@ export interface CachedPropsUpdaterConfig {
 	beforeDocumentChange?: BeforeDocumentChangeCallback
 	afterDocumentChange?: AfterDocumentChangeCallback
 	beforeQueryOwnerCollection?: BeforeQueryOwnerCollection
+	/**
+	 * Notified when a refresh driven by the install subscription fails. Optional:
+	 * when absent the failure is contained silently (no rejection, no logging).
+	 */
+	onRefreshFailure?: OnRefreshFailureCallback
 	chunkSize?: number
 	concurrency?: number
 	/**
@@ -51,6 +64,7 @@ export class CachedPropsUpdater {
 			this._afterDocumentChange = config.afterDocumentChange
 			this._beforeDocumentChange = config.beforeDocumentChange
 			this._beforeQueryOwnerCollection = config.beforeQueryOwnerCollection
+			this._onRefreshFailure = config.onRefreshFailure
 			this._chunkSize = CachedPropsUpdater.sanitizeCount( config.chunkSize, CachedPropsUpdater.DEFAULT_CHUNK_SIZE )
 			this._concurrency = CachedPropsUpdater.sanitizeCount( config.concurrency, CachedPropsUpdater.DEFAULT_CONCURRENCY )
 			this._transactional = config.transactional ?? true
@@ -126,6 +140,52 @@ export class CachedPropsUpdater {
 	}
 
 	/**
+	 * Subscribes to the changes of every collection whose documents hold a cached
+	 * prop of this updater, so a referenced document change refreshes its owners
+	 * without any caller-side listener bridge. A host (or the data source that
+	 * installed this updater) should call this once after construction.
+	 *
+	 * The data source passed here is also the one owner documents are read and
+	 * written through, so the updater works independently of which data source is
+	 * active in the Store. Unsubscribing stops the refreshes but does not clear
+	 * that data source, so later direct `updateProps()` calls keep reading and
+	 * writing owners through it. Calling it again replaces the previous
+	 * subscription: only one subscription is live per updater and the previously
+	 * returned unsubscriber becomes a no-op.
+	 *
+	 * Refreshes are fire-and-forget: a failure is handed to the `onRefreshFailure`
+	 * config callback (if any) and never rejects. `updateProps` keeps rejecting as
+	 * it always has when called directly.
+	 * @param dataSource the data source that stores the watched and the owner documents
+	 * @returns a function that unsubscribes this subscription
+	 */
+	subscribe( dataSource: DataSource ): Unsubscriber {
+		this.unsubscribe()
+		this._ownerDataSource = dataSource
+
+		const unsubscribers = Object.keys( this._collectionsToWatch ).map( collectionTemplate =>
+			dataSource.onDocumentTemplateChange( collectionTemplate, event => this.onSubscriptionChange( collectionTemplate, event ) )
+		)
+
+		const unsubscribe = () => {
+			unsubscribers.forEach( unsubscriber => unsubscriber() )
+			// only the live subscription clears itself, so an older unsubscriber is a no-op
+			if ( this._subscriptionUnsubscriber === unsubscribe ) this._subscriptionUnsubscriber = undefined
+		}
+		this._subscriptionUnsubscriber = unsubscribe
+		return unsubscribe
+	}
+
+	/**
+	 * Stops the current subscription, if any. Owner routing stays as it was, so
+	 * later direct `updateProps()` calls keep reading and writing owners through
+	 * the data source of the stopped subscription.
+	 */
+	unsubscribe(): void {
+		this._subscriptionUnsubscriber?.()
+	}
+
+	/**
 	 * Fans out the update of every owner document whose cached props are affected
 	 * by the given document change.
 	 *
@@ -140,6 +200,24 @@ export class CachedPropsUpdater {
 		if ( !propsToUpdate ) return Promise.resolve()
 
 		return this.onDocumentChange( event, propsToUpdate )
+	}
+
+	/**
+	 * Bridges a data source template notification to a refresh. The refresh is not
+	 * awaited: its rejection is handed to the `onRefreshFailure` callback and
+	 * contained, so a failed refresh never raises an unhandled rejection and never
+	 * unsubscribes the listener. The host callback is itself guarded, so a throwing
+	 * failure handler cannot fail the refresh path.
+	 */
+	private onSubscriptionChange( collectionTemplate: string, event: DocumentChange<DocumentObject> ) {
+		this.updateProps( collectionTemplate, event ).catch( error => {
+			try {
+				this._onRefreshFailure?.( error, event )
+			}
+			catch {
+				// A throwing host handler must not break the subscription.
+			}
+		})
 	}
 
 	private async onDocumentChange( event: DocumentChange<DocumentObject>, propsToUpdate: PersistentProperty[] ) {
@@ -179,7 +257,7 @@ export class CachedPropsUpdater {
 	 * drains the in-flight saves and rejects.
 	 */
 	private async fanOutToCollection( ownerCollection: string, prop: PersistentProperty, change: DocumentChange<Persistent>, results: UpdatedResults ) {
-		const ownerModel = Store.getModel<any>( ownerCollection )
+		const ownerModel = this.ownerModel( ownerCollection )
 		let query = ownerModel.find()
 		if ( prop.searchableArray ) query = query.where( prop.name, 'contains', change.before! )
 		else query = query.where( prop.name, '==', change.before! )
@@ -247,18 +325,20 @@ export class CachedPropsUpdater {
 		result.totalDocumentsToUpdate = result.documentsToUpdate.length
 	}
 
+	/**
+	 * The model owner documents are read and written through: the data source this
+	 * updater is subscribed to when it is, the Store data source otherwise.
+	 */
+	private ownerModel( collection: string ): Model<any> {
+		return this._ownerDataSource
+			? new Model<any>( this._ownerDataSource, collection )
+			: Store.getModel<any>( collection )
+	}
+
 	private async updateOwnerDocument( ownerModel: Model<any>, document: any, prop: PersistentProperty, change: DocumentChange<Persistent>, result: UpdatedResults[ string ] ) {
 		const after = change.after!
 		const applyUpdate = ( target: any ) => {
-			if ( prop.searchableArray ) {
-				const array = target[ prop.name ] as Persistent[]
-				const index = array.findIndex( obj => obj.id === change.before!.id )
-				if ( index >= 0 ) array[ index ] = after
-				else array.push( after )
-			}
-			else {
-				target[ `_${ prop.name }` ] = after
-			}
+			this.setCachedReference( target, prop, change )
 
 			this._beforeUpdateDocument?.( target, prop, after )
 			return target
@@ -283,6 +363,31 @@ export class CachedPropsUpdater {
 		}
 		finally {
 			this.enableChangeListener( document )
+		}
+	}
+
+	/**
+	 * Writes the new cached reference into an owner document. The only place the
+	 * updater mutates an owner's reference, shared by the transactional and the
+	 * legacy save paths.
+	 *
+	 * A scalar reference is written to `'_' + prop.name` because `@persistent`
+	 * properties live in their underscore-prefixed private field (the underscore is
+	 * stripped on serialization, see the project conventions). A searchable array
+	 * reference replaces the matching element, or appends the reference when it is
+	 * not there yet.
+	 */
+	private setCachedReference( target: any, prop: PersistentProperty, change: DocumentChange<Persistent> ) {
+		const after = change.after!
+
+		if ( prop.searchableArray ) {
+			const array = target[ prop.name ] as Persistent[]
+			const index = array.findIndex( obj => obj.id === change.before!.id )
+			if ( index >= 0 ) array[ index ] = after
+			else array.push( after )
+		}
+		else {
+			target[ `_${ prop.name }` ] = after
 		}
 	}
 
@@ -361,6 +466,9 @@ export class CachedPropsUpdater {
 	private _beforeDocumentChange: BeforeDocumentChangeCallback | undefined
 	private _afterDocumentChange: AfterDocumentChangeCallback | undefined
 	private _beforeQueryOwnerCollection: BeforeQueryOwnerCollection | undefined
+	private _onRefreshFailure: OnRefreshFailureCallback | undefined
+	private _ownerDataSource: DataSource | undefined
+	private _subscriptionUnsubscriber: Unsubscriber | undefined
 	private _resolveCollectionPaths: ( template: string ) => Promise<string[]> = ()=> { throw new Error( 'The method collectionsMatchingTemplate has not been implemented in the concrete data source' ) }
 	private _disabledChangeListeners = new Set<string>()
 	private _collectionsToWatch: Collection<PersistentProperty[]> = {}

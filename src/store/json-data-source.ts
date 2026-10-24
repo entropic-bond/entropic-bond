@@ -22,6 +22,15 @@ type QueryProcessors = {
 }
 
 /**
+ * A template listener is matched at notify time, not at subscribe time, so a
+ * collection that appears after the subscription is notified too.
+ */
+type TemplateListener = {
+	template: string
+	listener: DocumentChangeListener< DocumentObject >
+}
+
+/**
  * A concrete implementation of the DataSource interface uses an in-memory data store
  * initialized by a JSON object.
  * It is useful for testing purposes.
@@ -187,7 +196,7 @@ export class JsonDataSource extends DataSource {
 				params: change.params,
 			} as DocumentChange<DocumentObject>], this.querySync( query, collectionName ) )
 		}
-		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+		const uid = this.createListenerUid()
 		listeners[ uid ] = finalListener
 
 		const snapshot = this.querySync( query, collectionName )
@@ -212,32 +221,15 @@ export class JsonDataSource extends DataSource {
 			if ( changedId === documentId ) listener( change )
 		}
 
-		const uid = Math.random().toString( 36 ).substring( 2, 9 )
+		const uid = this.createListenerUid()
 		listeners[ uid ] = finalListener
 		return ()=> delete listeners[ uid ]
 	}
 
 	override onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener< DocumentObject > ): Unsubscriber {
-		const allCollections = this.collectionsMatchingTemplate( collectionTemplate )
-		const unsubscribers: Unsubscriber[] = []
-
-		allCollections.forEach( collectionName => {
-			let listeners = this._documentListeners[ collectionName ] 
-			if ( !listeners ) {
-				this._documentListeners[ collectionName ] = {}
-				listeners = this._documentListeners[ collectionName ]
-			}
-			const finalListener = ( change: DocumentChange<DocumentObject> ) => {
-				change.params = DataSource.extractTemplateParams( collectionName, collectionTemplate )
-				listener( change )
-			}
-
-			const uid = Math.random().toString( 36 ).substring( 2, 9 )
-			listeners[ uid ] = finalListener
-			unsubscribers.push( () => delete listeners![ uid ] )
-		})
-
-		return () => unsubscribers.forEach( unsubscriber => unsubscriber() )
+		const uid = this.createListenerUid()
+		this._templateListeners[ uid ] = { template: collectionTemplate, listener }
+		return () => delete this._templateListeners[ uid ]
 	}
 
 
@@ -279,6 +271,10 @@ export class JsonDataSource extends DataSource {
 		return this
 	}
 
+	private createListenerUid(): string {
+		return Math.random().toString( 36 ).substring( 2, 9 )
+	}
+
 	private notifyChange( collectionPath: string, document: DocumentObject, oldValue: DocumentObject | undefined, type?: DocumentChangeType ) {
 		const changeType = type ?? ( oldValue? 'update' : 'create' ) as DocumentChangeType
 		const event: DocumentChange<DocumentObject> = {
@@ -291,6 +287,21 @@ export class JsonDataSource extends DataSource {
 
 		Object.values( this._documentListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
 		Object.values( this._collectionListeners[ collectionPath ] ?? {} ).forEach( listener => listener( event ) )
+		this.notifyTemplateListeners( collectionPath, event )
+	}
+
+	/**
+	 * Notifies every template listener whose template matches the changed
+	 * collection, whatever the collection existed when the listener subscribed.
+	 * Each listener receives its own copy of the event with `params` extracted from
+	 * the collection path, so the shared event is never mutated.
+	 */
+	private notifyTemplateListeners( collectionPath: string, event: DocumentChange<DocumentObject> ) {
+		Object.values( this._templateListeners ).forEach(({ template, listener }) => {
+			if ( !DataSource.isStringMatchingTemplate( template, collectionPath ) ) return
+
+			listener({ ...event, params: DataSource.extractTemplateParams( collectionPath, template ) })
+		})
 	}
 
 	private queryProcessor<T, P extends keyof QueryProcessors>( docs: DocumentObject[], processMethod: P, value: QueryObject<T>[P] ) {
@@ -418,5 +429,6 @@ export class JsonDataSource extends DataSource {
 	private _pendingPromises: Promise<any>[] = []
 	private _simulateError: ErrorOnOperation | undefined
 	private _documentListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
+	private _templateListeners: Collection<TemplateListener> = {}
 	private _collectionListeners: Collection<Collection<DocumentChangeListener<DocumentObject>>> = {}
 }

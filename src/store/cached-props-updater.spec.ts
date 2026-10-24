@@ -109,11 +109,6 @@ describe( 'Persistent with cached props reference', ()=>{
 
 	function setupUpdateCachedPropsUpdater() {
 		cachedPropsUpdater = datasource.installCachedPropsUpdater()
-		datasource.onDocumentTemplateChange( '{rootCollection}/{rootDocumentId}/{subCollection}/{subDocumentId}', event => {
-			const { rootCollection, subCollection } = event.params!
-			const documentPath = subCollection? `${ rootCollection }/{customerId}/${ subCollection }` : rootCollection
-			cachedPropsUpdater.updateProps( documentPath, event )
-		})
 		allPropsUpdatedCalled = new Promise<AllPropsUpdatedCallbackResult>( resolve => {
 			cachedPropsUpdater.afterDocumentChange = ( updatedResult, propsToUpdate ) => resolve({ 
 				updatedResult: updatedResult!, 
@@ -333,11 +328,6 @@ describe( 'Cached props fan-out resource safety. Issue: #19 [REQ-1][REQ-2][REQ-3
 		// so they pin it explicitly; the transactional owner path (the default)
 		// is covered by the Issue #25 suite below.
 		updater = datasource.installCachedPropsUpdater({ transactional: false, ...config })
-		datasource.onDocumentTemplateChange( '{rootCollection}/{rootDocumentId}/{subCollection}/{subDocumentId}', event => {
-			const { rootCollection, subCollection } = event.params!
-			const documentPath = subCollection? `${ rootCollection }/{customerId}/${ subCollection }` : rootCollection
-			updater.updateProps( documentPath, event )
-		})
 		return updater
 	}
 
@@ -676,4 +666,511 @@ describe( 'Transactional owner updates prevent lost updates [REQ-1][REQ-2]', ()=
 
 		expect( storedRefNames() ).toEqual( [ 'a-updated', 'b-updated' ] )
 	})
+})
+
+@registerPersistentClass( 'Unwatched' )
+class Unwatched extends Persistent {
+	set name( value: string ) {
+		this._name = value
+	}
+
+	get name(): string {
+		return this._name
+	}
+
+	@persistent private _name: string = ''
+}
+
+/**
+ * Covers the issue #14 feature: installing the cached-props updater subscribes to
+ * the watched collection templates, so cached props refresh without a caller-side
+ * listener bridge. Most tests install the updater through the data source and
+ * await the `afterDocumentChange` callback to know the refresh completed (the
+ * `JsonDataSource.wait()` method is not a barrier for install-driven refreshes).
+ */
+describe( 'Cached props refresh driven by installCachedPropsUpdater', ()=>{
+	let datasource: JsonDataSource
+
+	beforeEach(()=>{
+		datasource = new JsonDataSource({})
+		Store.useDataSource( datasource )
+	})
+
+	afterEach(()=>{
+		vi.restoreAllMocks()
+	})
+
+	/** Collects every `afterDocumentChange` report, empty ones included. */
+	function watchAfterDocumentChange( updater: CachedPropsUpdater ): UpdatedResults[] {
+		const reports: UpdatedResults[] = []
+		updater.afterDocumentChange = results => reports.push( results ?? {} )
+		return reports
+	}
+
+	/** Only the reports that actually updated an owner document. */
+	function updatedReports( reports: UpdatedResults[] ): UpdatedResults[] {
+		return reports.filter( report => Object.values( report ).some( result => result.updatedDocuments.length > 0 ))
+	}
+
+	async function waitForUpdatedReports( reports: UpdatedResults[], count = 1 ) {
+		await vi.waitFor(()=> expect( updatedReports( reports ) ).toHaveLength( count ))
+	}
+
+	/** Lets any fire-and-forget refresh settle, to assert that nothing else reports. */
+	const settle = () => new Promise( resolve => setTimeout( resolve, 20 ))
+
+	function ownerChildModel( customerId: string ) {
+		return Store.getModelForSubCollection<Child>( new Root( customerId ), 'Child' )
+	}
+
+	function ownerParentModel( customerId: string ) {
+		return Store.getModelForSubCollection<Parent>( new Root( customerId ), 'Parent' )
+	}
+
+	async function renameChild( childId: string, name: string, model: Model<Child> = Store.getModel<Child>( 'Child' ) ) {
+		const child = ( await model.findById( childId ) )!
+		child.name = name
+		await model.save( child )
+	}
+
+	function rootOwnerAndChildData() {
+		return {
+			Parent: {
+				a: { id: 'a', __className: 'Parent', name: 'a', propInRootForRootCollection: { id: 'a2', __className: 'Child', name: 'a2', __documentReference: { storedInCollection: 'Child' } } },
+				b: { id: 'b', __className: 'Parent', name: 'b' },
+				c: { id: 'c', __className: 'Parent', name: 'c' },
+			},
+			Child: {
+				a2: { id: 'a2', __className: 'Child', name: 'a2' },
+				b2: { id: 'b2', __className: 'Child', name: 'b2' },
+				c2: { id: 'c2', __className: 'Child', name: 'c2' },
+			}
+		}
+	}
+
+	/**
+	 * Rejects the first `failures` owner transactions, so an install-driven refresh
+	 * fails exactly as a rejected owner save does.
+	 */
+	function failOwnerTransactions( failures = 1 ) {
+		const originalRunTransaction = datasource.runTransaction.bind( datasource )
+		let remaining = failures
+		vi.spyOn( datasource, 'runTransaction' ).mockImplementation(( fn: any )=> {
+			if ( remaining > 0 ) {
+				remaining--
+				return Promise.reject( new Error( 'owner save failed' ) )
+			}
+			return originalRunTransaction( fn )
+		})
+	}
+
+	it( 'Reproduce: installing the updater alone refreshes cached props. Issue: #14 [REQ-10]', async ()=>{
+		const seed = rootOwnerAndChildData()
+		datasource.setDataStore( seed as any )
+		// install is the only wiring: no caller-side onDocumentTemplateChange bridge
+		const updater = datasource.installCachedPropsUpdater()
+		const reports = watchAfterDocumentChange( updater )
+
+		await renameChild( 'a2', 'a2-updated' )
+
+		await waitForUpdatedReports( reports )
+		await settle()
+
+		const stored = datasource.rawData[ 'Parent' ]!
+		expect(( stored[ 'a' ] as any ).propInRootForRootCollection.name ).toBe( 'a2-updated' )
+		expect( stored[ 'b' ] ).toEqual( seed.Parent.b )
+		expect( stored[ 'c' ] ).toEqual( seed.Parent.c )
+
+		expect( updatedReports( reports ) ).toHaveLength( 1 )
+		expect( updatedReports( reports )[ 0 ] ).toEqual({
+			Parent: {
+				totalDocumentsToUpdate: 1,
+				updatedDocuments: [ 'a' ],
+				documentsToUpdate: [ 'a' ]
+			}
+		})
+	})
+
+	it( 'Refresh a reference stored in a templated subcollection with install alone. Issue: #14 [REQ-11]', async ()=>{
+		datasource.setDataStore({
+			Parent: {
+				a: { id: 'a', __className: 'Parent', name: 'a', propInSubcollectionForRootCollection: { id: 'a2', __className: 'Child', name: 'a2', __documentReference: { storedInCollection: 'Root/a/Child' } } },
+				b: { id: 'b', __className: 'Parent', name: 'b' },
+				c: { id: 'c', __className: 'Parent', name: 'c' },
+			},
+			'Root/a/Child': {
+				a2: { id: 'a2', __className: 'Child', name: 'a2' },
+				b2: { id: 'b2', __className: 'Child', name: 'b2' },
+			}
+		} as any )
+		const updater = datasource.installCachedPropsUpdater()
+		const reports = watchAfterDocumentChange( updater )
+
+		await renameChild( 'a2', 'a2-updated', ownerChildModel( 'a' ) )
+		await waitForUpdatedReports( reports )
+
+		const owner = ( await Store.getModel<Parent>( 'Parent' ).findById( 'a' ) )!
+		expect( owner.propInSubcollectionForRootCollection?.name ).toBe( 'a2-updated' )
+	})
+
+	it( 'Refresh an owner stored in a templated subcollection with install alone. Issue: #14 [REQ-12]', async ()=>{
+		datasource.setDataStore({
+			'Root/a/Parent': {
+				a: { id: 'a', __className: 'Parent', name: 'a', propInRootForSubcollection: { id: 'a2', __className: 'Child', name: 'a2', __documentReference: { storedInCollection: 'Child' } } },
+				b: { id: 'b', __className: 'Parent', name: 'b' },
+			},
+			Child: {
+				a2: { id: 'a2', __className: 'Child', name: 'a2' },
+				b2: { id: 'b2', __className: 'Child', name: 'b2' },
+			}
+		} as any )
+		const updater = datasource.installCachedPropsUpdater()
+		const reports = watchAfterDocumentChange( updater )
+
+		await renameChild( 'a2', 'a2-updated' )
+		await waitForUpdatedReports( reports )
+
+		const owner = ( await ownerParentModel( 'a' ).findById( 'a' ) )!
+		expect( owner.propInRootForSubcollection?.name ).toBe( 'a2-updated' )
+	})
+
+	it( 'Refresh after a watched collection is created post-install. Issue: #14 [REQ-13]', async ()=>{
+		// nothing is stored yet: install happens before any collection exists
+		const updater = datasource.installCachedPropsUpdater()
+		const reports = watchAfterDocumentChange( updater )
+		const childModel = Store.getModel<Child>( 'Child' )
+		const parentModel = Store.getModel<Parent>( 'Parent' )
+
+		const child = new Child( 'a2' )
+		child.name = 'a2'
+		await childModel.save( child )
+
+		const owner = new Parent( 'a' )
+		owner.propInRootForRootCollection = child
+		await parentModel.save( owner )
+
+		child.name = 'a2-updated'
+		await childModel.save( child )
+
+		await waitForUpdatedReports( reports )
+
+		const storedOwner = ( await parentModel.findById( 'a' ) )!
+		expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
+	})
+
+	it( 'Refresh a subcollection created post-install with a new path parameter. Issue: #14 [REQ-14]', async ()=>{
+		// a collection matching the watched template exists, another one appears later
+		datasource.setDataStore({
+			'Root/b/Child': { b2: { id: 'b2', __className: 'Child', name: 'b2' } }
+		} as any )
+		const updater = datasource.installCachedPropsUpdater()
+		const reports = watchAfterDocumentChange( updater )
+		const childModel = ownerChildModel( 'a' )
+		const parentModel = ownerParentModel( 'a' )
+
+		const child = new Child( 'a2' )
+		child.name = 'a2'
+		await childModel.save( child )
+
+		const owner = new Parent( 'a' )
+		owner.propInSubcollectionForSubcollection = child
+		await parentModel.save( owner )
+
+		child.name = 'a2-updated'
+		await childModel.save( child )
+
+		await waitForUpdatedReports( reports )
+
+		const storedOwner = ( await parentModel.findById( 'a' ) )!
+		expect( storedOwner.propInSubcollectionForSubcollection?.name ).toBe( 'a2-updated' )
+	})
+
+	it( 'Ignore changes in collections no cached prop watches. Issue: #14 [REQ-15]', async ()=>{
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const updater = datasource.installCachedPropsUpdater()
+		const findSpy = vi.spyOn( datasource, 'find' )
+		const updateSpy = vi.spyOn( updater, 'updateProps' )
+		const beforeSpy = vi.fn()
+		const afterSpy = vi.fn()
+		updater.beforeDocumentChange = beforeSpy
+		updater.afterDocumentChange = afterSpy
+
+		// Unwatched is registered without cached-prop references: its collection is not watched
+		const unwatched = new Unwatched( 'u1' )
+		unwatched.name = 'u1'
+		await Store.getModel<Unwatched>( 'Unwatched' ).save( unwatched )
+		await settle()
+
+		expect( findSpy ).not.toHaveBeenCalled()
+		expect( updateSpy ).not.toHaveBeenCalled()
+		expect( beforeSpy ).not.toHaveBeenCalled()
+		expect( afterSpy ).not.toHaveBeenCalled()
+	})
+
+	it( 'Hand an install-driven refresh failure to the failure handler. Issue: #14 [REQ-16]', async ()=>{
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const failures: { error: unknown, change: DocumentChange<DocumentObject> }[] = []
+		datasource.installCachedPropsUpdater({
+			onRefreshFailure: ( error, change ) => failures.push({ error, change })
+		})
+		failOwnerTransactions()
+
+		// the referenced document save itself succeeds: only the owner refresh fails
+		await renameChild( 'a2', 'a2-updated' )
+
+		await vi.waitFor(()=> expect( failures ).toHaveLength( 1 ))
+		expect(( failures[ 0 ]!.error as Error ).message ).toBe( 'owner save failed' )
+		expect( failures[ 0 ]!.change.collectionPath ).toBe( 'Child' )
+		expect( failures[ 0 ]!.change.after?.id ).toBe( 'a2' )
+	})
+
+	it( 'Leave no unhandled rejection when an install-driven refresh fails. Issue: #14 [REQ-17]', async ()=>{
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const onRefreshFailure = vi.fn()
+		datasource.installCachedPropsUpdater({ onRefreshFailure })
+		failOwnerTransactions()
+		const unhandled: unknown[] = []
+		const onUnhandled = ( reason: unknown ) => unhandled.push( reason )
+		const nodeProcess = ( globalThis as any ).process
+		nodeProcess.on( 'unhandledRejection', onUnhandled )
+		try {
+			await renameChild( 'a2', 'a2-updated' )
+
+			await vi.waitFor(()=> expect( onRefreshFailure ).toHaveBeenCalledTimes( 1 ))
+			await settle()
+
+			expect( onRefreshFailure ).toHaveBeenCalledTimes( 1 )
+			expect(( onRefreshFailure.mock.calls[ 0 ]![ 0 ] as Error ).message ).toBe( 'owner save failed' )
+			expect( unhandled ).toEqual( [] )
+		}
+		finally {
+			nodeProcess.off( 'unhandledRejection', onUnhandled )
+		}
+	})
+
+	it( 'Keep refreshing after a failed refresh. Issue: #14 [REQ-18]', async ()=>{
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const onRefreshFailure = vi.fn()
+		const updater = datasource.installCachedPropsUpdater({ onRefreshFailure })
+		const reports = watchAfterDocumentChange( updater )
+		failOwnerTransactions( 1 )
+
+		await renameChild( 'a2', 'a2-first-attempt' )
+		await vi.waitFor(()=> expect( onRefreshFailure ).toHaveBeenCalledTimes( 1 ))
+		expect( updatedReports( reports ) ).toHaveLength( 0 )
+
+		await renameChild( 'a2', 'a2-second-attempt' )
+		await waitForUpdatedReports( reports )
+
+		const ownerModel = Store.getModel<Parent>( 'Parent' )
+		const storedOwner = ( await ownerModel.findById( 'a' ) )!
+		expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-second-attempt' )
+
+		// still subscribed: the next change refreshes again
+		await renameChild( 'a2', 'a2-third-attempt' )
+		await waitForUpdatedReports( reports, 2 )
+		const refreshedOwner = ( await ownerModel.findById( 'a' ) )!
+		expect( refreshedOwner.propInRootForRootCollection?.name ).toBe( 'a2-third-attempt' )
+	})
+
+	it( 'Replace the previous subscription when the updater is re-installed. Issue: #14 [REQ-19]', async ()=>{
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const firstUpdater = datasource.installCachedPropsUpdater()
+		const firstReports = watchAfterDocumentChange( firstUpdater )
+
+		const secondUpdater = datasource.installCachedPropsUpdater()
+		expect( secondUpdater ).not.toBe( firstUpdater )
+		const secondReports = watchAfterDocumentChange( secondUpdater )
+
+		await renameChild( 'a2', 'a2-updated' )
+
+		await waitForUpdatedReports( secondReports )
+		await settle()
+
+		expect( updatedReports( secondReports ) ).toHaveLength( 1 )
+		expect( firstReports ).toEqual( [] )
+
+		const storedOwner = ( await Store.getModel<Parent>( 'Parent' ).findById( 'a' ) )!
+		expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
+	})
+
+	it( 'Refresh owners through the data source that installed the updater. Issue: #14 [REQ-20]', async ()=>{
+		const dataSourceA = datasource
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const updater = dataSourceA.installCachedPropsUpdater()
+		const reports = watchAfterDocumentChange( updater )
+
+		const dataSourceB = new JsonDataSource( rootOwnerAndChildData() as any )
+		Store.useDataSource( dataSourceB )
+
+		const childModelInA = new Model<Child>( dataSourceA, 'Child' )
+		await renameChild( 'a2', 'a2-updated', childModelInA )
+
+		await waitForUpdatedReports( reports )
+
+		const ownerInA = ( await new Model<Parent>( dataSourceA, 'Parent' ).findById( 'a' ) )!
+		expect( ownerInA.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
+
+		const ownerInB = ( await new Model<Parent>( dataSourceB, 'Parent' ).findById( 'a' ) )!
+		expect( ownerInB.propInRootForRootCollection?.name ).toBe( 'a2' )
+	})
+
+	it( 'Keep a direct updateProps() call working. Issue: #14 [REQ-22]', async ()=>{
+		datasource.setDataStore( rootOwnerAndChildData() as any )
+		const updater = datasource.installCachedPropsUpdater()
+		const event: DocumentChange<DocumentObject> = {
+			before: { id: 'a2', __className: 'Child', name: 'a2' } as DocumentObject,
+			after: { id: 'a2', __className: 'Child', name: 'a2-direct' } as DocumentObject,
+			type: 'update',
+			params: {},
+			collectionPath: 'Child'
+		}
+
+		await updater.updateProps( 'Child', event )
+
+		const storedOwner = ( await Store.getModel<Parent>( 'Parent' ).findById( 'a' ) )!
+		expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-direct' )
+	})
+
+	describe( 'Supplementary install-subscription coverage', ()=>{
+
+		const resolveExistingCollection = async ( template: string ) => [ template ]
+
+		it( 'replaces its own previous subscription when it subscribes twice', async ()=>{
+			datasource.setDataStore( rootOwnerAndChildData() as any )
+			const updater = new CachedPropsUpdater()
+			updater.resolveCollectionPaths = resolveExistingCollection
+			const firstUnsubscribe = updater.subscribe( datasource )
+			const reports = watchAfterDocumentChange( updater )
+			const secondUnsubscribe = updater.subscribe( datasource )
+
+			await renameChild( 'a2', 'a2-first-rename' )
+			await waitForUpdatedReports( reports )
+			await settle()
+
+			// subscribe() replaced its own previous subscription: one refresh, not two
+			expect( updatedReports( reports ) ).toHaveLength( 1 )
+
+			// an unsubscriber replaced by a newer subscription is a no-op
+			firstUnsubscribe()
+			await renameChild( 'a2', 'a2-second-rename' )
+			await waitForUpdatedReports( reports, 2 )
+
+			secondUnsubscribe()
+
+			// unsubscribing stops the refreshes but keeps the owner routing of the
+			// stopped subscription: a direct updateProps() still writes through it
+			await updater.updateProps( 'Child', {
+				before: { id: 'a2', __className: 'Child', name: 'a2-second-rename' } as DocumentObject,
+				after: { id: 'a2', __className: 'Child', name: 'a2-after-unsubscribe' } as DocumentObject,
+				type: 'update',
+				params: {},
+				collectionPath: 'Child'
+			})
+
+			const storedOwner = ( await new Model<Parent>( datasource, 'Parent' ).findById( 'a' ) )!
+			expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-after-unsubscribe' )
+		})
+
+		it( 'keeps a directly constructed updater working through the Store data source', async ()=>{
+			datasource.setDataStore( rootOwnerAndChildData() as any )
+			const updater = new CachedPropsUpdater()
+			updater.resolveCollectionPaths = resolveExistingCollection
+
+			await updater.updateProps( 'Child', {
+				before: { id: 'a2', __className: 'Child', name: 'a2' } as DocumentObject,
+				after: { id: 'a2', __className: 'Child', name: 'a2-updated' } as DocumentObject,
+				type: 'update',
+				params: {},
+				collectionPath: 'Child'
+			})
+
+			const storedOwner = ( await Store.getModel<Parent>( 'Parent' ).findById( 'a' ) )!
+			expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
+		})
+
+		it( 'contains a refresh failure when no handler is configured', async ()=>{
+			datasource.setDataStore( rootOwnerAndChildData() as any )
+			const updater = datasource.installCachedPropsUpdater()
+			const reports = watchAfterDocumentChange( updater )
+			failOwnerTransactions( 1 )
+			const unhandled: unknown[] = []
+			const onUnhandled = ( reason: unknown ) => unhandled.push( reason )
+			const nodeProcess = ( globalThis as any ).process
+			nodeProcess.on( 'unhandledRejection', onUnhandled )
+			try {
+				await renameChild( 'a2', 'a2-first-attempt' )
+				await vi.waitFor(()=> expect( datasource.runTransaction ).toHaveBeenCalled() )
+				await settle()
+
+				expect( unhandled ).toEqual( [] )
+				expect( updatedReports( reports ) ).toHaveLength( 0 )
+
+				// the subscription survives the contained failure
+				await renameChild( 'a2', 'a2-second-attempt' )
+				await waitForUpdatedReports( reports )
+				const storedOwner = ( await Store.getModel<Parent>( 'Parent' ).findById( 'a' ) )!
+				expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-second-attempt' )
+			}
+			finally {
+				nodeProcess.off( 'unhandledRejection', onUnhandled )
+			}
+		})
+
+		it( 'contains a throwing failure handler', async ()=>{
+			datasource.setDataStore( rootOwnerAndChildData() as any )
+			const onRefreshFailure = vi.fn(()=> { throw new Error( 'handler failed' ) })
+			const updater = datasource.installCachedPropsUpdater({ onRefreshFailure })
+			const reports = watchAfterDocumentChange( updater )
+			failOwnerTransactions( 1 )
+			const unhandled: unknown[] = []
+			const onUnhandled = ( reason: unknown ) => unhandled.push( reason )
+			const nodeProcess = ( globalThis as any ).process
+			nodeProcess.on( 'unhandledRejection', onUnhandled )
+			try {
+				await renameChild( 'a2', 'a2-first-attempt' )
+				await vi.waitFor(()=> expect( onRefreshFailure ).toHaveBeenCalledTimes( 1 ))
+				await settle()
+
+				expect( unhandled ).toEqual( [] )
+				expect( updatedReports( reports ) ).toHaveLength( 0 )
+
+				// the subscription survives both the failed refresh and the throwing handler
+				await renameChild( 'a2', 'a2-second-attempt' )
+				await waitForUpdatedReports( reports )
+				const storedOwner = ( await Store.getModel<Parent>( 'Parent' ).findById( 'a' ) )!
+				expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-second-attempt' )
+			}
+			finally {
+				nodeProcess.off( 'unhandledRejection', onUnhandled )
+			}
+		})
+
+		it( 're-installs over a manual subscription without leaving two live subscriptions', async ()=>{
+			datasource.setDataStore( rootOwnerAndChildData() as any )
+			const first = datasource.installCachedPropsUpdater()
+			const firstReports = watchAfterDocumentChange( first )
+
+			// a host call replaces the subscription created by the first install
+			first.subscribe( datasource )
+
+			const second = datasource.installCachedPropsUpdater()
+			const secondReports = watchAfterDocumentChange( second )
+			const runTransactionSpy = vi.spyOn( datasource, 'runTransaction' )
+
+			// one rename must fan out once: two live subscriptions would double it
+			await renameChild( 'a2', 'a2-updated' )
+
+			await waitForUpdatedReports( secondReports )
+			await settle()
+
+			expect( runTransactionSpy.mock.calls.length ).toBe( 1 )
+			expect( updatedReports( secondReports ) ).toHaveLength( 1 )
+			expect( firstReports ).toEqual( [] )
+
+			const storedOwner = ( await new Model<Parent>( datasource, 'Parent' ).findById( 'a' ) )!
+			expect( storedOwner.propInRootForRootCollection?.name ).toBe( 'a2-updated' )
+		})
+	})
+
 })

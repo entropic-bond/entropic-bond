@@ -411,6 +411,57 @@ describe( 'Json DataSource', ()=>{
 		})
 	})
 
+	describe( 'Template listeners and collections created after subscribing', ()=>{
+		let datasource: JsonDataSource
+
+		beforeEach(()=>{
+			datasource = new JsonDataSource()
+			Store.useDataSource( datasource )
+		})
+
+		it( 'should notify a template listener for a collection created after subscribing', ()=>{
+			const listener = vi.fn()
+			const uninstall = datasource.onDocumentTemplateChange( 'Customer/{customerId}/Audit', listener )
+
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 1 } as any ] })
+
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({
+				type: 'create',
+				after: expect.objectContaining({ id: 'a', val: 1 }),
+				params: { customerId: '1' },
+				collectionPath: 'Customer/1/Audit'
+			}) )
+
+			uninstall()
+		})
+
+		it( 'should stop notifying a template listener once it is uninstalled', ()=>{
+			datasource.setDataStore({ 'Customer/1/Audit': { a: { id: 'a', val: 1 } } as any })
+			const listener = vi.fn()
+			const uninstall = datasource.onDocumentTemplateChange( 'Customer/{customerId}/Audit', listener )
+
+			uninstall()
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 2 } as any ] })
+
+			expect( listener ).not.toHaveBeenCalled()
+		})
+
+		it( 'should notify every matching template listener with its own params', ()=>{
+			const auditListener = vi.fn()
+			const genericListener = vi.fn()
+			const uninstallAudit = datasource.onDocumentTemplateChange( 'Customer/{customerId}/Audit', auditListener )
+			const uninstallGeneric = datasource.onDocumentTemplateChange( '{rootCollection}/{customerId}/{subCollection}', genericListener )
+
+			datasource.save({ 'Customer/1/Audit': [{ id: 'a', val: 1 } as any ] })
+
+			expect( auditListener ).toHaveBeenCalledWith( expect.objectContaining({ params: { customerId: '1' } }) )
+			expect( genericListener ).toHaveBeenCalledWith( expect.objectContaining({ params: { rootCollection: 'Customer', customerId: '1', subCollection: 'Audit' } }) )
+
+			uninstallAudit()
+			uninstallGeneric()
+		})
+	})
+
 	describe( 'Helper methods', ()=>{
 		describe( 'isStringMatchingTemplate', ()=>{
 			it( 'should match simple templates', ()=>{

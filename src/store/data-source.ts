@@ -213,11 +213,41 @@ export abstract class DataSource {
 
 	abstract onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
+	/**
+	 * Subscribes to the changes of the documents stored in every collection whose
+	 * path matches the given collection template.
+	 *
+	 * The template is matched against a collection path when a change is notified,
+	 * not when the listener is subscribed, so a collection created after the
+	 * subscription is observed too. The listener's `change.params` is filled with
+	 * the template parameters extracted from the concrete collection path of the
+	 * changed document.
+	 *
+	 * `JsonDataSource` matches the template at notify time. An adapter that
+	 * resolves the template at subscribe time still works for the collections that
+	 * exist at subscribe time, but misses the collections created later; the
+	 * external Firestore data source is the known such adapter and is tracked
+	 * separately.
+	 * @param collectionTemplate the collection path template, parameters written as `{name}` or `${name}`
+	 * @param listener the listener notified on every change of a matching collection
+	 * @returns a function that unsubscribes the listener
+	 */
 	abstract onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber
 
+	/**
+	 * Creates the cached props updater and subscribes it to the changes of the
+	 * collections that hold references to documents with cached props, so cached
+	 * props are refreshed automatically: no caller-side listener bridge is needed.
+	 * Installing again replaces the previous updater and its subscription.
+	 * @param config the updater configuration
+	 * @returns the installed updater
+	 */
 	installCachedPropsUpdater( config?: CachedPropsUpdaterConfig ): CachedPropsUpdater {
+		this._cachedPropsUpdater?.unsubscribe()
+
 		this._cachedPropsUpdater = new CachedPropsUpdater( config )
 		this._cachedPropsUpdater.resolveCollectionPaths = this.resolveCollectionPaths.bind( this )
+		this._cachedPropsUpdater.subscribe( this )
 		return this._cachedPropsUpdater
 	}
 

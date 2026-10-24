@@ -31,7 +31,14 @@ class Employee extends Persistent {
 
 async function main() {
   const ds = new JsonDataSource()
-  ds.installCachedPropsUpdater()
+
+  // Installing is enough: the updater subscribes to the collections that hold
+  // references with cached props, so no manual document-template listener bridge is needed.
+  const updater: CachedPropsUpdater = ds.installCachedPropsUpdater({
+    onRefreshFailure: (error, change) => {
+      console.log(`Cached props refresh failed for ${change.collectionPath}`, error)
+    }
+  })
   Store.useDataSource(ds)
 
   const team = new Team()
@@ -48,6 +55,28 @@ async function main() {
   await teamModel.save(team)
   await empModel.save(employee)
   console.log('Saved with cached props')
+
+  // A refresh is asynchronous: await the updater's afterDocumentChange callback
+  // to know it completed. The callback reports the owners touched by one
+  // referenced-document change, so wait for the report that actually updated
+  // the employee.
+  const refreshed = new Promise<void>(resolve => {
+    updater.afterDocumentChange = (updatedResults) => {
+      const updated = Object.values(updatedResults ?? {}).some(result => result.updatedDocuments.length > 0)
+      if (updated) resolve()
+    }
+  })
+
+  const newName = 'Platform Core'
+  team.name = newName
+  await teamModel.save(team)
+  await refreshed
+
+  const storedEmployee = (await empModel.findById(employee.id))!
+  const cachedTeamName = storedEmployee.team?.name
+  console.log(`Employee ${storedEmployee.name} cached team name: ${cachedTeamName}`)
+
+  if (cachedTeamName !== newName) throw new Error('The cached team name was not refreshed')
 }
 
 main()
