@@ -267,7 +267,14 @@ class User extends EntropicComponent {
 }
 ```
 
-The `CachedPropsUpdater` (installed via `DataSource.installCachedPropsUpdater()`) will propagate changes to cached props across all referencing documents.
+The `CachedPropsUpdater` (installed via `DataSource.installCachedPropsUpdater()`) will propagate changes to cached props across all referencing documents. Installing also **subscribes** the updater to the referenced collections, so cached props refresh automatically: do **not** wire a manual `onDocumentTemplateChange → updateProps` bridge, which would now refresh twice. Installing again replaces the previous updater and its subscription.
+
+```ts
+const updater = dataSource.installCachedPropsUpdater({
+  // optional: refresh failures are contained, never thrown at the host
+  onRefreshFailure: (error, change) => console.error(change.collectionPath, error),
+})
+```
 
 > See the complete example at [samples/08-cached-props.ts](./samples/08-cached-props.ts)
 
